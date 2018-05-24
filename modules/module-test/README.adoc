@@ -1,0 +1,4 @@
+= Spring Fu test module
+
+This module provides support for testing via https://junit.org/junit5/[JUnit 5] configured by default with https://junit.org/junit5/docs/current/user-guide/#writing-tests-test-instance-lifecycle[per class lifecycle] in order to make tests faster and allow using `@BeforeClass` and `@AfterClass` on regular non-static methods.
+
