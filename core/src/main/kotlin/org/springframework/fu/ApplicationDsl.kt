@@ -22,6 +22,7 @@ import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import org.springframework.context.support.registerBean
 import org.springframework.core.env.ConfigurableEnvironment
+import org.springframework.core.env.Environment
 
 @DslMarker
 annotation class ContainerModuleMarker
@@ -97,6 +98,11 @@ open class ApplicationDsl : ContainerModule() {
 		}
 	}
 }
+
+fun ApplicationDsl.configuration(init: () -> Any): Unit =
+		beans {
+			bean { init() }
+		}
 
 fun application(init: ApplicationDsl.() -> Unit): ApplicationDsl {
 	val application = ApplicationDsl()

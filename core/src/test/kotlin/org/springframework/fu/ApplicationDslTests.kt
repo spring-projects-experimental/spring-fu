@@ -16,10 +16,12 @@
 
 package org.springframework.fu
 
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.getBean
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.ReloadableResourceBundleMessageSource
+import org.springframework.core.env.get
 
 /**
  * @author Sebastien Deleuze
@@ -49,6 +51,24 @@ class ApplicationDslTests {
 		context.close()
 	}
 
+	@Test
+	fun `Application configuration bean with default Environment property`() {
+		val context = GenericApplicationContext()
+		val app = application {
+			configuration {
+				TestConfiguration(name = env["NOT_EXIST"] ?: "default")
+			}
+		}
+		app.run(context)
+		val testConfig = context.getBean<TestConfiguration>()
+		assertEquals(testConfig.name, "default")
+		context.close()
+	}
+
 	class Foo
+
+	data class TestConfiguration(
+			val name: String
+	)
 }
 
