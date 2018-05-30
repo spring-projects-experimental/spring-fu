@@ -19,6 +19,8 @@ package org.springframework.fu.sample
 import org.springframework.http.HttpHeaders.*
 import org.springframework.http.MediaType.*
 import org.springframework.fu.application
+import org.springframework.fu.configuration
+import org.springframework.fu.get
 import org.springframework.fu.module.data.mongodb.mongodb
 import org.springframework.fu.module.jackson.jackson
 import org.springframework.fu.module.mustache.mustache
@@ -46,10 +48,15 @@ val app = application {
 			}
 		}
 	}
+	configuration { env ->
+		SampleConfiguration(property = env["ENV_VARIABLE"] ?: "debugConf")
+	}
 	mongodb()
 }
 
 data class User(val name: String)
+
+data class SampleConfiguration(val property: String)
 
 fun main(args: Array<String>) {
 	app.run(await = true)

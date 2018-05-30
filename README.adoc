@@ -30,6 +30,9 @@ val app = application {
 	}
 	mongodb(uri = "mongodb://myserver.com/foo")
 	configuration("myconf.kts")
+	configuration { env ->
+	    TestConfiguration(name = env["SYSTEM_ENV"] ?: "default")
+	}
 	webflux {
 		val htmlHandler = ref<HtmlHandler>()
 		val apiHandler = ref<ApiHandler>()

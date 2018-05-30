@@ -16,10 +16,12 @@
 
 package org.springframework.fu
 
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.getBean
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.ReloadableResourceBundleMessageSource
+import org.springframework.mock.env.MockEnvironment
 
 /**
  * @author Sebastien Deleuze
@@ -49,6 +51,39 @@ class ApplicationDslTests {
 		context.close()
 	}
 
+	@Test
+	fun `App configuration bean with default Environment property`() {
+		val context = GenericApplicationContext()
+		val app = application {
+			configuration { env ->
+				TestConfiguration(name = env["NOT_EXIST"] ?: "default")
+			}
+		}
+		app.run(context)
+		val testConfig = context.getBean<TestConfiguration>()
+		assertEquals(testConfig.name, "default")
+		context.close()
+	}
+
+	@Test
+	fun `App configurationS bean with some Environment property`() {
+		val context = GenericApplicationContext()
+		val app = application {
+			configurations { env ->
+				bean { TestConfiguration(name = env["SYSTEM_ENV"] ?: "default") }
+			}
+		}
+		context.environment.merge(MockEnvironment().apply { setProperty("SYSTEM_ENV", "system") })
+		app.run(context)
+		val testConfig = context.getBean<TestConfiguration>()
+		assertEquals(testConfig.name, "system")
+		context.close()
+	}
+
 	class Foo
+
+	data class TestConfiguration(
+			val name: String
+	)
 }
 
