@@ -60,10 +60,10 @@ You can optionally add https://kotlinlang.org/docs/reference/data-classes.html[t
 The compiler will automatically derive the following members from all properties declared
 in the primary constructor:
 
-* equals()/hashCode() pair
-* toString() of the form "User(name=John, age=42)"
-* componentN() functions corresponding to the properties in their order of declaration
-* copy() function
+* `equals()`/`hashCode`() pair
+* `toString()` of the form "User(name=John, age=42)"
+* `componentN()` functions corresponding to the properties in their order of declaration
+* `copy()` function
 
 
 This allows for easy changes to individual properties even if `Person` properties are read-only.
