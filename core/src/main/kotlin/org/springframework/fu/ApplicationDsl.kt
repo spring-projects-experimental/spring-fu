@@ -81,6 +81,14 @@ open class ApplicationDsl : ContainerModule() {
 		super.initialize(context)
 	}
 
+	/**
+	 * Take in account functional configuration enclosed in the provided lambda only when the
+	 * specified profile is active.
+	 */
+	fun profile(profile: String, block: () -> Unit) {
+		initModule(ProfileModule(profile, block), {})
+	}
+
 	fun run(context: GenericApplicationContext = GenericApplicationContext(), await: Boolean = false) {
 		context.registerBean("messageSource") {
 			ReloadableResourceBundleMessageSource().apply {
@@ -96,6 +104,17 @@ open class ApplicationDsl : ContainerModule() {
 				Thread.sleep(100)
 			}
 		}
+	}
+
+	class ProfileModule(private val profile: String, private val block: () -> Unit) : ContainerModule() {
+
+		override fun initialize(context: GenericApplicationContext) {
+			if (context.environment.activeProfiles.contains(profile)) {
+				block.invoke()
+			}
+			super.initialize(context)
+		}
+
 	}
 }
 

@@ -52,7 +52,7 @@ class ApplicationDslTests {
 	}
 
 	@Test
-	fun `Application configuration bean with default Environment property`() {
+	fun `Application configuration with default Environment property`() {
 		val context = GenericApplicationContext()
 		val app = application {
 			configuration {
@@ -62,6 +62,28 @@ class ApplicationDslTests {
 		app.run(context)
 		val testConfig = context.getBean<TestConfiguration>()
 		assertEquals(testConfig.name, "default")
+		context.close()
+	}
+
+	@Test
+	fun `Application configuration depending on profile`() {
+		val context = GenericApplicationContext()
+		val app = application {
+			profile("foo") {
+				configuration {
+					TestConfiguration(name = "foo")
+				}
+			}
+			profile("bar") {
+				configuration {
+					TestConfiguration(name = "bar")
+				}
+			}
+		}
+		context.environment.addActiveProfile("foo")
+		app.run(context)
+		val testConfig = context.getBean<TestConfiguration>()
+		assertEquals(testConfig.name, "foo")
 		context.close()
 	}
 
