@@ -1,0 +1,12 @@
+= Spring Fu dynamic configuration module
+
+This module provides an alternative to the regular Spring Fu application configuration
+designed to allow writing configuration using data classes in Kotlin scripts
+(`*.kts files`).
+
+It allows to benefits of auto-complete in the IDE and avoid learning a
+new format for your properties and is well suited for dynamic or remote configuration
+loading for example.
+
+The main drawback is the size of the Kotlin compiler dependency (almost 20M) and the time, CPU
+and memory required for compiling the script, that's why it is not used by default.

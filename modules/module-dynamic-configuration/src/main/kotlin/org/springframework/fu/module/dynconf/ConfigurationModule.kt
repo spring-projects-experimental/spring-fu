@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.fu.module.ktsconfiguration
+package org.springframework.fu.module.dynconf
 
 import org.springframework.beans.factory.getBean
 import org.springframework.context.support.GenericApplicationContext
@@ -26,10 +26,9 @@ import javax.script.ScriptEngine
 import javax.script.ScriptEngineManager
 
 /**
- * TODO Find a way to precompile kts files to avoid shipping the big compiler with the app
  * @author Sebastien Deleuze
  */
-class ConfigurationModule(private val filename: String) : Module {
+class DynamicConfigurationModule(private val filename: String) : Module {
 
 	override fun initialize(context : GenericApplicationContext) {
 		if (!context.containsBean("kotlinScriptEngine")) {
@@ -45,8 +44,8 @@ class ConfigurationModule(private val filename: String) : Module {
 	}
 }
 
-fun ApplicationDsl.configuration(filename: String = "application.kts") : ConfigurationModule {
-	val configuration = ConfigurationModule(filename)
+fun ApplicationDsl.configuration(filename: String = "application.kts") : DynamicConfigurationModule {
+	val configuration = DynamicConfigurationModule(filename)
 	children.add(configuration)
 	return configuration
 }

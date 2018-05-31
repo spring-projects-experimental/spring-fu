@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.fu.module.ktsconfiguration
+package org.springframework.fu.module.dynconf
 
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.getBean
@@ -24,7 +24,7 @@ import org.springframework.fu.application
 /**
  * @author Sebastien Deleuze
  */
-class ConfigurationModuleTests {
+class DynamicConfigurationModuleTests {
 
 	@Test
 	fun `Use kts properties to generate a TestConfiguration bean`() {
