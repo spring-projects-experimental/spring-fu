@@ -99,9 +99,9 @@ open class ApplicationDsl : ContainerModule() {
 	}
 }
 
-fun ApplicationDsl.configuration(init: () -> Any): Unit =
+fun ApplicationDsl.configuration(init: (Environment) -> Any): Unit =
 		beans {
-			bean { init() }
+			bean { init(env) }
 		}
 
 fun application(init: ApplicationDsl.() -> Unit): ApplicationDsl {
