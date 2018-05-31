@@ -16,7 +16,9 @@
 
 package org.springframework.fu.module.jackson
 
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
+import org.springframework.beans.factory.getBean
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.http.HttpHeaders.*
 import org.springframework.http.MediaType.*
@@ -24,9 +26,12 @@ import org.springframework.fu.application
 import org.springframework.fu.module.webflux.Server
 
 import org.springframework.fu.module.webflux.webflux
+import org.springframework.http.HttpStatus
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.test.web.reactive.server.expectBody
+import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.server.ServerResponse.*
+import reactor.test.test
 
 /**
  * @author Sebastien Deleuze
@@ -34,7 +39,7 @@ import org.springframework.web.reactive.function.server.ServerResponse.*
 class JacksonModuleTests {
 
 	@Test
-	fun `Enable jackson module create and request a JSON endpoint`() {
+	fun `Enable jackson module on server, create and request a JSON endpoint`() {
 		val context = GenericApplicationContext()
 		val app = application {
 			webflux {
@@ -57,6 +62,41 @@ class JacksonModuleTests {
 				.expectHeader().contentType(APPLICATION_JSON_UTF8_VALUE)
 				.expectBody<User>()
 				.isEqualTo(User("Brian"))
+		context.close()
+	}
+
+	@Test
+	fun `Enable jackson module on client and server, create and request a JSON endpoint`() {
+		val context = GenericApplicationContext()
+		val app = application {
+			webflux {
+				server(Server.NETTY) {
+					codecs {
+						jackson()
+					}
+					routes {
+						GET("/user") {
+							ok().header(CONTENT_TYPE, APPLICATION_JSON_UTF8_VALUE).syncBody(User("Brian"))
+						}
+					}
+				}
+				client {
+					codecs {
+						jackson()
+					}
+				}
+			}
+		}
+		app.run(context)
+		val client = context.getBean<WebClient>()
+		val exchange = client.get().uri("http://localhost:8080/user").exchange()
+		exchange.test()
+				.consumeNextWith {
+					assertEquals(HttpStatus.OK, it.statusCode())
+					assertEquals(APPLICATION_JSON_UTF8, it.headers().contentType().get())
+				}
+				.verifyComplete()
+
 		context.close()
 	}
 

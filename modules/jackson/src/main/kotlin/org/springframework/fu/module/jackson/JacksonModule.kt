@@ -9,7 +9,7 @@ import org.springframework.fu.module.webflux.WebFluxModule
 /**
  * @author Sebastien Deleuze
  */
-class JacksonModule(val json: Boolean) : WebFluxModule.WebFluxCodecModule {
+class JacksonModule(val json: Boolean) : WebFluxModule.WebFluxServerCodecModule {
 
 	override fun initialize(applicationContext: GenericApplicationContext) {
 	}

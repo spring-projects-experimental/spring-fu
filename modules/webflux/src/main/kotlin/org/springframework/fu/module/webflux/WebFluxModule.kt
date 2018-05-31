@@ -23,6 +23,8 @@ import org.springframework.http.codec.ServerCodecConfigurer
 import org.springframework.fu.ApplicationDsl
 import org.springframework.fu.ContainerModule
 import org.springframework.fu.Module
+import org.springframework.http.codec.ClientCodecConfigurer
+import org.springframework.web.reactive.function.client.ExchangeStrategies
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.server.*
 import org.springframework.web.reactive.handler.WebFluxResponseStatusExceptionHandler
@@ -40,7 +42,9 @@ class WebFluxModule: ContainerModule() {
 		initModule(WebFluxServerModule(server, port), init)
 	}
 
-	fun client() = initializers.add(beans { bean { WebClient.create() } })
+	fun client(baseUrl: String? = null, name: String? = null, init: WebFluxClientModule.() -> Unit =  {}) {
+		initModule(WebFluxClientModule(baseUrl, name), init)
+	}
 
 	class WebFluxServerModule(private val server: Server,
 							  private val port: Int): ContainerModule() {
@@ -55,7 +59,9 @@ class WebFluxModule: ContainerModule() {
 					for (c in children) {
 						if (c is WebFluxCodecsModule) {
 							for (codec in c.children) {
-								builder.codecs({ (codec as WebFluxCodecModule).invoke(it) } )
+								if (codec is WebFluxServerCodecModule) {
+									builder.codecs({ codec.invoke(it) })
+								}
 							}
 						}
 					}
@@ -85,7 +91,7 @@ class WebFluxModule: ContainerModule() {
 		}
 
 		fun codecs(init: WebFluxCodecsModule.() -> Unit =  {}) {
-			initModule(WebFluxCodecsModule(builder), init)
+			initModule(WebFluxCodecsModule(), init)
 		}
 
 		fun filter(filter: WebFilter) {
@@ -100,9 +106,42 @@ class WebFluxModule: ContainerModule() {
 
 	}
 
-	class WebFluxCodecsModule(val builder: HandlerStrategies.Builder): ContainerModule()
+	class WebFluxClientModule(baseUrl: String?, name: String?) : ContainerModule() {
 
-	interface WebFluxCodecModule: Module, (ServerCodecConfigurer) -> (Unit)
+		private val builder = WebClient.builder()
+
+		init {
+			initializers.add(beans {
+				bean(name = name) {
+					if (baseUrl != null) {
+						builder.baseUrl(baseUrl)
+					}
+					val exchangeStrategiesBuilder = ExchangeStrategies.builder()
+					for (c in children) {
+						if (c is WebFluxCodecsModule) {
+							for (codec in c.children) {
+								if (codec is WebFluxClientCodecModule) {
+									exchangeStrategiesBuilder.codecs({ codec.invoke(it) })
+								}
+							}
+						}
+					}
+					builder.exchangeStrategies(exchangeStrategiesBuilder.build())
+					builder.build()
+				}
+			})
+		}
+
+		fun codecs(init: WebFluxCodecsModule.() -> Unit =  {}) {
+			initModule(WebFluxCodecsModule(), init)
+		}
+	}
+
+	class WebFluxCodecsModule: ContainerModule()
+
+	interface WebFluxServerCodecModule: Module, (ServerCodecConfigurer) -> (Unit)
+
+	interface WebFluxClientCodecModule: Module, (ClientCodecConfigurer) -> (Unit)
 }
 
 fun ApplicationDsl.webflux(init: WebFluxModule.() -> Unit): WebFluxModule {

@@ -16,12 +16,16 @@
 
 package org.springframework.fu.module.webflux
 
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.getBean
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.fu.application
+import org.springframework.http.HttpStatus.*
 import org.springframework.test.web.reactive.server.WebTestClient
+import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.server.ServerResponse
+import reactor.test.test
 
 /**
  * @author Sebastien Deleuze
@@ -77,6 +81,51 @@ class WebFluxModuleTests {
 		context.close()
 	}
 
+	@Test
+	fun `Create a WebClient and request an endpoint`() {
+		val context = GenericApplicationContext()
+		val app = application {
+			webflux {
+				server(Server.NETTY) {
+					routes {
+						GET("/") { ServerResponse.noContent().build() }
+					}
+				}
+				client("http://localhost:8080")
+			}
+		}
+		app.run(context)
+		val client = context.getBean<WebClient>()
+		client.get().uri("/").exchange().test()
+				.consumeNextWith { assertEquals(NO_CONTENT, it.statusCode()) }
+				.verifyComplete()
+		context.close()
+	}
 
+	@Test
+	fun `Create 2 WebClient with different names and request an endpoint`() {
+		val context = GenericApplicationContext()
+		val app = application {
+			webflux {
+				server(Server.NETTY) {
+					routes {
+						GET("/") { ServerResponse.noContent().build() }
+					}
+				}
+				client(baseUrl = "http://localhost:8080", name = "client1")
+				client(name = "client2")
+			}
+		}
+		app.run(context)
+		val client1 = context.getBean<WebClient>("client1")
+		client1.get().uri("/").exchange().test()
+				.consumeNextWith { assertEquals(NO_CONTENT, it.statusCode()) }
+				.verifyComplete()
+		val client2 = context.getBean<WebClient>("client2")
+		client2.get().uri("http://localhost:8080/").exchange().test()
+				.consumeNextWith { assertEquals(NO_CONTENT, it.statusCode()) }
+				.verifyComplete()
+		context.close()
+	}
 
 }
