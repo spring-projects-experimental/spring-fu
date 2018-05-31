@@ -1,7 +1,3 @@
-= Spring Fu
-
-== Overview
-
 Spring Fu makes it easy to create https://spring.io/projects/spring-framework[Spring]-powered applications, micro-services and functions (Serverless) in https://kotlinlang.org/[Kotlin]. It is to Kotlin and functional programming what http://projects.spring.io/spring-boot/[Spring Boot] is to Java and annotations.
 
 It is designed to be simple, fast and lightweight with minimal reflection thanks to https://spring.io/blog/2017/08/01/spring-framework-5-kotlin-apis-the-functional-way[Spring functional configuration] mechanism which makes it possible to do efficient dead code removal and should provide https://github.com/oracle/graal[Graalvm] native image support by creating beans using lambda and class references in Kotlin. A simple Spring Fu web application start in less than a second on modern hardware, consume only 16M of heap memory, and self-executable shrinked JAR is less than 10M.
@@ -15,12 +11,3 @@ Developer experience is efficient without requiring specific support since no an
 Spring Fu will be also a good fit for Function as a Service (Serverless) thanks to its fast startup-time and to the fact it will take advantage of Kotlin first-class functional supports (top level functions, function types).
 
 Kudos to https://github.com/tgirard12[Thomas Girard] for its https://github.com/tgirard12/spring-webflux-kotlin-dsl[spring-webflux-kotlin-dsl] experiment that initially demonstrated this approach was possible.
-
-include::core/README.adoc[leveloffset=+1]
-
-include::modules/README.adoc[leveloffset=+1]
-
-include::samples/README.adoc[leveloffset=+1]
-
-== License
-Spring Fu is Open Source software released under the http://www.apache.org/licenses/LICENSE-2.0.html[Apache 2.0 license].

@@ -40,7 +40,9 @@ val app = application {
 					ok().syncBody("Hello")
 				}
 				GET("/user") {
-					ok().header(CONTENT_TYPE, APPLICATION_JSON_UTF8_VALUE).syncBody(User("Brian"))
+					ok()
+							.header(CONTENT_TYPE, APPLICATION_JSON_UTF8_VALUE)
+							.syncBody(User("Brian"))
 				}
 				GET("/view") {
 					ok().render("template", mapOf("name" to "world"))

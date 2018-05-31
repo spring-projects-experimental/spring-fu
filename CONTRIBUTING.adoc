@@ -1,4 +1,4 @@
-= Contributing to Spring Wave
+= Contributing to Spring Fu
 
 Spring Wave is released under the Apache 2.0 license. If you would like to contribute something, or simply want to hack on the code this document should help you get started.
 
@@ -13,10 +13,26 @@ We use GitHub issues to track bugs and enhancements. If you are reporting a bug,
 === Building from Source
 To build the source you will need to install Java 8+.
 
-==== Default Build
-The project can be built from the root directory using the standard maven command:
+==== Build
+The project can be built from the root directory using the standard Gradle command:
 
 [indent=0]
 ----
 	$ ./gradlew build
+----
+
+==== Documentation
+
+Documentation can be built via the following Gradle command:
+
+[indent=0]
+----
+	$ ./gradlew asciidoctor
+----
+
+In order to get syntax highlighting for Kotlin code, https://github.com/jirutka/asciidoctor-rouge[asciidoctor-rouge] needs to be installed before running the following command:
+
+[indent=0]
+----
+	$ asciidoctor -r asciidoctor-rouge -a source-highlighter=rouge REFERENCE.adoc -a tabsize=4 -o build/docs/html5/REFERENCE.html
 ----

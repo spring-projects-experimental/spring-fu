@@ -1,3 +1,4 @@
+import org.asciidoctor.gradle.AsciidoctorTask
 import org.jetbrains.kotlin.gradle.plugin.KotlinPluginWrapper
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import proguard.gradle.ProGuardTask
@@ -5,7 +6,8 @@ import proguard.gradle.ProGuardTask
 plugins {
 	id("org.jetbrains.kotlin.jvm") version "1.2.41"
 	id("io.spring.dependency-management") version "1.0.5.RELEASE"
-	id ("com.github.johnrengelman.shadow") version "2.0.4" apply false
+	id("com.github.johnrengelman.shadow") version "2.0.4" apply false
+	id("org.asciidoctor.convert") version "1.5.6"
 }
 
 buildscript {
@@ -72,5 +74,15 @@ subprojects {
 
 		dontwarn()
 	}
+}
+
+// See CONTRIBUTING.adoc in order to have Kotlin syntax highlighting
+tasks.withType<AsciidoctorTask> {
+	sourceDir = File("")
+	sources(delegateClosureOf<PatternSet> {
+		include("REFERENCE.adoc")
+	})
+	outputDir = File("build/docs")
+	setAttributes(mapOf("tabsize" to "4"))
 }
 
