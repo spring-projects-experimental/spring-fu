@@ -9,11 +9,11 @@ application {
 
 dependencies {
 	compile(project(":core"))
-	compile(project(":modules:module-data-mongodb"))
-	compile(project(":modules:module-jackson"))
-	compile(project(":modules:module-mustache"))
-	compile(project(":modules:module-test"))
-	compile(project(":modules:module-webflux"))
+	compile(project(":modules:data-mongodb"))
+	compile(project(":modules:jackson"))
+	compile(project(":modules:mustache"))
+	compile(project(":modules:test"))
+	compile(project(":modules:webflux"))
 }
 
 tasks {

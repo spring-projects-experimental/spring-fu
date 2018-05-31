@@ -6,7 +6,7 @@ Spring Fu makes it easy to create https://spring.io/projects/spring-framework[Sp
 
 It is designed to be simple, fast and lightweight with minimal reflection thanks to https://spring.io/blog/2017/08/01/spring-framework-5-kotlin-apis-the-functional-way[Spring functional configuration] mechanism which makes it possible to do efficient dead code removal and should provide https://github.com/oracle/graal[Graalvm] native image support by creating beans using lambda and class references in Kotlin. A simple Spring Fu web application start in less than a second on modern hardware, consume only 16M of heap memory, and self-executable shrinked JAR is less than 10M.
 
-A minimal core is enabled by default and configuration is always explicit. Spring Fu https://github.com/sdeleuze/spring-fu/tree/master/modules[modules] provide integration for various JVM technologies by providing required dependencies and configuration DSL.
+A minimal core is enabled by default and configuration is always explicit. Spring Fu https://github.com/sdeleuze/spring-fu/tree/master/modules[modules] provide integration for various JVM technologies by providing required dependencies and functional configuration.
 
 It also leverages https://docs.spring.io/spring/docs/current/spring-framework-reference/web-reactive.html#spring-webflux[Spring WebFlux] and Spring Data Reactive support to allow developing scalable applications, and give the choice to use powerful https://projectreactor.io/[Reactor] `Flux` and `Mono` API for functional programming or Kotlin https://kotlinlang.org/docs/reference/coroutines.html[Coroutines] for imperative programming. Functional actuators provides `health`, `beans`, `metrics`, `mapping` predefined endpoints.
 
@@ -16,67 +16,11 @@ Spring Fu will be also a good fit for Function as a Service (Serverless) thanks 
 
 Kudos to https://github.com/tgirard12[Thomas Girard] for its https://github.com/tgirard12/spring-webflux-kotlin-dsl[spring-webflux-kotlin-dsl] experiment that initially demonstrated this approach was possible.
 
-== Functional configuration
+include::core/README.adoc[leveloffset=+1]
 
-Configuration is done via code in an explicit way by leveraging various Kotlin features like https://kotlinlang.org/docs/reference/type-safe-builders.html[DSL], https://kotlinlang.org/docs/reference/functions.html#named-arguments[named arguments] and https://kotlinlang.org/docs/reference/inline-functions.html#reified-type-parameters[reified type parameters] on top of a Spring functional bean configuration based core.
+include::modules/README.adoc[leveloffset=+1]
 
-```kotlin
-val app = application {
-	beans {
-		bean<UserRepository>()
-		bean<ArticleRepository>()
-		bean<HtmlHandler>()
-		bean<ApiHandler>()
-	}
-	mongodb(uri = "mongodb://myserver.com/foo")
-	configuration("myconf.kts")
-	configuration { env ->
-	    TestConfiguration(name = env["SYSTEM_ENV"] ?: "default")
-	}
-	webflux {
-		val htmlHandler = ref<HtmlHandler>()
-		val apiHandler = ref<ApiHandler>()
-
-		server(engine = NETTY) {
-			cors(origin = "example.com")
-			mustache()
-			codecs {
-				jackson()
-				protobuf()
-			}
-			routes {
-				GET("/", htmlHandler::blog)
-				GET("/article/{id}", htmlHandler:article)
-				"/api".nest {
-					GET("/", apiHandler::list)
-					POST("/", apiHandler::create)
-					PUT("/{id}", apiHandler::update)
-					DELETE("/{id}", apiHandler::delete)
-				}
-			}
-			security {
-				permitAll {
-					loginPage("/login")
-					logout()
-				}
-				authenticated {
-					"/"
-					"/home"
-				}
-			}
-		}
-		client(engine = JETTY) {
-			codecs {
-				jackson()
-			}
-		}
-	}
-}
-
-fun main(args: Array<String) {
-	app.run()
-}
-```
+include::samples/README.adoc[leveloffset=+1]
 
 == License
 Spring Fu is Open Source software released under the http://www.apache.org/licenses/LICENSE-2.0.html[Apache 2.0 license].

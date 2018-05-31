@@ -1,5 +1,5 @@
 dependencies {
-	compile(project(":modules:module-webflux"))
+	compile(project(":modules:webflux"))
 	compile("com.samskivert:jmustache")
 
 	testImplementation("org.junit.jupiter:junit-jupiter-api")

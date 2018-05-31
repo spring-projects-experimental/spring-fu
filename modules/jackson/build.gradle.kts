@@ -1,5 +1,5 @@
 dependencies {
-	compile(project(":modules:module-webflux"))
+	compile(project(":modules:webflux"))
 	compile("com.fasterxml.jackson.core:jackson-databind")
 	compile("com.fasterxml.jackson.module:jackson-module-kotlin")
 	compile("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")

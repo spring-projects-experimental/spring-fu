@@ -1,0 +1,33 @@
+= WebFlux module
+
+This module configures https://docs.spring.io/spring/docs/current/spring-framework-reference/web-reactive.html#spring-webflux[WebFlux] client or server.
+
+```kotlin
+application {
+	webflux {
+		val htmlHandler = ref<HtmlHandler>()
+		val apiHandler = ref<ApiHandler>()
+
+		server(engine = NETTY) {
+			codecs {
+				// ...
+			}
+			routes {
+				GET("/", htmlHandler::blog)
+				GET("/article/{id}", htmlHandler:article)
+				"/api".nest {
+					GET("/", apiHandler::list)
+					POST("/", apiHandler::create)
+					PUT("/{id}", apiHandler::update)
+					DELETE("/{id}", apiHandler::delete)
+				}
+			}
+		}
+		client(engine = JETTY) {
+			codecs {
+				jackson()
+			}
+		}
+	}
+}
+```

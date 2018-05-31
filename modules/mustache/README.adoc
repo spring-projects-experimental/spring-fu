@@ -1,0 +1,13 @@
+= Mustache module
+
+This module configures a https://github.com/samskivert/jmustache[Mustache] view resolver.
+
+```kotlin
+application {
+	webflux {
+		server(engine = NETTY) {
+			mustache()
+		}
+	}
+}
+```

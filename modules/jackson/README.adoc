@@ -1,0 +1,15 @@
+= Jackson module
+
+This module configures a https://github.com/FasterXML/jackson[Jackson] JSON codec on WebFlux server (and very soon on WebFlux client).
+
+```kotlin
+application {
+	webflux {
+		server(engine = NETTY) {
+			codecs {
+				jackson()
+			}
+		}
+	}
+}
+```
