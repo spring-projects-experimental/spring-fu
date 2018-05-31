@@ -31,7 +31,6 @@ import org.springframework.web.reactive.handler.WebFluxResponseStatusExceptionHa
 import org.springframework.web.server.WebFilter
 import org.springframework.web.server.i18n.AcceptHeaderLocaleContextResolver
 import reactor.core.publisher.Mono
-import java.util.function.Consumer
 
 /**
  * @author Sebastien Deleuze
