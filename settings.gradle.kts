@@ -1,9 +1,9 @@
 rootProject.name = "spring-fu-build"
 
 include("core",
-		"modules:data-mongodb",
-		"modules:jackson",
 		"modules:dynamic-configuration",
+		"modules:jackson",
+		"modules:mongodb",
 		"modules:mustache",
 		"modules:test",
 		"modules:webflux",

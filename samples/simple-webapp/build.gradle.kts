@@ -9,8 +9,8 @@ application {
 
 dependencies {
 	compile(project(":core"))
-	compile(project(":modules:data-mongodb"))
 	compile(project(":modules:jackson"))
+	compile(project(":modules:mongodb"))
 	compile(project(":modules:mustache"))
 	compile(project(":modules:test"))
 	compile(project(":modules:webflux"))
