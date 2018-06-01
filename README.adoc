@@ -10,4 +10,84 @@ Developer experience is efficient without requiring specific support since no an
 
 Spring Fu will be also a good fit for Function as a Service (Serverless) thanks to its fast startup-time and to the fact it will take advantage of Kotlin first-class functional supports (top level functions, function types).
 
+== Functional configuration
+
+Here is an example of Spring Fu functional configuration.
+
+```kotlin
+data class AppConfiguration(
+	val name: String
+)
+
+val app = application {
+	profile("data") {
+		beans {
+			bean<UserRepository>()
+			bean<ArticleRepository>()
+		}
+		mongodb(uri = "mongodb://myserver.com/foo")
+	}
+	profile("web") {
+		beans {
+			bean<HtmlHandler>()
+			bean<ApiHandler>()
+		}
+		webflux {
+			val htmlHandler = ref<HtmlHandler>()
+			val apiHandler = ref<ApiHandler>()
+			server(engine = NETTY) {
+				cors(origin = "example.com")
+				mustache()
+				codecs {
+					jackson()
+					protobuf()
+				}
+				routes {
+					GET("/", htmlHandler::blog)
+					GET("/article/{id}", htmlHandler:article)
+					"/api".nest {
+						GET("/", apiHandler::list)
+						POST("/", apiHandler::create)
+						PUT("/{id}", apiHandler::update)
+						DELETE("/{id}", apiHandler::delete)
+					}
+				}
+				security {
+					// ...
+				}
+			}
+			client(engine = JETTY) {
+				codecs {
+					jackson()
+				}
+			}
+		}
+	}
+	configuration {
+	    AppConfiguration(name = env["SYSTEM_ENV"] ?: "default")
+	}
+}
+
+fun main(args: Array<String) {
+	app.run()
+}
+```
+
+== Reference documentation
+
+* https://github.com/sdeleuze/spring-fu/tree/master/core[Core]
+* Modules
+** https://github.com/sdeleuze/spring-fu/tree/master/modules/dynamic-configuration[Dynamic configuration]
+** https://github.com/sdeleuze/spring-fu/tree/master/modules/jackson[Jackson]
+** https://github.com/sdeleuze/spring-fu/tree/master/modules/mongodb[MongoDB]
+** https://github.com/sdeleuze/spring-fu/tree/master/modules/mustache[Mustache]
+** https://github.com/sdeleuze/spring-fu/tree/master/modules/test[Test]
+** https://github.com/sdeleuze/spring-fu/tree/master/modules/webflux[WebFlux]
+
+== Samples
+
+* https://github.com/sdeleuze/spring-fu/tree/master/samples/simple-webapp[Simple webapp]
+
+== Credits
+
 Kudos to https://github.com/tgirard12[Thomas Girard] for its https://github.com/tgirard12/spring-webflux-kotlin-dsl[spring-webflux-kotlin-dsl] experiment that initially demonstrated this approach was possible.

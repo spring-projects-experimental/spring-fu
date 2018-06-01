@@ -10,7 +10,7 @@ application {
 
 		server(engine = NETTY) {
 			codecs {
-				// ...
+				jackson()
 			}
 			routes {
 				GET("/", htmlHandler::blog)
