@@ -69,7 +69,7 @@ val app = application {
 }
 
 fun main(args: Array<String) {
-	app.run()
+	app.run(profiles = "data, web")
 }
 ```
 

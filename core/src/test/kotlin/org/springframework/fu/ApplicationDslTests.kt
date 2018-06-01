@@ -80,8 +80,7 @@ class ApplicationDslTests {
 				}
 			}
 		}
-		context.environment.addActiveProfile("foo")
-		app.run(context)
+		app.run(context = context, profiles = "foo")
 		val testConfig = context.getBean<TestConfiguration>()
 		assertEquals("foo", testConfig.name)
 		context.close()

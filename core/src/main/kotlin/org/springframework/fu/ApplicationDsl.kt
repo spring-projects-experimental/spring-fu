@@ -84,12 +84,20 @@ open class ApplicationDsl(private val init: ApplicationDsl.() -> Unit, condition
 		modules.add(ApplicationDsl(init, { it.activeProfiles.contains(profile) }))
 	}
 
-	fun run(context: GenericApplicationContext = GenericApplicationContext(), await: Boolean = false) {
+	/**
+	 * @param context the [GenericApplicationContext] instance to use
+	 * @param await set to `true` to block, useful when used in a `main()` function
+	 * @param profiles [ApplicationContext] profiles separated by commas.
+	 */
+	fun run(context: GenericApplicationContext = GenericApplicationContext(), await: Boolean = false, profiles: String = "") {
 		context.registerBean("messageSource") {
 			ReloadableResourceBundleMessageSource().apply {
 				setBasename("messages")
 				setDefaultEncoding("UTF-8")
 			}
+		}
+		if (!profiles.isEmpty()) {
+			context.environment.setActiveProfiles(*profiles.split(",").map { it.trim() }.toTypedArray())
 		}
 		initialize(context)
 		context.refresh()
