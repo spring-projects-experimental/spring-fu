@@ -17,16 +17,13 @@
 package org.springframework.fu.module.mustache
 
 import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.getBean
 import org.springframework.context.support.GenericApplicationContext
-import org.springframework.http.MediaType
 import org.springframework.fu.application
-import org.springframework.fu.module.webflux.Server
+import org.springframework.fu.module.webflux.netty.NettyWebServerModule
 
 import org.springframework.fu.module.webflux.webflux
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.web.reactive.function.server.ServerResponse
-import org.springframework.web.reactive.function.server.router
 import org.springframework.test.web.reactive.server.expectBody
 
 /**
@@ -39,7 +36,7 @@ class MustacheModuleTests {
 		val context = GenericApplicationContext()
 		val app = application {
 			webflux {
-				server(Server.NETTY) {
+				server(NettyWebServerModule()) {
 					mustache()
 					routes {
 						GET("/view") { ServerResponse.ok().render("template", mapOf("name" to "world")) }

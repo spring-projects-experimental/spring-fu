@@ -13,7 +13,7 @@ dependencies {
 	compile(project(":modules:mongodb"))
 	compile(project(":modules:mustache"))
 	compile(project(":modules:test"))
-	compile(project(":modules:webflux"))
+	compile(project(":modules:webflux:netty"))
 }
 
 tasks {

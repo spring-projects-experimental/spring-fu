@@ -83,6 +83,8 @@ fun main(args: Array<String) {
 ** https://github.com/sdeleuze/spring-fu/tree/master/modules/mustache[Mustache]
 ** https://github.com/sdeleuze/spring-fu/tree/master/modules/test[Test]
 ** https://github.com/sdeleuze/spring-fu/tree/master/modules/webflux[WebFlux]
+*** https://github.com/sdeleuze/spring-fu/tree/master/modules/webflux/netty[WebFlux Netty]
+*** https://github.com/sdeleuze/spring-fu/tree/master/modules/webflux/tomcat[WebFlux Tomcat]
 
 == Samples
 

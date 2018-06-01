@@ -7,4 +7,6 @@ include("core",
 		"modules:mustache",
 		"modules:test",
 		"modules:webflux",
+		"modules:webflux:netty",
+		"modules:webflux:tomcat",
 		"samples:simple-webapp")

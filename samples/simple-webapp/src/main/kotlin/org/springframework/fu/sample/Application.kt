@@ -24,13 +24,13 @@ import org.springframework.fu.configuration
 import org.springframework.fu.module.data.mongodb.mongodb
 import org.springframework.fu.module.jackson.jackson
 import org.springframework.fu.module.mustache.mustache
-import org.springframework.fu.module.webflux.Server
+import org.springframework.fu.module.webflux.netty.NettyWebServerModule
 import org.springframework.fu.module.webflux.webflux
 import org.springframework.web.reactive.function.server.ServerResponse.*
 
 val app = application {
 	webflux {
-		server(Server.NETTY) {
+		server(NettyWebServerModule()) {
 			mustache()
 			codecs {
 				jackson()

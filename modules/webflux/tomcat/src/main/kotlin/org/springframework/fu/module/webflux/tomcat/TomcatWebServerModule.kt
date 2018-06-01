@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.fu.module.webflux
+package org.springframework.fu.module.webflux.tomcat
 
 import org.apache.catalina.LifecycleState
 import org.apache.catalina.connector.Connector
@@ -22,65 +22,33 @@ import org.apache.catalina.core.StandardContext
 import org.apache.catalina.loader.WebappClassLoader
 import org.apache.catalina.loader.WebappLoader
 import org.apache.catalina.startup.Tomcat
-import org.springframework.context.ApplicationContext
-import org.springframework.context.SmartLifecycle
-import org.springframework.http.server.reactive.ReactorHttpHandlerAdapter
+import org.springframework.context.support.GenericApplicationContext
+import org.springframework.context.support.registerBean
+import org.springframework.fu.module.webflux.WebFluxModule
+
+import org.springframework.fu.module.webflux.WebServer
 import org.springframework.http.server.reactive.TomcatHttpHandlerAdapter
 import org.springframework.util.ClassUtils
 import org.springframework.web.server.adapter.WebHttpHandlerBuilder
-import reactor.netty.DisposableServer
-import reactor.netty.http.server.HttpServer
-import java.util.concurrent.atomic.AtomicReference
-
-
-
-enum class Server {
-    NETTY, TOMCAT
-}
-
-interface WebServer : SmartLifecycle
 
 /**
  * @author Sebastien Deleuze
  */
-class NettyWebServer(private val context: ApplicationContext, private val port: Int = 8080) : WebServer {
+class TomcatWebServerModule(private val port: Int = 8080): WebFluxModule.WebServerModule {
 
-    private val server: HttpServer by lazy { HttpServer.create().tcpConfiguration { it.host("0.0.0.0") }.port(port) }
-	private val disposableServer = AtomicReference<DisposableServer>()
-
-	override fun isRunning() = !(disposableServer.get()?.isDisposed ?: true )
-
-	override fun start() {
-		if (!isRunning) {
-			val httpHandler = WebHttpHandlerBuilder.applicationContext(context).build()
-			disposableServer.set(server.handle(ReactorHttpHandlerAdapter(httpHandler)).bindNow())
+	override fun initialize(context: GenericApplicationContext) {
+		context.registerBean {
+			TomcatWebServer(port)
 		}
 	}
-
-	override fun stop(callback: Runnable) {
-		val disposableServer = this.disposableServer.get()
-		if (disposableServer != null) {
-			disposableServer.disposeNow()
-			callback.run()
-		}
-	}
-
-	override fun stop() {
-		disposableServer.get()?.disposeNow()
-	}
-
-	override fun isAutoStartup() = true
-
-	override fun getPhase() = Integer.MIN_VALUE
 }
 
 /**
  * @author Sebastien Deleuze
  */
-class TomcatWebServer(private val context: ApplicationContext, private val port: Int = 8080) : WebServer {
+class TomcatWebServer(private val port: Int = 8080) : WebServer(port) {
 
 	private val tomcat = Tomcat()
-
 
 	override fun isRunning() = tomcat.server.state == LifecycleState.STARTED
 
@@ -126,9 +94,5 @@ class TomcatWebServer(private val context: ApplicationContext, private val port:
 	override fun stop() {
 		tomcat.stop()
 	}
-
-	override fun isAutoStartup() = true
-
-	override fun getPhase() = Integer.MIN_VALUE
 
 }

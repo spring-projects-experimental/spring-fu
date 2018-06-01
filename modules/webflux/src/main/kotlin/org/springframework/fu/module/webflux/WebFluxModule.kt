@@ -18,6 +18,9 @@ package org.springframework.fu.module.webflux
 
 import org.springframework.beans.factory.NoSuchBeanDefinitionException
 import org.springframework.beans.factory.getBeansOfType
+import org.springframework.context.ApplicationContext
+import org.springframework.context.ApplicationContextAware
+import org.springframework.context.SmartLifecycle
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.beans
 import org.springframework.http.codec.ServerCodecConfigurer
@@ -43,8 +46,8 @@ class WebFluxModule(private val init: WebFluxModule.() -> Unit): ContainerModule
 		super.initialize(context)
 	}
 
-	fun server(server: Server, port: Int = 8080, init: WebFluxServerModule.() -> Unit =  {}) {
-		modules.add(WebFluxServerModule(init, server, port))
+	fun server(server: WebServerModule, init: WebFluxServerModule.() -> Unit =  {}) {
+		modules.add(WebFluxServerModule(init, server))
 	}
 
 	fun client(baseUrl: String? = null, name: String? = null, init: WebFluxClientModule.() -> Unit =  {}) {
@@ -52,12 +55,12 @@ class WebFluxModule(private val init: WebFluxModule.() -> Unit): ContainerModule
 	}
 
 	class WebFluxServerModule(private val init: WebFluxServerModule.() -> Unit,
-							  private val server: Server,
-							  private val port: Int): ContainerModule() {
+							  serverModule: WebServerModule): ContainerModule() {
 
 		private val builder = HandlerStrategies.empty()
 
 		init {
+			modules.add(serverModule)
 			modules.add(beans {
 				bean("webHandler") {
 					builder.exceptionHandler(WebFluxResponseStatusExceptionHandler())
@@ -85,12 +88,6 @@ class WebFluxModule(private val init: WebFluxModule.() -> Unit): ContainerModule
 					}
 					else {
 						RouterFunction<ServerResponse> { Mono.empty() }
-					}
-				}
-				bean {
-					when (server) {
-						Server.NETTY -> NettyWebServer(context, port)
-						Server.TOMCAT -> TomcatWebServer(context, port)
 					}
 				}
 			})
@@ -160,9 +157,24 @@ class WebFluxModule(private val init: WebFluxModule.() -> Unit): ContainerModule
 		}
 	}
 
+	interface WebServerModule: Module
+
 	interface WebFluxServerCodecModule: Module, (ServerCodecConfigurer) -> (Unit)
 
 	interface WebFluxClientCodecModule: Module, (ClientCodecConfigurer) -> (Unit)
+}
+
+abstract class WebServer(private val port: Int) : SmartLifecycle, ApplicationContextAware {
+
+	lateinit var context: ApplicationContext
+
+	override fun isAutoStartup() = true
+
+	override fun getPhase() = Integer.MIN_VALUE
+
+	override fun setApplicationContext(context: ApplicationContext) {
+		this.context = context
+	}
 }
 
 fun ApplicationDsl.webflux(init: WebFluxModule.() -> Unit): WebFluxModule {

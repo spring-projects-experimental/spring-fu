@@ -21,6 +21,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.getBean
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.fu.application
+import org.springframework.fu.module.webflux.tomcat.TomcatWebServerModule
 import org.springframework.http.HttpStatus.*
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.web.reactive.function.client.WebClient
@@ -30,14 +31,14 @@ import reactor.test.test
 /**
  * @author Sebastien Deleuze
  */
-class WebFluxModuleTests {
+class TomcatWebServerModuleTests {
 
 	@Test
-	fun `Create an application with an empty Netty server`() {
+	fun `Create an application with an empty server`() {
 		val context = GenericApplicationContext()
 		val app = application {
 			webflux {
-				server(Server.NETTY)
+				server(TomcatWebServerModule())
 			}
 		}
 		app.run(context)
@@ -46,29 +47,11 @@ class WebFluxModuleTests {
 	}
 
 	@Test
-	fun `Create and request a Netty endpoint`() {
+	fun `Create and request an endpoint`() {
 		val context = GenericApplicationContext()
 		val app = application {
 			webflux {
-				server(Server.NETTY) {
-					routes {
-						GET("/") { ServerResponse.noContent().build() }
-					}
-				}
-			}
-		}
-		app.run(context)
-		val client = WebTestClient.bindToServer().baseUrl("http://localhost:8080").build()
-		client.get().uri("/").exchange().expectStatus().is2xxSuccessful
-		context.close()
-	}
-
-	@Test
-	fun `Create and request a Tomcat endpoint`() {
-		val context = GenericApplicationContext()
-		val app = application {
-			webflux {
-				server(Server.TOMCAT) {
+				server(TomcatWebServerModule()) {
 					routes {
 						GET("/") { ServerResponse.noContent().build() }
 					}
@@ -86,7 +69,7 @@ class WebFluxModuleTests {
 		val context = GenericApplicationContext()
 		val app = application {
 			webflux {
-				server(Server.NETTY) {
+				server(TomcatWebServerModule()) {
 					routes {
 						GET("/") { ServerResponse.noContent().build() }
 					}
@@ -107,7 +90,7 @@ class WebFluxModuleTests {
 		val context = GenericApplicationContext()
 		val app = application {
 			webflux {
-				server(Server.NETTY) {
+				server(TomcatWebServerModule()) {
 					routes {
 						GET("/") { ServerResponse.noContent().build() }
 					}
