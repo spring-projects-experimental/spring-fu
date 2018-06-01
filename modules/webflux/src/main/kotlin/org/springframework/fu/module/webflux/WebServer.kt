@@ -23,16 +23,16 @@ import org.apache.catalina.loader.WebappClassLoader
 import org.apache.catalina.loader.WebappLoader
 import org.apache.catalina.startup.Tomcat
 import org.springframework.context.ApplicationContext
-import org.springframework.context.ApplicationContextAware
-import org.springframework.context.Lifecycle
 import org.springframework.context.SmartLifecycle
-import org.springframework.http.server.reactive.HttpHandler
 import org.springframework.http.server.reactive.ReactorHttpHandlerAdapter
 import org.springframework.http.server.reactive.TomcatHttpHandlerAdapter
 import org.springframework.util.ClassUtils
 import org.springframework.web.server.adapter.WebHttpHandlerBuilder
-import reactor.ipc.netty.http.server.HttpServer
-import reactor.ipc.netty.tcp.BlockingNettyContext
+import reactor.netty.DisposableServer
+import reactor.netty.http.server.HttpServer
+import java.util.concurrent.atomic.AtomicReference
+
+
 
 enum class Server {
     NETTY, TOMCAT
@@ -45,25 +45,28 @@ interface WebServer : SmartLifecycle
  */
 class NettyWebServer(private val context: ApplicationContext, private val port: Int = 8080) : WebServer {
 
-    private val server: HttpServer by lazy { HttpServer.create(port) }
-    private var nettyContext: BlockingNettyContext? = null
+    private val server: HttpServer by lazy { HttpServer.create().tcpConfiguration { it.host("0.0.0.0") }.port(port) }
+	private val disposableServer = AtomicReference<DisposableServer>()
 
-	override fun isRunning() = nettyContext != null
+	override fun isRunning() = !(disposableServer.get()?.isDisposed ?: true )
 
 	override fun start() {
 		if (!isRunning) {
 			val httpHandler = WebHttpHandlerBuilder.applicationContext(context).build()
-			nettyContext = server.start(ReactorHttpHandlerAdapter(httpHandler))
+			disposableServer.set(server.handle(ReactorHttpHandlerAdapter(httpHandler)).bindNow())
 		}
 	}
 
 	override fun stop(callback: Runnable) {
-		nettyContext?.shutdown()
-		callback.run()
+		val disposableServer = this.disposableServer.get()
+		if (disposableServer != null) {
+			disposableServer.disposeNow()
+			callback.run()
+		}
 	}
 
 	override fun stop() {
-		nettyContext?.shutdown()
+		disposableServer.get()?.disposeNow()
 	}
 
 	override fun isAutoStartup() = true
