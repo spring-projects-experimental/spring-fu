@@ -35,7 +35,7 @@ val app = application {
 		webflux {
 			val htmlHandler = ref<HtmlHandler>()
 			val apiHandler = ref<ApiHandler>()
-			server(engine = NETTY) {
+			server(NettyWebServerModule()) {
 				cors(origin = "example.com")
 				mustache()
 				codecs {
@@ -56,7 +56,7 @@ val app = application {
 					// ...
 				}
 			}
-			client(engine = JETTY) {
+			client {
 				codecs {
 					jackson()
 				}
