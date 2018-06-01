@@ -27,25 +27,21 @@ import org.springframework.core.env.Environment
 @DslMarker
 annotation class ContainerModuleMarker
 
-interface Module : ApplicationContextInitializer<GenericApplicationContext>
+typealias Module = ApplicationContextInitializer<GenericApplicationContext>
 
 @ContainerModuleMarker
-abstract class ContainerModule: Module {
-	val children = arrayListOf<Module>()
-	protected val initializers = mutableListOf<ApplicationContextInitializer<GenericApplicationContext>>()
+abstract class ContainerModule(private val condition: (ConfigurableEnvironment) -> Boolean = { true }): Module {
 
-	open fun <T : Module> initModule(module: T, init: T.() -> Unit): T {
-		module.init()
-		children.add(module)
-		return module
-	}
+	lateinit var context: GenericApplicationContext
+
+	val modules = mutableListOf<Module>()
 
 	override fun initialize(context: GenericApplicationContext) {
-		for (c in children) {
-			c.initialize(context)
-		}
-		for (i in initializers) {
-			i.initialize(context)
+		this.context = context
+		for (child in modules) {
+			if ((child is ContainerModule && child.condition.invoke(context.environment)) || child !is ContainerModule) {
+				child.initialize(context)
+			}
 		}
 	}
 }
@@ -53,15 +49,13 @@ abstract class ContainerModule: Module {
 /**
  * @author Sebastien Deleuze
  */
-open class ApplicationDsl : ContainerModule() {
-
-	lateinit var context: GenericApplicationContext
+open class ApplicationDsl(private val init: ApplicationDsl.() -> Unit, condition: (ConfigurableEnvironment) -> Boolean = { true }) : ContainerModule(condition) {
 
 	val env : ConfigurableEnvironment
 		get() = context.environment
 
 	fun beans(init: BeanDefinitionDsl.() -> Unit) {
-		initializers.add(BeanDefinitionDsl(init))
+		modules.add(BeanDefinitionDsl(init))
 	}
 
 	/**
@@ -78,6 +72,7 @@ open class ApplicationDsl : ContainerModule() {
 
 	override fun initialize(context: GenericApplicationContext) {
 		this.context = context
+		init()
 		super.initialize(context)
 	}
 
@@ -85,8 +80,8 @@ open class ApplicationDsl : ContainerModule() {
 	 * Take in account functional configuration enclosed in the provided lambda only when the
 	 * specified profile is active.
 	 */
-	fun profile(profile: String, block: () -> Unit) {
-		initModule(ProfileModule(profile, block), {})
+	fun profile(profile: String, init: ApplicationDsl.() -> Unit) {
+		modules.add(ApplicationDsl(init, { it.activeProfiles.contains(profile) }))
 	}
 
 	fun run(context: GenericApplicationContext = GenericApplicationContext(), await: Boolean = false) {
@@ -106,16 +101,6 @@ open class ApplicationDsl : ContainerModule() {
 		}
 	}
 
-	class ProfileModule(private val profile: String, private val block: () -> Unit) : ContainerModule() {
-
-		override fun initialize(context: GenericApplicationContext) {
-			if (context.environment.activeProfiles.contains(profile)) {
-				block.invoke()
-			}
-			super.initialize(context)
-		}
-
-	}
 }
 
 fun ApplicationDsl.configuration(init: (Environment) -> Any): Unit =
@@ -124,7 +109,7 @@ fun ApplicationDsl.configuration(init: (Environment) -> Any): Unit =
 		}
 
 fun application(init: ApplicationDsl.() -> Unit): ApplicationDsl {
-	val application = ApplicationDsl()
+	val application = ApplicationDsl(init)
 	application.init()
 	return application
 }

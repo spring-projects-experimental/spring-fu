@@ -83,6 +83,6 @@ class DataMongoModule(private val connectionString: String) : Module {
 
 fun ApplicationDsl.mongodb(connectionString: String = "mongodb://localhost/test") : DataMongoModule {
 	val mustacheDsl = DataMongoModule(connectionString)
-	children.add(mustacheDsl)
+	modules.add(mustacheDsl)
 	return mustacheDsl
 }

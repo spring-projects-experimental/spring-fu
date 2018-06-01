@@ -26,6 +26,6 @@ class JacksonModule(val json: Boolean) : WebFluxModule.WebFluxServerCodecModule 
 
 fun WebFluxModule.WebFluxCodecsModule.jackson(json: Boolean = true) : JacksonModule {
 	val jacksonModule = JacksonModule(json)
-	children.add(jacksonModule)
+	modules.add(jacksonModule)
 	return jacksonModule
 }

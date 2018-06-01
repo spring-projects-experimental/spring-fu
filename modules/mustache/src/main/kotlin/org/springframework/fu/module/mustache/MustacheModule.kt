@@ -46,6 +46,6 @@ fun WebFluxModule.WebFluxServerModule.mustache(prefix: String = "classpath:/temp
 											suffix: String = ".mustache",
 											f: MustacheViewResolver.() -> Unit = {}) : MustacheModule {
 	val mustacheDsl = MustacheModule(prefix, suffix, f)
-	children.add(mustacheDsl)
+	modules.add(mustacheDsl)
 	return mustacheDsl
 }

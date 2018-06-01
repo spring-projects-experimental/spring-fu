@@ -46,6 +46,6 @@ class DynamicConfigurationModule(private val filename: String) : Module {
 
 fun ApplicationDsl.configuration(filename: String = "application.kts") : DynamicConfigurationModule {
 	val configuration = DynamicConfigurationModule(filename)
-	children.add(configuration)
+	modules.add(configuration)
 	return configuration
 }

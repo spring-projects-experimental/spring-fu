@@ -18,6 +18,7 @@ package org.springframework.fu.module.webflux
 
 import org.springframework.beans.factory.NoSuchBeanDefinitionException
 import org.springframework.beans.factory.getBeansOfType
+import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.beans
 import org.springframework.http.codec.ServerCodecConfigurer
 import org.springframework.fu.ApplicationDsl
@@ -35,29 +36,35 @@ import reactor.core.publisher.Mono
 /**
  * @author Sebastien Deleuze
  */
-class WebFluxModule: ContainerModule() {
+class WebFluxModule(private val init: WebFluxModule.() -> Unit): ContainerModule() {
+
+	override fun initialize(context: GenericApplicationContext) {
+		init()
+		super.initialize(context)
+	}
 
 	fun server(server: Server, port: Int = 8080, init: WebFluxServerModule.() -> Unit =  {}) {
-		initModule(WebFluxServerModule(server, port), init)
+		modules.add(WebFluxServerModule(init, server, port))
 	}
 
 	fun client(baseUrl: String? = null, name: String? = null, init: WebFluxClientModule.() -> Unit =  {}) {
-		initModule(WebFluxClientModule(baseUrl, name), init)
+		modules.add(WebFluxClientModule(init, baseUrl, name))
 	}
 
-	class WebFluxServerModule(private val server: Server,
+	class WebFluxServerModule(private val init: WebFluxServerModule.() -> Unit,
+							  private val server: Server,
 							  private val port: Int): ContainerModule() {
 
 		private val builder = HandlerStrategies.empty()
 
 		init {
-			initializers.add(beans {
+			modules.add(beans {
 				bean("webHandler") {
 					builder.exceptionHandler(WebFluxResponseStatusExceptionHandler())
 					builder.localeContextResolver(AcceptHeaderLocaleContextResolver())
-					for (c in children) {
+					for (c in modules) {
 						if (c is WebFluxCodecsModule) {
-							for (codec in c.children) {
+							for (codec in c.modules) {
 								if (codec is WebFluxServerCodecModule) {
 									builder.codecs({ codec.invoke(it) })
 								}
@@ -89,8 +96,13 @@ class WebFluxModule: ContainerModule() {
 			})
 		}
 
+		override fun initialize(context: GenericApplicationContext) {
+			init()
+			super.initialize(context)
+		}
+
 		fun codecs(init: WebFluxCodecsModule.() -> Unit =  {}) {
-			initModule(WebFluxCodecsModule(), init)
+			modules.add(WebFluxCodecsModule(init))
 		}
 
 		fun filter(filter: WebFilter) {
@@ -98,27 +110,32 @@ class WebFluxModule: ContainerModule() {
 		}
 
 		fun routes(router: RouterFunctionDsl.() -> Unit) =
-				initializers.add(beans { bean { router(router) } })
+				modules.add(beans { bean { router(router) } })
 
 		fun routes(router: RouterFunction<ServerResponse>) =
-				initializers.add(beans { bean { router } })
+				modules.add(beans { bean { router } })
 
 	}
 
-	class WebFluxClientModule(baseUrl: String?, name: String?) : ContainerModule() {
+	class WebFluxClientModule(private val init: WebFluxClientModule.() -> Unit, baseUrl: String?, name: String?) : ContainerModule() {
 
 		private val builder = WebClient.builder()
 
+		override fun initialize(context: GenericApplicationContext) {
+			init()
+			super.initialize(context)
+		}
+
 		init {
-			initializers.add(beans {
+			modules.add(beans {
 				bean(name = name) {
 					if (baseUrl != null) {
 						builder.baseUrl(baseUrl)
 					}
 					val exchangeStrategiesBuilder = ExchangeStrategies.builder()
-					for (c in children) {
+					for (c in modules) {
 						if (c is WebFluxCodecsModule) {
-							for (codec in c.children) {
+							for (codec in c.modules) {
 								if (codec is WebFluxClientCodecModule) {
 									exchangeStrategiesBuilder.codecs({ codec.invoke(it) })
 								}
@@ -132,11 +149,16 @@ class WebFluxModule: ContainerModule() {
 		}
 
 		fun codecs(init: WebFluxCodecsModule.() -> Unit =  {}) {
-			initModule(WebFluxCodecsModule(), init)
+			modules.add(WebFluxCodecsModule(init))
 		}
 	}
 
-	class WebFluxCodecsModule: ContainerModule()
+	class WebFluxCodecsModule(private val init: WebFluxCodecsModule.() -> Unit): ContainerModule() {
+		override fun initialize(context: GenericApplicationContext) {
+			init()
+			super.initialize(context)
+		}
+	}
 
 	interface WebFluxServerCodecModule: Module, (ServerCodecConfigurer) -> (Unit)
 
@@ -144,7 +166,7 @@ class WebFluxModule: ContainerModule() {
 }
 
 fun ApplicationDsl.webflux(init: WebFluxModule.() -> Unit): WebFluxModule {
-	val webFluxDsl = WebFluxModule()
-	initModule(webFluxDsl, init)
+	val webFluxDsl = WebFluxModule(init)
+	modules.add(webFluxDsl)
 	return webFluxDsl
 }
