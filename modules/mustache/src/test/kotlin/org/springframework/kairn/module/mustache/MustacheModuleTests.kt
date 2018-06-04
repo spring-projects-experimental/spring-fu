@@ -20,10 +20,10 @@ import org.junit.jupiter.api.Test
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.fu.application
 import org.springframework.fu.module.webflux.netty.NettyWebServerModule
+import org.springframework.fu.module.webflux.ok
 
 import org.springframework.fu.module.webflux.webflux
 import org.springframework.test.web.reactive.server.WebTestClient
-import org.springframework.web.reactive.function.server.ServerResponse
 import org.springframework.test.web.reactive.server.expectBody
 
 /**
@@ -39,7 +39,7 @@ class MustacheModuleTests {
 				server(NettyWebServerModule()) {
 					mustache()
 					routes {
-						GET("/view") { ServerResponse.ok().render("template", mapOf("name" to "world")) }
+						GET("/view") { ok().render("template", mapOf("name" to "world")) }
 					}
 				}
 			}

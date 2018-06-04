@@ -23,7 +23,7 @@ buildscript {
 	}
 	dependencies {
 		classpath("net.sf.proguard:proguard-gradle:5.3.3")
-		classpath(kotlinModule("gradle-plugin", kotlin_version))
+		classpath(kotlin("gradle-plugin", kotlin_version))
 	}
 }
 
@@ -91,11 +91,11 @@ tasks.withType<AsciidoctorTask> {
 		include("REFERENCE.adoc")
 	})
 	outputDir = File("build/docs")
-	setAttributes(mapOf("tabsize" to "4"))
+	attributes = mapOf("tabsize" to "4")
 }
 
 dependencies {
-	compile(kotlinModule("stdlib-jdk8", kotlin_version))
+	compile(kotlin("stdlib-jdk8", kotlin_version))
 }
 repositories {
 	mavenCentral()

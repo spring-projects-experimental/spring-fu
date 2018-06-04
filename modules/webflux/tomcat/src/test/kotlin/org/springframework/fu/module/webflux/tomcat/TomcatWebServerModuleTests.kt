@@ -25,7 +25,6 @@ import org.springframework.fu.module.webflux.tomcat.TomcatWebServerModule
 import org.springframework.http.HttpStatus.*
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.web.reactive.function.client.WebClient
-import org.springframework.web.reactive.function.server.ServerResponse
 import reactor.test.test
 
 /**
@@ -53,7 +52,7 @@ class TomcatWebServerModuleTests {
 			webflux {
 				server(TomcatWebServerModule()) {
 					routes {
-						GET("/") { ServerResponse.noContent().build() }
+						GET("/") { noContent().build() }
 					}
 				}
 			}
@@ -71,7 +70,7 @@ class TomcatWebServerModuleTests {
 			webflux {
 				server(TomcatWebServerModule()) {
 					routes {
-						GET("/") { ServerResponse.noContent().build() }
+						GET("/") { noContent().build() }
 					}
 				}
 				client("http://localhost:8080")
@@ -92,7 +91,7 @@ class TomcatWebServerModuleTests {
 			webflux {
 				server(TomcatWebServerModule()) {
 					routes {
-						GET("/") { ServerResponse.noContent().build() }
+						GET("/") { noContent().build() }
 					}
 				}
 				client(baseUrl = "http://localhost:8080", name = "client1")
