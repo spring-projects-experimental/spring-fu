@@ -25,11 +25,11 @@ import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.beans
 import org.springframework.context.support.registerBean
 import org.springframework.core.codec.*
-import org.springframework.core.env.Environment
 import org.springframework.http.codec.ServerCodecConfigurer
 import org.springframework.fu.ApplicationDsl
 import org.springframework.fu.ContainerModule
 import org.springframework.fu.Module
+import org.springframework.fu.ModuleRef
 import org.springframework.http.codec.ClientCodecConfigurer
 import org.springframework.web.reactive.function.client.ExchangeStrategies
 import org.springframework.web.reactive.function.client.WebClient
@@ -202,11 +202,9 @@ fun ApplicationDsl.webflux(init: WebFluxModule.() -> Unit): WebFluxModule {
 	return webFluxDsl
 }
 
-open class WebFluxRoutesModule(private val init: WebFluxRoutesModule.() -> Unit): RouterFunctionDsl({}), Module {
-	lateinit var context: GenericApplicationContext
+open class WebFluxRoutesModule(private val init: WebFluxRoutesModule.() -> Unit) : RouterFunctionDsl({}), ModuleRef {
 
-	val env : Environment
-		get() = context.environment
+	override lateinit var context: GenericApplicationContext
 
 	override fun initialize(context: GenericApplicationContext) {
 		this.context = context
@@ -214,18 +212,6 @@ open class WebFluxRoutesModule(private val init: WebFluxRoutesModule.() -> Unit)
 			init()
 			invoke()
 		}
-	}
-
-	/**
-	 * Get a reference to the bean by type or type + name with the syntax
-	 * `ref<Foo>()` or `ref<Foo>("foo")`. When leveraging Kotlin type inference
-	 * it could be as short as `ref()` or `ref("foo")`.
-	 * @param name the name of the bean to retrieve
-	 * @param T type the bean must match, can be an interface or superclass
-	 */
-	inline fun <reified T : Any> ref(name: String? = null) : T = when (name) {
-		null -> context.getBean(T::class.java)
-		else -> context.getBean(name, T::class.java)
 	}
 }
 
