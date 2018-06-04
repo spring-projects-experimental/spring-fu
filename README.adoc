@@ -54,7 +54,7 @@ data class AppConfiguration(
 
 val routes = routes {
 	val htmlHandler = ref<HtmlHandler>()
-    val apiHandler = ref<ApiHandler>()
+	val apiHandler = ref<ApiHandler>()
 	GET("/", htmlHandler::blog)
 	GET("/article/{id}", htmlHandler:article)
 	"/api".nest {
