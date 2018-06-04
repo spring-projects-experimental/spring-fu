@@ -41,9 +41,7 @@ class ApplicationDslTests {
 	fun `Create an application with a custom bean`() {
 		val context = GenericApplicationContext()
 		val app = application {
-			beans {
-				bean<Foo>()
-			}
+			bean<Foo>()
 		}
 		app.run(context)
 		context.getBean<ReloadableResourceBundleMessageSource>()

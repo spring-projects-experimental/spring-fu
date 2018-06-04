@@ -25,10 +25,8 @@ import org.springframework.fu.module.webflux.netty.NettyWebServerModule
 import org.springframework.fu.module.webflux.webflux
 
 val app = application {
-	beans {
-		bean<UserRepository>()
-		bean<UserHandler>()
-	}
+	bean<UserRepository>()
+	bean<UserHandler>()
 	webflux {
 		server(NettyWebServerModule()) {
 			mustache()

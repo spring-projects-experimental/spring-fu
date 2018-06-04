@@ -16,6 +16,8 @@
 
 package org.springframework.fu
 
+import org.springframework.beans.factory.config.BeanDefinitionCustomizer
+import org.springframework.beans.factory.support.AbstractBeanDefinition
 import org.springframework.context.ApplicationContextInitializer
 import org.springframework.context.support.*
 import org.springframework.core.env.Environment
@@ -61,19 +63,99 @@ abstract class ContainerModule(private val condition: (Environment) -> Boolean =
 /**
  * @author Sebastien Deleuze
  */
-open class ApplicationDsl(private val init: ApplicationDsl.() -> Unit, condition: (Environment) -> Boolean = { true }) : ContainerModule(condition) {
+open class ApplicationDsl(private val init: ApplicationDsl.() -> Unit) : ContainerModule() {
+
+	private val beanDsl = BeanDefinitionDsl({})
 
 	/**
 	 * Take in account functional configuration enclosed in the provided lambda only when the
 	 * specified profile is active.
 	 */
 	fun profile(profile: String, init: ApplicationDsl.() -> Unit) {
-		modules.add(ApplicationDsl(init, { it.activeProfiles.contains(profile) }))
+		if (env.activeProfiles.contains(profile)) {
+			modules.add(ApplicationDsl(init))
+		}
 	}
 
-	fun beans(init: BeanDefinitionDsl.() -> Unit) {
-		modules.add(BeanDefinitionDsl(init))
+	/**
+	 * Declare a bean definition from the given bean class which can be inferred when possible.
+	 *
+	 * @param name the name of the bean
+	 * @param scope Override the target scope of this bean, specifying a new scope name.
+	 * @param isLazyInit Set whether this bean should be lazily initialized.
+	 * @param isPrimary Set whether this bean is a primary autowire candidate.
+	 * @param autowireMode Set the autowire mode, `Autowire.CONSTRUCTOR` by default
+	 * @param isAutowireCandidate Set whether this bean is a candidate for getting
+	 * autowired into some other bean.
+	 * @see GenericApplicationContext.registerBean
+	 * @see org.springframework.beans.factory.config.BeanDefinition
+	 */
+	inline fun <reified T : Any> bean(name: String? = null,
+									  scope: BeanDefinitionDsl.Scope? = null,
+									  isLazyInit: Boolean? = null,
+									  isPrimary: Boolean? = null,
+									  autowireMode: BeanDefinitionDsl.Autowire = BeanDefinitionDsl.Autowire.CONSTRUCTOR,
+									  isAutowireCandidate: Boolean? = null) {
+
+		val customizer = BeanDefinitionCustomizer { bd ->
+			scope?.let { bd.scope = scope.name.toLowerCase() }
+			isLazyInit?.let { bd.isLazyInit = isLazyInit }
+			isPrimary?.let { bd.isPrimary = isPrimary }
+			isAutowireCandidate?.let { bd.isAutowireCandidate = isAutowireCandidate }
+			if (bd is AbstractBeanDefinition) {
+				bd.autowireMode = autowireMode.ordinal
+			}
+		}
+
+		when (name) {
+			null -> context.registerBean(T::class.java, customizer)
+			else -> context.registerBean(name, T::class.java, customizer)
+		}
+
 	}
+
+	/**
+	 * Declare a bean definition using the given supplier for obtaining a new instance.
+	 *
+	 * @param name the name of the bean
+	 * @param scope Override the target scope of this bean, specifying a new scope name.
+	 * @param isLazyInit Set whether this bean should be lazily initialized.
+	 * @param isPrimary Set whether this bean is a primary autowire candidate.
+	 * @param autowireMode Set the autowire mode, `Autowire.NO` by default
+	 * @param isAutowireCandidate Set whether this bean is a candidate for getting
+	 * autowired into some other bean.
+	 * @param function the bean supplier function
+	 * @see GenericApplicationContext.registerBean
+	 * @see org.springframework.beans.factory.config.BeanDefinition
+	 */
+	inline fun <reified T : Any> bean(name: String? = null,
+									  scope: BeanDefinitionDsl.Scope? = null,
+									  isLazyInit: Boolean? = null,
+									  isPrimary: Boolean? = null,
+									  autowireMode: BeanDefinitionDsl.Autowire = BeanDefinitionDsl.Autowire.NO,
+									  isAutowireCandidate: Boolean? = null,
+									  crossinline function: () -> T) {
+
+		val customizer = BeanDefinitionCustomizer { bd ->
+			scope?.let { bd.scope = scope.name.toLowerCase() }
+			isLazyInit?.let { bd.isLazyInit = isLazyInit }
+			isPrimary?.let { bd.isPrimary = isPrimary }
+			isAutowireCandidate?.let { bd.isAutowireCandidate = isAutowireCandidate }
+			if (bd is AbstractBeanDefinition) {
+				bd.autowireMode = autowireMode.ordinal
+			}
+		}
+
+
+		when (name) {
+			null -> context.registerBean(T::class.java,
+					Supplier { function.invoke() }, customizer)
+			else -> context.registerBean(name, T::class.java,
+					Supplier { function.invoke() }, customizer)
+		}
+
+	}
+
 
 	fun <T : Any> configuration(module: ConfigurationModule<T>) = modules.add(module)
 
