@@ -1,4 +1,4 @@
-Spring Fu is an **incubating** project that makes it easy to create https://spring.io/projects/spring-framework[Spring]-powered applications, micro-services and functions (Serverless) in https://kotlinlang.org/[**Kotlin**] with **https://spring.io/blog/2017/08/01/spring-framework-5-kotlin-apis-the-functional-way[functional configuration]**. The programming model is explicit and based on lambdas instead of annotations without requiring annotation processing to generate code at compile time.
+Spring Fu is an **incubating** project that makes it easy to create https://spring.io/projects/spring-framework[Spring]-powered applications, micro-services and functions (Serverless) in https://kotlinlang.org/[**Kotlin**] with **https://spring.io/blog/2017/08/01/spring-framework-5-kotlin-apis-the-functional-way[functional configuration]**. Configuration is very flexible thanks to the possibility to use any kind of programmatic control Flow (if, when, for, while) and is based on lambdas instead of annotations. Kotlin features are heavily used (for example data classes for configuration properties). No (potentially slow) annotation processing is required.
 
 Spring Fu is designed to allow efficient dead code removal and should provide https://github.com/oracle/graal[Graalvm] native image support. A simple Spring Fu web application starts in less than a second on modern hardware, consumes only 16M of heap memory, and self-executable shrinked JAR is less than 10M.
 
@@ -44,6 +44,10 @@ val app = application {
 				}
 			}
 		}
+	}
+	// Functional configuration supports any kind of custom condition, loop, etc.
+	if (env.activeProfiles.any { it.startsWith("foo") }) {
+		bean<Foo>()
 	}
 }
 

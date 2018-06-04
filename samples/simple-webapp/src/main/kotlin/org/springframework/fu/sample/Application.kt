@@ -38,6 +38,9 @@ val app = application {
 	}
 	configuration(configuration)
 	mongodb()
+	if (env.activeProfiles.any { it.startsWith("foo") }) {
+
+	}
 }
 
 data class SampleConfiguration(val property: String)
