@@ -1,14 +1,10 @@
-Spring Fu makes it easy to create https://spring.io/projects/spring-framework[Spring]-powered applications, micro-services and functions (Serverless) in https://kotlinlang.org/[Kotlin]. It is to Kotlin and functional programming what http://projects.spring.io/spring-boot/[Spring Boot] is to Java and annotations.
+Spring Fu is an **incubating** project that makes it easy to create https://spring.io/projects/spring-framework[Spring]-powered applications, micro-services and functions (Serverless) in https://kotlinlang.org/[**Kotlin**] with **https://spring.io/blog/2017/08/01/spring-framework-5-kotlin-apis-the-functional-way[functional configuration]**. The programming model is explicit and based on lambdas instead of annotations without requiring annotation processing to generate code at compile time.
 
-It is designed to be simple, fast and lightweight with minimal reflection thanks to https://spring.io/blog/2017/08/01/spring-framework-5-kotlin-apis-the-functional-way[Spring functional configuration] mechanism which makes it possible to do efficient dead code removal and should provide https://github.com/oracle/graal[Graalvm] native image support by creating beans using lambda and class references in Kotlin. A simple Spring Fu web application start in less than a second on modern hardware, consume only 16M of heap memory, and self-executable shrinked JAR is less than 10M.
+Spring Fu is designed to allow efficient dead code removal and should provide https://github.com/oracle/graal[Graalvm] native image support. A simple Spring Fu web application starts in less than a second on modern hardware, consumes only 16M of heap memory, and self-executable shrinked JAR is less than 10M.
 
-A minimal core is enabled by default and configuration is always explicit. Spring Fu https://github.com/sdeleuze/spring-fu/tree/master/modules[modules] provide integration for various JVM technologies by providing required dependencies and functional configuration.
+A minimal core is enabled by default and configuration is always explicit. Spring Fu https://github.com/sdeleuze/spring-fu/tree/master/modules[modules] provides integration for various JVM technologies by providing required dependencies and modular functional configuration.
 
-It also leverages https://docs.spring.io/spring/docs/current/spring-framework-reference/web-reactive.html#spring-webflux[Spring WebFlux] and Spring Data Reactive support to allow developing scalable applications, and give the choice to use powerful https://projectreactor.io/[Reactor] `Flux` and `Mono` API for functional programming or Kotlin https://kotlinlang.org/docs/reference/coroutines.html[Coroutines] for imperative programming. Functional actuators provides `health`, `beans`, `metrics`, `mapping` predefined endpoints.
-
-Developer experience is efficient without requiring specific support since no annotation processing is involved. Custom configuration with full autocomplete is supported via Kotlin scripts (`*.kts` files).
-
-Spring Fu will be also a good fit for Function as a Service (Serverless) thanks to its fast startup-time and to the fact it will take advantage of Kotlin first-class functional supports (top level functions, function types).
+It also leverages https://docs.spring.io/spring/docs/current/spring-framework-reference/web-reactive.html#spring-webflux[Spring WebFlux] and Spring Data Reactive support to allow developing scalable applications, and give the choice to use powerful https://projectreactor.io/[Reactor] `Flux` and `Mono` Reactive for Reactive programming or Kotlin https://kotlinlang.org/docs/reference/coroutines.html[Coroutines] for async imperative programming.
 
 == Functional configuration
 
@@ -20,6 +16,16 @@ data class AppConfiguration(
 )
 
 val app = application {
+	configuration {
+	    AppConfiguration(name = env["SYSTEM_ENV"] ?: "default")
+	}
+	actuators {
+		health()
+		beans()
+		metrics()
+		mapping()
+	}
+	coroutines()
 	profile("data") {
 		beans {
 			bean<UserRepository>()
@@ -33,8 +39,6 @@ val app = application {
 			bean<ApiHandler>()
 		}
 		webflux {
-			val htmlHandler = ref<HtmlHandler>()
-			val apiHandler = ref<ApiHandler>()
 			server(NettyWebServerModule()) {
 				cors(origin = "example.com")
 				mustache()
@@ -42,16 +46,7 @@ val app = application {
 					jackson()
 					protobuf()
 				}
-				routes {
-					GET("/", htmlHandler::blog)
-					GET("/article/{id}", htmlHandler:article)
-					"/api".nest {
-						GET("/", apiHandler::list)
-						POST("/", apiHandler::create)
-						PUT("/{id}", apiHandler::update)
-						DELETE("/{id}", apiHandler::delete)
-					}
-				}
+				routes(routes)
 				security {
 					// ...
 				}
@@ -63,8 +58,18 @@ val app = application {
 			}
 		}
 	}
-	configuration {
-	    AppConfiguration(name = env["SYSTEM_ENV"] ?: "default")
+}
+
+val routes = routes {
+	val htmlHandler = ref<HtmlHandler>()
+    val apiHandler = ref<ApiHandler>()
+	GET("/", htmlHandler::blog)
+	GET("/article/{id}", htmlHandler:article)
+	"/api".nest {
+		GET("/", apiHandler::list)
+		POST("/", apiHandler::create)
+		PUT("/{id}", apiHandler::update)
+		DELETE("/{id}", apiHandler::delete)
 	}
 }
 

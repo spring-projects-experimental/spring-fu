@@ -17,12 +17,9 @@
 package org.springframework.fu
 
 import org.springframework.context.ApplicationContextInitializer
-import org.springframework.context.support.BeanDefinitionDsl
-import org.springframework.context.support.GenericApplicationContext
-import org.springframework.context.support.ReloadableResourceBundleMessageSource
-import org.springframework.context.support.registerBean
-import org.springframework.core.env.ConfigurableEnvironment
+import org.springframework.context.support.*
 import org.springframework.core.env.Environment
+import java.util.function.Supplier
 
 @DslMarker
 annotation class ContainerModuleMarker
@@ -30,9 +27,12 @@ annotation class ContainerModuleMarker
 typealias Module = ApplicationContextInitializer<GenericApplicationContext>
 
 @ContainerModuleMarker
-abstract class ContainerModule(private val condition: (ConfigurableEnvironment) -> Boolean = { true }): Module {
+abstract class ContainerModule(private val condition: (Environment) -> Boolean = { true }): Module {
 
 	lateinit var context: GenericApplicationContext
+
+	val env : Environment
+		get() = context.environment
 
 	val modules = mutableListOf<Module>()
 
@@ -43,19 +43,6 @@ abstract class ContainerModule(private val condition: (ConfigurableEnvironment) 
 				child.initialize(context)
 			}
 		}
-	}
-}
-
-/**
- * @author Sebastien Deleuze
- */
-open class ApplicationDsl(private val init: ApplicationDsl.() -> Unit, condition: (ConfigurableEnvironment) -> Boolean = { true }) : ContainerModule(condition) {
-
-	val env : ConfigurableEnvironment
-		get() = context.environment
-
-	fun beans(init: BeanDefinitionDsl.() -> Unit) {
-		modules.add(BeanDefinitionDsl(init))
 	}
 
 	/**
@@ -69,12 +56,12 @@ open class ApplicationDsl(private val init: ApplicationDsl.() -> Unit, condition
 		null -> context.getBean(T::class.java)
 		else -> context.getBean(name, T::class.java)
 	}
+}
 
-	override fun initialize(context: GenericApplicationContext) {
-		this.context = context
-		init()
-		super.initialize(context)
-	}
+/**
+ * @author Sebastien Deleuze
+ */
+open class ApplicationDsl(private val init: ApplicationDsl.() -> Unit, condition: (Environment) -> Boolean = { true }) : ContainerModule(condition) {
 
 	/**
 	 * Take in account functional configuration enclosed in the provided lambda only when the
@@ -82,6 +69,20 @@ open class ApplicationDsl(private val init: ApplicationDsl.() -> Unit, condition
 	 */
 	fun profile(profile: String, init: ApplicationDsl.() -> Unit) {
 		modules.add(ApplicationDsl(init, { it.activeProfiles.contains(profile) }))
+	}
+
+	fun beans(init: BeanDefinitionDsl.() -> Unit) {
+		modules.add(BeanDefinitionDsl(init))
+	}
+
+	fun <T : Any> configuration(module: ConfigurationModule<T>) = modules.add(module)
+
+	inline fun <reified T : Any> configuration(noinline init: ConfigurationModule<*>.() -> T) = modules.add(ConfigurationModule(init, T::class.java))
+
+	override fun initialize(context: GenericApplicationContext) {
+		this.context = context
+		init()
+		super.initialize(context)
 	}
 
 	/**
@@ -111,13 +112,30 @@ open class ApplicationDsl(private val init: ApplicationDsl.() -> Unit, condition
 
 }
 
-fun ApplicationDsl.configuration(init: (Environment) -> Any): Unit =
-		beans {
-			bean { init(env) }
-		}
+open class ConfigurationModule<T : Any>(private val init: ConfigurationModule<T>.() -> T, private val clazz: Class<T>): Module {
+	lateinit var context: GenericApplicationContext
 
-fun application(init: ApplicationDsl.() -> Unit): ApplicationDsl {
-	val application = ApplicationDsl(init)
-	application.init()
-	return application
+	val env : Environment
+		get() = context.environment
+
+	override fun initialize(context: GenericApplicationContext) {
+		this.context = context
+		context.registerBean(clazz, Supplier { init() })
+	}
+
+	/**
+	 * Get a reference to the bean by type or type + name with the syntax
+	 * `ref<Foo>()` or `ref<Foo>("foo")`. When leveraging Kotlin type inference
+	 * it could be as short as `ref()` or `ref("foo")`.
+	 * @param name the name of the bean to retrieve
+	 * @param T type the bean must match, can be an interface or superclass
+	 */
+	inline fun <reified T : Any> ref(name: String? = null) : T = when (name) {
+		null -> context.getBean(T::class.java)
+		else -> context.getBean(name, T::class.java)
+	}
 }
+
+inline fun <reified T : Any> configuration(noinline init: ConfigurationModule<*>.() -> T) = ConfigurationModule(init, T::class.java)
+
+fun application(init: ApplicationDsl.() -> Unit) = ApplicationDsl(init)

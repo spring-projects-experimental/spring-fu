@@ -16,47 +16,31 @@
 
 package org.springframework.fu.sample
 
-import org.springframework.core.env.get
-import org.springframework.http.HttpHeaders.*
-import org.springframework.http.MediaType.*
 import org.springframework.fu.application
-import org.springframework.fu.configuration
+
 import org.springframework.fu.module.data.mongodb.mongodb
 import org.springframework.fu.module.jackson.jackson
 import org.springframework.fu.module.mustache.mustache
 import org.springframework.fu.module.webflux.netty.NettyWebServerModule
 import org.springframework.fu.module.webflux.webflux
-import org.springframework.web.reactive.function.server.ServerResponse.*
 
 val app = application {
+	beans {
+		bean<UserRepository>()
+		bean<UserHandler>()
+	}
 	webflux {
 		server(NettyWebServerModule()) {
 			mustache()
 			codecs {
 				jackson()
 			}
-			routes {
-				GET("/") {
-					ok().syncBody("Hello")
-				}
-				GET("/user") {
-					ok()
-							.header(CONTENT_TYPE, APPLICATION_JSON_UTF8_VALUE)
-							.syncBody(User("Brian"))
-				}
-				GET("/view") {
-					ok().render("template", mapOf("name" to "world"))
-				}
-			}
+			routes(routes)
 		}
 	}
-	configuration {
-		SampleConfiguration(property = env["ENV_VARIABLE"] ?: "debugConf")
-	}
+	configuration(configuration)
 	mongodb()
 }
-
-data class User(val name: String)
 
 data class SampleConfiguration(val property: String)
 

@@ -23,6 +23,9 @@ import org.springframework.context.ApplicationContextAware
 import org.springframework.context.SmartLifecycle
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.beans
+import org.springframework.context.support.registerBean
+import org.springframework.core.codec.*
+import org.springframework.core.env.Environment
 import org.springframework.http.codec.ServerCodecConfigurer
 import org.springframework.fu.ApplicationDsl
 import org.springframework.fu.ContainerModule
@@ -65,6 +68,13 @@ class WebFluxModule(private val init: WebFluxModule.() -> Unit): ContainerModule
 				bean("webHandler") {
 					builder.exceptionHandler(WebFluxResponseStatusExceptionHandler())
 					builder.localeContextResolver(AcceptHeaderLocaleContextResolver())
+					builder.codecs {
+						with(it.customCodecs()) {
+							encoder(CharSequenceEncoder.textPlainOnly())
+							decoder(org.springframework.core.codec.ResourceDecoder())
+							decoder(org.springframework.core.codec.StringDecoder.textPlainOnly())
+						}
+					}
 					for (c in modules) {
 						if (c is WebFluxCodecsModule) {
 							for (codec in c.modules) {
@@ -106,11 +116,12 @@ class WebFluxModule(private val init: WebFluxModule.() -> Unit): ContainerModule
 			builder.webFilter(filter)
 		}
 
-		fun routes(router: RouterFunctionDsl.() -> Unit) =
-				modules.add(beans { bean { router(router) } })
+		fun routes(routesModule: WebFluxRoutesModule) =
+				modules.add(routesModule)
 
-		fun routes(router: RouterFunction<ServerResponse>) =
-				modules.add(beans { bean { router } })
+		fun routes(routes: WebFluxRoutesModule.() -> Unit) =
+				modules.add(WebFluxRoutesModule(routes))
+
 
 	}
 
@@ -130,6 +141,13 @@ class WebFluxModule(private val init: WebFluxModule.() -> Unit): ContainerModule
 						builder.baseUrl(baseUrl)
 					}
 					val exchangeStrategiesBuilder = ExchangeStrategies.builder()
+					exchangeStrategiesBuilder.codecs {
+						with(it.customCodecs()) {
+							encoder(CharSequenceEncoder.textPlainOnly())
+							decoder(ResourceDecoder())
+							decoder(StringDecoder.textPlainOnly())
+						}
+					}
 					for (c in modules) {
 						if (c is WebFluxCodecsModule) {
 							for (codec in c.modules) {
@@ -162,6 +180,7 @@ class WebFluxModule(private val init: WebFluxModule.() -> Unit): ContainerModule
 	interface WebFluxServerCodecModule: Module, (ServerCodecConfigurer) -> (Unit)
 
 	interface WebFluxClientCodecModule: Module, (ClientCodecConfigurer) -> (Unit)
+
 }
 
 abstract class WebServer(private val port: Int) : SmartLifecycle, ApplicationContextAware {
@@ -182,3 +201,32 @@ fun ApplicationDsl.webflux(init: WebFluxModule.() -> Unit): WebFluxModule {
 	modules.add(webFluxDsl)
 	return webFluxDsl
 }
+
+open class WebFluxRoutesModule(private val init: WebFluxRoutesModule.() -> Unit): RouterFunctionDsl({}), Module {
+	lateinit var context: GenericApplicationContext
+
+	val env : Environment
+		get() = context.environment
+
+	override fun initialize(context: GenericApplicationContext) {
+		this.context = context
+		context.registerBean {
+			init()
+			invoke()
+		}
+	}
+
+	/**
+	 * Get a reference to the bean by type or type + name with the syntax
+	 * `ref<Foo>()` or `ref<Foo>("foo")`. When leveraging Kotlin type inference
+	 * it could be as short as `ref()` or `ref("foo")`.
+	 * @param name the name of the bean to retrieve
+	 * @param T type the bean must match, can be an interface or superclass
+	 */
+	inline fun <reified T : Any> ref(name: String? = null) : T = when (name) {
+		null -> context.getBean(T::class.java)
+		else -> context.getBean(name, T::class.java)
+	}
+}
+
+fun routes(routes: WebFluxRoutesModule.() -> Unit) = WebFluxRoutesModule(routes)
