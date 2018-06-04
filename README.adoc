@@ -26,7 +26,7 @@ val app = application {
 		bean<HtmlHandler>()
 		bean<ApiHandler>()
 		webflux {
-			server(NettyWebServerModule()) {
+			server(netty()) {
 				cors(origin = "example.com")
 				mustache()
 				codecs {

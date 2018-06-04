@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.getBean
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.fu.application
-import org.springframework.fu.module.webflux.tomcat.TomcatWebServerModule
+import org.springframework.fu.module.webflux.netty.netty
 import org.springframework.http.HttpStatus.*
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.web.reactive.function.client.WebClient
@@ -30,14 +30,14 @@ import reactor.test.test
 /**
  * @author Sebastien Deleuze
  */
-class TomcatWebServerModuleTests {
+class NettyModuleTests {
 
 	@Test
 	fun `Create an application with an empty server`() {
 		val context = GenericApplicationContext()
 		val app = application {
 			webflux {
-				server(TomcatWebServerModule())
+				server(netty())
 			}
 		}
 		app.run(context)
@@ -50,7 +50,7 @@ class TomcatWebServerModuleTests {
 		val context = GenericApplicationContext()
 		val app = application {
 			webflux {
-				server(TomcatWebServerModule()) {
+				server(netty()) {
 					routes {
 						GET("/") { noContent().build() }
 					}
@@ -68,7 +68,7 @@ class TomcatWebServerModuleTests {
 		val context = GenericApplicationContext()
 		val app = application {
 			webflux {
-				server(TomcatWebServerModule()) {
+				server(netty()) {
 					routes {
 						GET("/") { noContent().build() }
 					}
@@ -89,7 +89,7 @@ class TomcatWebServerModuleTests {
 		val context = GenericApplicationContext()
 		val app = application {
 			webflux {
-				server(TomcatWebServerModule()) {
+				server(netty()) {
 					routes {
 						GET("/") { noContent().build() }
 					}

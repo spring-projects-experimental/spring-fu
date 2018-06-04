@@ -21,14 +21,14 @@ import org.springframework.fu.application
 import org.springframework.fu.module.data.mongodb.mongodb
 import org.springframework.fu.module.jackson.jackson
 import org.springframework.fu.module.mustache.mustache
-import org.springframework.fu.module.webflux.netty.NettyWebServerModule
+import org.springframework.fu.module.webflux.netty.netty
 import org.springframework.fu.module.webflux.webflux
 
 val app = application {
 	bean<UserRepository>()
 	bean<UserHandler>()
 	webflux {
-		server(NettyWebServerModule()) {
+		server(netty()) {
 			mustache()
 			codecs {
 				jackson()

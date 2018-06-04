@@ -19,7 +19,7 @@ package org.springframework.fu.module.mustache
 import org.junit.jupiter.api.Test
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.fu.application
-import org.springframework.fu.module.webflux.netty.NettyWebServerModule
+import org.springframework.fu.module.webflux.netty.netty
 import org.springframework.fu.module.webflux.ok
 
 import org.springframework.fu.module.webflux.webflux
@@ -36,7 +36,7 @@ class MustacheModuleTests {
 		val context = GenericApplicationContext()
 		val app = application {
 			webflux {
-				server(NettyWebServerModule()) {
+				server(netty()) {
 					mustache()
 					routes {
 						GET("/view") { ok().render("template", mapOf("name" to "world")) }

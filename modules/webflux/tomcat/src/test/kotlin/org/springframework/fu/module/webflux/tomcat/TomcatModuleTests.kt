@@ -14,14 +14,16 @@
  * limitations under the License.
  */
 
-package org.springframework.fu.module.webflux
+package org.springframework.fu.module.webflux.tomcat
 
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.getBean
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.fu.application
-import org.springframework.fu.module.webflux.netty.NettyWebServerModule
+import org.springframework.fu.module.webflux.WebServer
+import org.springframework.fu.module.webflux.noContent
+import org.springframework.fu.module.webflux.webflux
 import org.springframework.http.HttpStatus.*
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.web.reactive.function.client.WebClient
@@ -30,14 +32,14 @@ import reactor.test.test
 /**
  * @author Sebastien Deleuze
  */
-class NettyWebServerModuleTests {
+class TomcatModuleTests {
 
 	@Test
 	fun `Create an application with an empty server`() {
 		val context = GenericApplicationContext()
 		val app = application {
 			webflux {
-				server(NettyWebServerModule())
+				server(tomcat())
 			}
 		}
 		app.run(context)
@@ -50,7 +52,7 @@ class NettyWebServerModuleTests {
 		val context = GenericApplicationContext()
 		val app = application {
 			webflux {
-				server(NettyWebServerModule()) {
+				server(tomcat()) {
 					routes {
 						GET("/") { noContent().build() }
 					}
@@ -68,7 +70,7 @@ class NettyWebServerModuleTests {
 		val context = GenericApplicationContext()
 		val app = application {
 			webflux {
-				server(NettyWebServerModule()) {
+				server(tomcat()) {
 					routes {
 						GET("/") { noContent().build() }
 					}
@@ -89,7 +91,7 @@ class NettyWebServerModuleTests {
 		val context = GenericApplicationContext()
 		val app = application {
 			webflux {
-				server(NettyWebServerModule()) {
+				server(tomcat()) {
 					routes {
 						GET("/") { noContent().build() }
 					}

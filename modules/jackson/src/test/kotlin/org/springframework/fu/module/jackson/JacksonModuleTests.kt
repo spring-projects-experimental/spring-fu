@@ -23,7 +23,7 @@ import org.springframework.context.support.GenericApplicationContext
 import org.springframework.http.HttpHeaders.*
 import org.springframework.http.MediaType.*
 import org.springframework.fu.application
-import org.springframework.fu.module.webflux.netty.NettyWebServerModule
+import org.springframework.fu.module.webflux.netty.netty
 import org.springframework.fu.module.webflux.ok
 
 import org.springframework.fu.module.webflux.webflux
@@ -43,7 +43,7 @@ class JacksonModuleTests {
 		val context = GenericApplicationContext()
 		val app = application {
 			webflux {
-				server(NettyWebServerModule()) {
+				server(netty()) {
 					codecs {
 						jackson()
 					}
@@ -70,7 +70,7 @@ class JacksonModuleTests {
 		val context = GenericApplicationContext()
 		val app = application {
 			webflux {
-				server(NettyWebServerModule()) {
+				server(netty()) {
 					codecs {
 						jackson()
 					}
