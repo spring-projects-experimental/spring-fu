@@ -45,7 +45,6 @@ subprojects {
 	}
 	repositories {
 		mavenCentral()
-		mavenLocal()
 		maven("https://repo.spring.io/libs-release")
 		maven("https://repo.spring.io/snapshot")
 	}
