@@ -48,7 +48,8 @@ val app = application {
 }
 
 data class AppConfiguration(
-	val name: String
+	val name: String,
+	val remoteUrl: String  = "http://localhost:8080"
 )
 
 
