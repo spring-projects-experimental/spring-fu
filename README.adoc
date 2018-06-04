@@ -15,7 +15,7 @@ val app = application {
 	configuration {
 	    AppConfiguration(name = env["SYSTEM_ENV"] ?: "default")
 	}
-	actuators(health = true, mapping = true)
+	actuators(beans = false, mapping = false)
 	coroutines()
 	profile("data") {
 		bean<UserRepository>()
