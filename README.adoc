@@ -20,7 +20,7 @@ It also leverages https://docs.spring.io/spring/docs/current/spring-framework-re
 
 == Current status
 
-Spring Fu first milestone https://github.com/sdeleuze/spring-fu/milestone/1[`1.0.0.M1`] is currently under active development. For now you can clone the repository, try to play with the sample application, and send us your feedback on the `#spring` channel of http://slack.kotlinlang.org/[Kotlin Slack]. Feel free to https://github.com/sdeleuze/spring-fu/blob/master/CONTRIBUTING.adoc[contribute] fixes or new modules via pull requests.
+Spring Fu first milestone https://github.com/sdeleuze/spring-fu/milestone/1[`1.0.0.M1`] is currently under active development. It is based on Spring Framework 5.1. For now you can clone the repository, try to play with the sample application, and send us your feedback on the `#spring` channel of http://slack.kotlinlang.org/[Kotlin Slack]. Feel free to https://github.com/sdeleuze/spring-fu/blob/master/CONTRIBUTING.adoc[contribute] fixes or new modules via pull requests.
 
 == Functional configuration
 
