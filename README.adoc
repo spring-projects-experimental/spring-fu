@@ -1,9 +1,9 @@
 Spring Fu is an **incubating** project that makes it easy to create **lightweight** https://spring.io/projects/spring-framework[Spring]-powered applications and functions in https://kotlinlang.org/[**Kotlin**] with **https://spring.io/blog/2017/08/01/spring-framework-5-kotlin-apis-the-functional-way[functional configuration]**.
 
-It is a thin layer on top of a subset of Spring Framework 5, Spring Data and Spring Security support that provides an opinionated stack different from https://github.com/spring-projects/spring-boot[Spring Boot]:
+It is a thin but opinionated layer on top of Spring Framework 5.1, Spring Data and Spring Security support that provides a stack inspired from https://github.com/spring-projects/spring-boot[Spring Boot] but with very different programming model:
 
 * Designed natively for Kotlin and non-blocking I/O
-* Explicit configuration via Kotlin DSL
+* Explicit configuration via Kotlin DSL instead of conventions and classpath detection
 * Based on functional bean definitions instead of JavaConfig
 * Flexible programmatic control Flow (if, when, for, while, etc.) instead of `@Conditional` annotations
 * Minimal reflection usage
