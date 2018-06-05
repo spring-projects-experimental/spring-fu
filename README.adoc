@@ -6,11 +6,8 @@ It is a thin but opinionated layer on top of Spring Framework 5.1, Spring Data a
 * Explicit configuration via Kotlin DSL instead of conventions and classpath detection
 * Based on functional bean definitions instead of JavaConfig
 * Flexible programmatic control Flow (if, when, for, while, etc.) instead of `@Conditional` annotations
-* Minimal reflection usage
-* No annotation processing
-* No proxies required
-* Coroutines for async web applications
-* Reactive API for stream processing
+* No annotation processing, minimal reflection usage and no proxies required
+* Coroutines for imperative async programming and Reactive API for stream processing
 * Shrinked executable JAR (for example the XML support or the annotation programming model are not included)
 * Self-sufficient and opinionated documentation (Kotlin, constructor injection, functional configuration, WebFlux, Coroutines, etc.)
 
@@ -34,7 +31,6 @@ val app = application {
 	    AppConfiguration(name = env["SYSTEM_ENV"] ?: "default")
 	}
 	actuators(beans = false, mapping = false)
-	coroutines()
 	profile("data") {
 		bean<UserRepository>()
 		bean<ArticleRepository>()
