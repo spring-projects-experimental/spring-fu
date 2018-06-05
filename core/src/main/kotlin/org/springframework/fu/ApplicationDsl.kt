@@ -74,8 +74,6 @@ abstract class ContainerModule(private val condition: (Environment) -> Boolean =
  */
 open class ApplicationDsl(private val init: ApplicationDsl.() -> Unit) : ContainerModule() {
 
-	private val beanDsl = BeanDefinitionDsl({})
-
 	/**
 	 * Take in account functional configuration enclosed in the provided lambda only when the
 	 * specified profile is active.
