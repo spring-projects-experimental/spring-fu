@@ -96,10 +96,10 @@ fun main(args: Array<String) {
 https://github.com/sdeleuze/spring-fu/tree/master/core[Core]
 
 Modules: https://github.com/sdeleuze/spring-fu/tree/master/modules/dynamic-configuration[Dynamic configuration],
-https://github.com/sdeleuze/spring-fu/tree/master/modules/jackson[Jackson], https://github.com/sdeleuze/spring-fu/tree/master/modules/mongodb[MongoDB], https://github.com/sdeleuze/spring-fu/tree/master/modules/mustache[Mustache], https://github.com/sdeleuze/spring-fu/tree/master/modules/test[Test], https://github.com/sdeleuze/spring-fu/tree/master/modules/webflux[WebFlux]
-with https://github.com/sdeleuze/spring-fu/tree/master/modules/webflux/netty[Netty] and https://github.com/sdeleuze/spring-fu/tree/master/modules/webflux/tomcat[Tomcat] support
+https://github.com/sdeleuze/spring-fu/tree/master/modules/jackson[Jackson], https://github.com/sdeleuze/spring-fu/tree/master/modules/mongodb[MongoDB] with  https://github.com/sdeleuze/spring-fu/tree/master/modules/mongodb/coroutines[Coroutines] support, https://github.com/sdeleuze/spring-fu/tree/master/modules/mustache[Mustache], https://github.com/sdeleuze/spring-fu/tree/master/modules/test[Test], https://github.com/sdeleuze/spring-fu/tree/master/modules/webflux[WebFlux]
+with https://github.com/sdeleuze/spring-fu/tree/master/modules/webflux/coroutines[Coroutines], https://github.com/sdeleuze/spring-fu/tree/master/modules/webflux/netty[Netty] and https://github.com/sdeleuze/spring-fu/tree/master/modules/webflux/tomcat[Tomcat] support,
 
-Planned modules: CORS, security, logging, multipart, Coroutines, Embded MongoDB server, Reactive SQL
+Planned modules: CORS, security, logging, multipart, Embded MongoDB server, Reactive SQL
 
 == Samples
 

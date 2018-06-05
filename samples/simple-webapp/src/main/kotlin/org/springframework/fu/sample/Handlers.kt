@@ -1,22 +1,20 @@
 package org.springframework.fu.sample
 
-import org.springframework.fu.module.webflux.ok
-import org.springframework.http.HttpHeaders.*
-import org.springframework.http.MediaType.*
-import org.springframework.web.reactive.function.server.ServerRequest
-import org.springframework.web.reactive.function.server.body
+import org.springframework.fu.module.webflux.coroutines.web.function.server.CoroutineServerRequest
+import org.springframework.fu.module.webflux.coroutines.web.function.server.CoroutineServerResponse
+import org.springframework.fu.module.webflux.coroutines.web.function.server.CoroutineServerResponse.Companion.ok
+import org.springframework.fu.module.webflux.coroutines.web.function.server.body
 
 @Suppress("UNUSED_PARAMETER")
-class UserHandler(private val repository: UserRepository, private val configuration: SampleConfiguration) {
+class UserHandler(private val repository: UserRepository,
+				  private val configuration: SampleConfiguration) {
 
-	fun listApi(request: ServerRequest) = ok()
-			.header(CONTENT_TYPE, APPLICATION_JSON_UTF8_VALUE)
+	suspend fun listApi(request: CoroutineServerRequest) = ok()
 			.body(repository.findAll())
 
-
-	fun listView(request: ServerRequest) =
+	suspend fun listView(request: CoroutineServerRequest) =
 			ok().render("users", mapOf("users" to repository.findAll()))
 
-	fun conf(request: ServerRequest) =
+	suspend fun conf(request: CoroutineServerRequest) =
 			ok().syncBody(configuration.property)
 }

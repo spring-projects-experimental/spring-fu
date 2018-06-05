@@ -20,11 +20,12 @@ import org.junit.jupiter.api.Test
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.fu.application
 import org.springframework.fu.module.webflux.netty.netty
-import org.springframework.fu.module.webflux.ok
+
 
 import org.springframework.fu.module.webflux.webflux
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.test.web.reactive.server.expectBody
+import org.springframework.web.reactive.function.server.ServerResponse.ok
 
 /**
  * @author Sebastien Deleuze

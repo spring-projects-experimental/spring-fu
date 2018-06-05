@@ -179,7 +179,7 @@ open class ApplicationDsl(private val init: ApplicationDsl.() -> Unit) : Contain
 	 * @param await set to `true` to block, useful when used in a `main()` function
 	 * @param profiles [ApplicationContext] profiles separated by commas.
 	 */
-	fun run(context: GenericApplicationContext = GenericApplicationContext(), await: Boolean = false, profiles: String = "") {
+	fun run(context: GenericApplicationContext = GenericApplicationContext(), await: Boolean = false, profiles: String = "", init: (GenericApplicationContext) -> Unit = {}) {
 		context.registerBean("messageSource") {
 			ReloadableResourceBundleMessageSource().apply {
 				setBasename("messages")
@@ -191,6 +191,7 @@ open class ApplicationDsl(private val init: ApplicationDsl.() -> Unit) : Contain
 		}
 		initialize(context)
 		context.refresh()
+		init(context)
 		if (await) {
 			while (true)
 			{

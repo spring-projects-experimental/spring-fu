@@ -31,5 +31,3 @@ application {
 	}
 }
 ```
-
-It also provides idiomatic top level functions matching to `ServerResponse` static methods.

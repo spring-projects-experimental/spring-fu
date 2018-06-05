@@ -23,6 +23,7 @@ import org.bson.Document
 import org.springframework.beans.factory.getBean
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.registerBean
+import org.springframework.data.mongodb.core.ReactiveMongoOperations
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate
 import org.springframework.data.mongodb.core.SimpleReactiveMongoDatabaseFactory
 import org.springframework.data.mongodb.core.convert.*
@@ -30,15 +31,19 @@ import org.springframework.data.mongodb.core.mapping.MongoMappingContext
 import org.springframework.data.mongodb.core.mapping.MongoPersistentEntity
 import org.springframework.data.mongodb.core.mapping.MongoPersistentProperty
 import org.springframework.fu.ApplicationDsl
-import org.springframework.fu.Module
+import org.springframework.fu.ContainerModule
 
 
 /**
  * @author Sebastien Deleuze
  */
-class DataMongoModule(private val connectionString: String) : Module {
+open class MongoModule(private val connectionString: String, private val init: MongoModule.() -> Unit) : ContainerModule() {
+
+	override lateinit var context: GenericApplicationContext
 
 	override fun initialize(context : GenericApplicationContext) {
+		this.context = context
+		init()
 
 		context.registerBean {
 			MongoClients.create(connectionString)
@@ -57,9 +62,10 @@ class DataMongoModule(private val connectionString: String) : Module {
 				afterPropertiesSet()
 			}
 		}
-		context.registerBean {
+		context.registerBean<ReactiveMongoOperations> {
 			ReactiveMongoTemplate(context.getBean(), context.getBean<MongoConverter>())
 		}
+		super.initialize(context)
 	}
 
 	class NoOpDbRefResolver : DbRefResolver {
@@ -81,8 +87,8 @@ class DataMongoModule(private val connectionString: String) : Module {
 	}
 }
 
-fun ApplicationDsl.mongodb(connectionString: String = "mongodb://localhost/test") : DataMongoModule {
-	val mustacheDsl = DataMongoModule(connectionString)
-	modules.add(mustacheDsl)
-	return mustacheDsl
+fun ApplicationDsl.mongodb(connectionString: String = "mongodb://localhost/test", init: MongoModule.() -> Unit) : MongoModule {
+	val mongoModule = MongoModule(connectionString, init)
+	modules.add(mongoModule)
+	return mongoModule
 }

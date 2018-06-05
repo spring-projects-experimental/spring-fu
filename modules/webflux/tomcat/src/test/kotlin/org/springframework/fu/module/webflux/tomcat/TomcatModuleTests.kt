@@ -22,11 +22,11 @@ import org.springframework.beans.factory.getBean
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.fu.application
 import org.springframework.fu.module.webflux.WebServer
-import org.springframework.fu.module.webflux.noContent
 import org.springframework.fu.module.webflux.webflux
 import org.springframework.http.HttpStatus.*
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.web.reactive.function.client.WebClient
+import org.springframework.web.reactive.function.server.ServerResponse.noContent
 import reactor.test.test
 
 /**

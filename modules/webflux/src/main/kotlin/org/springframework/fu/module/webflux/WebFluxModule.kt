@@ -42,7 +42,7 @@ import reactor.core.publisher.Mono
 /**
  * @author Sebastien Deleuze
  */
-class WebFluxModule(private val init: WebFluxModule.() -> Unit): ContainerModule() {
+open class WebFluxModule(private val init: WebFluxModule.() -> Unit): ContainerModule() {
 
 	override fun initialize(context: GenericApplicationContext) {
 		init()
@@ -57,7 +57,7 @@ class WebFluxModule(private val init: WebFluxModule.() -> Unit): ContainerModule
 		modules.add(WebFluxClientModule(init, baseUrl, name))
 	}
 
-	class WebFluxServerModule(private val init: WebFluxServerModule.() -> Unit,
+	open class WebFluxServerModule(private val init: WebFluxServerModule.() -> Unit,
 							  private val serverModule: WebServerModule): ContainerModule() {
 
 		private val builder = HandlerStrategies.empty()
@@ -120,7 +120,7 @@ class WebFluxModule(private val init: WebFluxModule.() -> Unit): ContainerModule
 
 	}
 
-	class WebFluxClientModule(private val init: WebFluxClientModule.() -> Unit, baseUrl: String?, name: String?) : ContainerModule() {
+	class WebFluxClientModule(private val init: WebFluxClientModule.() -> Unit, val baseUrl: String?, val name: String?) : ContainerModule() {
 
 		private val builder = WebClient.builder()
 

@@ -25,6 +25,7 @@ import org.springframework.fu.module.webflux.netty.netty
 import org.springframework.http.HttpStatus.*
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.web.reactive.function.client.WebClient
+import org.springframework.web.reactive.function.server.ServerResponse.noContent
 import reactor.test.test
 
 /**

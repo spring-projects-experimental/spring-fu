@@ -1,0 +1,28 @@
+= Coroutines WebFlux module
+
+This module adds support for WebFlux Coroutines API and can create a `CoroutineWebClient` bean.
+
+```kotlin
+application {
+	webflux {
+		val coroutineHandler = ref<CoroutineHandler>()
+
+		server(netty()) {
+			codecs {
+				jackson()
+			}
+			// Coroutines don't support method references yet
+			routes {
+				GET("/") { coroutineHandler.blog(it))
+				GET("/article/{id}") { coroutineHandler.article(it) )
+			}
+		}
+		client {
+			coroutines()
+			codecs {
+				jackson()
+			}
+		}
+	}
+}
+```

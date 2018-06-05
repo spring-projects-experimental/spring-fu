@@ -47,6 +47,7 @@ subprojects {
 		mavenCentral()
 		maven("https://repo.spring.io/libs-release")
 		maven("https://repo.spring.io/snapshot")
+		maven("https://dl.bintray.com/konrad-kaminski/maven")
 	}
 	dependencyManagement {
 		imports {
@@ -54,6 +55,12 @@ subprojects {
 				bomProperty("spring.version", "5.1.0.BUILD-SNAPSHOT")
 				bomProperty("reactor-bom.version", "Californium-BUILD-SNAPSHOT")
 			}
+		}
+		dependencies {
+			val coroutinesVersion = "0.22.5"
+			val springCoroutineVersion = "0.3.4"
+			dependency("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
+			dependency("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:$coroutinesVersion")
 		}
 	}
 
