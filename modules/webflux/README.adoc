@@ -8,7 +8,7 @@ application {
 		val htmlHandler = ref<HtmlHandler>()
 		val apiHandler = ref<ApiHandler>()
 
-		server(engine = NETTY) {
+		server(netty()) {
 			codecs {
 				jackson()
 			}
@@ -23,7 +23,7 @@ application {
 				}
 			}
 		}
-		client(engine = JETTY) {
+		client {
 			codecs {
 				jackson()
 			}
