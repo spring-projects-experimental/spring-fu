@@ -5,7 +5,7 @@ This module configures a https://github.com/FasterXML/jackson[Jackson] JSON code
 ```kotlin
 application {
 	webflux {
-		server(engine = NETTY) {
+		server(netty()) {
 			codecs {
 				jackson()
 			}

@@ -5,7 +5,7 @@ This module configures a https://github.com/samskivert/jmustache[Mustache] view 
 ```kotlin
 application {
 	webflux {
-		server(engine = NETTY) {
+		server(netty()) {
 			mustache()
 		}
 	}
