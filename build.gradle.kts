@@ -64,6 +64,7 @@ subprojects {
 		}
 	}
 
+	// We should probably use custom packages excludes or alternative JAR minimization "à la Maven Shade" instead of proguard which is too touchee to configure
 	task<ProGuardTask>("proguard") {
 		val inputJar = File("$buildDir/libs/${project.name}-all.jar")
 		val outputJar = File("$buildDir/libs/${project.name}-shrinked.jar")

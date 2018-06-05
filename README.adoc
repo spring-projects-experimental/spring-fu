@@ -18,6 +18,8 @@ A minimal core is enabled by default and additional configuration is always expl
 
 It also leverages https://docs.spring.io/spring/docs/current/spring-framework-reference/web-reactive.html#webflux-fn[Spring WebFlux.fn] and Spring Data Reactive support to allow developing scalable applications, and give the choice to use Kotlin https://kotlinlang.org/docs/reference/coroutines.html[Coroutines] for async imperative programming or powerful https://projectreactor.io/[Reactor] `Flux` and `Mono` for more advanced stream processing.
 
+https://github.com/sdeleuze/spring-fu/issues/29[Graal VM native image support] is planned in order to provide even faster startup time and nice deployment target for containers.
+
 == Current status
 
 Spring Fu first milestone https://github.com/sdeleuze/spring-fu/milestone/1[`1.0.0.M1`] is currently under active development. It is based on Spring Framework 5.1. For now you can clone the repository, try to play with the sample application, and send us your feedback on the `#spring` channel of http://slack.kotlinlang.org/[Kotlin Slack]. Feel free to https://github.com/sdeleuze/spring-fu/blob/master/CONTRIBUTING.adoc[contribute] fixes or new modules via pull requests.
