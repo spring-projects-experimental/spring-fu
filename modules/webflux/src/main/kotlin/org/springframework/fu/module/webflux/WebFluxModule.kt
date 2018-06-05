@@ -58,11 +58,12 @@ class WebFluxModule(private val init: WebFluxModule.() -> Unit): ContainerModule
 	}
 
 	class WebFluxServerModule(private val init: WebFluxServerModule.() -> Unit,
-							  serverModule: WebServerModule): ContainerModule() {
+							  private val serverModule: WebServerModule): ContainerModule() {
 
 		private val builder = HandlerStrategies.empty()
 
-		init {
+		override fun initialize(context: GenericApplicationContext) {
+			init()
 			modules.add(serverModule)
 			modules.add(beans {
 				bean("webHandler") {
@@ -89,22 +90,16 @@ class WebFluxModule(private val init: WebFluxModule.() -> Unit): ContainerModule
 						builder.viewResolver(ref())
 					}
 					catch (ex: NoSuchBeanDefinitionException) {}
-					RouterFunctions.toWebHandler(ref(), builder.build())
-				}
-				bean {
 					val routers = context.getBeansOfType<RouterFunction<ServerResponse>>()
-					if (!routers.isEmpty()) {
+					val router = if (!routers.isEmpty()) {
 						routers.values.reduce(RouterFunction<ServerResponse>::and)
 					}
 					else {
 						RouterFunction<ServerResponse> { Mono.empty() }
 					}
+					RouterFunctions.toWebHandler(router, builder.build())
 				}
 			})
-		}
-
-		override fun initialize(context: GenericApplicationContext) {
-			init()
 			super.initialize(context)
 		}
 
