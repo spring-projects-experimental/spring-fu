@@ -19,8 +19,8 @@ package org.springframework.fu.module.dynconf
 import org.springframework.beans.factory.getBean
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.registerBean
+import org.springframework.fu.AbstractModule
 import org.springframework.fu.ApplicationDsl
-import org.springframework.fu.Module
 import java.io.InputStreamReader
 import javax.script.ScriptEngine
 import javax.script.ScriptEngineManager
@@ -28,7 +28,7 @@ import javax.script.ScriptEngineManager
 /**
  * @author Sebastien Deleuze
  */
-class DynamicConfigurationModule(private val filename: String) : Module {
+class DynamicConfigurationModule(private val filename: String) : AbstractModule() {
 
 	override fun initialize(context : GenericApplicationContext) {
 		if (!context.containsBean("kotlinScriptEngine")) {
@@ -46,6 +46,6 @@ class DynamicConfigurationModule(private val filename: String) : Module {
 
 fun ApplicationDsl.configuration(filename: String = "application.kts") : DynamicConfigurationModule {
 	val configuration = DynamicConfigurationModule(filename)
-	modules.add(configuration)
+	initializers.add(configuration)
 	return configuration
 }

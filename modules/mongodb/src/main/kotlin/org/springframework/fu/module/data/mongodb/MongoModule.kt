@@ -31,13 +31,13 @@ import org.springframework.data.mongodb.core.mapping.MongoMappingContext
 import org.springframework.data.mongodb.core.mapping.MongoPersistentEntity
 import org.springframework.data.mongodb.core.mapping.MongoPersistentProperty
 import org.springframework.fu.ApplicationDsl
-import org.springframework.fu.ContainerModule
+import org.springframework.fu.AbstractModule
 
 
 /**
  * @author Sebastien Deleuze
  */
-open class MongoModule(private val connectionString: String, private val init: MongoModule.() -> Unit) : ContainerModule() {
+open class MongoModule(private val connectionString: String, private val init: MongoModule.() -> Unit) : AbstractModule() {
 
 	override lateinit var context: GenericApplicationContext
 
@@ -89,6 +89,6 @@ open class MongoModule(private val connectionString: String, private val init: M
 
 fun ApplicationDsl.mongodb(connectionString: String = "mongodb://localhost/test", init: MongoModule.() -> Unit) : MongoModule {
 	val mongoModule = MongoModule(connectionString, init)
-	modules.add(mongoModule)
+	initializers.add(mongoModule)
 	return mongoModule
 }

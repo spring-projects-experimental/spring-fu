@@ -27,11 +27,10 @@ import org.springframework.core.env.Environment
 import java.util.function.Supplier
 
 @DslMarker
-annotation class ContainerModuleMarker
+annotation class ModuleMarker
 
-typealias Module = ApplicationContextInitializer<GenericApplicationContext>
-
-interface ModuleRef: ApplicationContextInitializer<GenericApplicationContext> {
+@ModuleMarker
+interface Module: ApplicationContextInitializer<GenericApplicationContext> {
 
 	var context: GenericApplicationContext
 
@@ -47,24 +46,21 @@ interface ModuleRef: ApplicationContextInitializer<GenericApplicationContext> {
  * @param name the name of the bean to retrieve
  * @param T type the bean must match, can be an interface or superclass
  */
-inline fun <reified T : Any> ModuleRef.ref(name: String? = null) : T = when (name) {
+inline fun <reified T : Any> Module.ref(name: String? = null) : T = when (name) {
 	null -> context.getBean(T::class.java)
 	else -> context.getBean(name, T::class.java)
 }
 
-@ContainerModuleMarker
-abstract class ContainerModule(private val condition: (Environment) -> Boolean = { true }): ModuleRef {
+abstract class AbstractModule: Module {
 
 	override lateinit var context: GenericApplicationContext
 
-	val modules = mutableListOf<Module>()
+	val initializers = mutableListOf<ApplicationContextInitializer<GenericApplicationContext>>()
 
 	override fun initialize(context: GenericApplicationContext) {
 		this.context = context
-		for (child in modules) {
-			if ((child is ContainerModule && child.condition.invoke(context.environment)) || child !is ContainerModule) {
-				child.initialize(context)
-			}
+		for (child in initializers) {
+			child.initialize(context)
 		}
 	}
 }
@@ -72,7 +68,7 @@ abstract class ContainerModule(private val condition: (Environment) -> Boolean =
 /**
  * @author Sebastien Deleuze
  */
-open class ApplicationDsl(private val init: ApplicationDsl.() -> Unit) : ContainerModule() {
+open class ApplicationDsl(private val init: ApplicationDsl.() -> Unit) : AbstractModule() {
 
 	/**
 	 * Take in account functional configuration enclosed in the provided lambda only when the
@@ -80,7 +76,7 @@ open class ApplicationDsl(private val init: ApplicationDsl.() -> Unit) : Contain
 	 */
 	fun profile(profile: String, init: ApplicationDsl.() -> Unit) {
 		if (env.activeProfiles.contains(profile)) {
-			modules.add(ApplicationDsl(init))
+			initializers.add(ApplicationDsl(init))
 		}
 	}
 
@@ -163,10 +159,22 @@ open class ApplicationDsl(private val init: ApplicationDsl.() -> Unit) : Contain
 
 	}
 
+	/**
+	 * Get a reference to the bean by type or type + name with the syntax
+	 * `ref<Foo>()` or `ref<Foo>("foo")`. When leveraging Kotlin type inference
+	 * it could be as short as `ref()` or `ref("foo")`.
+	 * @param name the name of the bean to retrieve
+	 * @param T type the bean must match, can be an interface or superclass
+	 */
+	inline fun <reified T : Any> Module.ref(name: String? = null) : T = when (name) {
+		null -> context.getBean(T::class.java)
+		else -> context.getBean(name, T::class.java)
+	}
 
-	fun <T : Any> configuration(module: ConfigurationModule<T>) = modules.add(module)
 
-	inline fun <reified T : Any> configuration(noinline init: ConfigurationModule<*>.() -> T) = modules.add(ConfigurationModule(init, T::class.java))
+	fun <T : Any> configuration(module: ConfigurationModule<T>) = initializers.add(module)
+
+	inline fun <reified T : Any> configuration(noinline init: ConfigurationModule<*>.() -> T) = initializers.add(ConfigurationModule(init, T::class.java))
 
 	override fun initialize(context: GenericApplicationContext) {
 		this.context = context
@@ -202,11 +210,12 @@ open class ApplicationDsl(private val init: ApplicationDsl.() -> Unit) : Contain
 
 }
 
-open class ConfigurationModule<T : Any>(private val init: ConfigurationModule<T>.() -> T, private val clazz: Class<T>): ContainerModule() {
+open class ConfigurationModule<T : Any>(private val init: ConfigurationModule<T>.() -> T, private val clazz: Class<T>): AbstractModule() {
 
 	override fun initialize(context: GenericApplicationContext) {
 		this.context = context
 		context.registerBean(clazz, Supplier { init() })
+		super.initialize(context)
 	}
 
 }

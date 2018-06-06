@@ -19,7 +19,7 @@ package org.springframework.fu.module.mustache
 import com.samskivert.mustache.Mustache
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.registerBean
-import org.springframework.fu.Module
+import org.springframework.fu.AbstractModule
 import org.springframework.fu.module.webflux.WebFluxModule
 
 /**
@@ -27,7 +27,7 @@ import org.springframework.fu.module.webflux.WebFluxModule
  */
 class MustacheModule(private val prefix: String,
 					 private val suffix: String,
-					 private val f: MustacheViewResolver.() -> Unit) : Module {
+					 private val f: MustacheViewResolver.() -> Unit) : AbstractModule() {
 
 	override fun initialize(context : GenericApplicationContext) {
 		context.registerBean {
@@ -46,6 +46,6 @@ fun WebFluxModule.WebFluxServerModule.mustache(prefix: String = "classpath:/temp
 											suffix: String = ".mustache",
 											f: MustacheViewResolver.() -> Unit = {}) : MustacheModule {
 	val mustacheDsl = MustacheModule(prefix, suffix, f)
-	modules.add(mustacheDsl)
+	initializers.add(mustacheDsl)
 	return mustacheDsl
 }
