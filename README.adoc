@@ -31,6 +31,14 @@ val app = application {
 	    AppConfiguration(name = env["SYSTEM_ENV"] ?: "default")
 	}
 	actuators(beans = false, mapping = false)
+    logging {
+        level(INFO)
+        level("org.springframework", DEBUG)
+        logback {
+            consoleAppender()
+            rollingFileAppender(file = File("log.txt"))
+        }
+    }
 	profile("data") {
 		bean<UserRepository>()
 		bean<ArticleRepository>()

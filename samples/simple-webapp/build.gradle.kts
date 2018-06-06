@@ -11,6 +11,7 @@ application {
 
 dependencies {
 	compile(project(":core"))
+	compile(project(":modules:logging"))
 	compile(project(":modules:jackson"))
 	compile(project(":modules:mongodb"))
 	compile(project(":modules:mongodb:coroutines"))
