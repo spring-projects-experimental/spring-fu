@@ -1,29 +1,130 @@
-Spring Fu is an **incubating** project that makes it easy to create **lightweight** https://spring.io/projects/spring-framework[Spring]-powered applications and functions in https://kotlinlang.org/[**Kotlin**] with **https://spring.io/blog/2017/08/01/spring-framework-5-kotlin-apis-the-functional-way[functional configuration]**.
+Spring Fu is an **incubating** https://kotlinlang.org/[**Kotlin**] microframework that makes it easy to create lightweight https://spring.io/projects/spring-framework[Spring]-powered applications leveraging **https://spring.io/blog/2017/08/01/spring-framework-5-kotlin-apis-the-functional-way[functional configuration]**.
 
-It is a thin but opinionated layer on top of Spring Framework 5.1, Spring Data and Spring Security support that provides a stack inspired from https://github.com/spring-projects/spring-boot[Spring Boot] but with very different programming model:
+It is a thin but opinionated layer on top of a subset of Spring Framework 5.1, Spring Data, Spring Security and other Spring projects that provides what you need to develop easily applications, like https://github.com/spring-projects/spring-boot[Spring Boot], but with very different programming model:
 
-* Designed natively for Kotlin and non-blocking I/O
-* Explicit configuration via Kotlin DSL instead of conventions and classpath detection
-* Based on functional bean definitions instead of JavaConfig
-* Flexible programmatic control Flow (if, when, for, while, etc.) instead of `@Conditional` annotations
-* No annotation processing, minimal reflection usage and no proxies required
-* Coroutines for imperative async programming and Reactive API for stream processing
-* Shrinked executable JAR (for example the XML support or the annotation programming model are not included)
+* Functional bean registration instead of JavaConfig
+* Features are configured explicitly
+* Expressive configuration via Kotlin DSL
+* Flexible programmatic configuration
+* Minimal reflection usage
+* No annotation + classpath scanning
+* No annotation processing
+* Reactive web client and server based on WebFlux functional API
+* Coroutines support for imperative async programming
+* Shrinked executable JAR (for example XML support or blocking web support are not included)
 * Self-sufficient and opinionated documentation (Kotlin, constructor injection, functional configuration, WebFlux, Coroutines, etc.)
-
-A minimal core is enabled by default and additional configuration is always explicit. Spring Fu https://github.com/sdeleuze/spring-fu/tree/master/modules[modules] provides integration for various JVM technologies by providing required dependencies and modular functional configuration. Configuration is very flexible thanks to the possibility to use any kind of programmatic control Flow (if, when, for, while) and is based on lambdas instead of annotations. Kotlin features are heavily used (for example data classes for configuration properties) to provide efficient IDE integration without having to rely on potentially slow annotation processing. Spring Fu is designed for fast startup and low memory consumption.
-
-It also leverages https://docs.spring.io/spring/docs/current/spring-framework-reference/web-reactive.html#webflux-fn[Spring WebFlux.fn] and Spring Data Reactive support to allow developing scalable applications, and give the choice to use Kotlin https://kotlinlang.org/docs/reference/coroutines.html[Coroutines] for async imperative programming or powerful https://projectreactor.io/[Reactor] `Flux` and `Mono` for more advanced stream processing.
-
-https://github.com/sdeleuze/spring-fu/issues/29[Graal VM native image support] is planned in order to provide even faster startup time and nice deployment target for containers.
 
 == Current status
 
-Spring Fu first milestone https://github.com/sdeleuze/spring-fu/milestone/1[`1.0.0.M1`] is currently under active development. It is based on Spring Framework 5.1. For now you can clone the repository, try to play with the sample application, and send us your feedback on the `#spring` channel of http://slack.kotlinlang.org/[Kotlin Slack]. Feel free to https://github.com/sdeleuze/spring-fu/blob/master/CONTRIBUTING.adoc[contribute] fixes or new modules via pull requests.
+Spring Fu first milestone https://github.com/sdeleuze/spring-fu/milestone/1[`1.0.0.M1`] is currently under active development. It is based on Spring Framework 5.1. For now you can clone the repository, explore the source code, try to play with the sample application, and send us your feedback on the `#spring` channel of http://slack.kotlinlang.org/[Kotlin Slack]. Feel free to https://github.com/sdeleuze/spring-fu/blob/master/CONTRIBUTING.adoc[contribute] fixes or new modules via pull requests.
+
+Notice that some features currently incubating in Spring Fu **may** be later integrated in other Spring projects.
 
 == Functional configuration
 
-Here is an example of Spring Fu functional configuration.
+=== Configuration
+
+Functional bean definition allows to define beans in an efficient way with minimal reflection usage, no proxy and with a concise Kotlin DSL that takes advantage of https://kotlinlang.org/docs/reference/inline-functions.html#reified-type-parameters[reified type parameters] to avoid type erasure. The `beans {}` block is in fact a regular https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/ApplicationContextInitializer.html[`ApplicationContextInitializer`].
+
+|=====
+a|**JavaConfig** |**Functional bean definition**
+a|
+```kotlin
+ @Configuration
+ class MyConfiguration {
+
+  @Bean
+  fun foo() = Foo()
+
+  @Bean
+  fun bar(foo: Foo) = Bar(foo)
+}
+```
+
+a|
+```kotlin
+val myConfiguration = beans {
+  bean<Foo>()
+  // Implicit autowiring by constructor
+  bean<Bar>()
+}
+|=====
+
+=== Bean declaration
+
+Functional bean definition is explicit, does not imply any classpath scanning and supports constructor parameters autowiring.
+
+|=====
+a|**Annotation + classpath scanning** |**Functional bean definition**
+a|
+```kotlin
+@Component
+class Foo(private val b: Bar) {
+  // ...
+}
+
+@Component
+class Bar {
+  // ...
+}
+```
+
+a|
+```kotlin
+class Foo(private val b: Bar) {
+  // ...
+}
+class Bar {
+  // ...
+}
+
+beans {
+  bean<Foo>()
+  bean<Bar>()
+}
+|=====
+
+=== HTTP requests mapping
+
+Kotlin WebFlux router provides a simple but powerful way to implement your web application. HTTP API, streaming but also viw rendering are supported.
+
+|=====
+a|**Annotation-based controller** |**WebFlux functional router**
+a|
+```kotlin
+@RestController
+@RequestMapping("/api/article")
+class MyController(private val r: MyRepository) {
+
+  @GetMapping("/")
+  fun findAll() =
+    r.findAll()
+
+  @GetMapping("/{id}")
+  fun findOne(@PathVariable id: Long) =
+    repository.findById(id)
+  }
+}
+```
+
+a|
+```kotlin
+router {
+  "/api/article".nest {
+    GET("/") {
+      r.findAll()
+    }
+    GET("/{id}") {
+      val id = it.pathVariable("id")
+      r.findById(id)
+    }
+  }
+}
+|=====
+
+=== Spring Fu configuration example
+
+Spring Fu functional configuration is leveraging Kotlin DSL that allows you to configure your application explicitly. Each custom block like `configuration`, `actuators` or `webflux` is in fact a more high level `beans {}` block with a custom DSL provided for easy configuration. Since this configuration is code, you can use any kind of custom programmatic bean registration without having to implement your own `@Conditional` annotation.
 
 ```kotlin
 val app = application {
@@ -59,7 +160,7 @@ val app = application {
 			}
 		}
 	}
-	// Functional configuration supports any kind of custom condition, loop, etc.
+	// Functional configuration supports any kind of custom programmatic bean registration
 	if (env.activeProfiles.any { it.startsWith("foo") }) {
 		bean<Foo>()
 	}
@@ -69,7 +170,6 @@ data class AppConfiguration(
 	val name: String,
 	val remoteUrl: String  = "http://localhost:8080"
 )
-
 
 val routes = routes {
 	val htmlHandler = ref<HtmlHandler>()
@@ -97,7 +197,7 @@ Modules: https://github.com/sdeleuze/spring-fu/tree/master/modules/dynamic-confi
 https://github.com/sdeleuze/spring-fu/tree/master/modules/jackson[Jackson], https://github.com/sdeleuze/spring-fu/tree/master/modules/mongodb[MongoDB] with  https://github.com/sdeleuze/spring-fu/tree/master/modules/mongodb/coroutines[Coroutines] support, https://github.com/sdeleuze/spring-fu/tree/master/modules/mustache[Mustache], https://github.com/sdeleuze/spring-fu/tree/master/modules/test[Test], https://github.com/sdeleuze/spring-fu/tree/master/modules/webflux[WebFlux]
 with https://github.com/sdeleuze/spring-fu/tree/master/modules/webflux/coroutines[Coroutines], https://github.com/sdeleuze/spring-fu/tree/master/modules/webflux/netty[Netty] and https://github.com/sdeleuze/spring-fu/tree/master/modules/webflux/tomcat[Tomcat] support,
 
-Planned modules: CORS, security, logging, multipart, Embded MongoDB server, Reactive SQL
+Planned modules: CORS, security, logging, multipart, Embedded MongoDB server, Reactive SQL
 
 == Samples
 
