@@ -4,15 +4,16 @@ It is a thin but opinionated layer on top of a subset of Spring Framework 5.1, S
 
 * Functional bean registration instead of JavaConfig
 * Features are configured explicitly
-* Expressive configuration via Kotlin DSL
+* Expressive configuration via Kotlin https://kotlinlang.org/docs/reference/type-safe-builders.html[domain-specific languages] (DSL)
 * Flexible programmatic configuration
 * Minimal reflection usage
-* No annotation + classpath scanning
+* No classpath scanning to find annotated classes
 * No annotation processing
+* Modules provide integration with JVM ecosystem and configuration DSL
 * Reactive web client and server based on WebFlux functional API
-* Coroutines support for imperative async programming
-* Shrinked executable JAR (for example XML support or blocking web support are not included)
-* Self-sufficient and opinionated documentation (Kotlin, constructor injection, functional configuration, WebFlux, Coroutines, etc.)
+* https://github.com/Kotlin/kotlinx.coroutines/blob/master/coroutines-guide.md[Coroutines] support for imperative async programming
+* JAR minimization via removal of unneeded Spring packages
+* Self-sufficient opinionated documentation (Kotlin, constructor injection, functional configuration, WebFlux, Coroutines, etc.)
 
 == Current status
 
@@ -21,108 +22,6 @@ Spring Fu first milestone https://github.com/sdeleuze/spring-fu/milestone/1[`1.0
 Notice that some features currently incubating in Spring Fu **may** be later integrated in other Spring projects.
 
 == Functional configuration
-
-=== Configuration
-
-Functional bean definition allows to define beans in an efficient way with minimal reflection usage, no proxy and with a concise Kotlin DSL that takes advantage of https://kotlinlang.org/docs/reference/inline-functions.html#reified-type-parameters[reified type parameters] to avoid type erasure. The `beans {}` block is in fact a regular https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/ApplicationContextInitializer.html[`ApplicationContextInitializer`].
-
-|=====
-a|**JavaConfig** |**Functional bean definition**
-a|
-```kotlin
- @Configuration
- class MyConfiguration {
-
-  @Bean
-  fun foo() = Foo()
-
-  @Bean
-  fun bar(foo: Foo) = Bar(foo)
-}
-```
-
-a|
-```kotlin
-val myConfiguration = beans {
-  bean<Foo>()
-  // Implicit autowiring by constructor
-  bean<Bar>()
-}
-|=====
-
-=== Bean declaration
-
-Functional bean definition is explicit, does not imply any classpath scanning and supports constructor parameters autowiring.
-
-|=====
-a|**Annotation + classpath scanning** |**Functional bean definition**
-a|
-```kotlin
-@Component
-class Foo(private val b: Bar) {
-  // ...
-}
-
-@Component
-class Bar {
-  // ...
-}
-```
-
-a|
-```kotlin
-class Foo(private val b: Bar) {
-  // ...
-}
-class Bar {
-  // ...
-}
-
-beans {
-  bean<Foo>()
-  bean<Bar>()
-}
-|=====
-
-=== HTTP requests mapping
-
-Kotlin WebFlux router provides a simple but powerful way to implement your web application. HTTP API, streaming but also viw rendering are supported.
-
-|=====
-a|**Annotation-based controller** |**WebFlux functional router**
-a|
-```kotlin
-@RestController
-@RequestMapping("/api/article")
-class MyController(private val r: MyRepository) {
-
-  @GetMapping("/")
-  fun findAll() =
-    r.findAll()
-
-  @GetMapping("/{id}")
-  fun findOne(@PathVariable id: Long) =
-    repository.findById(id)
-  }
-}
-```
-
-a|
-```kotlin
-router {
-  "/api/article".nest {
-    GET("/") {
-      r.findAll()
-    }
-    GET("/{id}") {
-      val id = it.pathVariable("id")
-      r.findById(id)
-    }
-  }
-}
-|=====
-
-=== Spring Fu configuration example
 
 Spring Fu functional configuration is leveraging Kotlin DSL that allows you to configure your application explicitly. Each custom block like `configuration`, `actuators` or `webflux` is in fact a more high level `beans {}` block with a custom DSL provided for easy configuration. Since this configuration is code, you can use any kind of custom programmatic bean registration without having to implement your own `@Conditional` annotation.
 
@@ -188,6 +87,107 @@ fun main(args: Array<String) {
 	app.run(await = true, profiles = "data, web")
 }
 ```
+
+=== JavaConfig versus functional bean definition
+
+Functional bean definition allows to define beans in an efficient way with minimal reflection usage, no proxy and with a concise Kotlin DSL that takes advantage of https://kotlinlang.org/docs/reference/inline-functions.html#reified-type-parameters[reified type parameters] to avoid type erasure. The `beans {}` block is in fact a regular https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/ApplicationContextInitializer.html[`ApplicationContextInitializer`].
+
+|=====
+a|**JavaConfig** |**Functional bean definition**
+a|
+```kotlin
+ @Configuration
+ class MyConfiguration {
+
+  @Bean
+  fun foo() = Foo()
+
+  @Bean
+  fun bar(foo: Foo) = Bar(foo)
+}
+```
+
+a|
+```kotlin
+val myConfiguration = beans {
+  bean<Foo>()
+  // Implicit autowiring by constructor
+  bean<Bar>()
+}
+|=====
+
+=== `@Component` scanning versus functional bean definition
+
+Functional bean definition is explicit, does not imply any classpath scanning and supports constructor parameters autowiring.
+
+|=====
+a|**`@Component` scanning** |**Functional bean definition**
+a|
+```kotlin
+@Component
+class Foo {
+  // ...
+}
+
+@Component
+class Bar(private val f: Foo) {
+  // ...
+}
+```
+
+a|
+```kotlin
+class Foo {
+  // ...
+}
+class Bar(private val f: Foo) {
+  // ...
+}
+
+beans {
+  bean<Foo>()
+  bean<Bar>()
+}
+|=====
+
+=== Annotation-based controller versus Kotlin WebFlux router
+
+Kotlin WebFlux router provides a simple but powerful way to implement your web application. HTTP API, streaming but also viw rendering are supported.
+
+|=====
+a|**Annotation-based controller** |**Kotlin WebFlux router**
+a|
+```kotlin
+@RestController
+@RequestMapping("/api/article")
+class MyController(private val r: MyRepository) {
+
+  @GetMapping("/")
+  fun findAll() =
+    r.findAll()
+
+  @GetMapping("/{id}")
+  fun findOne(@PathVariable id: Long) =
+    repository.findById(id)
+  }
+}
+```
+
+a|
+```kotlin
+router {
+  val r = ref<MyRepository>()
+  "/api/article".nest {
+    GET("/") {
+      r.findAll()
+    }
+    GET("/{id}") {
+      val id = it.pathVariable("id")
+      r.findById(id)
+    }
+  }
+}
+|=====
 
 == Reference documentation
 
