@@ -18,19 +18,33 @@ package org.springframework.fu.sample
 
 import kotlinx.coroutines.experimental.runBlocking
 import org.springframework.beans.factory.getBean
+import org.springframework.beans.factory.support.DefaultListableBeanFactory
 import org.springframework.fu.application
-
-import org.springframework.fu.module.data.mongodb.mongodb
 import org.springframework.fu.module.data.mongodb.coroutines.coroutines
+import org.springframework.fu.module.data.mongodb.mongodb
 import org.springframework.fu.module.jackson.jackson
+import org.springframework.fu.module.logging.*
+import org.springframework.fu.module.logging.LogLevel.*
 import org.springframework.fu.module.mustache.mustache
 import org.springframework.fu.module.webflux.coroutines.routes
 import org.springframework.fu.module.webflux.netty.netty
 import org.springframework.fu.module.webflux.webflux
+import java.io.File
 
 val app = application {
 	bean<UserRepository>()
 	bean<UserHandler>()
+	logging {
+		level(INFO)
+		level("org.springframework", DEBUG)
+		level<DefaultListableBeanFactory>(WARN)
+
+		logback {
+			debug(true)
+			consoleAppender()
+			rollingFileAppender(File("/tmp/log.txt"))
+		}
+	}
 	webflux {
 		server(netty()) {
 			mustache()

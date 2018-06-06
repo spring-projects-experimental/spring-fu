@@ -1,0 +1,32 @@
+= Logging module
+
+This module configures https://logback.qos.ch/[Logback] logging Framework
+
+```kotlin
+application {
+	logging {
+		level(INFO)
+		level("org.springframework", DEBUG)
+		level<DefaultListableBeanFactory>(WA
+		logback {
+			debug(true)
+			consoleAppender(
+				// Defaults Arguments
+				name = "STDOUT",
+				pattern ="%d{yyyy-MM-dd HH:mm:ss.SSS}  %-5p --- [%15.15t] %-40.40logger{39} : %msg %n"
+			)
+			rollingFileAppender(
+				file = File("log.txt"),
+				// Defaults Arguments
+				name = "ROLLING",
+				pattern = "%d{yyyy-MM-dd HH:mm:ss.SSS}  %-5p --- [%t] %-40.40logger{39} : %m%n:",
+				fileNamePattern = "${file.nameWithoutExtension}.%d{yyyy-MM-dd}.%i.gz",
+				maxFileSize = "100MB",
+				maxHistory = 30,
+				totalSizeCap = "2GB",
+				append = true
+			)
+		}
+	}
+}
+```
