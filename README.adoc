@@ -10,7 +10,7 @@ It is a thin but opinionated layer on top of a subset of Spring Framework 5.1, S
 * No classpath scanning to find annotated classes
 * No annotation processing
 * Modules provide integration with JVM ecosystem and configuration DSL
-* Reactive web client and server based on WebFlux functional API
+* Reactive web client and server based on https://docs.spring.io/spring/docs/current/spring-framework-reference/html/web-reactive.html#web-reactive[WebFlux] functional API
 * https://github.com/Kotlin/kotlinx.coroutines/blob/master/coroutines-guide.md[Coroutines] support for imperative async programming
 * JAR minimization via removal of unneeded Spring packages
 * Self-sufficient opinionated documentation (Kotlin, constructor injection, functional configuration, WebFlux, Coroutines, etc.)
@@ -59,7 +59,7 @@ val app = application {
 			}
 		}
 	}
-	// Functional configuration supports any kind of custom programmatic bean registration
+	// Any kind of custom conditional bean definition is possible
 	if (env.activeProfiles.any { it.startsWith("foo") }) {
 		bean<Foo>()
 	}
