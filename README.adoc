@@ -212,7 +212,7 @@ beans {
 Kotlin WebFlux router provides a simple but powerful way to implement your web application. HTTP API, streaming but also viw rendering are supported.
 
 |=====
-a|**Annotation-based controller** |**Kotlin WebFlux router**
+a|**Annotation-based controller** |**Kotlin WebFlux routes**
 a|
 ```kotlin
 @RestController
@@ -231,7 +231,7 @@ class MyController(private val r: MyRepository) {
 ```
 a|
 ```kotlin
-router {
+routes {
   val r = ref<MyRepository>()
   "/api/article".nest {
     GET("/") {
