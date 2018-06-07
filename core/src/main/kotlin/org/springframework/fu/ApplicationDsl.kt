@@ -18,6 +18,8 @@ package org.springframework.fu
 
 import org.springframework.beans.factory.config.BeanDefinitionCustomizer
 import org.springframework.beans.factory.support.AbstractBeanDefinition
+import org.springframework.context.ApplicationEvent
+import org.springframework.context.ApplicationListener
 import org.springframework.context.support.BeanDefinitionDsl
 import org.springframework.context.support.BeanDefinitionDsl.Autowire
 import org.springframework.context.support.GenericApplicationContext
@@ -128,6 +130,16 @@ open class ApplicationDsl(private val init: ApplicationDsl.() -> Unit) : Abstrac
 		else -> context.getBean(name, T::class.java)
 	}
 
+	inline fun <reified E : ApplicationEvent>listener(crossinline listener: (E) -> Unit) {
+		context.registerBean {
+			if (it is E) {
+				ApplicationListener<E> {
+					listener.invoke(it)
+				}
+			}
+		}
+	}
+
 	/**
 	 * Take in account functional configuration enclosed in the provided lambda only when the
 	 * specified profile is active.
@@ -143,7 +155,7 @@ open class ApplicationDsl(private val init: ApplicationDsl.() -> Unit) : Abstrac
 	 * @param await set to `true` to block, useful when used in a `main()` function
 	 * @param profiles [ApplicationContext] profiles separated by commas.
 	 */
-	fun run(context: GenericApplicationContext = GenericApplicationContext(), await: Boolean = false, profiles: String = "", init: (GenericApplicationContext) -> Unit = {}) {
+	fun run(context: GenericApplicationContext = GenericApplicationContext(), await: Boolean = false, profiles: String = "") {
 		context.registerBean("messageSource") {
 			ReloadableResourceBundleMessageSource().apply {
 				setBasename("messages")
@@ -155,7 +167,6 @@ open class ApplicationDsl(private val init: ApplicationDsl.() -> Unit) : Abstrac
 		}
 		initialize(context)
 		context.refresh()
-		init(context)
 		if (await) {
 			while (true)
 			{

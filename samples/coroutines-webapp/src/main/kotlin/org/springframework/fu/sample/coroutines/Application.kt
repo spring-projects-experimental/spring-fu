@@ -17,8 +17,8 @@
 package org.springframework.fu.sample.coroutines
 
 import kotlinx.coroutines.experimental.runBlocking
-import org.springframework.beans.factory.getBean
 import org.springframework.beans.factory.support.DefaultListableBeanFactory
+import org.springframework.context.event.ContextStartedEvent
 import org.springframework.fu.application
 import org.springframework.fu.module.data.mongodb.coroutines.coroutines
 import org.springframework.fu.module.data.mongodb.mongodb
@@ -34,6 +34,11 @@ import java.io.File
 val app = application {
 	bean<UserRepository>()
 	bean<UserHandler>()
+	listener<ContextStartedEvent> {
+		runBlocking {
+			ref<UserRepository>().init()
+		}
+	}
 	logging {
 		level(INFO)
 		level("org.springframework", DEBUG)
@@ -66,9 +71,5 @@ val app = application {
 data class SampleConfiguration(val property: String)
 
 fun main(args: Array<String>) {
-	app.run(await = true) {
-		runBlocking {
-			it.getBean<UserRepository>().init()
-		}
-	}
+	app.run(await = true)
 }

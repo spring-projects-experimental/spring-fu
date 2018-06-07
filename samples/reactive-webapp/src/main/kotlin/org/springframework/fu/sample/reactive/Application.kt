@@ -16,8 +16,8 @@
 
 package org.springframework.fu.sample.reactive
 
-import org.springframework.beans.factory.getBean
 import org.springframework.beans.factory.support.DefaultListableBeanFactory
+import org.springframework.context.event.ContextStartedEvent
 import org.springframework.fu.application
 import org.springframework.fu.module.data.mongodb.mongodb
 import org.springframework.fu.module.jackson.jackson
@@ -31,6 +31,9 @@ import java.io.File
 val app = application {
 	bean<UserRepository>()
 	bean<UserHandler>()
+	listener<ContextStartedEvent> {
+		ref<UserRepository>().init()
+	}
 	logging {
 		level(INFO)
 		level("org.springframework", DEBUG)
@@ -61,7 +64,5 @@ val app = application {
 data class SampleConfiguration(val property: String)
 
 fun main(args: Array<String>) {
-	app.run(await = true) {
-		it.getBean<UserRepository>().init()
-	}
+	app.run(await = true)
 }
