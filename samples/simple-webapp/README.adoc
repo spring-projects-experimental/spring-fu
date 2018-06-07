@@ -1,9 +1,0 @@
-= Simple Webapp
-
-This is a Spring Fu example of a simple webapp.
-
-[source,kotlin]
-----
-include::src/main/kotlin/org/springframework/fu/sample/Application.kt[lines=19..-1]
-----
-

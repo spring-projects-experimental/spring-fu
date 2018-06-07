@@ -1,4 +1,4 @@
-package org.springframework.fu.sample
+package org.springframework.fu.sample.coroutines
 
 import org.springframework.fu.module.webflux.coroutines.routes
 import org.springframework.fu.ref

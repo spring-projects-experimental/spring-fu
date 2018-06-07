@@ -27,7 +27,8 @@ To start with Spring Fu, you can read the https://repo.spring.io/libs-snapshot-l
 
 You can also have a look to the sample applications:
 
-* https://github.com/sdeleuze/spring-fu/tree/master/samples/simple-webapp[Simple webapp]
+* https://github.com/sdeleuze/spring-fu/tree/master/samples/reactive-webapp[Reactive webapp]
+* https://github.com/sdeleuze/spring-fu/tree/master/samples/coroutines-webapp[Coroutines webapp]
 
 Spring Fu https://github.com/sdeleuze/spring-fu/milestone/1[`1.0.0.M1`] is currently under active development so no release is available yet, but you can clone the repository, import it into Intellij IDEA, try to play with the tests and sample applications.
 

@@ -1,4 +1,4 @@
-package org.springframework.fu.sample
+package org.springframework.fu.sample.coroutines
 
 import org.springframework.fu.module.webflux.coroutines.web.function.server.CoroutineServerRequest
 import org.springframework.fu.module.webflux.coroutines.web.function.server.CoroutineServerResponse

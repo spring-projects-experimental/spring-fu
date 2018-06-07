@@ -25,6 +25,3 @@ include::../../../modules/test/README.adoc[leveloffset=+2]
 
 include::../../../modules/webflux/README.adoc[leveloffset=+2]
 
-include::../../../samples/README.adoc[leveloffset=+1]
-
-include::../../../samples/simple-webapp/README.adoc[leveloffset=+2]

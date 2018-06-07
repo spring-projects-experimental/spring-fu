@@ -1,0 +1,9 @@
+= Reactive webapp
+
+This is a Spring Fu example of a reactive webapp. Requires a local MongoDB server until Spring Fu supports embedded MongoDB server.
+
+[source,kotlin]
+----
+include::src/main/kotlin/org/springframework/fu/sample/Application.kt[lines=19..-1]
+----
+

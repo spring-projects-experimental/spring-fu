@@ -12,4 +12,5 @@ include("core",
 		"modules:webflux:coroutines",
 		"modules:webflux:netty",
 		"modules:webflux:tomcat",
-		"samples:simple-webapp")
+		"samples:coroutines-webapp",
+		"samples:reactive-webapp")

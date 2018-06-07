@@ -62,7 +62,7 @@ open class MongoModule(private val connectionString: String, private val init: M
 				afterPropertiesSet()
 			}
 		}
-		context.registerBean<ReactiveMongoOperations> {
+		context.registerBean {
 			ReactiveMongoTemplate(context.getBean(), context.getBean<MongoConverter>())
 		}
 		super.initialize(context)
@@ -87,7 +87,7 @@ open class MongoModule(private val connectionString: String, private val init: M
 	}
 }
 
-fun ApplicationDsl.mongodb(connectionString: String = "mongodb://localhost/test", init: MongoModule.() -> Unit) : MongoModule {
+fun ApplicationDsl.mongodb(connectionString: String = "mongodb://localhost/test", init: MongoModule.() -> Unit = {}) : MongoModule {
 	val mongoModule = MongoModule(connectionString, init)
 	initializers.add(mongoModule)
 	return mongoModule
