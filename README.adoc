@@ -1,20 +1,20 @@
-Spring Fu is an incubating https://kotlinlang.org/[**Kotlin**] micro-framework that makes it easy to create lightweight https://spring.io/projects/spring-framework[Spring]-powered applications leveraging https://spring.io/blog/2017/08/01/spring-framework-5-kotlin-apis-the-functional-way[functional configuration].
+Spring Fu is an incubating https://kotlinlang.org/[**Kotlin**] micro-framework that makes it easy to create lightweight https://spring.io/projects/spring-framework[Spring]-powered applications leveraging link:#functional-configuration[functional configuration].
 
 == Overview
 
-Spring Fu a thin but opinionated layer on top of a subset of Spring Framework, Spring Data, Spring Security and other Spring projects that provides what you need to develop easily applications, like https://github.com/spring-projects/spring-boot[Spring Boot], but with very different programming model:
+Spring Fu is a thin but opinionated layer on top of a subset of Spring Framework, Spring Data, Spring Security and other Spring projects that provides an alternative way than https://github.com/spring-projects/spring-boot[Spring Boot] to develop application in Kotlin:
 
-* Functional bean registration instead of JavaConfig
-* Features are configured explicitly
-* Expressive configuration via Kotlin https://kotlinlang.org/docs/reference/type-safe-builders.html[domain-specific languages] (DSL)
+* https://spring.io/blog/2017/08/01/spring-framework-5-kotlin-apis-the-functional-way[Functional bean registration] instead of JavaConfig for both internals and application
+* Features are configured explicitly via expressive configuration leveraging Kotlin https://kotlinlang.org/docs/reference/type-safe-builders.html[domain-specific languages] (DSL)
 * Flexible programmatic configuration
 * Minimal reflection usage
 * No classpath scanning to find annotated classes
 * No annotation processing
-* Modules provide integration with JVM ecosystem and configuration DSL
+* Modules provide configuration DSL and dependencies for other Spring projects and JVM ecosystem
 * Reactive and https://github.com/Kotlin/kotlinx.coroutines/blob/master/coroutines-guide.md[Coroutines] web client and server based on https://docs.spring.io/spring/docs/current/spring-framework-reference/html/web-reactive.html#web-reactive[WebFlux] functional API
 * Reactive and https://github.com/Kotlin/kotlinx.coroutines/blob/master/coroutines-guide.md[Coroutines] persistence via Spring Data (MongoDB supported, https://github.com/sdeleuze/spring-fu/issues/14[SQL planned])
-* https://github.com/sdeleuze/spring-fu/issues/34[JAR minimization] via removal of unneeded Spring packages
+* https://github.com/sdeleuze/spring-fu/issues/34[JAR minimization] in order to have minimal classpath and deploy just what you use
+* No blocking web/persistence support since Coroutines provides support imperative programming
 * Self-sufficient opinionated documentation (Kotlin, constructor injection, functional configuration, WebFlux, Coroutines, etc.)
 
 [NOTE]
