@@ -18,67 +18,17 @@ package org.springframework.fu
 
 import org.springframework.beans.factory.config.BeanDefinitionCustomizer
 import org.springframework.beans.factory.support.AbstractBeanDefinition
-import org.springframework.context.ApplicationContextInitializer
 import org.springframework.context.support.BeanDefinitionDsl
+import org.springframework.context.support.BeanDefinitionDsl.Autowire
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import org.springframework.context.support.registerBean
-import org.springframework.core.env.Environment
 import java.util.function.Supplier
-
-@DslMarker
-annotation class ModuleMarker
-
-@ModuleMarker
-interface Module: ApplicationContextInitializer<GenericApplicationContext> {
-
-	var context: GenericApplicationContext
-
-	val env : Environment
-		get() = context.environment
-
-}
-
-/**
- * Get a reference to the bean by type or type + name with the syntax
- * `ref<Foo>()` or `ref<Foo>("foo")`. When leveraging Kotlin type inference
- * it could be as short as `ref()` or `ref("foo")`.
- * @param name the name of the bean to retrieve
- * @param T type the bean must match, can be an interface or superclass
- */
-inline fun <reified T : Any> Module.ref(name: String? = null) : T = when (name) {
-	null -> context.getBean(T::class.java)
-	else -> context.getBean(name, T::class.java)
-}
-
-abstract class AbstractModule: Module {
-
-	override lateinit var context: GenericApplicationContext
-
-	val initializers = mutableListOf<ApplicationContextInitializer<GenericApplicationContext>>()
-
-	override fun initialize(context: GenericApplicationContext) {
-		this.context = context
-		for (child in initializers) {
-			child.initialize(context)
-		}
-	}
-}
 
 /**
  * @author Sebastien Deleuze
  */
 open class ApplicationDsl(private val init: ApplicationDsl.() -> Unit) : AbstractModule() {
-
-	/**
-	 * Take in account functional configuration enclosed in the provided lambda only when the
-	 * specified profile is active.
-	 */
-	fun profile(profile: String, init: ApplicationDsl.() -> Unit) {
-		if (env.activeProfiles.contains(profile)) {
-			initializers.add(ApplicationDsl(init))
-		}
-	}
 
 	/**
 	 * Declare a bean definition from the given bean class which can be inferred when possible.
@@ -97,7 +47,7 @@ open class ApplicationDsl(private val init: ApplicationDsl.() -> Unit) : Abstrac
 									  scope: BeanDefinitionDsl.Scope? = null,
 									  isLazyInit: Boolean? = null,
 									  isPrimary: Boolean? = null,
-									  autowireMode: BeanDefinitionDsl.Autowire = BeanDefinitionDsl.Autowire.CONSTRUCTOR,
+									  autowireMode: Autowire = Autowire.CONSTRUCTOR,
 									  isAutowireCandidate: Boolean? = null) {
 
 		val customizer = BeanDefinitionCustomizer { bd ->
@@ -135,7 +85,7 @@ open class ApplicationDsl(private val init: ApplicationDsl.() -> Unit) : Abstrac
 									  scope: BeanDefinitionDsl.Scope? = null,
 									  isLazyInit: Boolean? = null,
 									  isPrimary: Boolean? = null,
-									  autowireMode: BeanDefinitionDsl.Autowire = BeanDefinitionDsl.Autowire.NO,
+									  autowireMode: Autowire = Autowire.NO,
 									  isAutowireCandidate: Boolean? = null,
 									  crossinline function: () -> T) {
 
@@ -148,29 +98,13 @@ open class ApplicationDsl(private val init: ApplicationDsl.() -> Unit) : Abstrac
 				bd.autowireMode = autowireMode.ordinal
 			}
 		}
-
-
 		when (name) {
 			null -> context.registerBean(T::class.java,
 					Supplier { function.invoke() }, customizer)
 			else -> context.registerBean(name, T::class.java,
 					Supplier { function.invoke() }, customizer)
 		}
-
 	}
-
-	/**
-	 * Get a reference to the bean by type or type + name with the syntax
-	 * `ref<Foo>()` or `ref<Foo>("foo")`. When leveraging Kotlin type inference
-	 * it could be as short as `ref()` or `ref("foo")`.
-	 * @param name the name of the bean to retrieve
-	 * @param T type the bean must match, can be an interface or superclass
-	 */
-	inline fun <reified T : Any> Module.ref(name: String? = null) : T = when (name) {
-		null -> context.getBean(T::class.java)
-		else -> context.getBean(name, T::class.java)
-	}
-
 
 	fun <T : Any> configuration(module: ConfigurationModule<T>) = initializers.add(module)
 
@@ -180,6 +114,28 @@ open class ApplicationDsl(private val init: ApplicationDsl.() -> Unit) : Abstrac
 		this.context = context
 		init()
 		super.initialize(context)
+	}
+
+	/**
+	 * Get a reference to the bean by type or type + name with the syntax
+	 * `ref<Foo>()` or `ref<Foo>("foo")`. When leveraging Kotlin type inference
+	 * it could be as short as `ref()` or `ref("foo")`.
+	 * @param name the name of the bean to retrieve
+	 * @param T type the bean must match, can be an interface or superclass
+	 */
+	inline fun <reified T : Any> ref(name: String? = null) : T = when (name) {
+		null -> context.getBean(T::class.java)
+		else -> context.getBean(name, T::class.java)
+	}
+
+	/**
+	 * Take in account functional configuration enclosed in the provided lambda only when the
+	 * specified profile is active.
+	 */
+	fun profile(profile: String, init: ApplicationDsl.() -> Unit) {
+		if (env.activeProfiles.contains(profile)) {
+			initializers.add(ApplicationDsl(init))
+		}
 	}
 
 	/**
@@ -207,19 +163,6 @@ open class ApplicationDsl(private val init: ApplicationDsl.() -> Unit) : Abstrac
 			}
 		}
 	}
-
 }
-
-open class ConfigurationModule<T : Any>(private val init: ConfigurationModule<T>.() -> T, private val clazz: Class<T>): AbstractModule() {
-
-	override fun initialize(context: GenericApplicationContext) {
-		this.context = context
-		context.registerBean(clazz, Supplier { init() })
-		super.initialize(context)
-	}
-
-}
-
-inline fun <reified T : Any> configuration(noinline init: ConfigurationModule<*>.() -> T) = ConfigurationModule(init, T::class.java)
 
 fun application(init: ApplicationDsl.() -> Unit) = ApplicationDsl(init)
