@@ -1,7 +1,6 @@
 import org.asciidoctor.gradle.AsciidoctorTask
 import org.jetbrains.kotlin.gradle.plugin.KotlinPluginWrapper
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import proguard.gradle.ProGuardTask
 
 val kotlin_version: String by extra
 
@@ -22,7 +21,6 @@ buildscript {
 		mavenCentral()
 	}
 	dependencies {
-		classpath("net.sf.proguard:proguard-gradle:5.3.3")
 		classpath(kotlin("gradle-plugin", kotlin_version))
 	}
 }
@@ -62,33 +60,6 @@ subprojects {
 			dependency("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
 			dependency("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:$coroutinesVersion")
 		}
-	}
-
-	// We should probably use custom packages excludes or alternative JAR minimization "à la Maven Shade" instead of proguard which is too touchee to configure
-	task<ProGuardTask>("proguard") {
-		val inputJar = File("$buildDir/libs/${project.name}-all.jar")
-		val outputJar = File("$buildDir/libs/${project.name}-shrinked.jar")
-
-		injars(inputJar)
-		outjars(outputJar)
-
-		dontobfuscate()
-		dontoptimize()
-
-		keepclasseswithmembers("public class * { public static void main(java.lang.String[]);}")
-		keep("class kotlin.reflect.** { *; }")
-		keep("class org.jetbrains.** { *; }")
-		keep("class org.springframework.beans.* { *; }")
-		keep("class org.springframework.http.codec.* { *; }")
-		keep("class org.springframework.http.codec.support.* { *; }")
-		keep("class com.fasterxml.jackson.**  { *; }")
-		keep("class kotlin.Metadata { *; }")
-
-		keepattributes("Exceptions,InnerClasses,Signature,Deprecated,SourceFile,LineNumberTable,*Annotation*,EnclosingMethod")
-		libraryjars(File("${System.getProperty("java.home")}/lib/rt.jar"))
-		keepclassmembers("class * extends java.lang.Enum { <fields>; public static **[] values(); public static ** valueOf(java.lang.String); }")
-
-		dontwarn()
 	}
 }
 

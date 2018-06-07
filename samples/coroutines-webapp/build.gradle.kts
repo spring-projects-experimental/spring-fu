@@ -21,10 +21,6 @@ dependencies {
 	compile(project(":modules:webflux:coroutines"))
 }
 
-tasks {
-	"build" { dependsOn("proguard") }
-}
-
 kotlin {
 	experimental.coroutines = Coroutines.ENABLE
 }

@@ -18,7 +18,3 @@ dependencies {
 	compile(project(":modules:test"))
 	compile(project(":modules:webflux:netty"))
 }
-
-tasks {
-	"build" { dependsOn("proguard") }
-}
