@@ -1,8 +1,8 @@
-Spring Fu is an incubating https://kotlinlang.org/[**Kotlin**] micro-framework that makes it easy to create lightweight https://spring.io/projects/spring-framework[Spring]-powered applications leveraging link:#functional-configuration[functional configuration].
+Spring Fu is an incubating https://kotlinlang.org/[Kotlin] micro-framework that makes it easy to create lightweight https://spring.io/projects/spring-framework[Spring]-powered applications leveraging <<functional-configuration,functional configuration>>.
 
 == Overview
 
-Spring Fu is a thin but opinionated layer on top of a subset of Spring Framework, Spring Data, Spring Security and other Spring projects that provides an alternative way than https://github.com/spring-projects/spring-boot[Spring Boot] to develop application in Kotlin:
+Spring Fu is a thin but opinionated layer on top of a subset of Spring Framework, Spring Data, Spring Security and other Spring projects that provides an alternative way than https://github.com/spring-projects/spring-boot[Spring Boot] to develop application in Kotlin. No blocking web/persistence support is provided since https://github.com/Kotlin/kotlinx.coroutines/blob/master/coroutines-guide.md[coroutines] provides support imperative programming.
 
 * https://spring.io/blog/2017/08/01/spring-framework-5-kotlin-apis-the-functional-way[Functional bean registration] instead of JavaConfig for both internals and application
 * Features are configured explicitly via expressive configuration leveraging Kotlin https://kotlinlang.org/docs/reference/type-safe-builders.html[domain-specific languages] (DSL)
@@ -11,11 +11,18 @@ Spring Fu is a thin but opinionated layer on top of a subset of Spring Framework
 * No classpath scanning to find annotated classes
 * No annotation processing
 * Modules provide configuration DSL and dependencies for other Spring projects and JVM ecosystem
-* Reactive and https://github.com/Kotlin/kotlinx.coroutines/blob/master/coroutines-guide.md[Coroutines] web client and server based on https://docs.spring.io/spring/docs/current/spring-framework-reference/html/web-reactive.html#web-reactive[WebFlux] functional API
-* Reactive and https://github.com/Kotlin/kotlinx.coroutines/blob/master/coroutines-guide.md[Coroutines] persistence via Spring Data (MongoDB supported, https://github.com/sdeleuze/spring-fu/issues/14[SQL planned])
+* Reactive and coroutines web client and server based on https://docs.spring.io/spring/docs/current/spring-framework-reference/html/web-reactive.html#web-reactive[WebFlux] functional API
+* Reactive and coroutines persistence via Spring Data (MongoDB supported)
+
+TODO:
+
 * https://github.com/sdeleuze/spring-fu/issues/34[JAR minimization] in order to have minimal classpath and deploy just what you use
-* No blocking web/persistence support since Coroutines provides support imperative programming
+* https://github.com/sdeleuze/spring-fu/issues/5[Gradle plugin]
 * Self-sufficient opinionated documentation (Kotlin, constructor injection, functional configuration, WebFlux, Coroutines, etc.)
+* https://github.com/sdeleuze/spring-fu/issues/14[Reactive/Coroutines SQL support]
+* https://github.com/sdeleuze/spring-fu/issues/29[Graal native image support]
+* https://github.com/sdeleuze/spring-fu/issues/23[Single language fullstack support] with frontend written in Kotlin
+* https://github.com/sdeleuze/spring-fu/issues/13[Functional actuators]
 
 [NOTE]
 ====
@@ -37,6 +44,7 @@ Spring Fu https://github.com/sdeleuze/spring-fu/milestone/1[`1.0.0.M1`] is curre
 
 Please send us your feedback on the `#spring` channel of http://slack.kotlinlang.org/[Kotlin Slack]. Feel free to open issues, https://github.com/sdeleuze/spring-fu/blob/master/CONTRIBUTING.adoc[contribute] fixes or new modules via pull requests.
 
+[[functional-configuration]]
 == Functional configuration
 
 Spring Fu functional configuration is leveraging Kotlin DSL that allows you to configure your application explicitly. Each custom block like `configuration`, `actuators` or `webflux` is in fact a more high level `beans {}` block with a custom DSL provided for easy configuration. Since this configuration is code, you can use any kind of custom programmatic bean registration without having to implement your own `@Conditional` annotation.
