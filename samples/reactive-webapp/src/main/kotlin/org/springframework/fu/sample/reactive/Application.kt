@@ -26,6 +26,7 @@ import org.springframework.fu.module.logging.LogLevel.*
 import org.springframework.fu.module.mustache.mustache
 import org.springframework.fu.module.webflux.netty.netty
 import org.springframework.fu.module.webflux.webflux
+import org.springframework.fu.ref
 import java.io.File
 
 val app = application {

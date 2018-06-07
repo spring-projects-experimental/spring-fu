@@ -118,17 +118,7 @@ open class ApplicationDsl(private val init: ApplicationDsl.() -> Unit) : Abstrac
 		super.initialize(context)
 	}
 
-	/**
-	 * Get a reference to the bean by type or type + name with the syntax
-	 * `ref<Foo>()` or `ref<Foo>("foo")`. When leveraging Kotlin type inference
-	 * it could be as short as `ref()` or `ref("foo")`.
-	 * @param name the name of the bean to retrieve
-	 * @param T type the bean must match, can be an interface or superclass
-	 */
-	inline fun <reified T : Any> ref(name: String? = null) : T = when (name) {
-		null -> context.getBean(T::class.java)
-		else -> context.getBean(name, T::class.java)
-	}
+
 
 	inline fun <reified E : ApplicationEvent>listener(crossinline listener: (E) -> Unit) {
 		context.registerBean {
