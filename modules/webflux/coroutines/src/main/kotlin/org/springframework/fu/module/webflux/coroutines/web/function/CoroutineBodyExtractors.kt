@@ -34,19 +34,20 @@ private val PART_TYPE = forClass(Part::class.java)
 
 fun toFormData(): CoroutineBodyExtractor<MultiValueMap<String, String>?, CoroutineServerHttpRequest> =
         object : CoroutineBodyExtractor<MultiValueMap<String, String>?, CoroutineServerHttpRequest> {
-            override suspend fun extract(serverRequest: CoroutineServerHttpRequest, context: CoroutineBodyExtractor.Context): MultiValueMap<String, String>? {
+            override suspend fun extract(inputMessage: CoroutineServerHttpRequest, context: CoroutineBodyExtractor.Context): MultiValueMap<String, String>? {
                 val messageReader = messageReader<MultiValueMap<String, String>>(FORM_MAP_TYPE, MediaType.APPLICATION_FORM_URLENCODED, context)
                 return context.serverResponse()
                         ?.let {
-                            val readSingle = messageReader.readSingle(actualType = FORM_MAP_TYPE, elementType = FORM_MAP_TYPE, request = serverRequest, response = it, hints = context.hints())
+                            val readSingle = messageReader.readSingle(actualType = FORM_MAP_TYPE, elementType = FORM_MAP_TYPE, request = inputMessage, response = it, hints = context.hints())
                             readSingle
                         }
-                        ?: messageReader.readSingle(FORM_MAP_TYPE, serverRequest, context.hints())
+                        ?: messageReader.readSingle(FORM_MAP_TYPE, inputMessage, context.hints())
             }
         }
 
+@Suppress("UNCHECKED_CAST")
 private fun <T> messageReader(elementType: org.springframework.core.ResolvableType,
-                              mediaType: MediaType, context: CoroutineBodyExtractor.Context): CoroutineHttpMessageReader<T> =
+							  mediaType: MediaType, context: CoroutineBodyExtractor.Context): CoroutineHttpMessageReader<T> =
         context.messageReaders().invoke()
                 .filter { messageReader -> messageReader.canRead(elementType, mediaType) }
                 .firstOrNull()

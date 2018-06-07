@@ -20,7 +20,6 @@ import kotlinx.coroutines.experimental.Unconfined
 import kotlinx.coroutines.experimental.channels.ReceiveChannel
 import kotlinx.coroutines.experimental.reactive.asPublisher
 import kotlinx.coroutines.experimental.reactive.awaitFirst
-import kotlinx.coroutines.experimental.reactive.awaitFirstOrDefault
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.fu.module.webflux.coroutines.http.server.CoroutineServerHttpResponse
@@ -100,7 +99,7 @@ internal open class DefaultCoroutineBodyBuilder(builder: ServerResponse.BodyBuil
             builder.body(inserter.asBodyInserter()).asCoroutineServerResponse()
 
     suspend override fun <T> body(value: T?, elementClass: Class<T>): CoroutineServerResponse? =
-            builder.body(Mono.justOrEmpty(value), elementClass as Class<T?>).asCoroutineServerResponse()
+            builder.body(Mono.justOrEmpty(value), elementClass).asCoroutineServerResponse()
 
     suspend override fun <T> body(channel: ReceiveChannel<T>, elementClass: Class<T>): CoroutineServerResponse? =
             builder.body(channel.asPublisher(Unconfined), elementClass).asCoroutineServerResponse()
@@ -144,8 +143,8 @@ inline suspend fun <reified T : Any> CoroutineBodyBuilder.body(channel: ReceiveC
 suspend inline fun <reified T: Any> CoroutineBodyBuilder.body(value: T?): CoroutineServerResponse? =
         body(value, T::class.java)
 
-inline fun <T : CoroutineServerResponse> ServerResponse.asCoroutineServerResponse(): T =
+fun ServerResponse.asCoroutineServerResponse(): CoroutineServerResponse =
         when (this) {
             is RenderingResponse -> CoroutineRenderingResponse(this)
             else                 -> CoroutineServerResponse(this)
-        } as T
+        }
