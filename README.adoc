@@ -17,7 +17,10 @@ Spring Fu a thin but opinionated layer on top of a subset of Spring Framework, S
 * https://github.com/sdeleuze/spring-fu/issues/34[JAR minimization] via removal of unneeded Spring packages
 * Self-sufficient opinionated documentation (Kotlin, constructor injection, functional configuration, WebFlux, Coroutines, etc.)
 
-Notice that some features currently incubating in Spring Fu, like Coroutines support, **may** be later integrated in other Spring projects.
+[NOTE]
+====
+Some features currently incubating in Spring Fu, like Coroutines support, **may** be later integrated in other Spring projects.
+====
 
 In addition to the whole Spring and Reactor teams, credits to https://github.com/tgirard12[Thomas Girard] for its https://github.com/tgirard12/spring-webflux-kotlin-dsl[spring-webflux-kotlin-dsl] experiment that initially demonstrated this approach was possible and to https://github.com/konrad-kaminski[Konrad Kaminski] for his awesome https://github.com/konrad-kaminski/spring-kotlin-coroutine[spring-kotlin-coroutine] project.
 

@@ -1,3 +1,54 @@
+== Application configuration
+
+In Spring Fu, configuration is done via an application DSL augmented by the configuration DSL of the modules present in the classpath.
+
+=== Beans
+
+Beans are simply as following.
+
+```kotlin
+application {
+	bean<UserRepository>()
+	bean<ArticleRepository>()
+	bean<HtmlHandler>()
+	bean<ApiHandler>()
+}
+
+```
+
+[NOTE]
+====
+Beans declared like above will be autowired by constructor if needed.
+====
+
+=== Configuration
+
+Configuration is usually done using `data` classes instantiation with environment and default values.
+
+```kotlin
+application {
+	configuration {
+		TestConfiguration(name = env["SYSTEM_ENV"] ?: "default")
+	}
+}
+
+data class TestConfiguration(
+		val name: String
+)
+```
+
+=== Listeners
+
+Declare application event Listeners in order to run tasks when `ApplicationContextEvent` like `ContextStartedEvent` or `ContextRefreshedEvent` are emitted.
+
+```kotlin
+application {
+	listener<ContextStartedEvent> {
+		ref<UserRepository>().init()
+	}
+}
+```
+
 == Guidelines
 
 === Constructor injection
