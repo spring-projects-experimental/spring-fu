@@ -12,9 +12,9 @@ Spring Fu a thin but opinionated layer on top of a subset of Spring Framework, S
 * No classpath scanning to find annotated classes
 * No annotation processing
 * Modules provide integration with JVM ecosystem and configuration DSL
-* Reactive web client and server based on https://docs.spring.io/spring/docs/current/spring-framework-reference/html/web-reactive.html#web-reactive[WebFlux] functional API
-* https://github.com/Kotlin/kotlinx.coroutines/blob/master/coroutines-guide.md[Coroutines] support for imperative async programming
-* JAR minimization via removal of unneeded Spring packages
+* Reactive and https://github.com/Kotlin/kotlinx.coroutines/blob/master/coroutines-guide.md[Coroutines] web client and server based on https://docs.spring.io/spring/docs/current/spring-framework-reference/html/web-reactive.html#web-reactive[WebFlux] functional API
+* Reactive and https://github.com/Kotlin/kotlinx.coroutines/blob/master/coroutines-guide.md[Coroutines] persistence via Spring Data (MongoDB supported, https://github.com/sdeleuze/spring-fu/issues/14[SQL planned])
+* https://github.com/sdeleuze/spring-fu/issues/34[JAR minimization] via removal of unneeded Spring packages
 * Self-sufficient opinionated documentation (Kotlin, constructor injection, functional configuration, WebFlux, Coroutines, etc.)
 
 Notice that some features currently incubating in Spring Fu, like Coroutines support, **may** be later integrated in other Spring projects.
