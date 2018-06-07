@@ -63,9 +63,6 @@ val app = application {
 	mongodb {
 		coroutines()
 	}
-	if (env.activeProfiles.any { it.startsWith("foo") }) {
-
-	}
 }
 
 data class SampleConfiguration(val property: String)
