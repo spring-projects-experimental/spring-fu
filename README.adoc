@@ -1,6 +1,8 @@
-Spring Fu is an **incubating** https://kotlinlang.org/[**Kotlin**] microframework that makes it easy to create lightweight https://spring.io/projects/spring-framework[Spring]-powered applications leveraging **https://spring.io/blog/2017/08/01/spring-framework-5-kotlin-apis-the-functional-way[functional configuration]**.
+Spring Fu is an incubating https://kotlinlang.org/[**Kotlin**] micro-framework that makes it easy to create lightweight https://spring.io/projects/spring-framework[Spring]-powered applications leveraging https://spring.io/blog/2017/08/01/spring-framework-5-kotlin-apis-the-functional-way[functional configuration].
 
-It is a thin but opinionated layer on top of a subset of Spring Framework 5.1, Spring Data, Spring Security and other Spring projects that provides what you need to develop easily applications, like https://github.com/spring-projects/spring-boot[Spring Boot], but with very different programming model:
+== Overview
+
+Spring Fu a thin but opinionated layer on top of a subset of Spring Framework, Spring Data, Spring Security and other Spring projects that provides what you need to develop easily applications, like https://github.com/spring-projects/spring-boot[Spring Boot], but with very different programming model:
 
 * Functional bean registration instead of JavaConfig
 * Features are configured explicitly
@@ -15,11 +17,21 @@ It is a thin but opinionated layer on top of a subset of Spring Framework 5.1, S
 * JAR minimization via removal of unneeded Spring packages
 * Self-sufficient opinionated documentation (Kotlin, constructor injection, functional configuration, WebFlux, Coroutines, etc.)
 
-== Current status
+Notice that some features currently incubating in Spring Fu, like Coroutines support, **may** be later integrated in other Spring projects.
 
-Spring Fu first milestone https://github.com/sdeleuze/spring-fu/milestone/1[`1.0.0.M1`] is currently under active development. It is based on Spring Framework 5.1. For now you can clone the repository, explore the source code, try to play with the sample application, and send us your feedback on the `#spring` channel of http://slack.kotlinlang.org/[Kotlin Slack]. Feel free to https://github.com/sdeleuze/spring-fu/blob/master/CONTRIBUTING.adoc[contribute] fixes or new modules via pull requests.
+In addition to the whole Spring and Reactor teams, credits to https://github.com/tgirard12[Thomas Girard] for its https://github.com/tgirard12/spring-webflux-kotlin-dsl[spring-webflux-kotlin-dsl] experiment that initially demonstrated this approach was possible and to https://github.com/konrad-kaminski[Konrad Kaminski] for his awesome https://github.com/konrad-kaminski/spring-kotlin-coroutine[spring-kotlin-coroutine] project.
 
-Notice that some features currently incubating in Spring Fu **may** be later integrated in other Spring projects.
+== Getting started
+
+To start with Spring Fu, you can read the https://repo.spring.io/libs-snapshot-local/org/springframework/fu/spring-fu-docs/1.0.0.BUILD-SNAPSHOT/spring-fu-docs-1.0.0.BUILD-SNAPSHOT.html[**reference documentation**].
+
+You can also have a look to the sample applications:
+
+* https://github.com/sdeleuze/spring-fu/tree/master/samples/simple-webapp[Simple webapp]
+
+Spring Fu https://github.com/sdeleuze/spring-fu/milestone/1[`1.0.0.M1`] is currently under active development so no release is available yet, but you can clone the repository, import it into Intellij IDEA, try to play with the tests and sample applications.
+
+Please send us your feedback on the `#spring` channel of http://slack.kotlinlang.org/[Kotlin Slack]. Feel free to open issues, https://github.com/sdeleuze/spring-fu/blob/master/CONTRIBUTING.adoc[contribute] fixes or new modules via pull requests.
 
 == Functional configuration
 
@@ -96,7 +108,7 @@ fun main(args: Array<String) {
 }
 ```
 
-=== JavaConfig versus functional bean definition
+=== Comparison with JavaConfig
 
 Functional bean definition allows to define beans in an efficient way with minimal reflection usage, no proxy and with a concise Kotlin DSL that takes advantage of https://kotlinlang.org/docs/reference/inline-functions.html#reified-type-parameters[reified type parameters] to avoid type erasure. The `beans {}` block is in fact a regular https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/ApplicationContextInitializer.html[`ApplicationContextInitializer`].
 
@@ -114,7 +126,6 @@ a|
   fun bar(foo: Foo) = Bar(foo)
 }
 ```
-
 a|
 ```kotlin
 val myConfiguration = beans {
@@ -124,7 +135,7 @@ val myConfiguration = beans {
 }
 |=====
 
-=== `@Component` scanning versus functional bean definition
+=== Comparison with `@Component`
 
 Functional bean definition is explicit, does not imply any classpath scanning and supports constructor parameters autowiring.
 
@@ -142,7 +153,6 @@ class Bar(private val f: Foo) {
   // ...
 }
 ```
-
 a|
 ```kotlin
 class Foo {
@@ -158,7 +168,7 @@ beans {
 }
 |=====
 
-=== Annotation-based controller versus Kotlin WebFlux router
+=== Comparison with controllers
 
 Kotlin WebFlux router provides a simple but powerful way to implement your web application. HTTP API, streaming but also viw rendering are supported.
 
@@ -180,7 +190,6 @@ class MyController(private val r: MyRepository) {
   }
 }
 ```
-
 a|
 ```kotlin
 router {
@@ -196,21 +205,3 @@ router {
   }
 }
 |=====
-
-== Reference documentation
-
-https://github.com/sdeleuze/spring-fu/tree/master/core[Core]
-
-Modules: https://github.com/sdeleuze/spring-fu/tree/master/modules/dynamic-configuration[Dynamic configuration],
-https://github.com/sdeleuze/spring-fu/tree/master/modules/jackson[Jackson], https://github.com/sdeleuze/spring-fu/tree/master/modules/mongodb[MongoDB] with  https://github.com/sdeleuze/spring-fu/tree/master/modules/mongodb/coroutines[Coroutines] support, https://github.com/sdeleuze/spring-fu/tree/master/modules/mustache[Mustache], https://github.com/sdeleuze/spring-fu/tree/master/modules/test[Test], https://github.com/sdeleuze/spring-fu/tree/master/modules/webflux[WebFlux]
-with https://github.com/sdeleuze/spring-fu/tree/master/modules/webflux/coroutines[Coroutines], https://github.com/sdeleuze/spring-fu/tree/master/modules/webflux/netty[Netty] and https://github.com/sdeleuze/spring-fu/tree/master/modules/webflux/tomcat[Tomcat] support,
-
-Planned modules: CORS, security, logging, multipart, Embedded MongoDB server, Reactive SQL
-
-== Samples
-
-* https://github.com/sdeleuze/spring-fu/tree/master/samples/simple-webapp[Simple webapp]
-
-== Credits
-
-In addition to the whole Spring and Reactor teams, kudos to https://github.com/tgirard12[Thomas Girard] for its https://github.com/tgirard12/spring-webflux-kotlin-dsl[spring-webflux-kotlin-dsl] experiment that initially demonstrated this approach was possible and to https://github.com/konrad-kaminski[Konrad Kaminski] for his awesome https://github.com/konrad-kaminski/spring-kotlin-coroutine[spring-kotlin-coroutine] project.

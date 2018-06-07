@@ -1,24 +1,3 @@
-= Functional configuration
-
-In Spring Fu, configuration is done via code in an explicit way by leveraging various Kotlin features like https://kotlinlang.org/docs/reference/type-safe-builders.html[DSL], https://kotlinlang.org/docs/reference/functions.html#named-arguments[named arguments] and https://kotlinlang.org/docs/reference/inline-functions.html#reified-type-parameters[reified type parameters] on top of a Spring functional bean configuration based core.
-
-```kotlin
-val app = application {
-	bean<UserRepository>()
-	bean<ArticleRepository>()
-	bean<HtmlHandler>()
-	bean<ApiHandler>()
-	configuration {
-	    TestConfiguration(name = env["SYSTEM_ENV"] ?: "default")
-	}
-	// Modules configuration ...
-}
-
-fun main(args: Array<String) {
-	app.run(await = true)
-}
-```
-
 == Guidelines
 
 === Constructor injection

@@ -94,12 +94,8 @@ subprojects {
 
 // See CONTRIBUTING.adoc in order to have Kotlin syntax highlighting
 tasks.withType<AsciidoctorTask> {
-	sourceDir = File("")
-	sources(delegateClosureOf<PatternSet> {
-		include("REFERENCE.adoc")
-	})
+	sourceDir = File("src/docs/asciidoc")
 	outputDir = File("build/docs")
-	attributes = mapOf("tabsize" to "4")
 }
 
 dependencies {

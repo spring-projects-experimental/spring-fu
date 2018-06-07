@@ -34,5 +34,6 @@ In order to get syntax highlighting for Kotlin code, https://github.com/jirutka/
 
 [indent=0]
 ----
-	$ asciidoctor -r asciidoctor-rouge -a source-highlighter=rouge REFERENCE.adoc -a tabsize=4 -o build/docs/html5/REFERENCE.html
+	$  asciidoctor -r asciidoctor-rouge -a source-highlighter=rouge src/docs/asciidoc/reference.adoc -o build/docs/html5/reference.html
+
 ----
