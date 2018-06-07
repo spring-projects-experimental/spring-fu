@@ -26,13 +26,13 @@ import org.springframework.fu.module.jackson.jackson
 import org.springframework.fu.module.logging.*
 import org.springframework.fu.module.logging.LogLevel.*
 import org.springframework.fu.module.mustache.mustache
-import org.springframework.fu.module.webflux.coroutines.routes
+import org.springframework.fu.module.webflux.coroutines.import
 import org.springframework.fu.module.webflux.netty.netty
 import org.springframework.fu.module.webflux.webflux
 import org.springframework.fu.ref
 import java.io.File
 
-val app = application {
+fun main(args: Array<String>) = application {
 	bean<UserRepository>()
 	bean<UserHandler>()
 	listener<ContextStartedEvent> {
@@ -57,17 +57,11 @@ val app = application {
 			codecs {
 				jackson()
 			}
-			routes(routes)
+			import(::coroutineRoutes)
 		}
 	}
 	configuration(configuration)
 	mongodb {
 		coroutines()
 	}
-}
-
-data class SampleConfiguration(val property: String)
-
-fun main(args: Array<String>) {
-	app.run(await = true)
-}
+}.run(await = true)

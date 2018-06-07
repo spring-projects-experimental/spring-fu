@@ -5,13 +5,12 @@ This module adds support for WebFlux Coroutines API and can create a `CoroutineW
 ```kotlin
 application {
 	webflux {
-		val coroutineHandler = ref<CoroutineHandler>()
-
 		server(netty()) {
 			codecs {
 				jackson()
 			}
 			routes {
+				val coroutineHandler = ref<CoroutineHandler>()
 				GET("/") { coroutineHandler.blog(it))
 				GET("/article/{id}") { coroutineHandler.article(it) )
 			}

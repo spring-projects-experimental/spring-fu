@@ -29,7 +29,7 @@ import org.springframework.fu.module.webflux.webflux
 import org.springframework.fu.ref
 import java.io.File
 
-val app = application {
+fun main(args: Array<String>) = application {
 	bean<UserRepository>()
 	bean<UserHandler>()
 	listener<ContextStartedEvent> {
@@ -52,15 +52,9 @@ val app = application {
 			codecs {
 				jackson()
 			}
-			routes(routes)
+			import(::reactiveRoutes)
 		}
 	}
 	configuration(configuration)
 	mongodb()
-}
-
-data class SampleConfiguration(val property: String)
-
-fun main(args: Array<String>) {
-	app.run(await = true)
-}
+}.run(await = true)

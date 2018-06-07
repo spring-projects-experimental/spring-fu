@@ -5,14 +5,13 @@ This module configures https://docs.spring.io/spring/docs/current/spring-framewo
 ```kotlin
 application {
 	webflux {
-		val htmlHandler = ref<HtmlHandler>()
-		val apiHandler = ref<ApiHandler>()
-
 		server(netty()) {
 			codecs {
 				jackson()
 			}
 			routes {
+				val htmlHandler = ref<HtmlHandler>()
+				val apiHandler = ref<ApiHandler>()
 				GET("/", htmlHandler::blog)
 				GET("/article/{id}", htmlHandler::article)
 				"/api".nest {

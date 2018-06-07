@@ -1,8 +1,31 @@
-Spring Fu is an incubating https://kotlinlang.org/[Kotlin] micro-framework that makes it easy to create lightweight https://spring.io/projects/spring-framework[Spring]-powered applications leveraging <<functional-configuration,functional configuration>>.
+Spring Fu is an incubating https://kotlinlang.org/[Kotlin] micro-framework that makes it easy to create lightweight https://spring.io/projects/spring-framework[Spring]-powered applications with <<functional-configuration,functional APIs>> instead of annotations.
 
 == Overview
 
-Spring Fu is a thin but opinionated layer on top of a subset of Spring Framework, Spring Data, Spring Security and other Spring projects that provides an alternative programming model than https://github.com/spring-projects/spring-boot[Spring Boot] to develop applications in Kotlin. No blocking web/persistence support is provided since https://github.com/Kotlin/kotlinx.coroutines/blob/master/coroutines-guide.md[coroutines] provides support for imperative programming.
+A simple Spring Fu web application rendering an HTML page and exposing a JSON HTTP endpoint looks like that:
+
+```kotlin
+fun main(args: Array<String>) = application {
+	bean<UserRepository>()
+	bean<UserHandler>()
+	webflux {
+		server(netty()) {
+			mustache()
+			codecs {
+				jackson()
+			}
+			import(::appRoutes)
+		}
+	}
+}.run(await = true)
+
+fun appRoutes() = routes {
+	val userHandler = ref<UserHandler>()
+	GET("/", userHandler::listView)
+	GET("/api/user", userHandler::listApi)
+}
+```
+It is a thin but opinionated layer on top of a subset of Spring Framework, Spring Data, Spring Security and other Spring projects that provides an alternative programming model to https://github.com/spring-projects/spring-boot[Spring Boot] to develop applications in Kotlin.
 
 * https://spring.io/blog/2017/08/01/spring-framework-5-kotlin-apis-the-functional-way[Functional bean registration] instead of JavaConfig for both internals and application
 * Features are configured explicitly via expressive configuration leveraging Kotlin https://kotlinlang.org/docs/reference/type-safe-builders.html[domain-specific languages] (DSL)
@@ -13,10 +36,11 @@ Spring Fu is a thin but opinionated layer on top of a subset of Spring Framework
 * Modules provide configuration DSL and dependencies for other Spring projects and JVM ecosystem
 * Reactive and coroutines web client and server based on https://docs.spring.io/spring/docs/current/spring-framework-reference/html/web-reactive.html#web-reactive[WebFlux] functional API
 * Reactive and coroutines persistence via Spring Data (MongoDB supported)
+* No blocking web/persistence support is provided since https://github.com/Kotlin/kotlinx.coroutines/blob/master/coroutines-guide.md[coroutines] provides support for imperative programming.
 
-TODO:
+Upcoming features:
 
-* https://github.com/sdeleuze/spring-fu/issues/34[JAR minimization] in order to have minimal classpath and deploy just what you use
+* https://github.com/sdeleuze/spring-fu/issues/34[Spring packages filtering] in order to have a minimal classpath and deploy just what you need
 * https://github.com/sdeleuze/spring-fu/issues/5[Gradle plugin]
 * Self-sufficient opinionated documentation (Kotlin, constructor injection, functional configuration, WebFlux, Coroutines, etc.)
 * https://github.com/sdeleuze/spring-fu/issues/14[Reactive/Coroutines SQL support]
@@ -31,28 +55,33 @@ Some features currently incubating in Spring Fu, like Coroutines support, **may*
 
 In addition to the whole Spring and Reactor teams, credits to https://github.com/tgirard12[Thomas Girard] for its https://github.com/tgirard12/spring-webflux-kotlin-dsl[spring-webflux-kotlin-dsl] experiment that initially demonstrated this approach was possible and to https://github.com/konrad-kaminski[Konrad Kaminski] for his awesome https://github.com/konrad-kaminski/spring-kotlin-coroutine[spring-kotlin-coroutine] project.
 
+Please send us your feedback on the `#spring` channel of http://slack.kotlinlang.org/[Kotlin Slack]. Feel free to open issues, https://github.com/sdeleuze/spring-fu/blob/master/CONTRIBUTING.adoc[contribute] fixes or new modules via pull requests.
+
 == Getting started
-
-To start with Spring Fu, you can read the https://repo.spring.io/libs-snapshot-local/org/springframework/fu/spring-fu-docs/1.0.0.BUILD-SNAPSHOT/reference.html[**reference documentation**].
-
-You can also have a look to the sample applications:
-
-* https://github.com/sdeleuze/spring-fu/tree/master/samples/reactive-webapp[Reactive webapp]
-* https://github.com/sdeleuze/spring-fu/tree/master/samples/coroutines-webapp[Coroutines webapp]
 
 Spring Fu https://github.com/sdeleuze/spring-fu/milestone/1[`1.0.0.M1`] is currently under active development so no release is available yet, but you can clone the repository, import it into Intellij IDEA, try to play with the tests and sample applications.
 
-Please send us your feedback on the `#spring` channel of http://slack.kotlinlang.org/[Kotlin Slack]. Feel free to open issues, https://github.com/sdeleuze/spring-fu/blob/master/CONTRIBUTING.adoc[contribute] fixes or new modules via pull requests.
+=== Documentation
+
+To start with Spring Fu, you can read the https://repo.spring.io/libs-snapshot-local/org/springframework/fu/spring-fu-docs/1.0.0.BUILD-SNAPSHOT/reference.html[**reference documentation**].
+
+API documentation will be available https://github.com/sdeleuze/spring-fu/issues/8[shortly].
+
+You can have a look to the sample applications:
+
+* https://github.com/sdeleuze/spring-fu/tree/master/samples/reactive-webapp[Reactive webapp]
+* https://github.com/sdeleuze/spring-fu/tree/master/samples/coroutines-webapp[Coroutines webapp]
 
 [[functional-configuration]]
 == Functional configuration
 
 Spring Fu functional configuration is leveraging Kotlin DSL that allows you to configure your application explicitly. Each custom block like `configuration`, `actuators` or `webflux` is in fact a more high level `beans {}` block with a custom DSL provided for easy configuration. Since this configuration is code, you can use any kind of custom programmatic bean registration without having to implement your own `@Conditional` annotation.
 
+Here is an example of a typical Spring Fu application functional configuration.
 ```kotlin
-val app = application {
+fun main(args: Array<String) = application {
 	configuration {
-	    AppConfiguration(name = env["SYSTEM_ENV"] ?: "default")
+		AppConfiguration(name = env["SYSTEM_ENV"] ?: "default")
 	}
 	actuators(beans = false, mapping = false)
 	logging {
@@ -83,7 +112,7 @@ val app = application {
 					jackson()
 					protobuf()
 				}
-				routes(routes)
+				import(::appRoutes)
 				security { // TODO }
 			}
 			client {
@@ -97,14 +126,14 @@ val app = application {
 	if (env.activeProfiles.any { it.startsWith("foo") }) {
 		bean<Foo>()
 	}
-}
+}.app.run(await = true, profiles = "data, web")
 
 data class AppConfiguration(
 	val name: String,
 	val remoteUrl: String  = "http://localhost:8080"
 )
 
-val routes = routes {
+fun appRoutes() = routes {
 	val htmlHandler = ref<HtmlHandler>()
 	val apiHandler = ref<ApiHandler>()
 	GET("/", htmlHandler::blog)
@@ -115,10 +144,6 @@ val routes = routes {
 		PUT("/{id}", apiHandler::update)
 		DELETE("/{id}", apiHandler::delete)
 	}
-}
-
-fun main(args: Array<String) {
-	app.run(await = true, profiles = "data, web")
 }
 ```
 

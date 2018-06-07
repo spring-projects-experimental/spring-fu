@@ -111,11 +111,11 @@ open class WebFluxModule(private val init: WebFluxModule.() -> Unit): AbstractMo
 			builder.webFilter(filter)
 		}
 
-		fun routes(routesModule: WebFluxRoutesModule) =
-				initializers.add(routesModule)
-
 		fun routes(routes: WebFluxRoutesModule.() -> Unit) =
 				initializers.add(WebFluxRoutesModule(routes))
+
+		fun import(routesModuleSupplier: () -> WebFluxRoutesModule) =
+				initializers.add(routesModuleSupplier.invoke())
 
 
 	}

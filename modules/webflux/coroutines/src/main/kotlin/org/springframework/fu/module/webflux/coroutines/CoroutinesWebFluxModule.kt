@@ -47,8 +47,8 @@ open class CoroutineWebFluxRoutesModule(private val init: (CoroutineWebFluxRoute
 
 fun routes(routes: CoroutineWebFluxRoutesModule.() -> Unit) = CoroutineWebFluxRoutesModule(routes)
 
-fun WebFluxModule.WebFluxServerModule.routes(routesModule: CoroutineWebFluxRoutesModule) =
-		initializers.add(routesModule)
+fun WebFluxModule.WebFluxServerModule.import(routesModuleSupplier: () -> CoroutineWebFluxRoutesModule) =
+		initializers.add(routesModuleSupplier.invoke())
 
 fun WebFluxModule.WebFluxServerModule.routes(routes: CoroutineWebFluxRoutesModule.() -> Unit) =
 		initializers.add(CoroutineWebFluxRoutesModule(routes))
