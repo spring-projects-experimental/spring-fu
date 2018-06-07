@@ -27,6 +27,7 @@ import org.springframework.http.HttpStatus.*
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.server.ServerResponse.noContent
+import org.springframework.web.reactive.function.server.ServerResponse.ok
 import reactor.test.test
 
 /**
@@ -109,6 +110,28 @@ class TomcatModuleTests {
 		client2.get().uri("http://localhost:8080/").exchange().test()
 				.consumeNextWith { assertEquals(NO_CONTENT, it.statusCode()) }
 				.verifyComplete()
+		context.close()
+	}
+
+	@Test
+	fun `Declare 2 routes blocks`() {
+		val context = GenericApplicationContext()
+		val app = application {
+			webflux {
+				server(tomcat()) {
+					routes {
+						GET("/foo") { noContent().build() }
+					}
+					routes {
+						GET("/bar") { ok().build() }
+					}
+				}
+			}
+		}
+		app.run(context)
+		val client = WebTestClient.bindToServer().baseUrl("http://localhost:8080").build()
+		client.get().uri("/foo").exchange().expectStatus().isNoContent
+		client.get().uri("/bar").exchange().expectStatus().isOk
 		context.close()
 	}
 

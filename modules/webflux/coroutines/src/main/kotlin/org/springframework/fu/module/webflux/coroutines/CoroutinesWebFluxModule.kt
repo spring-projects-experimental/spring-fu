@@ -7,6 +7,7 @@ import org.springframework.fu.Module
 import org.springframework.fu.module.webflux.WebFluxModule
 import org.springframework.fu.module.webflux.coroutines.web.function.client.CoroutineWebClient
 import org.springframework.fu.module.webflux.coroutines.web.function.server.CoroutineRouterFunctionDsl
+import org.springframework.web.reactive.function.server.RouterFunction
 
 class CoroutineWebFluxClientModule(private val clientModule: WebFluxModule.WebFluxClientModule) : AbstractModule() {
 	override fun initialize(context: GenericApplicationContext) {
@@ -28,11 +29,15 @@ fun WebFluxModule.WebFluxClientModule.coroutines() : CoroutineWebFluxClientModul
 
 open class CoroutineWebFluxRoutesModule(private val init: (CoroutineWebFluxRoutesModule.() -> Unit)) : CoroutineRouterFunctionDsl({}), Module {
 
+	companion object {
+		var count = 0
+	}
+
 	override lateinit var context: GenericApplicationContext
 
 	override fun initialize(context: GenericApplicationContext) {
 		this.context = context
-		context.registerBean {
+		context.registerBean("${RouterFunction::class.qualifiedName}${count++}") {
 			init()
 			invoke()
 		}

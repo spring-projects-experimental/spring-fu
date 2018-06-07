@@ -37,6 +37,7 @@ import org.springframework.web.reactive.handler.WebFluxResponseStatusExceptionHa
 import org.springframework.web.server.WebFilter
 import org.springframework.web.server.i18n.AcceptHeaderLocaleContextResolver
 import reactor.core.publisher.Mono
+import java.lang.Math.random
 
 /**
  * @author Sebastien Deleuze
@@ -198,11 +199,17 @@ fun ApplicationDsl.webflux(init: WebFluxModule.() -> Unit): WebFluxModule {
 
 open class WebFluxRoutesModule(private val init: WebFluxRoutesModule.() -> Unit) : RouterFunctionDsl({}), Module {
 
+	companion object {
+		var count = 0
+	}
+
 	override lateinit var context: GenericApplicationContext
 
 	override fun initialize(context: GenericApplicationContext) {
 		this.context = context
-		context.registerBean {
+		val name = "${RouterFunction::class.qualifiedName}${count++}"
+		println(name)
+		context.registerBean(name) {
 			init()
 			invoke()
 		}
