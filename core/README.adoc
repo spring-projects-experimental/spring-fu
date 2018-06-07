@@ -65,7 +65,7 @@ class YourBean(
 
 [NOTE]
 ====
-As of Spring Framework 4.3, classes with a single constructor have their parameters automatically autowired, that's why there is no need for an explicit `@Autowired constructor` in the example shown above.
+Classes with a single constructor have their parameters automatically autowired, that's why there is no need for an explicit `@Autowired constructor` in the example shown above.
 ====
 
 === Immutable data classes
