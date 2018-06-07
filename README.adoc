@@ -98,7 +98,7 @@ val routes = routes {
 	val htmlHandler = ref<HtmlHandler>()
 	val apiHandler = ref<ApiHandler>()
 	GET("/", htmlHandler::blog)
-	GET("/article/{id}", htmlHandler:article)
+	GET("/article/{id}", htmlHandler::article)
 	"/api".nest {
 		GET("/", apiHandler::list)
 		POST("/", apiHandler::create)
