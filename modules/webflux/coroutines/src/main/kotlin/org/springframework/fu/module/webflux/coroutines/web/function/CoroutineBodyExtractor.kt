@@ -23,15 +23,16 @@ import org.springframework.http.ReactiveHttpInputMessage
 import org.springframework.web.reactive.function.BodyExtractor
 
 interface CoroutineBodyExtractor<T, in M: CoroutineHttpInputMessage> {
-    suspend fun extract(inputMessage: M, context: Context): T
 
-    fun <N: ReactiveHttpInputMessage> asBodyExtractor(): BodyExtractor<T, N> = TODO()
+	suspend fun extract(inputMessage: M, context: Context): T
 
-    interface Context {
-        fun messageReaders(): (() -> Sequence<CoroutineHttpMessageReader<*>>)
+	fun <N: ReactiveHttpInputMessage> asBodyExtractor(): BodyExtractor<T, N> = TODO()
 
-        fun serverResponse(): CoroutineServerHttpResponse?
+	interface Context {
+		fun messageReaders(): (() -> Sequence<CoroutineHttpMessageReader<*>>)
 
-        fun hints(): Map<String, Any>
-    }
+		fun serverResponse(): CoroutineServerHttpResponse?
+
+		fun hints(): Map<String, Any>
+	}
 }

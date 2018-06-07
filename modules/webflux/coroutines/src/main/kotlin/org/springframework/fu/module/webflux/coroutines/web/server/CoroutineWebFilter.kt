@@ -27,8 +27,8 @@ interface CoroutineWebFilter: WebFilter {
 
 	@Suppress("UNCHECKED_CAST")
 	override fun filter(exchange: ServerWebExchange, chain: WebFilterChain): Mono<Void> = mono(Unconfined) {
-        filter(CoroutineServerWebExchange(exchange), CoroutineWebFilterChain(chain))
-    } as Mono<Void>
+		filter(CoroutineServerWebExchange(exchange), CoroutineWebFilterChain(chain))
+	} as Mono<Void>
 
-    suspend fun filter(exchange: CoroutineServerWebExchange, chain: CoroutineWebFilterChain)
+	suspend fun filter(exchange: CoroutineServerWebExchange, chain: CoroutineWebFilterChain)
 }

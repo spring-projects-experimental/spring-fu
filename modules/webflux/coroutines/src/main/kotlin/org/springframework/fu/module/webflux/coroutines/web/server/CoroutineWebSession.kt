@@ -17,9 +17,10 @@
 package org.springframework.fu.module.webflux.coroutines.web.server
 
 interface CoroutineWebSession {
-    val attributes: MutableMap<String, Any?>
 
-    fun <T> getAttribute(name: String): T?
+	val attributes: MutableMap<String, Any?>
 
-    suspend fun save(): Unit
+	fun <T> getAttribute(name: String): T?
+
+	suspend fun save()
 }

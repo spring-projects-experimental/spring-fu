@@ -21,23 +21,25 @@ import org.springframework.fu.module.webflux.coroutines.http.server.coroutine.Co
 import org.springframework.web.server.ServerWebExchange
 
 interface CoroutineServerWebExchange {
-    val request: CoroutineServerHttpRequest
 
-    val response: CoroutineServerHttpResponse
+	val request: CoroutineServerHttpRequest
 
-    suspend fun getSession(): CoroutineWebSession?
+	val response: CoroutineServerHttpResponse
 
-    fun mutate(): Builder
+	suspend fun getSession(): CoroutineWebSession?
 
-    fun extractServerWebExchange(): ServerWebExchange
+	fun mutate(): Builder
 
-    companion object {
-        operator fun invoke(exchange: ServerWebExchange): CoroutineServerWebExchange = DefaultCoroutineServerWebExchange(exchange)
-    }
+	fun extractServerWebExchange(): ServerWebExchange
 
-    interface Builder {
-        fun request(request: CoroutineServerHttpRequest): Builder
+	companion object {
+		operator fun invoke(exchange: ServerWebExchange): CoroutineServerWebExchange =
+				DefaultCoroutineServerWebExchange(exchange)
+	}
 
-        fun build(): CoroutineServerWebExchange
-    }
+	interface Builder {
+		fun request(request: CoroutineServerHttpRequest): Builder
+
+		fun build(): CoroutineServerWebExchange
+	}
 }

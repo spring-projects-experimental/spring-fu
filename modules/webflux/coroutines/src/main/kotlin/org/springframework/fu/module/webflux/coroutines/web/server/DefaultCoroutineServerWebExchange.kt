@@ -23,22 +23,24 @@ import org.springframework.fu.module.webflux.coroutines.web.server.session.asCor
 import org.springframework.web.server.ServerWebExchange
 
 class DefaultCoroutineServerWebExchange(val exchange: ServerWebExchange): CoroutineServerWebExchange {
-    override val request: CoroutineServerHttpRequest
-        get() = CoroutineServerHttpRequest(exchange.request)
-    override val response: CoroutineServerHttpResponse
-        get() = CoroutineServerHttpResponse(exchange.response)
+	override val request: CoroutineServerHttpRequest
+		get() = CoroutineServerHttpRequest(exchange.request)
+	override val response: CoroutineServerHttpResponse
+		get() = CoroutineServerHttpResponse(exchange.response)
 
-    override suspend fun getSession(): CoroutineWebSession? = exchange.session.awaitFirstOrDefault(null)?.asCoroutineWebSession()
+	override suspend fun getSession(): CoroutineWebSession? =
+			exchange.session.awaitFirstOrDefault(null)?.asCoroutineWebSession()
 
-    override fun mutate(): CoroutineServerWebExchange.Builder = DefaultCoroutineServerWebExchangeBuilder(exchange.mutate())
+	override fun mutate(): CoroutineServerWebExchange.Builder =
+			DefaultCoroutineServerWebExchangeBuilder(exchange.mutate())
 
-    override fun extractServerWebExchange(): ServerWebExchange = exchange
+	override fun extractServerWebExchange(): ServerWebExchange = exchange
 }
 
-class DefaultCoroutineServerWebExchangeBuilder(val builder: ServerWebExchange.Builder) : CoroutineServerWebExchange.Builder {
-    override fun build(): CoroutineServerWebExchange = CoroutineServerWebExchange(builder.build())
+class DefaultCoroutineServerWebExchangeBuilder(private val builder: ServerWebExchange.Builder) : CoroutineServerWebExchange.Builder {
+	override fun build(): CoroutineServerWebExchange = CoroutineServerWebExchange(builder.build())
 
-    override fun request(request: CoroutineServerHttpRequest): CoroutineServerWebExchange.Builder = apply {
-        builder.request(request.extractServerHttpRequest())
-    }
+	override fun request(request: CoroutineServerHttpRequest): CoroutineServerWebExchange.Builder = apply {
+		builder.request(request.extractServerHttpRequest())
+	}
 }

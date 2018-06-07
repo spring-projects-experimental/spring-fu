@@ -21,14 +21,14 @@ import org.springframework.fu.module.webflux.coroutines.web.server.CoroutineWebS
 import org.springframework.web.server.WebSession
 
 class DefaultCoroutineWebSession(val session: WebSession): CoroutineWebSession {
-    override val attributes: MutableMap<String, Any?>
-        get() = session.attributes
+	override val attributes: MutableMap<String, Any?>
+		get() = session.attributes
 
-    override fun <T> getAttribute(name: String): T? = session.getAttribute<T>(name)
+	override fun <T> getAttribute(name: String): T? = session.getAttribute<T>(name)
 
-    suspend override fun save(): Unit {
-        session.save().awaitFirstOrDefault(null)
-    }
+	suspend override fun save(): Unit {
+		session.save().awaitFirstOrDefault(null)
+	}
 }
 
 internal fun WebSession.asCoroutineWebSession() = DefaultCoroutineWebSession(this)

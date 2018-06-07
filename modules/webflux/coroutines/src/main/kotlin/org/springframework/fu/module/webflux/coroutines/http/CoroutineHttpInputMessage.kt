@@ -21,5 +21,5 @@ import org.springframework.core.io.buffer.DataBuffer
 import org.springframework.http.HttpMessage
 
 interface CoroutineHttpInputMessage: HttpMessage {
-    val body: ReceiveChannel<DataBuffer>
+	val body: ReceiveChannel<DataBuffer>
 }

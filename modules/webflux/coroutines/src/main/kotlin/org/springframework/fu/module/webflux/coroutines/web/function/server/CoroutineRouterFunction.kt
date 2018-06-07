@@ -29,55 +29,55 @@ import org.springframework.web.reactive.function.server.RouterFunctions.route
 import org.springframework.web.reactive.function.server.ServerResponse
 
 open class CoroutineRouterFunctionDsl(private val init: (CoroutineRouterFunctionDsl.() -> Unit)): () -> RouterFunction<ServerResponse> {
-    private val routes = mutableListOf<RouterFunction<ServerResponse>>()
+	private val routes = mutableListOf<RouterFunction<ServerResponse>>()
 
-    infix fun RequestPredicate.and(other: String): RequestPredicate = this.and(path(other))
+	infix fun RequestPredicate.and(other: String): RequestPredicate = this.and(path(other))
 
-    infix fun RequestPredicate.or(other: RequestPredicate): RequestPredicate = this.or(other)
+	infix fun RequestPredicate.or(other: RequestPredicate): RequestPredicate = this.or(other)
 
-    fun accept(mediaType: MediaType): RequestPredicate = RequestPredicates.accept(mediaType)
+	fun accept(mediaType: MediaType): RequestPredicate = RequestPredicates.accept(mediaType)
 
-    fun contentType(mediaType: MediaType): RequestPredicate = RequestPredicates.contentType(mediaType)
+	fun contentType(mediaType: MediaType): RequestPredicate = RequestPredicates.contentType(mediaType)
 
-    suspend fun RequestPredicate.nest(r: (CoroutineRouterFunctionDsl.() -> Unit)) {
-        routes += nest(this, CoroutineRouterFunctionDsl(r).invoke())
-    }
+	suspend fun RequestPredicate.nest(r: (CoroutineRouterFunctionDsl.() -> Unit)) {
+		routes += nest(this, CoroutineRouterFunctionDsl(r).invoke())
+	}
 
-    suspend fun String.nest(r: (CoroutineRouterFunctionDsl.() -> Unit)) = path(this).nest(r)
+	suspend fun String.nest(r: (CoroutineRouterFunctionDsl.() -> Unit)) = path(this).nest(r)
 
-    fun DELETE(pattern: String): RequestPredicate = RequestPredicates.DELETE(pattern)
+	fun DELETE(pattern: String): RequestPredicate = RequestPredicates.DELETE(pattern)
 
-    fun GET(pattern: String) = RequestPredicates.GET(pattern)
+	fun GET(pattern: String) = RequestPredicates.GET(pattern)
 
-    fun GET(pattern: String, f:  suspend (CoroutineServerRequest) -> CoroutineServerResponse?) {
-        routes += route(RequestPredicates.GET(pattern), f.asHandlerFunction())
-    }
+	fun GET(pattern: String, f:  suspend (CoroutineServerRequest) -> CoroutineServerResponse?) {
+		routes += route(RequestPredicates.GET(pattern), f.asHandlerFunction())
+	}
 
-    fun path(pattern: String): RequestPredicate = RequestPredicates.path(pattern)
+	fun path(pattern: String): RequestPredicate = RequestPredicates.path(pattern)
 
-    fun pathExtension(extension: String, f:  suspend (CoroutineServerRequest) -> CoroutineServerResponse?) {
-        routes += route(RequestPredicates.pathExtension(extension), f.asHandlerFunction())
-    }
+	fun pathExtension(extension: String, f:  suspend (CoroutineServerRequest) -> CoroutineServerResponse?) {
+		routes += route(RequestPredicates.pathExtension(extension), f.asHandlerFunction())
+	}
 
-    fun POST(pattern: String, f:  suspend (CoroutineServerRequest) -> CoroutineServerResponse?) {
-        routes += route(RequestPredicates.POST(pattern), f.asHandlerFunction())
-    }
+	fun POST(pattern: String, f:  suspend (CoroutineServerRequest) -> CoroutineServerResponse?) {
+		routes += route(RequestPredicates.POST(pattern), f.asHandlerFunction())
+	}
 
-    override fun invoke(): RouterFunction<ServerResponse> {
+	override fun invoke(): RouterFunction<ServerResponse> {
 		init()
 		return routes.reduce(RouterFunction<ServerResponse>::and)
-    }
+	}
 
-    operator fun RequestPredicate.invoke(f:  suspend (CoroutineServerRequest) -> CoroutineServerResponse?) {
-        routes += route(this, f.asHandlerFunction())
-    }
+	operator fun RequestPredicate.invoke(f:  suspend (CoroutineServerRequest) -> CoroutineServerResponse?) {
+		routes += route(this, f.asHandlerFunction())
+	}
 
-    private fun  (suspend (CoroutineServerRequest) -> CoroutineServerResponse?).asHandlerFunction() = HandlerFunction {
-        mono(Unconfined) {
-            this@asHandlerFunction.invoke(CoroutineServerRequest(it))?.extractServerResponse()
-        }
-    }
+	private fun  (suspend (CoroutineServerRequest) -> CoroutineServerResponse?).asHandlerFunction() = HandlerFunction {
+		mono(Unconfined) {
+			this@asHandlerFunction.invoke(CoroutineServerRequest(it))?.extractServerResponse()
+		}
+	}
 }
 
 operator fun <T: ServerResponse> RouterFunction<T>.plus(other: RouterFunction<T>) =
-        this.and(other)
+		this.and(other)

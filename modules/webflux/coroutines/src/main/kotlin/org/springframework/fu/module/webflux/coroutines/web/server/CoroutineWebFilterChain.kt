@@ -20,15 +20,15 @@ import kotlinx.coroutines.experimental.reactive.awaitFirstOrDefault
 import org.springframework.web.server.WebFilterChain
 
 interface CoroutineWebFilterChain {
-    suspend fun filter(exchange: CoroutineServerWebExchange): Unit
+	suspend fun filter(exchange: CoroutineServerWebExchange): Unit
 
-    companion object {
-        operator fun invoke(chain: WebFilterChain): CoroutineWebFilterChain = DefaultCoroutineWebFilterChain(chain)
-    }
+	companion object {
+		operator fun invoke(chain: WebFilterChain): CoroutineWebFilterChain = DefaultCoroutineWebFilterChain(chain)
+	}
 }
 
 class DefaultCoroutineWebFilterChain(val chain: WebFilterChain): CoroutineWebFilterChain {
-    override suspend fun filter(exchange: CoroutineServerWebExchange) {
-        chain.filter(exchange.extractServerWebExchange()).awaitFirstOrDefault(null)
-    }
+	override suspend fun filter(exchange: CoroutineServerWebExchange) {
+		chain.filter(exchange.extractServerWebExchange()).awaitFirstOrDefault(null)
+	}
 }

@@ -24,13 +24,14 @@ import org.springframework.fu.module.webflux.coroutines.http.CoroutineHttpInputM
 import org.springframework.http.MediaType
 
 interface CoroutineHttpMessageReader<out T> {
-    fun canRead(elementType: ResolvableType, mediaType: MediaType): Boolean
 
-    fun read(elementType: ResolvableType, message: CoroutineHttpInputMessage, hints: Map<String, Any>): ReceiveChannel<T>
+	fun canRead(elementType: ResolvableType, mediaType: MediaType): Boolean
 
-    suspend fun readSingle(elementType: ResolvableType, message: CoroutineHttpInputMessage, hints: Map<String, Any>): T?
+	fun read(elementType: ResolvableType, message: CoroutineHttpInputMessage, hints: Map<String, Any>): ReceiveChannel<T>
 
-    suspend fun readSingle(actualType: ResolvableType, elementType: ResolvableType, request: CoroutineServerHttpRequest,
+	suspend fun readSingle(elementType: ResolvableType, message: CoroutineHttpInputMessage, hints: Map<String, Any>): T?
+
+	suspend fun readSingle(actualType: ResolvableType, elementType: ResolvableType, request: CoroutineServerHttpRequest,
 						   response: CoroutineServerHttpResponse?, hints: Map<String, Any>): T? =
-        readSingle(elementType, request, hints)
+		readSingle(elementType, request, hints)
 }

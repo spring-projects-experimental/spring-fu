@@ -27,56 +27,56 @@ import org.springframework.fu.module.webflux.coroutines.web.server.session.asCor
 import java.net.URI
 
 interface CoroutineServerRequest {
-    fun <T> body(extractor: CoroutineBodyExtractor<T, CoroutineServerHttpRequest>): T
+	fun <T> body(extractor: CoroutineBodyExtractor<T, CoroutineServerHttpRequest>): T
 
-    fun <T> body(extractor: CoroutineBodyExtractor<T, CoroutineServerHttpRequest>, hints: Map<String, Any>): T
+	fun <T> body(extractor: CoroutineBodyExtractor<T, CoroutineServerHttpRequest>, hints: Map<String, Any>): T
 
-    suspend fun <T> body(elementClass: Class<out T>): T?
+	suspend fun <T> body(elementClass: Class<out T>): T?
 
-    fun <T> bodyToReceiveChannel(elementClass: Class<out T>): ReceiveChannel<T>
+	fun <T> bodyToReceiveChannel(elementClass: Class<out T>): ReceiveChannel<T>
 
-    fun headers(): ServerRequest.Headers
+	fun headers(): ServerRequest.Headers
 
-    fun pathVariable(name: String): String?
+	fun pathVariable(name: String): String?
 
-    suspend fun session(): CoroutineWebSession?
+	suspend fun session(): CoroutineWebSession?
 
-    fun uri(): URI
+	fun uri(): URI
 
-    fun extractServerRequest(): ServerRequest
+	fun extractServerRequest(): ServerRequest
 
-    companion object {
-        operator fun invoke(req: ServerRequest) = DefaultCoroutineServerRequest(req)
-    }
+	companion object {
+		operator fun invoke(req: ServerRequest) = DefaultCoroutineServerRequest(req)
+	}
 }
 
 class DefaultCoroutineServerRequest(val req: ServerRequest): CoroutineServerRequest {
-    override fun <T> body(extractor: CoroutineBodyExtractor<T, CoroutineServerHttpRequest>): T =
-            req.body(extractor.asBodyExtractor())
+	override fun <T> body(extractor: CoroutineBodyExtractor<T, CoroutineServerHttpRequest>): T =
+			req.body(extractor.asBodyExtractor())
 
-    override fun <T> body(extractor: CoroutineBodyExtractor<T, CoroutineServerHttpRequest>, hints: Map<String, Any>): T =
-            req.body(extractor.asBodyExtractor(), hints)
+	override fun <T> body(extractor: CoroutineBodyExtractor<T, CoroutineServerHttpRequest>, hints: Map<String, Any>): T =
+			req.body(extractor.asBodyExtractor(), hints)
 
-    suspend override fun <T> body(elementClass: Class<out T>): T? =
-            req.bodyToMono(elementClass).awaitFirstOrDefault(null)
+	override suspend fun <T> body(elementClass: Class<out T>): T? =
+			req.bodyToMono(elementClass).awaitFirstOrDefault(null)
 
-    override fun <T> bodyToReceiveChannel(elementClass: Class<out T>): ReceiveChannel<T> =
-            req.bodyToFlux(elementClass).openSubscription()
+	override fun <T> bodyToReceiveChannel(elementClass: Class<out T>): ReceiveChannel<T> =
+			req.bodyToFlux(elementClass).openSubscription()
 
-    override fun headers(): ServerRequest.Headers = req.headers()
+	override fun headers(): ServerRequest.Headers = req.headers()
 
-    override fun pathVariable(name: String): String? = req.pathVariable(name)
+	override fun pathVariable(name: String): String? = req.pathVariable(name)
 
-    suspend override fun session(): CoroutineWebSession? =  req.session().awaitFirstOrDefault(null)?.asCoroutineWebSession()
+	override suspend fun session(): CoroutineWebSession? =  req.session().awaitFirstOrDefault(null)?.asCoroutineWebSession()
 
-    override fun uri(): URI = req.uri()
+	override fun uri(): URI = req.uri()
 
-    override fun extractServerRequest(): ServerRequest = req
+	override fun extractServerRequest(): ServerRequest = req
 }
 
 //fun CoroutineServerRequest.language() = TODO()
-        //TODO findByTag(this.headers().asHttpHeaders().acceptLanguageAsLocales.first().language)
+		//TODO findByTag(this.headers().asHttpHeaders().acceptLanguageAsLocales.first().language)
 
-inline suspend fun <reified T : Any> CoroutineServerRequest.body(): T? = body(T::class.java)
+suspend inline fun <reified T : Any> CoroutineServerRequest.body(): T? = body(T::class.java)
 
 

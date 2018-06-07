@@ -32,60 +32,62 @@ import reactor.core.publisher.Mono
 import java.net.URI
 
 interface CoroutineServerResponse {
-    fun extractServerResponse(): ServerResponse
+	fun extractServerResponse(): ServerResponse
 
-    companion object {
-        operator fun invoke(resp: ServerResponse): CoroutineServerResponse = DefaultCoroutineServerResponse(resp)
+	companion object {
+		operator fun invoke(resp: ServerResponse): CoroutineServerResponse = DefaultCoroutineServerResponse(resp)
 
-        fun created(location: URI): CoroutineBodyBuilder = CoroutineBodyBuilder(ServerResponse.created(location))
+		fun created(location: URI): CoroutineBodyBuilder = ServerResponse.created(location).asCoroutineBodyBuilder()
 
-        fun ok(): CoroutineBodyBuilder = status(HttpStatus.OK)
+		fun ok(): CoroutineBodyBuilder = status(HttpStatus.OK)
 
-        fun permanentRedirect(location: URI): CoroutineBodyBuilder = ServerResponse.permanentRedirect(location).asCoroutineBodyBuilder()
+		fun accepted(): CoroutineBodyBuilder = status(HttpStatus.OK)
 
-        fun seeOther(location: URI): CoroutineBodyBuilder =
-            ServerResponse.seeOther(location).asCoroutineBodyBuilder()
+		fun permanentRedirect(location: URI): CoroutineBodyBuilder = ServerResponse.permanentRedirect(location).asCoroutineBodyBuilder()
 
-        fun status(status: HttpStatus): CoroutineBodyBuilder = ServerResponse.status(status).asCoroutineBodyBuilder()
-    }
+		fun seeOther(location: URI): CoroutineBodyBuilder =
+			ServerResponse.seeOther(location).asCoroutineBodyBuilder()
+
+		fun status(status: HttpStatus): CoroutineBodyBuilder = ServerResponse.status(status).asCoroutineBodyBuilder()
+	}
 }
 
 interface CoroutineHeadersBuilder {
-    fun location(location: URI): CoroutineHeadersBuilder
+	fun location(location: URI): CoroutineHeadersBuilder
 
 	fun header(headerName: String, vararg headerValues: String): CoroutineHeadersBuilder
 }
 
 interface CoroutineBodyBuilder: CoroutineHeadersBuilder {
-    suspend fun build(): CoroutineServerResponse
+	suspend fun build(): CoroutineServerResponse
 
-    suspend fun body(inserter: CoroutineBodyInserter<*, in CoroutineServerHttpResponse>): CoroutineServerResponse?
+	suspend fun body(inserter: CoroutineBodyInserter<*, in CoroutineServerHttpResponse>): CoroutineServerResponse?
 
-    suspend fun <T> body(value: T?, elementClass: Class<T>): CoroutineServerResponse?
+	suspend fun <T> body(value: T?, elementClass: Class<T>): CoroutineServerResponse?
 
-    suspend fun <T> body(channel: ReceiveChannel<T>, elementClass: Class<T>): CoroutineServerResponse?
+	suspend fun <T> body(channel: ReceiveChannel<T>, elementClass: Class<T>): CoroutineServerResponse?
 
-    fun contentType(contentType: MediaType): CoroutineBodyBuilder
+	fun contentType(contentType: MediaType): CoroutineBodyBuilder
 
-    suspend fun render(name: String, vararg modelAttributes: Any): CoroutineServerResponse?
+	suspend fun render(name: String, vararg modelAttributes: Any): CoroutineServerResponse?
 
-    suspend fun render(name: String, model: Map<String, *>): CoroutineServerResponse?
+	suspend fun render(name: String, model: Map<String, *>): CoroutineServerResponse?
 
-    suspend fun syncBody(body: Any): CoroutineServerResponse?
+	suspend fun syncBody(body: Any): CoroutineServerResponse?
 
-    companion object {
-        operator fun invoke(builder: ServerResponse.BodyBuilder): CoroutineBodyBuilder = DefaultCoroutineBodyBuilder(builder)
-    }
+	companion object {
+		operator fun invoke(builder: ServerResponse.BodyBuilder): CoroutineBodyBuilder = DefaultCoroutineBodyBuilder(builder)
+	}
 }
 
 internal open class DefaultCoroutineServerResponse(val resp: ServerResponse): CoroutineServerResponse {
-    override fun extractServerResponse(): ServerResponse = resp
+	override fun extractServerResponse(): ServerResponse = resp
 }
 
 internal open class DefaultCoroutineHeadersBuilder<T: ServerResponse.HeadersBuilder<T>>(var builder: T): CoroutineHeadersBuilder {
-    override fun location(location: URI): CoroutineHeadersBuilder = apply {
-        builder.location(location)
-    }
+	override fun location(location: URI): CoroutineHeadersBuilder = apply {
+		builder.location(location)
+	}
 
 	override fun header(headerName: String, vararg headerValues: String) = apply {
 		builder.header(headerName, *headerValues)
@@ -93,31 +95,31 @@ internal open class DefaultCoroutineHeadersBuilder<T: ServerResponse.HeadersBuil
 }
 
 internal open class DefaultCoroutineBodyBuilder(builder: ServerResponse.BodyBuilder): DefaultCoroutineHeadersBuilder<ServerResponse.BodyBuilder>(builder), CoroutineBodyBuilder {
-    override suspend fun build(): CoroutineServerResponse = builder.build().asCoroutineServerResponse()
+	override suspend fun build(): CoroutineServerResponse = builder.build().asCoroutineServerResponse()
 
-    suspend override fun body(inserter: CoroutineBodyInserter<*, in CoroutineServerHttpResponse>): CoroutineServerResponse? =
-            builder.body(inserter.asBodyInserter()).asCoroutineServerResponse()
+	suspend override fun body(inserter: CoroutineBodyInserter<*, in CoroutineServerHttpResponse>): CoroutineServerResponse? =
+			builder.body(inserter.asBodyInserter()).asCoroutineServerResponse()
 
-    suspend override fun <T> body(value: T?, elementClass: Class<T>): CoroutineServerResponse? =
-            builder.body(Mono.justOrEmpty(value), elementClass).asCoroutineServerResponse()
+	suspend override fun <T> body(value: T?, elementClass: Class<T>): CoroutineServerResponse? =
+			builder.body(Mono.justOrEmpty(value), elementClass).asCoroutineServerResponse()
 
-    suspend override fun <T> body(channel: ReceiveChannel<T>, elementClass: Class<T>): CoroutineServerResponse? =
-            builder.body(channel.asPublisher(Unconfined), elementClass).asCoroutineServerResponse()
+	suspend override fun <T> body(channel: ReceiveChannel<T>, elementClass: Class<T>): CoroutineServerResponse? =
+			builder.body(channel.asPublisher(Unconfined), elementClass).asCoroutineServerResponse()
 
-    override fun contentType(contentType: MediaType): CoroutineBodyBuilder = apply {
-        builder.contentType(contentType)
-    }
+	override fun contentType(contentType: MediaType): CoroutineBodyBuilder = apply {
+		builder.contentType(contentType)
+	}
 
-    suspend override fun render(name: String, vararg modelAttributes: Any): CoroutineServerResponse? =
-            builder.render(name, modelAttributes).awaitFirst().asCoroutineServerResponse()
+	suspend override fun render(name: String, vararg modelAttributes: Any): CoroutineServerResponse? =
+			builder.render(name, modelAttributes).awaitFirst().asCoroutineServerResponse()
 
-    suspend override fun render(name: String, model: Map<String, *>): CoroutineServerResponse? =
-            builder.render(name, model).awaitFirst().asCoroutineServerResponse()
+	suspend override fun render(name: String, model: Map<String, *>): CoroutineServerResponse? =
+			builder.render(name, model).awaitFirst().asCoroutineServerResponse()
 
-    suspend override fun syncBody(body: Any): CoroutineServerResponse? =
-            builder.syncBody(body).asCoroutineServerResponse()
+	suspend override fun syncBody(body: Any): CoroutineServerResponse? =
+			builder.syncBody(body).asCoroutineServerResponse()
 
-    suspend fun Mono<ServerResponse>.asCoroutineServerResponse(): CoroutineServerResponse =
+	suspend fun Mono<ServerResponse>.asCoroutineServerResponse(): CoroutineServerResponse =
 			awaitFirst().let { CoroutineServerResponse(it) }
 }
 
@@ -125,12 +127,12 @@ internal open class DefaultCoroutineRenderingResponse(resp: RenderingResponse): 
 }
 
 class DefaultCoroutineRenderingResponseBuilder(val builder: RenderingResponse.Builder): CoroutineRenderingResponse.Builder {
-    suspend override fun build(): CoroutineRenderingResponse =
-            CoroutineRenderingResponse(builder.build().awaitFirst())
+	suspend override fun build(): CoroutineRenderingResponse =
+			CoroutineRenderingResponse(builder.build().awaitFirst())
 
-    override fun modelAttributes(attributes: Map<String, *>): CoroutineRenderingResponse.Builder = apply {
-        builder.modelAttributes(attributes)
-    }
+	override fun modelAttributes(attributes: Map<String, *>): CoroutineRenderingResponse.Builder = apply {
+		builder.modelAttributes(attributes)
+	}
 }
 
 private fun CoroutineBodyInserter<*, in CoroutineServerHttpResponse>.asBodyInserter(): BodyInserter<Any, ServerHttpResponse> = TODO()
@@ -138,13 +140,13 @@ private fun CoroutineBodyInserter<*, in CoroutineServerHttpResponse>.asBodyInser
 private fun ServerResponse.BodyBuilder.asCoroutineBodyBuilder(): CoroutineBodyBuilder = CoroutineBodyBuilder(this)
 
 inline suspend fun <reified T : Any> CoroutineBodyBuilder.body(channel: ReceiveChannel<T>): CoroutineServerResponse? =
-        body(channel, T::class.java)
+		body(channel, T::class.java)
 
 suspend inline fun <reified T: Any> CoroutineBodyBuilder.body(value: T?): CoroutineServerResponse? =
-        body(value, T::class.java)
+		body(value, T::class.java)
 
 fun ServerResponse.asCoroutineServerResponse(): CoroutineServerResponse =
-        when (this) {
-            is RenderingResponse -> CoroutineRenderingResponse(this)
-            else                 -> CoroutineServerResponse(this)
-        }
+		when (this) {
+			is RenderingResponse -> CoroutineRenderingResponse(this)
+			else                 -> CoroutineServerResponse(this)
+		}
