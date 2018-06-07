@@ -59,6 +59,10 @@ val app = application {
 		bean<UserRepository>()
 		bean<ArticleRepository>()
 		mongodb(uri = "mongodb://myserver.com/foo")
+		listener<ContextStartedEvent> {
+			ref<UserRepository>().init()
+			ref<ArticleRepository>().init()
+		}
 	}
 	profile("web") {
 		bean<HtmlHandler>()
@@ -72,9 +76,7 @@ val app = application {
 					protobuf()
 				}
 				routes(routes)
-				security {
-					// ...
-				}
+				security { // TODO }
 			}
 			client {
 				codecs {
