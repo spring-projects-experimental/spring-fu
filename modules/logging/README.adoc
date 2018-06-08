@@ -1,6 +1,6 @@
 = Logging module
 
-This module configures https://logback.qos.ch/[Logback] logging Framework
+This module configures the https://logback.qos.ch/[Logback] logging framework
 
 ```kotlin
 application {

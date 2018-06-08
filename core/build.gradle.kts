@@ -1,12 +1,13 @@
 dependencies {
-	compile("org.springframework:spring-core")
-	compile("org.springframework:spring-context") {
+	api("org.springframework:spring-core")
+	api("org.springframework:spring-context") {
 		exclude(module = "spring-aop")
 	}
-	compile("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-	compile("org.jetbrains.kotlin:kotlin-reflect")
+	api("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+	api("org.jetbrains.kotlin:kotlin-reflect")
 
-	testCompile("org.springframework:spring-test")
+	testImplementation("org.springframework:spring-test")
 	testImplementation("org.junit.jupiter:junit-jupiter-api")
+
 	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
 }

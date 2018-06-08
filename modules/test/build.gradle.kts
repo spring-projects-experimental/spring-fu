@@ -8,15 +8,15 @@ buildscript {
 		mavenCentral()
 	}
 	dependencies {
-		classpath(kotlinModule("gradle-plugin", kotlin_version))
+		classpath(kotlin("gradle-plugin", kotlin_version))
 	}
 }
 dependencies {
-	compile("org.junit.jupiter:junit-jupiter-api")
-	compile("org.junit.jupiter:junit-jupiter-engine")
-	compile("org.springframework:spring-test")
-	compile("io.projectreactor:reactor-test")
-	compile(kotlinModule("stdlib-jdk8", kotlin_version))
+	api("org.junit.jupiter:junit-jupiter-api")
+	implementation("org.junit.jupiter:junit-jupiter-engine")
+	api("org.springframework:spring-test")
+	api("io.projectreactor:reactor-test")
+	api(kotlin("stdlib-jdk8", kotlin_version))
 }
 apply {
 	plugin("kotlin")

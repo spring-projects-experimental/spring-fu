@@ -1,9 +1,10 @@
 dependencies {
-	compile(project(":modules:webflux"))
-	compile("com.samskivert:jmustache")
+	api(project(":modules:webflux"))
+	api("com.samskivert:jmustache")
 
 	testImplementation("org.junit.jupiter:junit-jupiter-api")
+	testImplementation("org.springframework:spring-test")
+	testImplementation(project(":modules:webflux:netty"))
+
 	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
-	testCompile("org.springframework:spring-test")
-	testCompile(project(":modules:webflux:netty"))
 }
