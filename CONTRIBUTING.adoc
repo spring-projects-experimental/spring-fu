@@ -11,7 +11,7 @@ This project adheres to the Contributor Covenant link:CODE_OF_CONDUCT.adoc[code 
 We use GitHub issues to track bugs and enhancements. If you are reporting a bug, please help to speed up problem diagnosis by providing as much information as possible.
 
 === Building from Source
-To build the source you will need to install Java 8+.
+To build the source you will need to install Java 8+, and you will need a local MongoDB server to run tests and samples.
 
 ==== Build
 The project can be built from the root directory using the standard Gradle command:
