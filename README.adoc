@@ -40,14 +40,14 @@ It is a thin but opinionated layer on top of a subset of Spring Framework, Sprin
 
 Upcoming features:
 
-* https://github.com/sdeleuze/spring-fu/issues/34[Spring packages filtering] in order to have a minimal classpath and deploy just what you need
-* https://github.com/sdeleuze/spring-fu/issues/5[Gradle plugin]
+* https://github.com/spring-projects/spring-fu/issues/34[Spring packages filtering] in order to have a minimal classpath and deploy just what you need
+* https://github.com/spring-projects/spring-fu/issues/5[Gradle plugin]
 * Self-sufficient opinionated documentation (Kotlin, constructor injection, functional configuration, WebFlux, Coroutines, etc.)
-* https://github.com/sdeleuze/spring-fu/issues/14[Reactive/Coroutines SQL support]
-* https://github.com/sdeleuze/spring-fu/issues/29[Graal native image support]
-* https://github.com/sdeleuze/spring-fu/issues/23[Single language fullstack support] with frontend written in Kotlin
-* https://github.com/sdeleuze/spring-fu/issues/13[Functional actuators]
-* https://github.com/sdeleuze/spring-fu/issues/37[FaaS support]
+* https://github.com/spring-projects/spring-fu/issues/14[Reactive/Coroutines SQL support]
+* https://github.com/spring-projects/spring-fu/issues/29[Graal native image support]
+* https://github.com/spring-projects/spring-fu/issues/23[Single language fullstack support] with frontend written in Kotlin
+* https://github.com/spring-projects/spring-fu/issues/13[Functional actuators]
+* https://github.com/spring-projects/spring-fu/issues/37[FaaS support]
 
 [NOTE]
 ====
@@ -56,22 +56,22 @@ Some features experimented in Spring Fu, like Coroutines support, **might** be i
 
 In addition to the whole Spring and Reactor teams, credits to https://github.com/tgirard12[Thomas Girard] for its https://github.com/tgirard12/spring-webflux-kotlin-dsl[spring-webflux-kotlin-dsl] experiment that initially demonstrated this approach was possible and to https://github.com/konrad-kaminski[Konrad Kaminski] for his awesome https://github.com/konrad-kaminski/spring-kotlin-coroutine[spring-kotlin-coroutine] project.
 
-Please send us your feedback on the `#spring` channel of http://slack.kotlinlang.org/[Kotlin Slack]. Feel free to open issues, https://github.com/sdeleuze/spring-fu/blob/master/CONTRIBUTING.adoc[contribute] fixes or new modules via pull requests.
+Please send us your feedback on the `#spring` channel of http://slack.kotlinlang.org/[Kotlin Slack]. Feel free to open issues, https://github.com/spring-projects/spring-fu/blob/master/CONTRIBUTING.adoc[contribute] fixes or new modules via pull requests.
 
 == Getting started
 
-Spring Fu https://github.com/sdeleuze/spring-fu/milestone/1[`1.0.0.M1`] is currently under active development so no release is available yet, but you can clone the repository, import it into Intellij IDEA, try to play with the tests and sample applications.
+Spring Fu https://github.com/spring-projects/spring-fu/milestone/1[`1.0.0.M1`] is currently under active development so no release is available yet, but you can clone the repository, import it into Intellij IDEA, try to play with the tests and sample applications.
 
 === Documentation
 
 To start with Spring Fu, you can read the https://repo.spring.io/libs-snapshot-local/org/springframework/fu/spring-fu-docs/1.0.0.BUILD-SNAPSHOT/reference.html[**reference documentation**].
 
-API documentation will be available https://github.com/sdeleuze/spring-fu/issues/8[shortly].
+API documentation will be available https://github.com/spring-projects/spring-fu/issues/8[shortly].
 
 You can have a look to the sample applications:
 
-* https://github.com/sdeleuze/spring-fu/tree/master/samples/reactive-webapp[Reactive webapp]
-* https://github.com/sdeleuze/spring-fu/tree/master/samples/coroutines-webapp[Coroutines webapp]
+* https://github.com/spring-projects/spring-fu/tree/master/samples/reactive-webapp[Reactive webapp]
+* https://github.com/spring-projects/spring-fu/tree/master/samples/coroutines-webapp[Coroutines webapp]
 
 [[functional-configuration]]
 == Functional configuration
