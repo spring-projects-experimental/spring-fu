@@ -64,9 +64,14 @@ subprojects {
 }
 
 // See CONTRIBUTING.adoc in order to have Kotlin syntax highlighting
-tasks.withType<AsciidoctorTask> {
-	sourceDir = File("src/docs/asciidoc")
-	outputDir = File("build/docs")
+tasks {
+	val asciidoctor by getting(AsciidoctorTask::class) {
+		sourceDir = File("src/docs/asciidoc")
+		outputDir = File("build/docs")
+		inputs.files(fileTree("${projectDir}") {
+			include("**/*.adoc")
+		})
+	}
 }
 
 dependencies {
