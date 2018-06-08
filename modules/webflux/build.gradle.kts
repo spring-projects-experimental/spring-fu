@@ -1,4 +1,4 @@
 dependencies {
-	compile(project(":core"))
-	compile("org.springframework:spring-webflux")
+	api(project(":core"))
+	api("org.springframework:spring-webflux")
 }

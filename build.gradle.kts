@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.plugin.KotlinPluginWrapper
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-	id("org.jetbrains.kotlin.jvm") version "1.2.41"
+	kotlin("jvm") version "1.2.41"
 	id("io.spring.dependency-management") version "1.0.5.RELEASE"
 	id("com.github.johnrengelman.shadow") version "2.0.4" apply false
 	id("org.asciidoctor.convert") version "1.5.6"
@@ -15,6 +15,7 @@ subprojects {
 	apply {
 		plugin("io.spring.dependency-management")
 		plugin("org.jetbrains.kotlin.jvm")
+        plugin("java-library")
 	}
 	tasks.withType<KotlinCompile> {
 		kotlinOptions {
@@ -40,7 +41,6 @@ subprojects {
 		}
 		dependencies {
 			val coroutinesVersion = "0.22.5"
-			val springCoroutineVersion = "0.3.4"
 			dependency("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
 			dependency("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:$coroutinesVersion")
 		}
