@@ -2,27 +2,11 @@ import org.asciidoctor.gradle.AsciidoctorTask
 import org.jetbrains.kotlin.gradle.plugin.KotlinPluginWrapper
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val kotlin_version: String by extra
-
 plugins {
 	id("org.jetbrains.kotlin.jvm") version "1.2.41"
 	id("io.spring.dependency-management") version "1.0.5.RELEASE"
 	id("com.github.johnrengelman.shadow") version "2.0.4" apply false
 	id("org.asciidoctor.convert") version "1.5.6"
-}
-apply {
-	plugin("kotlin")
-}
-
-buildscript {
-	var kotlin_version: String by extra
-	kotlin_version = "1.2.41"
-	repositories {
-		mavenCentral()
-	}
-	dependencies {
-		classpath(kotlin("gradle-plugin", kotlin_version))
-	}
 }
 
 version = "1.0.0.BUILD-SNAPSHOT"
@@ -67,19 +51,4 @@ subprojects {
 tasks.withType<AsciidoctorTask> {
 	sourceDir = File("src/docs/asciidoc")
 	outputDir = File("build/docs")
-}
-
-dependencies {
-	compile(kotlin("stdlib-jdk8", kotlin_version))
-}
-repositories {
-	mavenCentral()
-}
-val compileKotlin: KotlinCompile by tasks
-compileKotlin.kotlinOptions {
-	jvmTarget = "1.8"
-}
-val compileTestKotlin: KotlinCompile by tasks
-compileTestKotlin.kotlinOptions {
-	jvmTarget = "1.8"
 }
