@@ -112,19 +112,13 @@ open class WebFluxModule(private val init: WebFluxModule.() -> Unit): AbstractMo
 		}
 
 		fun routes(import: (() -> WebFluxRoutesModule)? = null, routes: (WebFluxRoutesModule.() -> Unit)? = null) {
-			if (routes == null && import == null) {
+			if (routes == null && import == null)
 				throw IllegalArgumentException("No routes provided")
-			}
-			if (routes != null && import != null) {
-				throw IllegalArgumentException("You can't specify both routes and imported routes at the same time, choose one or the other")
-			}
-			if (routes != null) {
-				initializers.add(WebFluxRoutesModule(routes))
-			}
-			else {
-				initializers.add(import!!.invoke())
-			}
+
+			routes?.let { initializers.add(WebFluxRoutesModule(it)) }
+			import?.let { initializers.add(it.invoke()) }
 		}
+
 
 	}
 
