@@ -25,7 +25,7 @@ fun appRoutes() = routes {
 	GET("/api/user", userHandler::listApi)
 }
 ```
-It is a thin but opinionated layer on top of a subset of Spring Framework, Spring Data, Spring Security and other Spring projects that provides an alternative configuration model to Spring Boot to https://github.com/spring-projects/spring-boot[Spring Boot] to develop applications in Kotlin.
+It is a thin but opinionated layer on top of a subset of Spring Framework, Spring Data, Spring Security and other Spring projects that provides an alternative configuration model to https://github.com/spring-projects/spring-boot[Spring Boot] for developing applications in Kotlin.
 
 * https://spring.io/blog/2017/08/01/spring-framework-5-kotlin-apis-the-functional-way[Functional bean registration] instead of JavaConfig for both internals and application
 * Features are configured explicitly via expressive configuration leveraging Kotlin https://kotlinlang.org/docs/reference/type-safe-builders.html[domain-specific languages] (DSL)
