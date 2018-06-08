@@ -26,7 +26,7 @@ import org.springframework.fu.module.jackson.jackson
 import org.springframework.fu.module.logging.*
 import org.springframework.fu.module.logging.LogLevel.*
 import org.springframework.fu.module.mustache.mustache
-import org.springframework.fu.module.webflux.coroutines.import
+import org.springframework.fu.module.webflux.coroutines.routes
 import org.springframework.fu.module.webflux.netty.netty
 import org.springframework.fu.module.webflux.webflux
 import org.springframework.fu.ref
@@ -57,7 +57,7 @@ fun main(args: Array<String>) = application {
 			codecs {
 				jackson()
 			}
-			import(::coroutineRoutes)
+			routes(import = ::coroutineRoutes)
 		}
 	}
 	configuration(configuration)

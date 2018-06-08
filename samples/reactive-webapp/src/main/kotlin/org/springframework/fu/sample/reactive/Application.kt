@@ -52,7 +52,7 @@ fun main(args: Array<String>) = application {
 			codecs {
 				jackson()
 			}
-			import(::reactiveRoutes)
+			routes(import = ::reactiveRoutes)
 		}
 	}
 	configuration(configuration)

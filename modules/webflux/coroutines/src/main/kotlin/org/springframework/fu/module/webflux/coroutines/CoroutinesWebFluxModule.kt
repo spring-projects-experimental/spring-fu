@@ -47,8 +47,17 @@ open class CoroutineWebFluxRoutesModule(private val init: (CoroutineWebFluxRoute
 
 fun routes(routes: CoroutineWebFluxRoutesModule.() -> Unit) = CoroutineWebFluxRoutesModule(routes)
 
-fun WebFluxModule.WebFluxServerModule.import(routesModuleSupplier: () -> CoroutineWebFluxRoutesModule) =
-		initializers.add(routesModuleSupplier.invoke())
-
-fun WebFluxModule.WebFluxServerModule.routes(routes: CoroutineWebFluxRoutesModule.() -> Unit) =
+fun WebFluxModule.WebFluxServerModule.routes(routes: (CoroutineWebFluxRoutesModule.() -> Unit)? = null, import: (() -> CoroutineWebFluxRoutesModule)? = null) {
+	if (routes == null && import == null) {
+		throw IllegalArgumentException("No routes provided")
+	}
+	if (routes != null && import != null) {
+		throw IllegalArgumentException("You can't specify both routes and imported routes at the same time, choose one or the other")
+	}
+	if (routes != null) {
 		initializers.add(CoroutineWebFluxRoutesModule(routes))
+	}
+	else {
+		initializers.add(import!!.invoke())
+	}
+}

@@ -111,12 +111,20 @@ open class WebFluxModule(private val init: WebFluxModule.() -> Unit): AbstractMo
 			builder.webFilter(filter)
 		}
 
-		fun routes(routes: WebFluxRoutesModule.() -> Unit) =
+		fun routes(import: (() -> WebFluxRoutesModule)? = null, routes: (WebFluxRoutesModule.() -> Unit)? = null) {
+			if (routes == null && import == null) {
+				throw IllegalArgumentException("No routes provided")
+			}
+			if (routes != null && import != null) {
+				throw IllegalArgumentException("You can't specify both routes and imported routes at the same time, choose one or the other")
+			}
+			if (routes != null) {
 				initializers.add(WebFluxRoutesModule(routes))
-
-		fun import(routesModuleSupplier: () -> WebFluxRoutesModule) =
-				initializers.add(routesModuleSupplier.invoke())
-
+			}
+			else {
+				initializers.add(import!!.invoke())
+			}
+		}
 
 	}
 
