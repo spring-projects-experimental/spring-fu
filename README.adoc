@@ -47,6 +47,7 @@ Upcoming features:
 * https://github.com/sdeleuze/spring-fu/issues/29[Graal native image support]
 * https://github.com/sdeleuze/spring-fu/issues/23[Single language fullstack support] with frontend written in Kotlin
 * https://github.com/sdeleuze/spring-fu/issues/13[Functional actuators]
+* https://github.com/sdeleuze/spring-fu/issues/37[FaaS support]
 
 [NOTE]
 ====
