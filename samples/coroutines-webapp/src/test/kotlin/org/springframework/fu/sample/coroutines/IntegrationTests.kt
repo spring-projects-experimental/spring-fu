@@ -1,10 +1,11 @@
-= Test module
+package org.springframework.fu.sample.coroutines
 
-This module provides support for testing via https://junit.org/junit5/[JUnit 5] configured by default with https://junit.org/junit5/docs/current/user-guide/#writing-tests-test-instance-lifecycle[per class lifecycle] in order to make tests faster and allow using `@BeforeClass` and `@AfterClass` on regular non-static methods.
+import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.Test
+import org.springframework.http.MediaType
+import org.springframework.test.web.reactive.server.WebTestClient
 
-== Integration tests
-
-```kotlin
 class IntegrationTests {
 
 	private val client = WebTestClient.bindToServer().baseUrl("http://localhost:8080").build()
@@ -40,5 +41,3 @@ class IntegrationTests {
 		app.stop()
 	}
 }
-```
-

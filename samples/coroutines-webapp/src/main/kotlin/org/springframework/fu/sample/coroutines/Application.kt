@@ -32,7 +32,8 @@ import org.springframework.fu.module.webflux.webflux
 import org.springframework.fu.ref
 import java.io.File
 
-fun main(args: Array<String>) = application {
+
+val app =  application {
 	bean<UserRepository>()
 	bean<UserHandler>()
 	listener<ContextStartedEvent> {
@@ -64,4 +65,6 @@ fun main(args: Array<String>) = application {
 	mongodb {
 		coroutines()
 	}
-}.run(await = true)
+}
+
+fun main(args: Array<String>) = app.run(await = true)

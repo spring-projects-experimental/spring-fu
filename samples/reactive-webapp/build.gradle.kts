@@ -15,6 +15,6 @@ dependencies {
 	compile(project(":modules:jackson"))
 	compile(project(":modules:mongodb"))
 	compile(project(":modules:mustache"))
-	compile(project(":modules:test"))
 	compile(project(":modules:webflux:netty"))
+	testCompile(project(":modules:test"))
 }

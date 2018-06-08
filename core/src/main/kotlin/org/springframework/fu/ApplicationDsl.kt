@@ -164,6 +164,10 @@ open class ApplicationDsl(private val init: ApplicationDsl.() -> Unit) : Abstrac
 			}
 		}
 	}
+
+	fun stop() {
+		context.close()
+	}
 }
 
 fun application(init: ApplicationDsl.() -> Unit) = ApplicationDsl(init)
