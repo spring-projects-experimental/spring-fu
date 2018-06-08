@@ -4,7 +4,7 @@ In Spring Fu, configuration is done via an application DSL augmented by the conf
 
 === Beans
 
-Beans are simply as following.
+Beans are simply defined as follows.
 
 ```kotlin
 application {
@@ -18,7 +18,7 @@ application {
 
 [NOTE]
 ====
-Beans declared like above will be autowired by constructor if needed.
+Beans declared as above will be autowired by constructor if needed.
 ====
 
 === Configuration
