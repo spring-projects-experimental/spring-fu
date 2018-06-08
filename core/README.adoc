@@ -16,10 +16,17 @@ application {
 
 ```
 
-[NOTE]
-====
-Beans declared as above will be autowired by constructor if needed.
-====
+Since classes with a single constructor have their parameters automatically autowired, it is recommended to use constructor injection with `val` read-only (and non-nullable when possible) private https://kotlinlang.org/docs/reference/properties.html[properties].
+
+[source,kotlin]
+----
+class HtmlHandler(
+	private val userRepository: UserRepository,
+	private val articleRepository: ArticleRepository
+) {
+	// ...
+}
+----
 
 === Configuration
 
@@ -48,58 +55,3 @@ application {
 	}
 }
 ```
-
-== Guidelines
-
-=== Constructor injection
-
-Our recommendation is to try and favor constructor injection with `val` read-only (and non-nullable when possible) https://kotlinlang.org/docs/reference/properties.html[properties].
-
-[source,kotlin]
-----
-class YourBean(
-	private val mongoTemplate: ReactiveMongoTemplate,
-	private val configuration: ApplicationConfiguration
-)
-----
-
-[NOTE]
-====
-Classes with a single constructor have their parameters automatically autowired, that's why there is no need for an explicit `@Autowired constructor` in the example shown above.
-====
-
-=== Immutable data classes
-
-In Kotlin, it is very convenient and considered best practice to declare read-only properties
-within the primary constructor, as in the following example:
-
-[source,kotlin,indent=0]
-----
-	class Person(val name: String, val age: Int)
-----
-
-You can optionally add https://kotlinlang.org/docs/reference/data-classes.html[the `data` keyword].
-
-[source,kotlin,indent=0]
-----
-	data class Person(val name: String, val age: Int)
-----
-
-The compiler will automatically derive the following members from all properties declared
-in the primary constructor:
-
-* `equals()`/`hashCode`() pair
-* `toString()` of the form "User(name=John, age=42)"
-* `componentN()` functions corresponding to the properties in their order of declaration
-* `copy()` function
-
-
-This allows for easy changes to individual properties even if `Person` properties are read-only.
-
-[source,kotlin,indent=0]
-----
-	data class Person(val name: String, val age: Int)
-
-	val jack = Person(name = "Jack", age = 1)
-	val olderJack = jack.copy(age = 2)
-----
