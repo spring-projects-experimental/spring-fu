@@ -36,17 +36,16 @@ class CorsModuleTests {
             webflux {
                 server(netty()) {
                     cors {
-                        setAllowedOrigins(listOf("first.safe.com", "second.safe.com", "third.safe.com"))
-                        addAllowedOrigin("my.super.safe.com")
-                        setAllowedMethods(listOf("GET", "PATCH"))
-                        addAllowedMethod("PUT")
-                        setAllowedHeaders(listOf("*"))
-                        addAllowedHeader("*")
-                        setExposedHeaders(listOf("Content-Length"))
-                        addExposedHeader("Expires")
-                        setAllowCredentials(false)
-                        setMaxAge(600)
-                        applyPermitDefaultValues()
+                        path("/api") {
+                            allowedOrigins = listOf("first.example.com", "second.example.com")
+                            allowedMethods = listOf("GET", "PUT", "POST", "DELETE")
+                            applyPermitDefaultValues()
+                        }
+                        path("/public") {
+                            allowedOrigins = listOf("**")
+                            allowedMethods = listOf("GET")
+                            applyPermitDefaultValues()
+                        }
                     }
                     routes {
                         GET("/") { noContent().build() }
@@ -54,6 +53,7 @@ class CorsModuleTests {
                 }
             }
         }
+        // assert(context.containsBean("corsFilter")) // this fails, and context.beanDefinitionNames is empty
         app.run(context)
         val client = WebTestClient.bindToServer().baseUrl("http://localhost:8080").build()
         client.get().uri("/").exchange()

@@ -6,6 +6,7 @@ import org.springframework.fu.AbstractModule
 import org.springframework.fu.module.webflux.WebFluxModule
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.reactive.CorsWebFilter
+import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource
 
 /**
  * @author Ireneusz Kozłowski
@@ -13,58 +14,18 @@ import org.springframework.web.cors.reactive.CorsWebFilter
 class CorsModule(private val init: CorsModule.() -> Unit) :
     WebFluxModule.WebServerModule, AbstractModule() {
 
-    private val configuration = CorsConfiguration()
+    private val configuration = UrlBasedCorsConfigurationSource()
     override fun initialize(context: GenericApplicationContext) {
         init()
-        context.registerBean {
-            CorsWebFilter {
-                configuration
-            }
+        context.registerBean("corsFilter") {
+            CorsWebFilter(configuration)
         }
     }
 
-    fun setAllowedOrigins(allowedOrigins: List<String>?) {
-        configuration.allowedOrigins = allowedOrigins
-    }
-
-    fun addAllowedOrigin(origin: String) {
-        configuration.addAllowedOrigin(origin)
-    }
-
-    fun setAllowedMethods(allowedMethods: List<String>?) {
-        configuration.allowedMethods = allowedMethods
-    }
-
-    fun addAllowedMethod(origin: String) {
-        configuration.addAllowedMethod(origin)
-    }
-
-    fun setAllowedHeaders(allowedHeaders: List<String>?) {
-        configuration.allowedHeaders = allowedHeaders
-    }
-
-    fun addAllowedHeader(origin: String) {
-        configuration.addAllowedHeader(origin)
-    }
-
-    fun setExposedHeaders(ExposedHeaders: List<String>?) {
-        configuration.exposedHeaders = ExposedHeaders
-    }
-
-    fun addExposedHeader(origin: String) {
-        configuration.addExposedHeader(origin)
-    }
-
-    fun setAllowCredentials(allowCredentials: Boolean?) {
-        configuration.allowCredentials = allowCredentials
-    }
-
-    fun setMaxAge(maxAge: Long?) {
-        configuration.maxAge = maxAge
-    }
-
-    fun applyPermitDefaultValues() {
-        configuration.applyPermitDefaultValues()
+    fun path(path: String, init: CorsConfiguration.() -> Unit) {
+        val corsConfiguration = CorsConfiguration()
+        corsConfiguration.init()
+        configuration.registerCorsConfiguration(path, corsConfiguration)
     }
 }
 
