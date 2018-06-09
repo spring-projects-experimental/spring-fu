@@ -2,6 +2,7 @@ rootProject.name = "spring-fu-build"
 
 include("core",
 		"modules:logging",
+		"modules:cors",
 		"modules:dynamic-configuration",
 		"modules:jackson",
 		"modules:mongodb",
