@@ -1,5 +1,7 @@
 Spring Fu is an experimental https://kotlinlang.org/[Kotlin] micro-framework that makes it easy to create lightweight https://spring.io/projects/spring-framework[Spring]-powered applications with <<functional-configuration,functional APIs>> instead of annotations. See the https://repo.spring.io/libs-snapshot-local/org/springframework/fu/spring-fu-docs/1.0.0.BUILD-SNAPSHOT/reference.html[reference documentation] for more details.
 
+Fu is for **fu**nctional API, but that's also a wordplay with th -fu suffix which means skill, the Fu chinese character which means "fortune" or "good luck" and the https://en.wikipedia.org/wiki/Fu_(poetry)[chinese poetry].
+
 == Overview
 
 A simple Spring Fu web application rendering an HTML page and exposing a JSON HTTP endpoint looks like that:
