@@ -1,3 +1,5 @@
+group = "org.springframework.fu"
+
 dependencies {
 	api("org.springframework:spring-core")
 	api("org.springframework:spring-context") {
@@ -10,4 +12,13 @@ dependencies {
 	testImplementation("org.junit.jupiter:junit-jupiter-api")
 
 	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+}
+
+publishing {
+	publications {
+		create(project.name, MavenPublication::class.java) {
+			from(components["java"])
+			artifactId = "spring-fu"
+		}
+	}
 }

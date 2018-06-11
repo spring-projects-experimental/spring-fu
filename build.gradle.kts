@@ -5,17 +5,21 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
 	kotlin("jvm") version "1.2.41"
 	id("io.spring.dependency-management") version "1.0.5.RELEASE"
-	id("com.github.johnrengelman.shadow") version "2.0.4" apply false
 	id("org.asciidoctor.convert") version "1.5.6"
+	id("com.github.johnrengelman.shadow") version "2.0.4" apply false
+	id("maven-publish")
 }
 
-version = "1.0.0.BUILD-SNAPSHOT"
+allprojects {
+	version = "1.0.0.BUILD-SNAPSHOT"
+}
 
 subprojects {
 	apply {
 		plugin("io.spring.dependency-management")
 		plugin("org.jetbrains.kotlin.jvm")
         plugin("java-library")
+		plugin("maven-publish")
 	}
 	tasks.withType<KotlinCompile> {
 		kotlinOptions {
@@ -30,7 +34,6 @@ subprojects {
 		mavenCentral()
 		maven("https://repo.spring.io/libs-release")
 		maven("https://repo.spring.io/snapshot")
-		maven("https://dl.bintray.com/konrad-kaminski/maven")
 	}
 	dependencyManagement {
 		imports {

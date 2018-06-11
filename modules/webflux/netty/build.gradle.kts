@@ -9,3 +9,7 @@ dependencies {
 
 	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
 }
+
+base {
+	archivesBaseName = "spring-fu-webflux-netty"
+}

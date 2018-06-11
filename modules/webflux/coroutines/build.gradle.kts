@@ -9,3 +9,7 @@ dependencies {
 kotlin {
 	experimental.coroutines = Coroutines.ENABLE
 }
+
+base {
+	archivesBaseName = "spring-fu-webflux-coroutines"
+}
