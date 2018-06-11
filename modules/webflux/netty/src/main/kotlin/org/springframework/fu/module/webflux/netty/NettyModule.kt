@@ -16,12 +16,14 @@
 
 package org.springframework.fu.module.webflux.netty
 
+import org.springframework.beans.factory.getBean
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.registerBean
 import org.springframework.fu.AbstractModule
 import org.springframework.fu.module.webflux.WebFluxModule
 import org.springframework.fu.module.webflux.WebServer
 import org.springframework.http.server.reactive.ReactorHttpHandlerAdapter
+import org.springframework.web.cors.reactive.CorsWebFilter
 import org.springframework.web.server.adapter.WebHttpHandlerBuilder
 import reactor.netty.DisposableServer
 import reactor.netty.http.server.HttpServer
@@ -51,7 +53,10 @@ private class NettyWebServer(private val port: Int) : WebServer(port) {
 
 	override fun start() {
 		if (!isRunning) {
-			val httpHandler = WebHttpHandlerBuilder.applicationContext(context).build()
+			val httpHandler = WebHttpHandlerBuilder
+					.applicationContext(context)
+					.apply { if (context.containsBean("corsFilter")) filter(context.getBean<CorsWebFilter>()) }
+					.build()
 			disposableServer.set(server.handle(ReactorHttpHandlerAdapter(httpHandler)).bindNow())
 		}
 	}

@@ -22,6 +22,7 @@ import org.apache.catalina.core.StandardContext
 import org.apache.catalina.loader.WebappClassLoader
 import org.apache.catalina.loader.WebappLoader
 import org.apache.catalina.startup.Tomcat
+import org.springframework.beans.factory.getBean
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.registerBean
 import org.springframework.fu.AbstractModule
@@ -30,6 +31,7 @@ import org.springframework.fu.module.webflux.WebFluxModule
 import org.springframework.fu.module.webflux.WebServer
 import org.springframework.http.server.reactive.TomcatHttpHandlerAdapter
 import org.springframework.util.ClassUtils
+import org.springframework.web.cors.reactive.CorsWebFilter
 import org.springframework.web.server.adapter.WebHttpHandlerBuilder
 
 /**
@@ -57,7 +59,11 @@ private class TomcatWebServer(private val port: Int = 8080) : WebServer(port) {
 		if (isRunning) {
 			return
 		}
-		val httpHandler = WebHttpHandlerBuilder.applicationContext(context).build()
+		val httpHandler = WebHttpHandlerBuilder
+				.applicationContext(context)
+				.apply { if (context.containsBean("corsFilter")) filter(context.getBean<CorsWebFilter>()) }
+				.build()
+
 		val servlet = TomcatHttpHandlerAdapter(httpHandler)
 
 		val docBase = createTempDir("tomcat-docbase")

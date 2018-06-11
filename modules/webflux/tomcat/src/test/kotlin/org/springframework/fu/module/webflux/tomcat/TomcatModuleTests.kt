@@ -16,15 +16,17 @@
 
 package org.springframework.fu.module.webflux.tomcat
 
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.getBean
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.fu.application
 import org.springframework.fu.module.webflux.WebServer
 import org.springframework.fu.module.webflux.webflux
-import org.springframework.http.HttpStatus.*
+import org.springframework.http.HttpStatus.NO_CONTENT
 import org.springframework.test.web.reactive.server.WebTestClient
+import org.springframework.web.cors.CorsConfiguration
+import org.springframework.web.cors.reactive.CorsWebFilter
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.server.ServerResponse.noContent
 import org.springframework.web.reactive.function.server.ServerResponse.ok
@@ -132,6 +134,37 @@ class TomcatModuleTests {
 		val client = WebTestClient.bindToServer().baseUrl("http://localhost:8080").build()
 		client.get().uri("/foo").exchange().expectStatus().isNoContent
 		client.get().uri("/bar").exchange().expectStatus().isOk
+		context.close()
+	}
+
+
+	@Test
+	fun `Application configuration with CORS filter`() {
+		val context = GenericApplicationContext()
+
+		val corsConfiguration = CorsConfiguration().applyPermitDefaultValues()
+		corsConfiguration.addAllowedOrigin("http://example.com")
+
+		val app = application {
+			profile("cors") {
+				bean("corsFilter"){
+					CorsWebFilter { corsConfiguration }
+				}
+			}
+			webflux {
+				server(tomcat()) {
+					routes {
+						GET("/bar") { ok().build() }
+					}
+				}
+			}
+		}
+		app.run(context)
+		context.containsBean("corsFilter")
+		val client = WebTestClient.bindToServer().baseUrl("http://localhost:8080").build()
+		client.get().uri("/bar").exchange().expectStatus().isOk
+		val corsClient = WebTestClient.bindToServer().baseUrl("http://example.com").build()
+		corsClient.get().exchange().expectStatus().isOk
 		context.close()
 	}
 
