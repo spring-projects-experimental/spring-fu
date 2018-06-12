@@ -16,6 +16,7 @@
 
 package org.springframework.fu
 
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.config.BeanDefinitionCustomizer
 import org.springframework.beans.factory.support.AbstractBeanDefinition
 import org.springframework.context.ApplicationEvent
@@ -25,12 +26,17 @@ import org.springframework.context.support.BeanDefinitionDsl.Autowire
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import org.springframework.context.support.registerBean
+import java.lang.management.ManagementFactory
+import java.time.Duration
 import java.util.function.Supplier
+import kotlin.system.measureTimeMillis
 
 /**
  * @author Sebastien Deleuze
  */
 open class ApplicationDsl(private val init: ApplicationDsl.() -> Unit) : AbstractModule() {
+
+	private val fuLogger = LoggerFactory.getLogger(ApplicationDsl::class.java)
 
 	/**
 	 * Declare a bean definition from the given bean class which can be inferred when possible.
@@ -146,17 +152,24 @@ open class ApplicationDsl(private val init: ApplicationDsl.() -> Unit) : Abstrac
 	 * @param profiles [ApplicationContext] profiles separated by commas.
 	 */
 	fun run(context: GenericApplicationContext = GenericApplicationContext(), await: Boolean = false, profiles: String = "") {
-		context.registerBean("messageSource") {
-			ReloadableResourceBundleMessageSource().apply {
-				setBasename("messages")
-				setDefaultEncoding("UTF-8")
+		val startupTime = measureTimeMillis {
+			context.registerBean("messageSource") {
+				ReloadableResourceBundleMessageSource().apply {
+					setBasename("messages")
+					setDefaultEncoding("UTF-8")
+				}
 			}
+			if (!profiles.isEmpty()) {
+				context.environment.setActiveProfiles(*profiles.split(",").map { it.trim() }.toTypedArray())
+			}
+			initialize(context)
+			context.refresh()
 		}
-		if (!profiles.isEmpty()) {
-			context.environment.setActiveProfiles(*profiles.split(",").map { it.trim() }.toTypedArray())
-		}
-		initialize(context)
-		context.refresh()
+		val startupTimeDuration = Duration.ofMillis(startupTime)
+		fuLogger.info("Application started in " +
+				"${startupTimeDuration.seconds}.${startupTimeDuration.minusSeconds(startupTimeDuration.seconds).toMillis()} seconds " +
+				"(JVM running for ${ManagementFactory.getRuntimeMXBean().uptime / 1000.0})")
+
 		if (await) {
 			while (true)
 			{
