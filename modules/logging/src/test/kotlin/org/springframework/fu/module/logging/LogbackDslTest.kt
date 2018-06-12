@@ -34,6 +34,8 @@ import java.io.File
  */
 internal class LogbackDslTest {
 
+	private val tmp = System.getProperty("java.io.tmpdir").let(::File)
+
 	@Test
 	fun `Default Logback Configuration`() {
 		lateinit var logback: LogbackDsl
@@ -104,10 +106,11 @@ internal class LogbackDslTest {
 	fun `Logback rollingFileAppender`() {
 		lateinit var logback: LogbackDsl
 		val context = GenericApplicationContext()
+		val logFile = File(tmp, "log.txt")
 		application {
 			logging {
 				logback = logback {
-					rollingFileAppender(File("/tmp/log.txt"))
+					rollingFileAppender(logFile)
 				}
 			}
 		}.run(context)
@@ -120,7 +123,7 @@ internal class LogbackDslTest {
 			assertTrue(it.isAppend)
 
 			(it.rollingPolicy as SizeAndTimeBasedRollingPolicy<*>).let {
-				assertEquals("/tmp/log.txt", it.activeFileName)
+				assertEquals(logFile.path, it.activeFileName)
 				assertEquals("log.%d{yyyy-MM-dd}.%i.gz", it.fileNamePattern)
 				assertEquals(30, it.maxHistory)
 			}
@@ -131,18 +134,19 @@ internal class LogbackDslTest {
 	fun `Logback rollingFileAppender custom`() {
 		lateinit var logback: LogbackDsl
 		val context = GenericApplicationContext()
+		val logFile = File(tmp, "mylog.txt")
 		application {
 			logging {
 				logback = logback {
 					rollingFileAppender(
-							file = File("/tmp/mylog.txt"),
-							name = "MY_ROLLING",
-							pattern = "%d{yyyy-MM}",
-							fileNamePattern = "%i.gz",
-							maxFileSize = "2GB",
-							maxHistory = 11,
-							totalSizeCap = "1MB",
-							append = false
+						file = logFile,
+						name = "MY_ROLLING",
+						pattern = "%d{yyyy-MM}",
+						fileNamePattern = "%i.gz",
+						maxFileSize = "2GB",
+						maxHistory = 11,
+						totalSizeCap = "1MB",
+						append = false
 					)
 				}
 			}
@@ -158,7 +162,7 @@ internal class LogbackDslTest {
 			assertFalse(it.isAppend)
 
 			(it.rollingPolicy as SizeAndTimeBasedRollingPolicy<*>).let {
-				assertEquals("/tmp/mylog.txt", it.activeFileName)
+				assertEquals(logFile.path, it.activeFileName)
 				assertEquals("%i.gz", it.fileNamePattern)
 				assertEquals(11, it.maxHistory)
 			}
