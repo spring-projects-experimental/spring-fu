@@ -16,6 +16,7 @@
 
 package org.springframework.fu.module.webflux
 
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.NoSuchBeanDefinitionException
 import org.springframework.beans.factory.getBeansOfType
 import org.springframework.context.ApplicationContext
@@ -60,6 +61,7 @@ open class WebFluxModule(private val init: WebFluxModule.() -> Unit): AbstractMo
 	open class WebFluxServerModule(private val init: WebFluxServerModule.() -> Unit,
 							  private val serverModule: WebServerModule): AbstractModule() {
 
+		private val logWebflux = LoggerFactory.getLogger(WebFluxModule::class.java)
 		private val builder = HandlerStrategies.empty()
 
 		override fun initialize(context: GenericApplicationContext) {
@@ -97,6 +99,8 @@ open class WebFluxModule(private val init: WebFluxModule.() -> Unit): AbstractMo
 					else {
 						RouterFunction<ServerResponse> { Mono.empty() }
 					}
+					logWebflux.info("$router")
+
 					RouterFunctions.toWebHandler(router, builder.build())
 				}
 			})
