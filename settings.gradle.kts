@@ -2,6 +2,7 @@ rootProject.name = "spring-fu-build"
 
 include("core",
 		"dependencies",
+		"docs",
 		"modules",
 		"modules:logging",
 		"modules:dynamic-configuration",

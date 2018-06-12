@@ -16,6 +16,11 @@ publishing {
 		create(project.name, MavenPublication::class.java) {
 			from(components["java"])
 			artifactId = "spring-fu"
+			val sourcesJar by tasks.creating(Jar::class) {
+				classifier = "sources"
+				from(java.sourceSets["main"].allSource)
+			}
+			artifact(sourcesJar)
 		}
 	}
 }

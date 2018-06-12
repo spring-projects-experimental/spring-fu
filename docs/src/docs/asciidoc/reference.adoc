@@ -1,0 +1,31 @@
+= Spring Fu reference documentation
+:toc: left
+:toclevels: 4
+:tabsize: 4
+:stylesheet: stylesheets/main.css
+:docinfo1:
+
+include::../../../../README.adoc[]
+
+include::../../../../core/README.adoc[]
+
+include::../../../../modules/README.adoc[leveloffset=+1]
+
+include::../../../../modules/logging/README.adoc[leveloffset=+2]
+
+include::../../../../modules/mongodb/README.adoc[leveloffset=+2]
+
+include::../../../../modules/mongodb-coroutines/README.adoc[leveloffset=+2]
+
+include::../../../../modules/dynamic-configuration/README.adoc[leveloffset=+2]
+
+include::../../../../modules/jackson/README.adoc[leveloffset=+2]
+
+include::../../../../modules/mustache/README.adoc[leveloffset=+2]
+
+include::../../../../modules/test/README.adoc[leveloffset=+2]
+
+include::../../../../modules/webflux/README.adoc[leveloffset=+2]
+
+include::../../../../modules/webflux-coroutines/README.adoc[leveloffset=+2]
+
