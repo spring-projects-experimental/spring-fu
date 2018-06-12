@@ -49,7 +49,7 @@ val app =  application {
 		logback {
 			debug(true)
 			consoleAppender()
-			rollingFileAppender(File("/tmp/log.txt"))
+			rollingFileAppender(File(System.getProperty("java.io.tmpdir"), "log.txt"))
 		}
 	}
 	webflux {
