@@ -3,23 +3,25 @@ import org.jetbrains.kotlin.gradle.plugin.KotlinPluginWrapper
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-	kotlin("jvm") version "1.2.41"
+	id("org.jetbrains.kotlin.jvm") version "1.2.41" apply false
+	id("com.github.johnrengelman.shadow") version "2.0.4" apply false
 	id("io.spring.dependency-management") version "1.0.5.RELEASE"
 	id("org.asciidoctor.convert") version "1.5.6"
-	id("com.github.johnrengelman.shadow") version "2.0.4" apply false
+	id("java-library")
 	id("maven-publish")
 }
 
 allprojects {
 	version = "1.0.0.BUILD-SNAPSHOT"
+	group = "org.springframework.fu"
 }
 
 subprojects {
 	apply {
-		plugin("io.spring.dependency-management")
 		plugin("org.jetbrains.kotlin.jvm")
-        plugin("java-library")
+		plugin("java-library")
 		plugin("maven-publish")
+		plugin("io.spring.dependency-management")
 	}
 	tasks.withType<KotlinCompile> {
 		kotlinOptions {
@@ -32,20 +34,21 @@ subprojects {
 	}
 	repositories {
 		mavenCentral()
-		maven("https://repo.spring.io/libs-release")
+		maven("https://repo.spring.io/libs-milestone")
 		maven("https://repo.spring.io/snapshot")
 	}
 	dependencyManagement {
+		val bootVersion: String by project
+		val coroutinesVersion: String by project
 		imports {
-			mavenBom("org.springframework.boot:spring-boot-dependencies:2.0.2.RELEASE") {
-				bomProperty("spring.version", "5.1.0.BUILD-SNAPSHOT")
-				bomProperty("reactor-bom.version", "Californium-BUILD-SNAPSHOT")
-			}
+			mavenBom("org.springframework.boot:spring-boot-dependencies:$bootVersion")
 		}
 		dependencies {
-			val coroutinesVersion = "0.22.5"
 			dependency("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
 			dependency("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:$coroutinesVersion")
+		}
+		generatedPomCustomization {
+			enabled(false)
 		}
 	}
 }

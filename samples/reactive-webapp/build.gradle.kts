@@ -10,12 +10,11 @@ application {
 }
 
 dependencies {
-    implementation(project(":core"))
     implementation(project(":modules:logging"))
     implementation(project(":modules:jackson"))
     implementation(project(":modules:mongodb"))
     implementation(project(":modules:mustache"))
-    implementation(project(":modules:webflux:netty"))
+    implementation(project(":modules:webflux-netty"))
 
     testImplementation(project(":modules:test"))
 }

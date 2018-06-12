@@ -1,6 +1,4 @@
 subprojects {
-	group = "org.springframework.fu"
-
 	publishing {
 		publications {
 			create(project.name, MavenPublication::class.java) {

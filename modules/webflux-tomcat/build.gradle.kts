@@ -6,11 +6,7 @@ dependencies {
 	testImplementation("org.junit.jupiter:junit-jupiter-api")
 	testImplementation("org.springframework:spring-test")
 	testImplementation("io.projectreactor:reactor-test")
-	testImplementation("io.projectreactor.netty:reactor-netty:0.8.0.BUILD-SNAPSHOT")
+	testImplementation("io.projectreactor.netty:reactor-netty:") // For the client
 
 	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
-}
-
-base {
-	archivesBaseName = "spring-fu-webflux-tomcat"
 }

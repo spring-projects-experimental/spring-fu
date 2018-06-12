@@ -23,7 +23,6 @@ import org.bson.Document
 import org.springframework.beans.factory.getBean
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.registerBean
-import org.springframework.data.mongodb.core.ReactiveMongoOperations
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate
 import org.springframework.data.mongodb.core.SimpleReactiveMongoDatabaseFactory
 import org.springframework.data.mongodb.core.convert.*
@@ -49,7 +48,7 @@ open class MongoModule(private val connectionString: String, private val init: M
 			MongoClients.create(connectionString)
 		}
 		context.registerBean {
-			SimpleReactiveMongoDatabaseFactory(context.getBean(), MongoClientURI(connectionString).database)
+			SimpleReactiveMongoDatabaseFactory(context.getBean(), MongoClientURI(connectionString).database!!)
 		}
 		context.registerBean {
 			val conversions = MongoCustomConversions(emptyList<Any>())
@@ -69,11 +68,11 @@ open class MongoModule(private val connectionString: String, private val init: M
 	}
 
 	class NoOpDbRefResolver : DbRefResolver {
-		override fun resolveDbRef(property: MongoPersistentProperty, dbref: DBRef, callback: DbRefResolverCallback, proxyHandler: DbRefProxyHandler): Any? {
+		override fun resolveDbRef(property: MongoPersistentProperty, dbref: DBRef?, callback: DbRefResolverCallback, proxyHandler: DbRefProxyHandler): Any? {
 			return null
 		}
 
-		override fun createDbRef(annotation: org.springframework.data.mongodb.core.mapping.DBRef, entity: MongoPersistentEntity<*>, id: Any): DBRef {
+		override fun createDbRef(annotation: org.springframework.data.mongodb.core.mapping.DBRef?, entity: MongoPersistentEntity<*>, id: Any): DBRef {
 			return DBRef("", 0)
 		}
 

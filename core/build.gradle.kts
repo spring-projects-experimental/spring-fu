@@ -1,5 +1,3 @@
-group = "org.springframework.fu"
-
 dependencies {
 	api("org.springframework:spring-core")
 	api("org.springframework:spring-context") {
@@ -7,10 +5,8 @@ dependencies {
 	}
 	api("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	api("org.jetbrains.kotlin:kotlin-reflect")
-
 	testImplementation("org.springframework:spring-test")
 	testImplementation("org.junit.jupiter:junit-jupiter-api")
-
 	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
 }
 
