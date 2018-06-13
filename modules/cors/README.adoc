@@ -7,15 +7,13 @@ application {
 	webflux {
 		server(netty()) {
 			cors {
-				path("/api") {
-					allowedOrigins = listOf("first.example.com", "second.example.com")
-					allowedMethods = listOf("GET", "PUT", "POST", "DELETE")
-					applyPermitDefaultValues()
+				"/api" {
+					allowedOrigins("first.example.com", "second.example.com")
+					allowedMethods("GET", "PUT", "POST", "DELETE")
 				}
-					path("/public") {
-					allowedOrigins = listOf("**")
-					allowedMethods = listOf("GET")
-					applyPermitDefaultValues()
+				"/public" {
+					allowedOrigins("**")
+					allowedMethods("GET")
 				}
 			}
 		}
