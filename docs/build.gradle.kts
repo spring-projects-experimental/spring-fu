@@ -17,9 +17,8 @@ tasks {
 publishing {
 	publications {
 		create("reference", MavenPublication::class.java) {
-			artifactId = "spring-fu-docs"
+			artifactId = "spring-fu-reference"
 			artifact(File("$buildDir/docs/html5/reference.html")) {
-				classifier = "reference"
 				builtBy(tasks.getByName("asciidoctor"))
 			}
 		}

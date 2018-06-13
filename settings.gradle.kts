@@ -1,6 +1,7 @@
 rootProject.name = "spring-fu-build"
 
-include("core",
+include("bootstraps",
+		"core",
 		"dependencies",
 		"docs",
 		"modules",

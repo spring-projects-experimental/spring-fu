@@ -1,4 +1,4 @@
-Spring Fu is an experimental https://kotlinlang.org/[Kotlin] micro-framework that makes it easy to create lightweight https://spring.io/projects/spring-framework[Spring]-powered applications with <<functional-configuration,functional APIs>> instead of annotations. See the https://repo.spring.io/libs-snapshot-local/org/springframework/fu/spring-fu-docs/1.0.0.BUILD-SNAPSHOT/spring-fu-docs-1.0.0.BUILD-SNAPSHOT-reference.html[reference documentation] for more details.
+Spring Fu is an experimental https://kotlinlang.org/[Kotlin] micro-framework that makes it easy to create lightweight https://spring.io/projects/spring-framework[Spring]-powered applications with <<functional-configuration,functional APIs>> instead of annotations. See the https://repo.spring.io/libs-snapshot-local/org/springframework/fu/spring-fu-docs/1.0.0.BUILD-SNAPSHOT/spring-fu-reference-1.0.0.BUILD-SNAPSHOT.html[reference documentation] for more details.
 
 Fu is for **fu**nctional API, but that's also a wordplay with the -fu suffix which means skill, the https://en.wikipedia.org/wiki/Fu_(character)[chinese character] which means "good luck" and the https://en.wikipedia.org/wiki/Fu_(poetry)[chinese poetry].
 
@@ -11,7 +11,8 @@ fun main(args: Array<String>) = application {
 	bean<UserRepository>()
 	bean<UserHandler>()
 	webflux {
-		server(netty()) {
+		val port = if (profiles.contains("test")) 8181 else 8080
+		server(netty(port)) {
 			mustache()
 			codecs {
 				jackson()
@@ -62,11 +63,18 @@ Please send us your feedback on the `#spring` channel of http://slack.kotlinlang
 
 == Getting started
 
-Spring Fu https://github.com/spring-projects/spring-fu/milestone/1[`1.0.0.M1`] is currently under active development so no release is available yet, but you can clone the repository, import it into Intellij IDEA, try to play with the tests and sample applications.
+Spring Fu https://github.com/spring-projects/spring-fu/milestone/1[`1.0.0.M1`] is currently under active development so no release is available yet, but you have can try https://repo.spring.io/snapshot/org/springframework/fu/[`1.0.0.BUILD-SNAPSHOT` builds].
+
+=== Bootstrap
+
+A Spring Fu bootstrap is an archive containing minimal project templates designed to allow you getting started quickly and easily Spring Fu applications. To start a new project, download a bootstrap `.zip` archive, extract it and follow `README.adoc` instructions.
+
+ * https://repo.spring.io/libs-snapshot-local/org/springframework/fu/bootstrap/reactive-webapp/1.0.0.BUILD-SNAPSHOT/reactive-webapp-1.0.0.BUILD-SNAPSHOT.zip[reactive-webapp.zip]
+
 
 === Documentation
 
-To start with Spring Fu, you can read the https://repo.spring.io/libs-snapshot-local/org/springframework/fu/spring-fu-docs/1.0.0.BUILD-SNAPSHOT/spring-fu-docs-1.0.0.BUILD-SNAPSHOT-reference.html[**reference documentation**].
+To start with Spring Fu, you can read the https://repo.spring.io/libs-snapshot-local/org/springframework/fu/spring-fu-docs/1.0.0.BUILD-SNAPSHOT/spring-fu-reference-1.0.0.BUILD-SNAPSHOT.html[**reference documentation**].
 
 API documentation will be available https://github.com/spring-projects/spring-fu/issues/8[shortly].
 

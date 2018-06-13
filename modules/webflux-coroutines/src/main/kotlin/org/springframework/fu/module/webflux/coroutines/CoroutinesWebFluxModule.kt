@@ -11,6 +11,7 @@ import org.springframework.web.reactive.function.server.RouterFunction
 
 class CoroutineWebFluxClientModule(private val clientModule: WebFluxModule.WebFluxClientModule) : AbstractModule() {
 	override fun initialize(context: GenericApplicationContext) {
+		this.context = context
 		context.registerBean {
 			if (clientModule.baseUrl != null) {
 				CoroutineWebClient.create(clientModule.baseUrl!!)
@@ -18,6 +19,7 @@ class CoroutineWebFluxClientModule(private val clientModule: WebFluxModule.WebFl
 				CoroutineWebClient.create()
 			}
 		}
+		super.initialize(context)
 	}
 }
 

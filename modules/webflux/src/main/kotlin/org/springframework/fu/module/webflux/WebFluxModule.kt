@@ -46,6 +46,7 @@ import java.lang.Math.random
 open class WebFluxModule(private val init: WebFluxModule.() -> Unit): AbstractModule() {
 
 	override fun initialize(context: GenericApplicationContext) {
+		this.context = context
 		init()
 		super.initialize(context)
 	}
@@ -65,6 +66,7 @@ open class WebFluxModule(private val init: WebFluxModule.() -> Unit): AbstractMo
 		private val builder = HandlerStrategies.empty()
 
 		override fun initialize(context: GenericApplicationContext) {
+			this.context = context
 			init()
 			initializers.add(serverModule)
 			initializers.add(beans {

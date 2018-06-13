@@ -8,11 +8,11 @@ import org.springframework.test.web.reactive.server.WebTestClient
 
 class IntegrationTests {
 
-	private val client = WebTestClient.bindToServer().baseUrl("http://localhost:8080").build()
+	private val client = WebTestClient.bindToServer().baseUrl("http://localhost:8181").build()
 
 	@BeforeAll
 	fun beforeAll() {
-		app.run()
+		app.run(profiles = "test")
 	}
 
 	@Test

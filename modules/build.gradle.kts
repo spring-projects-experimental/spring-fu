@@ -3,6 +3,7 @@ subprojects {
 		publications {
 			create(project.name, MavenPublication::class.java) {
 				from(components["java"])
+				groupId = "org.springframework.fu.module"
 				artifactId = "${base.archivesBaseName}"
 				val sourcesJar by tasks.creating(Jar::class) {
 					classifier = "sources"

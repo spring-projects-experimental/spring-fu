@@ -14,6 +14,9 @@ interface Module: ApplicationContextInitializer<GenericApplicationContext> {
 
 	val env : Environment
 		get() = context.environment
+
+	val profiles : Array<String>
+		get() = env.activeProfiles
 }
 
 /**
@@ -35,7 +38,6 @@ abstract class AbstractModule: Module {
 	val initializers = mutableListOf<ApplicationContextInitializer<GenericApplicationContext>>()
 
 	override fun initialize(context: GenericApplicationContext) {
-		this.context = context
 		for (child in initializers) {
 			child.initialize(context)
 		}
