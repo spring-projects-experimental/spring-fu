@@ -32,7 +32,7 @@ import reactor.core.publisher.Mono
 import java.net.URI
 import java.time.ZonedDateTime
 
-class CoroutineHandler {
+class CoroutineHandlerFunction {
 
 	fun from(other: CoroutineServerResponse) =
 			ServerResponse.from(other.extractServerResponse()).asCoroutineBodyBuilder()
@@ -69,7 +69,7 @@ class CoroutineHandler {
 
 }
 
-suspend fun coroutineHandler(init: suspend CoroutineHandler.() -> CoroutineServerResponse) = CoroutineHandler().init()
+suspend fun coroutineHandler(init: suspend CoroutineHandlerFunction.() -> CoroutineServerResponse) = CoroutineHandlerFunction().init()
 
 interface CoroutineServerResponse {
 	fun extractServerResponse(): ServerResponse

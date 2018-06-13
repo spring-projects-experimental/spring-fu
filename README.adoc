@@ -17,12 +17,12 @@ fun main(args: Array<String>) = application {
 			codecs {
 				jackson()
 			}
-			routes(import = ::appRoutes)
+			routes(ref = ::routes)
 		}
 	}
 }.run(await = true)
 
-fun appRoutes() = routes {
+fun routes() = routes {
 	val userHandler = ref<UserHandler>()
 	GET("/", userHandler::listView)
 	GET("/api/user", userHandler::listApi)
@@ -125,7 +125,7 @@ fun main(args: Array<String) = application {
 					jackson()
 					protobuf()
 				}
-				routes(import = ::appRoutes)
+				routes(ref = ::routes)
 				security { // TODO }
 			}
 			client {
@@ -142,7 +142,7 @@ data class AppConfiguration(
 	val remoteUrl: String  = "http://localhost:8080"
 )
 
-fun appRoutes() = routes {
+fun routes() = routes {
 	val htmlHandler = ref<HtmlHandler>()
 	val apiHandler = ref<ApiHandler>()
 	GET("/", htmlHandler::blog)

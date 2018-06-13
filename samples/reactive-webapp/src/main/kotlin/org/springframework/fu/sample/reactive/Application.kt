@@ -53,7 +53,7 @@ val app = application {
 			codecs {
 				jackson()
 			}
-			routes(import = ::routes)
+			routes(ref = ::routes)
 		}
 	}
 	configuration(configuration)

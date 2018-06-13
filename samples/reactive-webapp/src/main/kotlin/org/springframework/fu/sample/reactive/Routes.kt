@@ -5,7 +5,7 @@ import org.springframework.fu.ref
 
 fun routes() = routes {
 	val userHandler = ref<UserHandler>()
-	GET("/", userHandler::listView)
-	GET("/api/user", userHandler::listApi)
-	GET("/conf", userHandler::conf)
+	GET("/", ref = userHandler::listView)
+	GET("/api/user", ref = userHandler::listApi)
+	GET("/conf", ref = userHandler::conf)
 }

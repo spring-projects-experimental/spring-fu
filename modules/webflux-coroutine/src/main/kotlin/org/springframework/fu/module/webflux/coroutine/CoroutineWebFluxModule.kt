@@ -50,10 +50,10 @@ class CoroutineWebFluxRoutesModule(private val init: (CoroutineWebFluxRoutesModu
 fun coroutineRoutes(routes: CoroutineWebFluxRoutesModule.() -> Unit) =
 		CoroutineWebFluxRoutesModule(routes)
 
-fun WebFluxModule.WebFluxServerModule.coroutineRoutes(import: (() -> CoroutineWebFluxRoutesModule)? = null, routes: (CoroutineWebFluxRoutesModule.() -> Unit)? = null) {
-	if (routes == null && import == null)
+fun WebFluxModule.WebFluxServerModule.coroutineRoutes(ref: (() -> CoroutineWebFluxRoutesModule)? = null, routes: (CoroutineWebFluxRoutesModule.() -> Unit)? = null) {
+	if (routes == null && ref == null)
 		throw IllegalArgumentException("No routes provided")
 
 	routes?.let { initializers.add(CoroutineWebFluxRoutesModule(it)) }
-	import?.let { initializers.add(it.invoke()) }
+	ref?.let { initializers.add(it.invoke()) }
 }

@@ -1,6 +1,5 @@
 package org.springframework.fu.sample.coroutines
 
-import org.springframework.fu.module.webflux.coroutine.web.function.server.CoroutineServerRequest
 import org.springframework.fu.module.webflux.coroutine.web.function.server.body
 import org.springframework.fu.module.webflux.coroutine.web.function.server.coroutineHandler
 import org.springframework.http.MediaType
@@ -9,15 +8,15 @@ import org.springframework.http.MediaType
 class UserHandler(private val repository: UserRepository,
 				  private val configuration: SampleConfiguration) {
 
-	suspend fun listApi(request: CoroutineServerRequest) = coroutineHandler {
+	suspend fun listApi() = coroutineHandler {
 		ok().contentType(MediaType.APPLICATION_JSON_UTF8).body(repository.findAll())
 	}
 
-	suspend fun listView(request: CoroutineServerRequest) = coroutineHandler {
+	suspend fun listView() = coroutineHandler {
 		ok().render("users", mapOf("users" to repository.findAll()))
 	}
 
-	suspend fun conf(request: CoroutineServerRequest) = coroutineHandler {
+	suspend fun conf() = coroutineHandler {
 		ok().syncBody(configuration.property)
 	}
 

@@ -59,7 +59,7 @@ val app =  application {
 			codecs {
 				jackson()
 			}
-			coroutineRoutes(import = ::routes)
+			coroutineRoutes(ref = ::routes)
 		}
 	}
 	configuration(configuration)
