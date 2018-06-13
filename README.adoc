@@ -70,6 +70,7 @@ Spring Fu https://github.com/spring-projects/spring-fu/milestone/1[`1.0.0.M1`] i
 A Spring Fu bootstrap is an archive containing minimal project templates designed to allow you getting started quickly and easily Spring Fu applications. To start a new project, download a bootstrap `.zip` archive, extract it and follow `README.adoc` instructions.
 
  * https://repo.spring.io/libs-snapshot-local/org/springframework/fu/bootstrap/reactive-webapp/1.0.0.BUILD-SNAPSHOT/reactive-webapp-1.0.0.BUILD-SNAPSHOT.zip[reactive-webapp.zip]
+ * https://repo.spring.io/libs-snapshot-local/org/springframework/fu/bootstrap/coroutine-webapp/1.0.0.BUILD-SNAPSHOT/coroutine-webapp-1.0.0.BUILD-SNAPSHOT.zip[coroutine-webapp.zip]
 
 
 === Documentation

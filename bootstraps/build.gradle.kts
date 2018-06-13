@@ -6,12 +6,25 @@ val reactiveWebapp by task<Zip> {
 	setExecutablePermissions()
 }
 
+val coroutineWebapp by task<Zip> {
+	from("coroutine-webapp") {
+		exclude("build", ".gradle", ".idea", "out", "*.iml")
+	}
+	into("coroutine-webapp")
+	setExecutablePermissions()
+}
+
 publishing {
 	publications {
 		create("reactive-webapp", MavenPublication::class.java) {
 			groupId = "org.springframework.fu.bootstrap"
 			artifactId = "reactive-webapp"
 			artifact(reactiveWebapp)
+		}
+		create("coroutine-webapp", MavenPublication::class.java) {
+			groupId = "org.springframework.fu.bootstrap"
+			artifactId = "coroutine-webapp"
+			artifact(coroutineWebapp)
 		}
 	}
 }
