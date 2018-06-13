@@ -1,4 +1,4 @@
-Spring Fu is an experimental https://kotlinlang.org/[Kotlin] micro-framework that makes it easy to create lightweight https://spring.io/projects/spring-framework[Spring]-powered applications with <<functional-configuration,functional APIs>> instead of annotations. See the https://repo.spring.io/libs-snapshot-local/org/springframework/fu/spring-fu-docs/1.0.0.BUILD-SNAPSHOT/spring-fu-reference-1.0.0.BUILD-SNAPSHOT.html[reference documentation] for more details.
+Spring Fu is an experimental https://kotlinlang.org/[Kotlin] micro-framework that makes it easy to create lightweight https://spring.io/projects/spring-framework[Spring]-powered applications with <<functional-configuration,functional APIs>> instead of annotations. See the https://repo.spring.io/snapshot/org/springframework/fu/spring-fu-reference/1.0.0.BUILD-SNAPSHOT/spring-fu-reference-1.0.0.BUILD-SNAPSHOT.html[reference documentation] for more details.
 
 Fu is for **fu**nctional API, but that's also a wordplay with the -fu suffix which means skill, the https://en.wikipedia.org/wiki/Fu_(character)[chinese character] which means "good luck" and the https://en.wikipedia.org/wiki/Fu_(poetry)[chinese poetry].
 
@@ -74,7 +74,7 @@ A Spring Fu bootstrap is an archive containing minimal project templates designe
 
 === Documentation
 
-To start with Spring Fu, you can read the https://repo.spring.io/libs-snapshot-local/org/springframework/fu/spring-fu-docs/1.0.0.BUILD-SNAPSHOT/spring-fu-reference-1.0.0.BUILD-SNAPSHOT.html[**reference documentation**].
+To start with Spring Fu, you can read the https://repo.spring.io/snapshot/org/springframework/fu/spring-fu-reference/1.0.0.BUILD-SNAPSHOT/spring-fu-reference-1.0.0.BUILD-SNAPSHOT.html[**reference documentation**].
 
 API documentation will be available https://github.com/spring-projects/spring-fu/issues/8[shortly].
 
