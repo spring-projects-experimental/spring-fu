@@ -15,11 +15,11 @@ dependencyManagement {
 		dependency("org.springframework.fu.module:spring-fu-jackson:$version")
 		dependency("org.springframework.fu.module:spring-fu-logging:$version")
 		dependency("org.springframework.fu.module:spring-fu-mongodb:$version")
-		dependency("org.springframework.fu.module:spring-fu-mongodb-coroutines:$version")
+		dependency("org.springframework.fu.module:spring-fu-mongodb-coroutine:$version")
 		dependency("org.springframework.fu.module:spring-fu-mustache:$version")
 		dependency("org.springframework.fu.module:spring-fu-test:$version")
 		dependency("org.springframework.fu.module:spring-fu-webflux:$version")
-		dependency("org.springframework.fu.module:spring-fu-webflux-coroutines:$version")
+		dependency("org.springframework.fu.module:spring-fu-webflux-coroutine:$version")
 		dependency("org.springframework.fu.module:spring-fu-webflux-netty:$version")
 		dependency("org.springframework.fu.module:spring-fu-webflux-tomcat:$version")
 

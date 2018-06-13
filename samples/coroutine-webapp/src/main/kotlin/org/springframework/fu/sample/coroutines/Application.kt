@@ -14,26 +14,32 @@
  * limitations under the License.
  */
 
-package org.springframework.fu.sample.reactive
+package org.springframework.fu.sample.coroutines
 
+import kotlinx.coroutines.experimental.runBlocking
 import org.springframework.beans.factory.support.DefaultListableBeanFactory
 import org.springframework.context.event.ContextStartedEvent
 import org.springframework.fu.application
+import org.springframework.fu.module.data.mongodb.coroutine.coroutine
 import org.springframework.fu.module.data.mongodb.mongodb
 import org.springframework.fu.module.jackson.jackson
 import org.springframework.fu.module.logging.*
 import org.springframework.fu.module.logging.LogLevel.*
 import org.springframework.fu.module.mustache.mustache
+import org.springframework.fu.module.webflux.coroutine.coroutineRoutes
 import org.springframework.fu.module.webflux.netty.netty
 import org.springframework.fu.module.webflux.webflux
 import org.springframework.fu.ref
 import java.io.File
 
-val app = application {
+
+val app =  application {
 	bean<UserRepository>()
 	bean<UserHandler>()
 	listener<ContextStartedEvent> {
-		ref<UserRepository>().init()
+		runBlocking {
+			ref<UserRepository>().init()
+		}
 	}
 	logging {
 		level(INFO)
@@ -53,11 +59,13 @@ val app = application {
 			codecs {
 				jackson()
 			}
-			routes(import = ::routes)
+			coroutineRoutes(import = ::routes)
 		}
 	}
 	configuration(configuration)
-	mongodb()
+	mongodb {
+		coroutine()
+	}
 }
 
 fun main(args: Array<String>) = app.run(await = true)

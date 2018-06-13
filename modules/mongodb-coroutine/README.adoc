@@ -1,0 +1,11 @@
+= Coroutine Spring Data MongoDB module
+
+This module configures a `CoroutineMongoTemplate` bean.
+
+```kotlin
+application {
+	mongodb(uri = "mongodb://myserver.com/foo") {
+		coroutine()
+	}
+}
+```

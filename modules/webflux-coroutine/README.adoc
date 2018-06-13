@@ -1,0 +1,29 @@
+= Coroutine WebFlux module
+
+This module adds support for WebFlux Coroutine API and can create a `CoroutineWebClient` bean. Be aware that Callable references to suspend functions are not supported yet in Kotlin compiler (https://youtrack.jetbrains.com/issue/KT-16908[KT-16908]).
+
+```kotlin
+application {
+	bean<CoroutineHandler>()
+	webflux {
+		server(netty()) {
+			codecs {
+				jackson()
+			}
+			coroutine {
+				routes {
+					val coroutineHandler = ref<CoroutineHandler>()
+					GET("/") { coroutineHandler.blog(it))
+					GET("/article/{id}") { coroutineHandler.article(it) )
+				}
+			}
+		}
+		client {
+			coroutine()
+			codecs {
+				jackson()
+			}
+		}
+	}
+}
+```

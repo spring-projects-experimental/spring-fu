@@ -15,7 +15,7 @@ include::../../../../modules/logging/README.adoc[leveloffset=+2]
 
 include::../../../../modules/mongodb/README.adoc[leveloffset=+2]
 
-include::../../../../modules/mongodb-coroutines/README.adoc[leveloffset=+2]
+include::../../../../modules/mongodb-coroutine/README.adoc[leveloffset=+2]
 
 include::../../../../modules/dynamic-configuration/README.adoc[leveloffset=+2]
 
@@ -27,5 +27,5 @@ include::../../../../modules/test/README.adoc[leveloffset=+2]
 
 include::../../../../modules/webflux/README.adoc[leveloffset=+2]
 
-include::../../../../modules/webflux-coroutines/README.adoc[leveloffset=+2]
+include::../../../../modules/webflux-coroutine/README.adoc[leveloffset=+2]
 
