@@ -3,8 +3,6 @@ package com.example
 import org.springframework.fu.application
 import org.springframework.fu.module.logging.*
 import org.springframework.fu.module.webflux.coroutine.coroutineRoutes
-import org.springframework.fu.module.webflux.coroutine.web.function.server.CoroutineServerResponse.Companion.ok
-import org.springframework.fu.module.webflux.coroutine.coroutine
 import org.springframework.fu.module.webflux.netty.netty
 import org.springframework.fu.module.webflux.webflux
 

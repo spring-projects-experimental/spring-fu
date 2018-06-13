@@ -48,18 +48,18 @@ open class CoroutineRouterFunctionDsl(private val init: (CoroutineRouterFunction
 
 	fun GET(pattern: String) = RequestPredicates.GET(pattern)
 
-	fun GET(pattern: String, f:  suspend (CoroutineServerRequest) -> CoroutineServerResponse?) {
-		routes += route(RequestPredicates.GET(pattern), f.asHandlerFunction())
+	fun GET(pattern: String, f:  suspend CoroutineHandler.(CoroutineServerRequest) -> CoroutineServerResponse) {
+		routes += route(RequestPredicates.GET(pattern), asHandlerFunction(f))
 	}
 
 	fun path(pattern: String): RequestPredicate = RequestPredicates.path(pattern)
 
-	fun pathExtension(extension: String, f:  suspend (CoroutineServerRequest) -> CoroutineServerResponse?) {
-		routes += route(RequestPredicates.pathExtension(extension), f.asHandlerFunction())
+	fun pathExtension(extension: String, f:  suspend CoroutineHandler.(CoroutineServerRequest) -> CoroutineServerResponse) {
+		routes += route(RequestPredicates.pathExtension(extension), asHandlerFunction(f))
 	}
 
-	fun POST(pattern: String, f:  suspend (CoroutineServerRequest) -> CoroutineServerResponse?) {
-		routes += route(RequestPredicates.POST(pattern), f.asHandlerFunction())
+	fun POST(pattern: String, f:  suspend CoroutineHandler.(CoroutineServerRequest) -> CoroutineServerResponse) {
+		routes += route(RequestPredicates.POST(pattern), asHandlerFunction(f))
 	}
 
 	override fun invoke(): RouterFunction<ServerResponse> {
@@ -67,15 +67,16 @@ open class CoroutineRouterFunctionDsl(private val init: (CoroutineRouterFunction
 		return routes.reduce(RouterFunction<ServerResponse>::and)
 	}
 
-	operator fun RequestPredicate.invoke(f:  suspend (CoroutineServerRequest) -> CoroutineServerResponse?) {
-		routes += route(this, f.asHandlerFunction())
+	operator fun RequestPredicate.invoke(f: suspend CoroutineHandler.(CoroutineServerRequest) -> CoroutineServerResponse) {
+		routes += route(this, asHandlerFunction(f))
 	}
 
-	protected fun  (suspend (CoroutineServerRequest) -> CoroutineServerResponse?).asHandlerFunction() = HandlerFunction {
+	private fun asHandlerFunction(init: suspend CoroutineHandler.(CoroutineServerRequest) -> CoroutineServerResponse) = HandlerFunction {
 		mono(Unconfined) {
-			this@asHandlerFunction.invoke(CoroutineServerRequest(it))?.extractServerResponse()
+			CoroutineHandler().init(CoroutineServerRequest.invoke(it)).extractServerResponse()
 		}
 	}
+
 }
 
 operator fun <T: ServerResponse> RouterFunction<T>.plus(other: RouterFunction<T>) =
