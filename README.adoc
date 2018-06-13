@@ -82,7 +82,7 @@ API documentation will be available https://github.com/spring-projects/spring-fu
 You can have a look to the sample applications:
 
 * https://github.com/spring-projects/spring-fu/tree/master/samples/reactive-webapp[Reactive webapp]
-* https://github.com/spring-projects/spring-fu/tree/master/samples/coroutine-webapp[Coroutine webapp]
+* https://github.com/spring-projects/spring-fu/tree/master/samples/coroutine-webapp[Coroutines webapp]
 
 [[functional-configuration]]
 == Functional configuration
