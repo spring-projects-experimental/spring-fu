@@ -42,7 +42,8 @@ class CoroutineHandler {
 
 	fun ok() = ServerResponse.ok().asCoroutineBodyBuilder()
 
-	fun noContent(): CoroutineHeadersBuilder = TODO()
+	fun noContent(): CoroutineHeadersBuilder =
+			ServerResponse.noContent().asCoroutineHeadersBuilder()
 
 	fun accepted() = ServerResponse.accepted().asCoroutineBodyBuilder()
 
@@ -57,7 +58,8 @@ class CoroutineHandler {
 
 	fun badRequest() = ServerResponse.badRequest().asCoroutineBodyBuilder()
 
-	fun notFound(): CoroutineHeadersBuilder = TODO()
+	fun notFound(): CoroutineHeadersBuilder =
+			ServerResponse.notFound().asCoroutineHeadersBuilder()
 
 	fun unprocessableEntity() = ServerResponse.unprocessableEntity().asCoroutineBodyBuilder()
 
@@ -103,6 +105,10 @@ interface CoroutineHeadersBuilder {
 
 	fun varyBy(vararg requestHeaders: String): CoroutineHeadersBuilder
 
+	companion object {
+		operator fun invoke(builder: ServerResponse.HeadersBuilder<*>): CoroutineHeadersBuilder = DefaultCoroutineHeadersBuilder(builder)
+	}
+
 }
 
 interface CoroutineBodyBuilder: CoroutineHeadersBuilder {
@@ -128,11 +134,11 @@ interface CoroutineBodyBuilder: CoroutineHeadersBuilder {
 	}
 }
 
-internal open class DefaultCoroutineServerResponse(val resp: ServerResponse): CoroutineServerResponse {
+internal open class DefaultCoroutineServerResponse(private val resp: ServerResponse): CoroutineServerResponse {
 	override fun extractServerResponse(): ServerResponse = resp
 }
 
-internal open class DefaultCoroutineHeadersBuilder<T: ServerResponse.HeadersBuilder<T>>(var builder: T): CoroutineHeadersBuilder {
+internal open class DefaultCoroutineHeadersBuilder(private val builder: ServerResponse.HeadersBuilder<*>): CoroutineHeadersBuilder {
 
 	override fun cookie(cookie: ResponseCookie) = apply {
 		builder.cookie(cookie)
@@ -179,30 +185,30 @@ internal open class DefaultCoroutineHeadersBuilder<T: ServerResponse.HeadersBuil
 	}
 }
 
-internal open class DefaultCoroutineBodyBuilder(builder: ServerResponse.BodyBuilder): DefaultCoroutineHeadersBuilder<ServerResponse.BodyBuilder>(builder), CoroutineBodyBuilder {
-	override suspend fun build(): CoroutineServerResponse = builder.build().asCoroutineServerResponse()
+internal open class DefaultCoroutineBodyBuilder(private val bodyBuilder: ServerResponse.BodyBuilder): DefaultCoroutineHeadersBuilder(bodyBuilder), CoroutineBodyBuilder {
+	override suspend fun build(): CoroutineServerResponse = bodyBuilder.build().asCoroutineServerResponse()
 
 	override suspend fun body(inserter: CoroutineBodyInserter<*, in CoroutineServerHttpResponse>): CoroutineServerResponse =
-			builder.body(inserter.asBodyInserter()).asCoroutineServerResponse()
+			bodyBuilder.body(inserter.asBodyInserter()).asCoroutineServerResponse()
 
 	override suspend fun <T> body(value: T?, elementClass: Class<T>): CoroutineServerResponse =
-			builder.body(Mono.justOrEmpty(value), elementClass).asCoroutineServerResponse()
+			bodyBuilder.body(Mono.justOrEmpty(value), elementClass).asCoroutineServerResponse()
 
 	override suspend fun <T> body(channel: ReceiveChannel<T>, elementClass: Class<T>): CoroutineServerResponse =
-			builder.body(channel.asPublisher(Unconfined), elementClass).asCoroutineServerResponse()
+			bodyBuilder.body(channel.asPublisher(Unconfined), elementClass).asCoroutineServerResponse()
 
 	override fun contentType(contentType: MediaType): CoroutineBodyBuilder = apply {
-		builder.contentType(contentType)
+		bodyBuilder.contentType(contentType)
 	}
 
 	override suspend fun render(name: String, vararg modelAttributes: Any): CoroutineServerResponse =
-			builder.render(name, modelAttributes).awaitFirst().asCoroutineServerResponse()
+			bodyBuilder.render(name, modelAttributes).awaitFirst().asCoroutineServerResponse()
 
 	override suspend fun render(name: String, model: Map<String, *>): CoroutineServerResponse =
-			builder.render(name, model).awaitFirst().asCoroutineServerResponse()
+			bodyBuilder.render(name, model).awaitFirst().asCoroutineServerResponse()
 
 	override suspend fun syncBody(body: Any): CoroutineServerResponse =
-			builder.syncBody(body).asCoroutineServerResponse()
+			bodyBuilder.syncBody(body).asCoroutineServerResponse()
 
 	suspend fun Mono<ServerResponse>.asCoroutineServerResponse(): CoroutineServerResponse =
 			awaitFirst().let { CoroutineServerResponse(it) }
@@ -211,7 +217,7 @@ internal open class DefaultCoroutineBodyBuilder(builder: ServerResponse.BodyBuil
 internal open class DefaultCoroutineRenderingResponse(resp: RenderingResponse): DefaultCoroutineServerResponse(resp), CoroutineRenderingResponse {
 }
 
-class DefaultCoroutineRenderingResponseBuilder(val builder: RenderingResponse.Builder): CoroutineRenderingResponse.Builder {
+class DefaultCoroutineRenderingResponseBuilder(private val builder: RenderingResponse.Builder): CoroutineRenderingResponse.Builder {
 	override suspend fun build(): CoroutineRenderingResponse =
 			CoroutineRenderingResponse(builder.build().awaitFirst())
 
@@ -223,6 +229,8 @@ class DefaultCoroutineRenderingResponseBuilder(val builder: RenderingResponse.Bu
 private fun CoroutineBodyInserter<*, in CoroutineServerHttpResponse>.asBodyInserter(): BodyInserter<Any, ServerHttpResponse> = TODO()
 
 private fun ServerResponse.BodyBuilder.asCoroutineBodyBuilder(): CoroutineBodyBuilder = CoroutineBodyBuilder(this)
+
+private fun ServerResponse.HeadersBuilder<*>.asCoroutineHeadersBuilder(): CoroutineHeadersBuilder = CoroutineHeadersBuilder(this)
 
 suspend inline fun <reified T : Any> CoroutineBodyBuilder.body(channel: ReceiveChannel<T>): CoroutineServerResponse =
 		body(channel, T::class.java)

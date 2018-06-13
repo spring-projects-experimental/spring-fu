@@ -50,7 +50,7 @@ interface CoroutineServerRequest {
 	}
 }
 
-class DefaultCoroutineServerRequest(val req: ServerRequest): CoroutineServerRequest {
+class DefaultCoroutineServerRequest(private val req: ServerRequest): CoroutineServerRequest {
 	override fun <T> body(extractor: CoroutineBodyExtractor<T, CoroutineServerHttpRequest>): T =
 			req.body(extractor.asBodyExtractor())
 
@@ -73,9 +73,6 @@ class DefaultCoroutineServerRequest(val req: ServerRequest): CoroutineServerRequ
 
 	override fun extractServerRequest(): ServerRequest = req
 }
-
-//fun CoroutineServerRequest.language() = TODO()
-		//TODO findByTag(this.headers().asHttpHeaders().acceptLanguageAsLocales.first().language)
 
 suspend inline fun <reified T : Any> CoroutineServerRequest.body(): T? = body(T::class.java)
 
