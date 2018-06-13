@@ -44,6 +44,15 @@ class CorsModuleTests {
                             allowedOrigins("**")
                             allowedMethods("GET")
                         }
+                        "fullConfig" {
+                            allowedOrigins("full.config.example.com")
+                            allowedMethods("GET")
+                            allowedHeaders("*")
+                            exposedHeaders("Content-Location")
+                            allowCredentials = true
+                            maxAge = 3600
+                            defaults = false
+                        }
                     }
                     routes {
                         GET("/") { noContent().build() }

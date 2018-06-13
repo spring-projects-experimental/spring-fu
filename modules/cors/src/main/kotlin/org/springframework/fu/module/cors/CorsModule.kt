@@ -4,15 +4,16 @@ import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.registerBean
 import org.springframework.fu.AbstractModule
 import org.springframework.fu.module.webflux.WebFluxModule
-import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.reactive.CorsWebFilter
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource
 
 /**
  * @author Ireneusz Kozłowski
  */
-class CorsModule(private val defaults: Boolean = true,
-                 private val init: CorsModule.() -> Unit) :
+class CorsModule(
+    private val defaults: Boolean = true,
+    private val init: CorsModule.() -> Unit
+) :
     WebFluxModule.WebServerModule, AbstractModule() {
 
     private val configuration = UrlBasedCorsConfigurationSource()
@@ -24,20 +25,10 @@ class CorsModule(private val defaults: Boolean = true,
         }
     }
 
-    operator fun String.invoke(defaults: Boolean = this@CorsModule.defaults, init: CorsConfiguration.() -> Unit) {
-        val corsConfiguration = CorsConfiguration()
-        corsConfiguration.init()
-        if(defaults)
-            corsConfiguration.applyPermitDefaultValues()
-        configuration.registerCorsConfiguration(this, corsConfiguration)
-    }
-
-    fun CorsConfiguration.allowedOrigins(vararg allowedOrigins: String) {
-        this.allowedOrigins = allowedOrigins.toList()
-    }
-
-    fun CorsConfiguration.allowedMethods(vararg allowedMethods: String) {
-        this.allowedMethods = allowedMethods.toList()
+    operator fun String.invoke(defaults: Boolean = this@CorsModule.defaults, init: CorsConfigurationDsl.() -> Unit) {
+        val corsConfigurationDsl = CorsConfigurationDsl(defaults)
+        corsConfigurationDsl.init()
+        configuration.registerCorsConfiguration(this, corsConfigurationDsl.getConfiguration())
     }
 }
 
