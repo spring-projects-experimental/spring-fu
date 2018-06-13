@@ -10,12 +10,10 @@ application {
 			codecs {
 				jackson()
 			}
-			coroutine {
-				routes {
-					val coroutineHandler = ref<CoroutineHandler>()
-					GET("/") { coroutineHandler.blog(it))
-					GET("/article/{id}") { coroutineHandler.article(it) )
-				}
+			coroutineRoutes {
+				val coroutineHandler = ref<CoroutineHandler>()
+				GET("/") { coroutineHandler.blog(it))
+				GET("/article/{id}") { coroutineHandler.article(it) )
 			}
 		}
 		client {
