@@ -1,6 +1,6 @@
 val reactiveWebapp by task<Zip> {
 	from("reactive-webapp") {
-		exclude("build", ".gradle", ".idea", "out")
+		exclude("build", ".gradle", ".idea", "out", "*.iml")
 	}
 	into("reactive-webapp")
 	setExecutablePermissions()
