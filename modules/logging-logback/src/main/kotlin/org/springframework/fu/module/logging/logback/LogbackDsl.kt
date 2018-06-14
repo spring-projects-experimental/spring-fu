@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package org.springframework.fu.module.logging
+package org.springframework.fu.module.logging.logback
 
 import ch.qos.logback.classic.Logger
 import ch.qos.logback.classic.LoggerContext
-import ch.qos.logback.classic.PatternLayout
+import ch.qos.logback.classic.encoder.PatternLayoutEncoder
 import ch.qos.logback.classic.jul.LevelChangePropagator
 import ch.qos.logback.classic.spi.ILoggingEvent
 import ch.qos.logback.core.Appender
@@ -29,6 +29,8 @@ import ch.qos.logback.core.status.OnConsoleStatusListener
 import ch.qos.logback.core.util.FileSize
 import ch.qos.logback.core.util.StatusListenerConfigHelper
 import org.slf4j.LoggerFactory
+import org.springframework.fu.module.logging.LoggingConfiguration
+import org.springframework.fu.module.logging.LoggingDsl
 import org.springframework.util.ClassUtils
 import java.io.File
 
@@ -100,14 +102,14 @@ fun LogbackDsl.consoleAppender(
 		name: String = "STDOUT",
 		pattern: String = "%d{yyyy-MM-dd HH:mm:ss.SSS}  %-5p --- [%15.15t] %-40.40logger{39} : %msg %n"
 ) = ConsoleAppender<ILoggingEvent>().apply {
-	val layout = PatternLayout()
-	layout.pattern = pattern
-	layout.context = loggerContext
-	layout.start()
+	val encoder = PatternLayoutEncoder()
+	encoder.context = loggerContext
+	encoder.pattern = pattern
+	encoder.start()
 
-	this.setLayout(layout)
 	this.context = loggerContext
 	this.name = name
+	this.encoder = encoder
 	start()
 	appenders.add(this)
 }
@@ -140,12 +142,11 @@ fun LogbackDsl.rollingFileAppender(
 		totalSizeCap: String = "2GB",
 		append: Boolean = true
 ) = RollingFileAppender<ILoggingEvent>().apply {
-	val layout = PatternLayout()
-	layout.pattern = pattern
-	layout.context = loggerContext
-	layout.start()
+	val encoder = PatternLayoutEncoder()
+	encoder.context = loggerContext
+	encoder.pattern = pattern
+	encoder.start()
 
-	this.setLayout(layout)
 	this.context = loggerContext
 	this.name = name
 	this.isAppend = append
@@ -160,6 +161,7 @@ fun LogbackDsl.rollingFileAppender(
 				srp.setParent(this)
 				srp.start()
 			}
+	this.encoder = encoder
 	this.start()
 	appenders.add(this)
 }
