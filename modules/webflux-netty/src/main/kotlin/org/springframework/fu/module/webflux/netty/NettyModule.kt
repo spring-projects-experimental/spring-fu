@@ -30,7 +30,7 @@ import java.util.concurrent.atomic.AtomicReference
 /**
  * @author Sebastien Deleuze
  */
-private class NettyModule(private val port: Int = 8080): WebFluxModule.WebServerModule, AbstractModule() {
+internal class NettyModule(private val port: Int = 8080): WebFluxModule.WebServerModule, AbstractModule() {
 
 	override fun initialize(context: GenericApplicationContext) {
 		context.registerBean {
