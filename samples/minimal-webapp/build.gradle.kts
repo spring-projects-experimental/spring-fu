@@ -1,0 +1,48 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import org.jetbrains.kotlin.gradle.dsl.Coroutines
+
+plugins {
+	application
+	id ("com.github.johnrengelman.shadow")
+}
+
+application {
+	mainClassName = "org.springframework.fu.sample.minimal.ApplicationKt"
+}
+
+dependencies {
+	implementation(project(":modules:webflux-netty"))
+	testImplementation(project(":modules:test"))
+}
+
+configurations {
+	all {
+		exclude(module = "spring-aop")
+	}
+}
+
+tasks.withType<ShadowJar> {
+	exclude("org/springframework/cglib/**",
+			"org/springframework/beans/factory/groovy/**",
+			"org/springframework/beans/factory/xml/**",
+			"org/springframework/cache",
+			"org/springframework/context/annotation",
+			"org/springframework/context/support/*Xml*.class",
+			"org/springframework/context/support/*Groovy*.class",
+			"org/springframework/ejb/**",
+			"org/springframework/instrument/classloading/**",
+			"org/springframework/jmx/**",
+			"org/springframework/jndi/**",
+			"org/springframework/remoting/**",
+			"org/springframework/scheduling/**",
+			"org/springframework/scripting/**",
+			"org/springframework/web/accept/**",
+			"org/springframework/web/bind/**",
+			"org/springframework/web/client/**",
+			"org/springframework/web/context/**",
+			"org/springframework/web/filter/**",
+			"org/springframework/web/jsf/**",
+			"org/springframework/web/method/**",
+			"org/springframework/web/multipart/**",
+			"org/springframework/util/xml/**")
+}

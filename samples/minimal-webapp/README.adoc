@@ -1,0 +1,17 @@
+= Minimal webapp
+
+This is a Spring Fu example of a minimal webapp with filtered classpath.
+
+Stats are Size of the executable JAR is:
+
+
+ * Tomcat: 866 ms startup, 12.1 MB executable JAR, 3400 classes, 10 MB heap, 0 MB Permgen
+ * Netty: 1058 ms startup, 12.6 MB  executable JAR, 3360 classes, 10 MB heap, 0 MB Permgen
+ * Undertow: TODO when https://github.com/spring-projects/spring-fu/issues/59 will be fixed
+ * Jetty: TODO when https://github.com/spring-projects/spring-fu/issues/60 will be fixed
+
+The app could be benchmark with the following command:
+
+`sudo perf stat -e cpu-clock -r10 java -jar -XX:TieredStopAtLevel=1 -noverify -Djava.security.egd=file:/dev/./urandom samples/minimal-webapp/build/libs/minimal-webapp-1.0.0.BUILD-SNAPSHOT-all.jar`
+
+

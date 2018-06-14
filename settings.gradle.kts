@@ -17,5 +17,6 @@ include("bootstraps",
 		"modules:webflux-netty",
 		"modules:webflux-tomcat",
 		"samples:coroutine-webapp",
+		"samples:minimal-webapp",
 		"samples:reactive-webapp")
 
