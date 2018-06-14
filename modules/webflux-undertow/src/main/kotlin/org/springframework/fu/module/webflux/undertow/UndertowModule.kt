@@ -28,7 +28,7 @@ import org.springframework.web.server.adapter.WebHttpHandlerBuilder
 /**
  * @author Ruslan Ibragimov
  */
-private class UndertowModule(private val port: Int = 8080,
+internal class UndertowModule(private val port: Int = 8080,
 							 private val host: String = "0.0.0.0"): WebFluxModule.WebServerModule, AbstractModule() {
 
 	override fun initialize(context: GenericApplicationContext) {

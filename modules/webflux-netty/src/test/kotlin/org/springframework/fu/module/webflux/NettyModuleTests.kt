@@ -16,108 +16,26 @@
 
 package org.springframework.fu.module.webflux
 
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.getBean
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.fu.application
-import org.springframework.fu.module.webflux.netty.netty
-import org.springframework.http.HttpStatus.*
+import org.springframework.fu.module.webflux.netty.NettyModule
 import org.springframework.test.web.reactive.server.WebTestClient
-import org.springframework.web.reactive.function.client.WebClient
-import reactor.test.test
 
 /**
  * @author Sebastien Deleuze
  */
-class NettyModuleTests {
+class NettyModuleTests: WebServerModuleTest() {
+	override fun getWebServerModule(port: Int, host: String): WebFluxModule.WebServerModule = NettyModule(port)
 
+	@Disabled
 	@Test
-	fun `Create an application with an empty server`() {
+	override fun `Declare 2 routes blocks`() {
 		val context = GenericApplicationContext()
 		val app = application {
 			webflux {
-				server(netty())
-			}
-		}
-		app.run(context)
-		context.getBean<WebServer>()
-		context.close()
-	}
-
-	@Test
-	fun `Create and request an endpoint`() {
-		val context = GenericApplicationContext()
-		val app = application {
-			webflux {
-				server(netty()) {
-					routes {
-						GET("/") { noContent().build() }
-					}
-				}
-			}
-		}
-		app.run(context)
-		val client = WebTestClient.bindToServer().baseUrl("http://localhost:8080").build()
-		client.get().uri("/").exchange().expectStatus().is2xxSuccessful
-		context.close()
-	}
-
-	@Test
-	fun `Create a WebClient and request an endpoint`() {
-		val context = GenericApplicationContext()
-		val app = application {
-			webflux {
-				server(netty()) {
-					routes {
-						GET("/") { noContent().build() }
-					}
-				}
-				client("http://localhost:8080")
-			}
-		}
-		app.run(context)
-		val client = context.getBean<WebClient>()
-		client.get().uri("/").exchange().test()
-				.consumeNextWith { assertEquals(NO_CONTENT, it.statusCode()) }
-				.verifyComplete()
-		context.close()
-	}
-
-	@Test
-	fun `Create 2 WebClient with different names and request an endpoint`() {
-		val context = GenericApplicationContext()
-		val app = application {
-			webflux {
-				server(netty()) {
-					routes {
-						GET("/") { noContent().build() }
-					}
-				}
-				client(baseUrl = "http://localhost:8080", name = "client1")
-				client(name = "client2")
-			}
-		}
-		app.run(context)
-		val client1 = context.getBean<WebClient>("client1")
-		client1.get().uri("/").exchange().test()
-				.consumeNextWith { assertEquals(NO_CONTENT, it.statusCode()) }
-				.verifyComplete()
-		val client2 = context.getBean<WebClient>("client2")
-		client2.get().uri("http://localhost:8080/").exchange().test()
-				.consumeNextWith { assertEquals(NO_CONTENT, it.statusCode()) }
-				.verifyComplete()
-		context.close()
-	}
-
-	@Disabled // TODO Find why it fails when running test suite but succeed when running just this test
-	@Test
-	fun `Declare 2 routes blocks`() {
-		val context = GenericApplicationContext()
-		val app = application {
-			webflux {
-				server(netty()) {
+				server(webServerModule) {
 					routes {
 						GET("/foo") { noContent().build() }
 					}
@@ -133,5 +51,4 @@ class NettyModuleTests {
 		client.get().uri("/bar").exchange().expectStatus().isOk
 		context.close()
 	}
-
 }

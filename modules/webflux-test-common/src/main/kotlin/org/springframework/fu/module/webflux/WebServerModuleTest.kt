@@ -37,7 +37,7 @@ abstract class WebServerModuleTest {
 	private val defaultHost = "127.0.0.1"
 	private val serverUrl = "http://$defaultHost:$defaultPort"
 
-	private val webServerModule: WebFluxModule.WebServerModule by lazy {
+	protected val webServerModule: WebFluxModule.WebServerModule by lazy {
 		getWebServerModule(defaultPort, defaultHost)
 	}
 
@@ -120,7 +120,7 @@ abstract class WebServerModuleTest {
 	}
 
 	@Test
-	fun `Declare 2 routes blocks`() {
+	open fun `Declare 2 routes blocks`() {
 		val context = GenericApplicationContext()
 		val app = application {
 			webflux {
