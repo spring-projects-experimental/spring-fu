@@ -3,10 +3,7 @@ dependencies {
 
 	implementation("org.apache.tomcat.embed:tomcat-embed-core")
 
-	testImplementation("org.junit.jupiter:junit-jupiter-api")
-	testImplementation("org.springframework:spring-test")
-	testImplementation("io.projectreactor:reactor-test")
-	testImplementation("io.projectreactor.netty:reactor-netty:") // For the client
+	testImplementation(project(":modules:webflux-test-common"))
 
 	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
 }

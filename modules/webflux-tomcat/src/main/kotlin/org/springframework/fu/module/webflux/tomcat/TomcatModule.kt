@@ -35,7 +35,7 @@ import org.springframework.web.server.adapter.WebHttpHandlerBuilder
 /**
  * @author Sebastien Deleuze
  */
-private class TomcatModule(private val port: Int = 8080): WebFluxModule.WebServerModule, AbstractModule() {
+internal class TomcatModule(private val port: Int = 8080): WebFluxModule.WebServerModule, AbstractModule() {
 
 	override fun initialize(context: GenericApplicationContext) {
 		context.registerBean {
