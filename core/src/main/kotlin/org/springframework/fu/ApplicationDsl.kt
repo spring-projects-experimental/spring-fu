@@ -17,6 +17,7 @@
 package org.springframework.fu
 
 import org.slf4j.LoggerFactory
+import org.slf4j.impl.SimpleLogger
 import org.springframework.beans.factory.config.BeanDefinitionCustomizer
 import org.springframework.beans.factory.support.AbstractBeanDefinition
 import org.springframework.context.ApplicationEvent
@@ -36,7 +37,16 @@ import kotlin.system.measureTimeMillis
  */
 open class ApplicationDsl(private val init: ApplicationDsl.() -> Unit) : AbstractModule() {
 
-	private val fuLogger = LoggerFactory.getLogger(ApplicationDsl::class.java)
+	private val fuLogger by lazy { LoggerFactory.getLogger(ApplicationDsl::class.java) }
+
+	init {
+		System.setProperty(SimpleLogger.LOG_FILE_KEY, "System.out")
+		System.setProperty(SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "INFO")
+		System.setProperty(SimpleLogger.SHOW_LOG_NAME_KEY, "true")
+		System.setProperty(SimpleLogger.SHOW_THREAD_NAME_KEY, "true")
+		System.setProperty(SimpleLogger.SHOW_DATE_TIME_KEY, "true")
+		System.setProperty(SimpleLogger.DATE_TIME_FORMAT_KEY, "yyyy-MM-dd HH:mm:ss.SSS")
+	}
 
 	/**
 	 * Declare a bean definition from the given bean class which can be inferred when possible.
