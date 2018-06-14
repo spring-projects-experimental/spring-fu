@@ -21,7 +21,6 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.getBean
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.fu.application
-import org.springframework.fu.module.webflux.jetty.jetty
 import org.springframework.http.HttpStatus.NO_CONTENT
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.web.reactive.function.client.WebClient
@@ -30,14 +29,24 @@ import reactor.test.test
 /**
  * @author Alexey Nesterov
  */
-class JettyModuleTests {
+abstract class WebServerModuleTest {
+
+	abstract fun getWebServerModule(port: Int, host: String): WebFluxModule.WebServerModule
+
+	private val defaultPort = 8080
+	private val defaultHost = "127.0.0.1"
+	private val serverUrl = "http://$defaultHost:$defaultPort"
+
+	private val webServerModule: WebFluxModule.WebServerModule by lazy {
+		getWebServerModule(defaultPort, defaultHost)
+	}
 
 	@Test
 	fun `Create an application with an empty server`() {
 		val context = GenericApplicationContext()
 		val app = application {
 			webflux {
-				server(jetty())
+				server(webServerModule)
 			}
 		}
 		app.run(context)
@@ -50,7 +59,7 @@ class JettyModuleTests {
 		val context = GenericApplicationContext()
 		val app = application {
 			webflux {
-				server(jetty()) {
+				server(webServerModule) {
 					routes {
 						GET("/") { noContent().build() }
 					}
@@ -58,7 +67,7 @@ class JettyModuleTests {
 			}
 		}
 		app.run(context)
-		val client = WebTestClient.bindToServer().baseUrl("http://localhost:8080").build()
+		val client = WebTestClient.bindToServer().baseUrl(serverUrl).build()
 		client.get().uri("/").exchange().expectStatus().is2xxSuccessful
 		context.close()
 	}
@@ -68,12 +77,12 @@ class JettyModuleTests {
 		val context = GenericApplicationContext()
 		val app = application {
 			webflux {
-				server(jetty()) {
+				server(webServerModule) {
 					routes {
 						GET("/") { noContent().build() }
 					}
 				}
-				client("http://localhost:8080")
+				client(serverUrl)
 			}
 		}
 		app.run(context)
@@ -89,12 +98,12 @@ class JettyModuleTests {
 		val context = GenericApplicationContext()
 		val app = application {
 			webflux {
-				server(jetty()) {
+				server(webServerModule) {
 					routes {
 						GET("/") { noContent().build() }
 					}
 				}
-				client(baseUrl = "http://localhost:8080", name = "client1")
+				client(baseUrl = serverUrl, name = "client1")
 				client(name = "client2")
 			}
 		}
@@ -115,7 +124,7 @@ class JettyModuleTests {
 		val context = GenericApplicationContext()
 		val app = application {
 			webflux {
-				server(jetty()) {
+				server(webServerModule) {
 					routes {
 						GET("/foo") { noContent().build() }
 					}
@@ -126,7 +135,7 @@ class JettyModuleTests {
 			}
 		}
 		app.run(context)
-		val client = WebTestClient.bindToServer().baseUrl("http://localhost:8080").build()
+		val client = WebTestClient.bindToServer().baseUrl(serverUrl).build()
 		client.get().uri("/foo").exchange().expectStatus().isNoContent
 		client.get().uri("/bar").exchange().expectStatus().isOk
 		context.close()

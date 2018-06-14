@@ -18,6 +18,7 @@ include("bootstraps",
 		"modules:webflux-jetty",
 		"modules:webflux-tomcat",
 		"modules:webflux-undertow",
+		"modules:webflux-test-common",
 		"samples:coroutine-webapp",
 		"samples:minimal-webapp",
 		"samples:reactive-webapp")
