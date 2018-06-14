@@ -37,8 +37,8 @@ import org.springframework.web.server.adapter.WebHttpHandlerBuilder
 
 private const val DEFAULT_STOP_TIMEOUT: Long = 5000
 
-private class JettyModule(
-        private val port: Int = 8080,
+internal class JettyModule(
+        private val port: Int,
         private val host: String) : WebFluxModule.WebServerModule, AbstractModule() {
 
     override fun initialize(context: GenericApplicationContext) {
