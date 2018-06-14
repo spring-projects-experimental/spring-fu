@@ -32,7 +32,7 @@ class CorsConfigurationDsl(
             corsConfiguration.maxAge
         }
 
-    fun getConfiguration(): CorsConfiguration {
+    operator fun invoke(): CorsConfiguration {
         if (defaults)
             corsConfiguration.applyPermitDefaultValues()
         return corsConfiguration

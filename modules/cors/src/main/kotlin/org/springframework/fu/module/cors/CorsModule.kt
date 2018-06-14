@@ -28,7 +28,7 @@ class CorsModule(
     operator fun String.invoke(defaults: Boolean = this@CorsModule.defaults, init: CorsConfigurationDsl.() -> Unit) {
         val corsConfigurationDsl = CorsConfigurationDsl(defaults)
         corsConfigurationDsl.init()
-        configuration.registerCorsConfiguration(this, corsConfigurationDsl.getConfiguration())
+        configuration.registerCorsConfiguration(this, corsConfigurationDsl())
     }
 }
 
