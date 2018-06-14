@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.fu.module.logging
+package org.springframework.fu.module.logging.logback
 
 import ch.qos.logback.classic.Level
 import ch.qos.logback.classic.spi.ILoggingEvent
@@ -26,6 +26,7 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.fu.application
+import org.springframework.fu.module.logging.logging
 import java.io.File
 
 
