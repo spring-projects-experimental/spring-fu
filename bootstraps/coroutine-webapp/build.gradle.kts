@@ -19,7 +19,7 @@ dependencyManagement {
 }
 
 dependencies {
-	implementation("org.springframework.fu.module:spring-fu-logging")
+	implementation("org.springframework.fu.module:spring-fu-logging-logback")
 	implementation("org.springframework.fu.module:spring-fu-webflux-netty")
 	implementation("org.springframework.fu.module:spring-fu-webflux-coroutine")
 	testImplementation("org.springframework.fu.module:spring-fu-test")

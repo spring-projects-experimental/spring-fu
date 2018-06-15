@@ -13,7 +13,7 @@ dependencyManagement {
 		dependency("org.springframework.fu:spring-fu:$version")
 		dependency("org.springframework.fu.module:spring-fu-dynamic-configuration:$version")
 		dependency("org.springframework.fu.module:spring-fu-jackson:$version")
-		dependency("org.springframework.fu.module:spring-fu-logging:$version")
+		dependency("org.springframework.fu.module:spring-fu-logging-logback:$version")
 		dependency("org.springframework.fu.module:spring-fu-mongodb:$version")
 		dependency("org.springframework.fu.module:spring-fu-mongodb-coroutine:$version")
 		dependency("org.springframework.fu.module:spring-fu-mustache:$version")

@@ -14,7 +14,7 @@ kotlin {
 }
 
 dependencies {
-	implementation(project(":modules:logging"))
+	implementation(project(":modules:logging-logback"))
 	implementation(project(":modules:jackson"))
 	implementation(project(":modules:mongodb-coroutine"))
 	implementation(project(":modules:mustache"))
@@ -22,3 +22,5 @@ dependencies {
 	implementation(project(":modules:webflux-netty"))
 	implementation(project(":modules:webflux-coroutine"))
 }
+
+configurations.all { exclude(module = "slf4j-simple") }

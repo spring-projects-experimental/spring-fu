@@ -2,6 +2,10 @@ package com.example
 
 import org.springframework.fu.application
 import org.springframework.fu.module.logging.*
+import org.springframework.fu.module.logging.logback.logback
+import org.springframework.fu.module.logging.logback.debug
+import org.springframework.fu.module.logging.logback.consoleAppender
+import org.springframework.fu.module.logging.logback.rollingFileAppender
 import org.springframework.fu.module.webflux.coroutine.coroutineRoutes
 import org.springframework.fu.module.webflux.netty.netty
 import org.springframework.fu.module.webflux.webflux
