@@ -1,0 +1,26 @@
+resources:
+  - name: spring-fu
+    type: git
+    source:
+      uri: https://github.com/spring-projects/spring-fu
+      branch: master
+jobs:
+  - name: build
+    public: true
+    plan:
+    - get: spring-fu
+      trigger: true
+    - task: build
+      file: spring-fu/ci/build.yml
+  - name: deploy
+    public: true
+    plan:
+    - get: spring-fu
+      passed:
+      - build
+      trigger: true
+    - task: deploy
+      file: spring-fu/ci/deploy.yml
+      params:
+      - ARTIFACTORY_USERNAME: {{artifactory_username}}
+      - ARTIFACTORY_PASSWORD: {{artifactory_password}}
