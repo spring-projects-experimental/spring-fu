@@ -1,4 +1,4 @@
-image:https://ci.spring.io/api/v1/teams/spring-fu/pipelines/spring-fu/jobs/build/badge["Build Status", link="https://ci.spring.io/teams/spring-fu/pipelines/spring-fu?groups=Build"]
+image::https://ci.spring.io/api/v1/teams/spring-fu/pipelines/spring-fu/badge["Build Status", link="https://ci.spring.io/teams/spring-fu/pipelines/spring-fu"]
 
 Spring Fu is an experimental https://kotlinlang.org/[Kotlin] micro-framework that makes it easy to create lightweight https://spring.io/projects/spring-framework[Spring]-powered applications with <<functional-configuration,functional APIs>> instead of annotations. See the https://repo.spring.io/snapshot/org/springframework/fu/spring-fu-reference/1.0.0.BUILD-SNAPSHOT/spring-fu-reference-1.0.0.BUILD-SNAPSHOT.html[reference documentation] for more details.
 
