@@ -10,7 +10,7 @@ application {
 }
 
 dependencies {
-    implementation(project(":modules:logging"))
+    implementation(project(":modules:logging-logback"))
     implementation(project(":modules:jackson"))
     implementation(project(":modules:mongodb"))
     implementation(project(":modules:mustache"))
@@ -18,3 +18,5 @@ dependencies {
 
     testImplementation(project(":modules:test"))
 }
+
+configurations.all { exclude(module = "slf4j-simple") }
