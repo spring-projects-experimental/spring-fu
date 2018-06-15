@@ -1,0 +1,31 @@
+= CORS module
+
+This module configures a https://github.com/spring-projects/spring-framework/blob/master/spring-web/src/main/java/org/springframework/web/cors/reactive/CorsWebFilter.java[CorsWebFilter] on WebFlux server.
+
+```kotlin
+application {
+	webflux {
+		server(netty()) {
+			cors {
+				"/api" {
+					allowedOrigins("first.example.com", "second.example.com")
+					allowedMethods("GET", "PUT", "POST", "DELETE")
+				}
+				"/public" {
+					allowedOrigins("**")
+					allowedMethods("GET")
+				}
+				 "fullConfig" {
+					allowedOrigins("full.config.example.com")
+					allowedMethods("GET")
+					allowedHeaders("*")
+					exposedHeaders("Content-Location")
+					allowCredentials = true
+					maxAge = 3600
+					defaults = false
+				}
+			}
+		}
+	}
+}
+```
