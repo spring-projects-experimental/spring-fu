@@ -22,5 +22,5 @@ jobs:
     - task: deploy
       file: spring-fu/ci/deploy.yml
       params:
-      - ARTIFACTORY_USERNAME: {{artifactory_username}}
-      - ARTIFACTORY_PASSWORD: {{artifactory_password}}
+       ARTIFACTORY_USERNAME: ((artifactory_username))
+       ARTIFACTORY_PASSWORD: ((artifactory_password))
