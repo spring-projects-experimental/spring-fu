@@ -3,9 +3,11 @@ package org.springframework.fu.sample.coroutines
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.condition.EnabledIfSystemProperty
 import org.springframework.http.MediaType
 import org.springframework.test.web.reactive.server.WebTestClient
 
+@EnabledIfSystemProperty(named = "mongo.server", matches = "true")
 class IntegrationTests {
 
 	private val client = WebTestClient.bindToServer().baseUrl("http://localhost:8181").build()
