@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.plugin.KotlinPluginWrapper
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-	id("org.jetbrains.kotlin.jvm") version "1.2.41" apply false
+	id("org.jetbrains.kotlin.jvm") version "1.2.50" apply false
 	id("com.github.johnrengelman.shadow") version "2.0.4" apply false
 	id("io.spring.dependency-management") version "1.0.5.RELEASE"
 	id("org.asciidoctor.convert") version "1.5.6" apply false
@@ -61,7 +61,9 @@ subprojects {
 		val bootVersion: String by project
 		val coroutinesVersion: String by project
 		imports {
-			mavenBom("org.springframework.boot:spring-boot-dependencies:$bootVersion")
+			mavenBom("org.springframework.boot:spring-boot-dependencies:$bootVersion") {
+				bomProperty("kotlin.version", plugins.getPlugin(KotlinPluginWrapper::class.java).kotlinPluginVersion)
+			}
 		}
 		dependencies {
 			dependency("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
