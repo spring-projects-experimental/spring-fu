@@ -16,6 +16,7 @@
 
 package org.springframework.fu.module.logging.logback
 
+import ch.qos.logback.classic.Level
 import ch.qos.logback.classic.Logger
 import ch.qos.logback.classic.LoggerContext
 import ch.qos.logback.classic.encoder.PatternLayoutEncoder
@@ -29,6 +30,7 @@ import ch.qos.logback.core.status.OnConsoleStatusListener
 import ch.qos.logback.core.util.FileSize
 import ch.qos.logback.core.util.StatusListenerConfigHelper
 import org.slf4j.LoggerFactory
+import org.springframework.fu.module.logging.LogLevel
 import org.springframework.fu.module.logging.LoggingConfiguration
 import org.springframework.fu.module.logging.LoggingDsl
 import org.springframework.util.ClassUtils
@@ -165,6 +167,18 @@ fun LogbackDsl.rollingFileAppender(
 	this.start()
 	appenders.add(this)
 }
+
+
+val LogLevel.logback: Level
+	get() = when (this) {
+		LogLevel.TRACE -> Level.TRACE
+		LogLevel.DEBUG -> Level.DEBUG
+		LogLevel.INFO -> Level.INFO
+		LogLevel.WARN -> Level.WARN
+		LogLevel.ERROR -> Level.ERROR
+		LogLevel.FATAL -> Level.ALL
+		LogLevel.OFF -> Level.OFF
+	}
 
 /**
  * Add custom appender

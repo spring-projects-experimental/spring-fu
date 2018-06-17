@@ -16,33 +16,16 @@
 
 package org.springframework.fu.module.logging
 
-import ch.qos.logback.classic.Level
 
 /**
  * @author Thomas Girard
  */
 enum class LogLevel {
-	TRACE {
-		override val logback: Level = Level.TRACE
-	},
-	DEBUG {
-		override val logback: Level = Level.DEBUG
-	},
-	INFO {
-		override val logback: Level = Level.INFO
-	},
-	WARN {
-		override val logback: Level = Level.WARN
-	},
-	ERROR {
-		override val logback: Level = Level.ERROR
-	},
-	FATAL {
-		override val logback: Level = Level.ALL
-	},
-	OFF {
-		override val logback: Level = Level.OFF
-	};
-
-	abstract val logback: Level
+	TRACE,
+	DEBUG,
+	INFO,
+	WARN,
+	ERROR,
+	FATAL,
+	OFF
 }

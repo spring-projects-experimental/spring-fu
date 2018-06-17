@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package org.springframework.fu.module.logging
+package org.springframework.fu.module.logging.logback
 
 import ch.qos.logback.classic.Level
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import org.springframework.fu.module.logging.LogLevel
 
 
 /**
