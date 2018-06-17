@@ -2,23 +2,26 @@
 
 This is a Spring Fu example of a minimal webapp with filtered classpath.
 
-Spring Fu figures are:
+Spring Fu `-verbose:gc` logs are:
 
- * Tomcat: 866 ms startup, 12.1 MB executable JAR, 3400 classes, 14 MB heap after startup without GC
- * Netty: 1058 ms startup, 12.6 MB  executable JAR, 3360 classes, 14 MB heap after startup without GC
- * Netty + Jackson: 1224 ms startup, 14.5 MB  executable JAR, 5200 classes, 65 MB heap after startup without GC
-
-To be compared to Boot with Netty + Jackson via the default Web Reactive starter: 2263 ms startup, 20.6 MB  executable JAR, 7900 classes, 151 MB heap after startup without GC
-
-TODO
-
- * Undertow: when https://github.com/spring-projects/spring-fu/issues/59 will be fixed
- * Jetty: when https://github.com/spring-projects/spring-fu/issues/60 will be fixed
+ [0.011s][info][gc] Using G1
+ [0,494s][info][gc] GC(0) Pause Young (G1 Evacuation Pause) 24M->3M(500M) 2,955ms
+ [0,898s][info][gc] GC(1) Pause Initial Mark (Metadata GC Threshold) 44M->6M(500M) 3,155ms
+ [0,898s][info][gc] GC(2) Concurrent Cycle
+ [0,901s][info][gc] GC(2) Pause Remark 7M->7M(500M) 1,614ms
+ [0,901s][info][gc] GC(2) Pause Cleanup 7M->7M(500M) 0,183ms
+ [0,903s][info][gc] GC(2) Concurrent Cycle 5,465ms
+ Started in 0.719 seconds (JVM running for 0.963)
 
 
+Spring Boot 2.0.3 (Kotlin with `spring-boot-starter-webflux` and `spring-boot-starter-json` excluded) `-verbose:gc` logs are:
 
-The app could be benchmark with the following command:
-
-`sudo perf stat -e cpu-clock -r10 java -jar -XX:TieredStopAtLevel=1 -noverify -Djava.security.egd=file:/dev/./urandom samples/minimal-webapp/build/libs/minimal-webapp-1.0.0.BUILD-SNAPSHOT-all.jar`
-
-
+ [0.006s][info][gc] Using G1
+ [0,380s][info][gc] GC(0) Pause Young (G1 Evacuation Pause) 24M->2M(500M) 2,882ms
+ [0,824s][info][gc] GC(1) Pause Initial Mark (Metadata GC Threshold) 86M->7M(500M) 5,057ms
+ [0,824s][info][gc] GC(2) Concurrent Cycle
+ [0,835s][info][gc] GC(2) Pause Remark 9M->9M(500M) 5,258ms
+ [0,835s][info][gc] GC(2) Pause Cleanup 9M->9M(500M) 0,189ms
+ [0,837s][info][gc] GC(2) Concurrent Cycle 12,718ms
+ [1,480s][info][gc] GC(3) Pause Young (G1 Evacuation Pause) 119M->11M(500M) 8,935ms
+ Started in 1.621 seconds (JVM running for 2.067)
