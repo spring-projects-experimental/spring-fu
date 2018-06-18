@@ -67,8 +67,5 @@ subprojects {
 			dependency("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
 			dependency("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:$coroutinesVersion")
 		}
-		generatedPomCustomization {
-			enabled(false)
-		}
 	}
 }
