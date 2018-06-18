@@ -1,8 +1,6 @@
 image::https://ci.spring.io/api/v1/teams/spring-fu/pipelines/spring-fu/badge["Build Status", link="https://ci.spring.io/teams/spring-fu/pipelines/spring-fu"]
 
-Spring Fu is an experimental https://kotlinlang.org/[Kotlin] micro-framework that makes it easy to create lightweight https://spring.io/projects/spring-framework[Spring]-powered applications with <<functional-configuration,functional APIs>> instead of annotations. See the https://repo.spring.io/snapshot/org/springframework/fu/spring-fu-reference/1.0.0.BUILD-SNAPSHOT/spring-fu-reference-1.0.0.BUILD-SNAPSHOT.html[reference documentation] for more details.
-
-Fu is for **fu**nctional API, but that's also a wordplay with the -fu suffix which means skill, the https://en.wikipedia.org/wiki/Fu_(character)[chinese character] which means "good luck" and the https://en.wikipedia.org/wiki/Fu_(poetry)[chinese poetry].
+Spring Fu (for **fu**nctional APIs) is an experimental https://kotlinlang.org/[Kotlin] micro-framework based on functional configuration intended to test ideas for upcoming https://spring.io/projects/spring-boot[Spring Boot] releases. It makes it easy to create lightweight https://spring.io/projects/spring-framework[Spring]-powered applications with <<functional-configuration,functional APIs>> instead of annotations. See the https://repo.spring.io/snapshot/org/springframework/fu/spring-fu-reference/1.0.0.BUILD-SNAPSHOT/spring-fu-reference-1.0.0.BUILD-SNAPSHOT.html[reference documentation] for more details.
 
 == Overview
 
@@ -30,11 +28,13 @@ fun routes() = routes {
 	GET("/api/user", userHandler::listApi)
 }
 ```
-It is a thin but opinionated layer on top of a subset of Spring Framework, Spring Data, Spring Security and other Spring projects that provides an alternative configuration model to https://github.com/spring-projects/spring-boot[Spring Boot] for developing applications in Kotlin.
+
+It leverages a subset Spring Boot, Spring Framework, Spring Data, Spring Security and other Spring projects that provides an alternative configuration model to https://github.com/spring-projects/spring-boot[Spring Boot] for developing applications in Kotlin.
 
 * https://spring.io/blog/2017/08/01/spring-framework-5-kotlin-apis-the-functional-way[Functional bean registration] instead of JavaConfig for both internals and application
 * Features are configured explicitly via expressive configuration leveraging Kotlin https://kotlinlang.org/docs/reference/type-safe-builders.html[domain-specific languages] (DSL)
 * Flexible programmatic configuration
+* https://github.com/spring-projects/spring-fu/labels/spring%20boot%20infra[Leverage a subset of Spring Boot]
 * Minimal reflection usage
 * No classpath scanning
 * No annotation processing
@@ -46,18 +46,12 @@ It is a thin but opinionated layer on top of a subset of Spring Framework, Sprin
 Upcoming features:
 
 * https://github.com/spring-projects/spring-fu/issues/34[Spring packages filtering] in order to have a minimal classpath and deploy just what you need
-* https://github.com/spring-projects/spring-fu/issues/5[Gradle plugin]
 * Self-sufficient opinionated documentation (Kotlin, constructor injection, functional configuration, WebFlux, Coroutines, etc.)
 * https://github.com/spring-projects/spring-fu/issues/14[Reactive/Coroutines SQL support]
 * https://github.com/spring-projects/spring-fu/issues/29[Graal native image support]
 * https://github.com/spring-projects/spring-fu/issues/23[Single language fullstack support] with frontend written in Kotlin
 * https://github.com/spring-projects/spring-fu/issues/13[Functional actuators]
 * https://github.com/spring-projects/spring-fu/issues/37[FaaS support]
-
-[NOTE]
-====
-Some features experimented in Spring Fu, like Coroutines support, **might** be integrated later in other Spring projects.
-====
 
 In addition to the whole Spring and Reactor teams, credits to https://github.com/tgirard12[Thomas Girard] for its https://github.com/tgirard12/spring-webflux-kotlin-dsl[spring-webflux-kotlin-dsl] experiment that initially demonstrated this approach was possible and to https://github.com/konrad-kaminski[Konrad Kaminski] for his awesome https://github.com/konrad-kaminski/spring-kotlin-coroutine[spring-kotlin-coroutine] project.
 

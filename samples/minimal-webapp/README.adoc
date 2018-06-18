@@ -25,3 +25,5 @@ Spring Boot 2.0.3 (Kotlin with `spring-boot-starter-webflux` and `spring-boot-st
  [0,837s][info][gc] GC(2) Concurrent Cycle 12,718ms
  [1,480s][info][gc] GC(3) Pause Young (G1 Evacuation Pause) 119M->11M(500M) 8,935ms
  Started in 1.621 seconds (JVM running for 2.067)
+
+Spring Boot 2.1 upcoming performance optimizations are likely to make functional and `@Configuration` closer in term of startup time, CPU and memory consumption.
