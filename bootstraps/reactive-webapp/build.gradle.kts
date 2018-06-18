@@ -9,7 +9,7 @@ plugins {
 
 dependencyManagement {
 	imports {
-		mavenBom("org.springframework.fu:spring-fu-dependencies:1.0.0.BUILD-SNAPSHOT")
+		mavenBom("org.springframework.fu:spring-fu-dependencies:0.0.1.BUILD-SNAPSHOT")
 	}
 }
 

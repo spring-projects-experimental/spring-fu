@@ -1,6 +1,6 @@
 image::https://ci.spring.io/api/v1/teams/spring-fu/pipelines/spring-fu/badge["Build Status", link="https://ci.spring.io/teams/spring-fu/pipelines/spring-fu"]
 
-Spring Fu (for **fu**nctional APIs) is an experimental https://kotlinlang.org/[Kotlin] micro-framework based on functional configuration intended to test ideas for upcoming https://spring.io/projects/spring-boot[Spring Boot] releases. It makes it easy to create lightweight https://spring.io/projects/spring-framework[Spring]-powered applications with <<functional-configuration,functional APIs>> instead of annotations. See the https://repo.spring.io/snapshot/org/springframework/fu/spring-fu-reference/1.0.0.BUILD-SNAPSHOT/spring-fu-reference-1.0.0.BUILD-SNAPSHOT.html[reference documentation] for more details.
+Spring Fu (for **fu**nctional APIs) is an experimental https://kotlinlang.org/[Kotlin] micro-framework based on functional configuration intended to test ideas for upcoming https://spring.io/projects/spring-boot[Spring Boot] releases. It makes it easy to create lightweight https://spring.io/projects/spring-framework[Spring]-powered applications with <<functional-configuration,functional APIs>> instead of annotations. See the https://repo.spring.io/snapshot/org/springframework/fu/spring-fu-reference/0.0.1.BUILD-SNAPSHOT/spring-fu-reference-0.0.1.BUILD-SNAPSHOT.html[reference documentation] for more details.
 
 == Overview
 
@@ -59,19 +59,19 @@ Please send us your feedback on the `#spring` channel of http://slack.kotlinlang
 
 == Getting started
 
-Spring Fu https://github.com/spring-projects/spring-fu/milestone/1[`1.0.0.M1`] is currently under active development so no release is available yet, but you have can try https://repo.spring.io/snapshot/org/springframework/fu/[`1.0.0.BUILD-SNAPSHOT` builds].
+Spring Fu https://github.com/spring-projects/spring-fu/milestone/1[`0.0.1`] is currently under active development so no release is available yet, but you have can try https://repo.spring.io/snapshot/org/springframework/fu/[`0.0.1.BUILD-SNAPSHOT` builds].
 
 === Bootstrap
 
 A Spring Fu bootstrap is an archive containing minimal project templates designed to allow you getting started quickly and easily Spring Fu applications. To start a new project, download a bootstrap `.zip` archive, extract it and follow `README.adoc` instructions.
 
- * https://repo.spring.io/libs-snapshot-local/org/springframework/fu/bootstrap/reactive-webapp/1.0.0.BUILD-SNAPSHOT/reactive-webapp-1.0.0.BUILD-SNAPSHOT.zip[reactive-webapp.zip]
- * https://repo.spring.io/libs-snapshot-local/org/springframework/fu/bootstrap/coroutine-webapp/1.0.0.BUILD-SNAPSHOT/coroutine-webapp-1.0.0.BUILD-SNAPSHOT.zip[coroutine-webapp.zip]
+ * https://repo.spring.io/libs-snapshot-local/org/springframework/fu/bootstrap/reactive-webapp/0.0.1.BUILD-SNAPSHOT/reactive-webapp-0.0.1.BUILD-SNAPSHOT.zip[reactive-webapp.zip]
+ * https://repo.spring.io/libs-snapshot-local/org/springframework/fu/bootstrap/coroutine-webapp/0.0.1.BUILD-SNAPSHOT/coroutine-webapp-0.0.1.BUILD-SNAPSHOT.zip[coroutine-webapp.zip]
 
 
 === Documentation
 
-To start with Spring Fu, you can read the https://repo.spring.io/snapshot/org/springframework/fu/spring-fu-reference/1.0.0.BUILD-SNAPSHOT/spring-fu-reference-1.0.0.BUILD-SNAPSHOT.html[**reference documentation**].
+To start with Spring Fu, you can read the https://repo.spring.io/snapshot/org/springframework/fu/spring-fu-reference/0.0.1.BUILD-SNAPSHOT/spring-fu-reference-0.0.1.BUILD-SNAPSHOT.html[**reference documentation**].
 
 API documentation will be available https://github.com/spring-projects/spring-fu/issues/8[shortly].
 

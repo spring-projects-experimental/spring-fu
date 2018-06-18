@@ -26,5 +26,5 @@ $ ./gradlew bootRun
 Or
 
 ```
-$ java -jar build/libs/coroutine-webapp-1.0.0.BUILD-SNAPSHOT.jar
+$ java -jar build/libs/coroutine-webapp-0.0.1.BUILD-SNAPSHOT.jar
 ```
