@@ -14,7 +14,7 @@ allprojects {
 	apply {
 		plugin("maven-publish")
 	}
-	version = "1.0.0.BUILD-SNAPSHOT"
+	version = "0.0.1.BUILD-SNAPSHOT"
 	group = "org.springframework.fu"
 
 	publishing {
