@@ -1,12 +1,7 @@
 import org.jetbrains.kotlin.gradle.dsl.Coroutines
 
 plugins {
-	application
-	id ("com.github.johnrengelman.shadow")
-}
-
-application {
-	mainClassName = "org.springframework.fu.sample.coroutines.ApplicationKt"
+	id("org.springframework.boot")
 }
 
 kotlin {

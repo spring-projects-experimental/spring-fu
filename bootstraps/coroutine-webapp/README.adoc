@@ -20,5 +20,11 @@ $ ./gradlew build
 
 ==== Run
 ```
-$ java -jar build/libs/coroutine-webapp-1.0.0.BUILD-SNAPSHOT-all.jar
+$ ./gradlew bootRun
+```
+
+Or
+
+```
+$ java -jar build/libs/coroutine-webapp-1.0.0.BUILD-SNAPSHOT.jar
 ```

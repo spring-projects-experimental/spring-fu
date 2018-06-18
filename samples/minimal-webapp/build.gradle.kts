@@ -1,13 +1,7 @@
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.jetbrains.kotlin.gradle.dsl.Coroutines
 
 plugins {
-	application
-	id ("com.github.johnrengelman.shadow")
-}
-
-application {
-	mainClassName = "org.springframework.fu.sample.minimal.ApplicationKt"
+	id("org.springframework.boot")
 }
 
 dependencies {
@@ -21,7 +15,7 @@ configurations {
 	}
 }
 
-tasks.withType<ShadowJar> {
+/*tasks.withType<ShadowJar> {
 	exclude("org/springframework/cglib/**",
 			"org/springframework/beans/factory/groovy/**",
 			"org/springframework/beans/factory/xml/**",
@@ -46,3 +40,4 @@ tasks.withType<ShadowJar> {
 			"org/springframework/web/multipart/**",
 			"org/springframework/util/xml/**")
 }
+*/

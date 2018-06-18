@@ -1,15 +1,11 @@
+import org.gradle.kotlin.dsl.version
 import org.jetbrains.kotlin.gradle.dsl.Coroutines
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-	id("org.jetbrains.kotlin.jvm") version "1.2.41"
+	id("org.jetbrains.kotlin.jvm") version "1.2.50"
 	id("io.spring.dependency-management") version "1.0.5.RELEASE"
-	application
-	id ("com.github.johnrengelman.shadow") version "2.0.4"
-}
-
-application {
-	mainClassName = "com.example.ApplicationKt"
+	id("org.springframework.boot") version "2.0.3.RELEASE"
 }
 
 dependencyManagement {
