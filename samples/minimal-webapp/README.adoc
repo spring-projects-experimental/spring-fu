@@ -1,6 +1,13 @@
 = Minimal webapp
 
-This is a Spring Fu example of a minimal webapp with filtered classpath.
+This is a Spring Fu example of a minimal webapp with filtered classpath used for startup time, memory, CPU and GC benchmarks.
+
+The platform is `Openjdk 10.0.1` running on a Dell precision 5520 with `Linux 4.15.0-23-generic x86_64 GNU/Linux` (Ubuntu 18.04).
+
+NOTE: Spring Boot 2.1 upcoming performance optimizations are likely to make functional configuration and `@Configuration` performances closer. The Boot application is a 2.0.3 Kotlin one with `spring-boot-starter-webflux` and `spring-boot-starter-json` excluded.
+
+
+== Garbage collector
 
 Spring Fu `-verbose:gc` logs are:
 
@@ -14,7 +21,7 @@ Spring Fu `-verbose:gc` logs are:
  Started in 0.719 seconds (JVM running for 0.963)
 
 
-Spring Boot 2.0.3 (Kotlin with `spring-boot-starter-webflux` and `spring-boot-starter-json` excluded) `-verbose:gc` logs are:
+Spring Boot 2.0 `-verbose:gc` logs are:
 
  [0.006s][info][gc] Using G1
  [0,380s][info][gc] GC(0) Pause Young (G1 Evacuation Pause) 24M->2M(500M) 2,882ms
@@ -26,4 +33,46 @@ Spring Boot 2.0.3 (Kotlin with `spring-boot-starter-webflux` and `spring-boot-st
  [1,480s][info][gc] GC(3) Pause Young (G1 Evacuation Pause) 119M->11M(500M) 8,935ms
  Started in 1.621 seconds (JVM running for 2.067)
 
-Spring Boot 2.1 upcoming performance optimizations are likely to make functional configuration and `@Configuration` closer in term of startup time, CPU and memory consumption.
+== Startup time
+
+== Netty
+
+Spring Fu:
+
+ Application started in 0.609 seconds (JVM running for 0.879)
+ Application started in 0.676 seconds (JVM running for 0.97)
+ Application started in 0.672 seconds (JVM running for 0.958)
+
+Spring Boot 2.0:
+
+ Started DemoStartupKotlinApplicationKt in 1.215 seconds (JVM running for 1.5)
+ Started DemoStartupKotlinApplicationKt in 1.174 seconds (JVM running for 1.494)
+ Started DemoStartupKotlinApplicationKt in 1.212 seconds (JVM running for 1.513)
+
+=== Tomcat
+
+Spring Fu:
+
+ Application started in 0.440 seconds (JVM running for 0.709)
+ Application started in 0.440 seconds (JVM running for 0.723)
+ Application started in 0.445 seconds (JVM running for 0.72)
+
+Spring Boot 2.0:
+
+ Started DemoStartupKotlinApplicationKt in 1.228 seconds (JVM running for 1.538)
+ Started DemoStartupKotlinApplicationKt in 1.262 seconds (JVM running for 1.561)
+ Started DemoStartupKotlinApplicationKt in 1.262 seconds (JVM running for 1.561)
+
+== Undertow
+
+Spring Fu:
+
+ Application started in 0.274 seconds (JVM running for 0.553)
+ Application started in 0.268 seconds (JVM running for 0.508)
+ Application started in 0.293 seconds (JVM running for 0.57)
+
+Spring Boot 2.0:
+
+ Started DemoStartupKotlinApplicationKt in 1.181 seconds (JVM running for 1.494)
+ Started DemoStartupKotlinApplicationKt in 1.231 seconds (JVM running for 1.571)
+ Started DemoStartupKotlinApplicationKt in 1.221 seconds (JVM running for 1.565)
