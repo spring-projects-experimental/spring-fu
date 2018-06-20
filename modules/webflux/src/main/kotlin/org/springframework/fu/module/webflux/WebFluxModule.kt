@@ -17,13 +17,11 @@
 package org.springframework.fu.module.webflux
 
 import org.springframework.beans.factory.NoSuchBeanDefinitionException
-import org.springframework.beans.factory.getBeansOfType
 import org.springframework.context.ApplicationContext
 import org.springframework.context.ApplicationContextAware
 import org.springframework.context.SmartLifecycle
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.beans
-import org.springframework.context.support.registerBean
 import org.springframework.core.codec.*
 import org.springframework.core.io.Resource
 import org.springframework.http.codec.ServerCodecConfigurer
@@ -66,6 +64,8 @@ open class WebFluxModule(private val init: WebFluxModule.() -> Unit): AbstractMo
 
 		private val builder = HandlerStrategies.empty()
 
+		private val routes = mutableListOf<() -> RouterFunction<ServerResponse>>()
+
 		override fun initialize(context: GenericApplicationContext) {
 			this.context = context
 			init()
@@ -85,7 +85,7 @@ open class WebFluxModule(private val init: WebFluxModule.() -> Unit): AbstractMo
 						if (c is WebFluxCodecsModule) {
 							for (codec in c.initializers) {
 								if (codec is WebFluxServerCodecModule) {
-									builder.codecs({ codec.invoke(it) })
+									builder.codecs { codec.invoke(it) }
 								}
 							}
 						}
@@ -95,9 +95,8 @@ open class WebFluxModule(private val init: WebFluxModule.() -> Unit): AbstractMo
 						builder.viewResolver(ref())
 					}
 					catch (ex: NoSuchBeanDefinitionException) {}
-					val routers = context.getBeansOfType<RouterFunction<ServerResponse>>()
-					val router = if (!routers.isEmpty()) {
-						routers.values.reduce(RouterFunction<ServerResponse>::and)
+					val router = if (!routes.isEmpty()) {
+						routes.map { it() }.reduce(RouterFunction<ServerResponse>::and)
 					}
 					else {
 						RouterFunction<ServerResponse> { Mono.empty() }
@@ -121,8 +120,8 @@ open class WebFluxModule(private val init: WebFluxModule.() -> Unit): AbstractMo
 			if (routes == null && ref == null)
 				throw IllegalArgumentException("No routes provided")
 
-			routes?.let { initializers.add(WebFluxRoutesModule(it)) }
-			ref?.let { initializers.add(it.invoke()) }
+			routes?.let { this.routes.add(WebFluxRoutesModule(it)) }
+			ref?.let { this.routes.add(it.invoke()) }
 		}
 
 
@@ -211,21 +210,7 @@ fun ApplicationDsl.webflux(init: WebFluxModule.() -> Unit): WebFluxModule {
 	return webFluxDsl
 }
 
-open class WebFluxRoutesModule(private val init: WebFluxRoutesModule.() -> Unit) : AbstractModule(), () -> RouterFunction<ServerResponse> {
-
-	companion object {
-		var count = 0
-	}
-
-	override fun initialize(context: GenericApplicationContext) {
-		this.context = context
-		val name = "${RouterFunction::class.qualifiedName}${count++}"
-		println(name)
-		context.registerBean(name) {
-			init()
-			invoke()
-		}
-	}
+open class WebFluxRoutesModule(private val init: WebFluxRoutesModule.() -> Unit) : () -> RouterFunction<ServerResponse>, AbstractModule() {
 
 	val routes = mutableListOf<RouterFunction<ServerResponse>>()
 
