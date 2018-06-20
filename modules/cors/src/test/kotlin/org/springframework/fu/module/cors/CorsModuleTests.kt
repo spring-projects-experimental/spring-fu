@@ -22,51 +22,50 @@ import org.springframework.fu.application
 import org.springframework.fu.module.webflux.netty.netty
 import org.springframework.fu.module.webflux.webflux
 import org.springframework.test.web.reactive.server.WebTestClient
-import org.springframework.web.reactive.function.server.ServerResponse.noContent
 
 /**
  * @author Ireneusz Kozłowski
  */
 class CorsModuleTests {
 
-    @Test
-    fun `Enable cors module on server, create and request a JSON endpoint`() {
-        val context = GenericApplicationContext()
-        val app = application {
-            webflux {
-                server(netty()) {
-                    cors {
-                        "/api" {
-                            allowedOrigins("first.example.com", "second.example.com")
-                            allowedMethods("GET", "PUT", "POST", "DELETE")
-                        }
-                        "/public" {
-                            allowedOrigins("**")
-                            allowedMethods("GET")
-                        }
-                        "fullConfig" {
-                            allowedOrigins("full.config.example.com")
-                            allowedMethods("GET")
-                            allowedHeaders("*")
-                            exposedHeaders("Content-Location")
-                            allowCredentials = true
-                            maxAge = 3600
-                            defaults = false
-                        }
-                    }
-                    routes {
-                        GET("/") { noContent().build() }
-                    }
-                }
-            }
-        }
-        app.run(context)
-        assert(context.containsBean("corsFilter"))
-        val client = WebTestClient.bindToServer().baseUrl("http://localhost:8080").build()
-        client.get().uri("/").exchange()
-            .expectStatus().is2xxSuccessful
-        context.close()
-    }
+	@Test
+	fun `Enable cors module on server, create and request a JSON endpoint`() {
+		val context = GenericApplicationContext()
+		val app = application {
+			webflux {
+				server(netty()) {
+					cors {
+						"/api" {
+							allowedOrigins("first.example.com", "second.example.com")
+							allowedMethods("GET", "PUT", "POST", "DELETE")
+						}
+						"/public" {
+							allowedOrigins("**")
+							allowedMethods("GET")
+						}
+						"fullConfig" {
+							allowedOrigins("full.config.example.com")
+							allowedMethods("GET")
+							allowedHeaders("*")
+							exposedHeaders("Content-Location")
+							allowCredentials = true
+							maxAge = 3600
+							defaults = false
+						}
+					}
+					routes {
+						GET("/") { noContent().build() }
+					}
+				}
+			}
+		}
+		app.run(context)
+		assert(context.containsBean("corsFilter"))
+		val client = WebTestClient.bindToServer().baseUrl("http://localhost:8080").build()
+		client.get().uri("/").exchange()
+			.expectStatus().is2xxSuccessful
+		context.close()
+	}
 }
 
 
