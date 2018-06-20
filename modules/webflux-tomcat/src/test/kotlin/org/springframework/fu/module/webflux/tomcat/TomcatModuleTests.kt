@@ -17,11 +17,11 @@
 package org.springframework.fu.module.webflux.tomcat
 
 import org.springframework.fu.module.webflux.WebFluxModule
-import org.springframework.fu.module.webflux.WebServerModuleTest
+import org.springframework.fu.module.webflux.AbstractWebServerModuleTests
 
 /**
  * @author Sebastien Deleuze
  */
-class TomcatModuleTests: WebServerModuleTest() {
+class TomcatModuleTests: AbstractWebServerModuleTests() {
 	override fun getWebServerModule(port: Int, host: String): WebFluxModule.WebServerModule = TomcatModule(port)
 }

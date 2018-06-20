@@ -24,7 +24,6 @@ import org.apache.catalina.loader.WebappLoader
 import org.apache.catalina.startup.Tomcat
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.registerBean
-import org.springframework.fu.AbstractModule
 import org.springframework.fu.module.webflux.WebFluxModule
 
 import org.springframework.fu.module.webflux.WebServer
@@ -35,7 +34,7 @@ import org.springframework.web.server.adapter.WebHttpHandlerBuilder
 /**
  * @author Sebastien Deleuze
  */
-internal class TomcatModule(private val port: Int = 8080): WebFluxModule.WebServerModule, AbstractModule() {
+internal class TomcatModule(private val port: Int): WebFluxModule.AbstractWebServerModule(port) {
 
 	override fun initialize(context: GenericApplicationContext) {
 		context.registerBean {
@@ -47,7 +46,7 @@ internal class TomcatModule(private val port: Int = 8080): WebFluxModule.WebServ
 /**
  * @author Sebastien Deleuze
  */
-private class TomcatWebServer(private val port: Int = 8080) : WebServer(port) {
+private class TomcatWebServer(private val port: Int) : WebServer(port) {
 
 	private val tomcat = Tomcat()
 

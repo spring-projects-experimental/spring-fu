@@ -18,7 +18,6 @@ package org.springframework.fu.module.webflux.netty
 
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.registerBean
-import org.springframework.fu.AbstractModule
 import org.springframework.fu.module.webflux.WebFluxModule
 import org.springframework.fu.module.webflux.WebServer
 import org.springframework.http.server.reactive.ReactorHttpHandlerAdapter
@@ -30,7 +29,7 @@ import java.util.concurrent.atomic.AtomicReference
 /**
  * @author Sebastien Deleuze
  */
-internal class NettyModule(private val port: Int = 8080): WebFluxModule.WebServerModule, AbstractModule() {
+internal class NettyModule(private val port: Int = 8080): WebFluxModule.AbstractWebServerModule(port) {
 
 	override fun initialize(context: GenericApplicationContext) {
 		context.registerBean {

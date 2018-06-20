@@ -18,37 +18,16 @@ package org.springframework.fu.module.webflux
 
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
-import org.springframework.context.support.GenericApplicationContext
-import org.springframework.fu.application
 import org.springframework.fu.module.webflux.netty.NettyModule
-import org.springframework.test.web.reactive.server.WebTestClient
 
 /**
  * @author Sebastien Deleuze
  */
-class NettyModuleTests: WebServerModuleTest() {
+class NettyModuleTests: AbstractWebServerModuleTests() {
 	override fun getWebServerModule(port: Int, host: String): WebFluxModule.WebServerModule = NettyModule(port)
 
+	// FIXME
 	@Disabled
 	@Test
-	override fun `Declare 2 routes blocks`() {
-		val context = GenericApplicationContext()
-		val app = application {
-			webflux {
-				server(webServerModule) {
-					routes {
-						GET("/foo") { noContent().build() }
-					}
-					routes {
-						GET("/bar") { ok().build() }
-					}
-				}
-			}
-		}
-		app.run(context)
-		val client = WebTestClient.bindToServer().baseUrl("http://localhost:8080").build()
-		client.get().uri("/foo").exchange().expectStatus().isNoContent
-		client.get().uri("/bar").exchange().expectStatus().isOk
-		context.close()
-	}
+	override fun `Declare 2 routes blocks`() {}
 }

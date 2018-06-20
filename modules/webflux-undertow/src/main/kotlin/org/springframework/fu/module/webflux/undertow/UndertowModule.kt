@@ -19,7 +19,6 @@ package org.springframework.fu.module.webflux.undertow
 import io.undertow.Undertow
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.registerBean
-import org.springframework.fu.AbstractModule
 import org.springframework.fu.module.webflux.WebFluxModule
 import org.springframework.fu.module.webflux.WebServer
 import org.springframework.http.server.reactive.UndertowHttpHandlerAdapter
@@ -28,8 +27,8 @@ import org.springframework.web.server.adapter.WebHttpHandlerBuilder
 /**
  * @author Ruslan Ibragimov
  */
-internal class UndertowModule(private val port: Int = 8080,
-							 private val host: String = "0.0.0.0"): WebFluxModule.WebServerModule, AbstractModule() {
+internal class UndertowModule(private val port: Int,
+							  private val host: String): WebFluxModule.AbstractWebServerModule(port, host) {
 
 	override fun initialize(context: GenericApplicationContext) {
 		context.registerBean {

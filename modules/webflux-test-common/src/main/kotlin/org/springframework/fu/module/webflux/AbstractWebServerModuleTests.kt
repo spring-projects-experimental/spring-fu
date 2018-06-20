@@ -29,24 +29,16 @@ import reactor.test.test
 /**
  * @author Alexey Nesterov
  */
-abstract class WebServerModuleTest {
+abstract class AbstractWebServerModuleTests {
 
-	abstract fun getWebServerModule(port: Int, host: String): WebFluxModule.WebServerModule
-
-	private val defaultPort = 8080
-	private val defaultHost = "127.0.0.1"
-	private val serverUrl = "http://$defaultHost:$defaultPort"
-
-	protected val webServerModule: WebFluxModule.WebServerModule by lazy {
-		getWebServerModule(defaultPort, defaultHost)
-	}
+	abstract fun getWebServerModule(port: Int = 8080, host: String = "127.0.0.1"): WebFluxModule.WebServerModule
 
 	@Test
 	fun `Create an application with an empty server`() {
 		val context = GenericApplicationContext()
 		val app = application {
 			webflux {
-				server(webServerModule)
+				server(getWebServerModule())
 			}
 		}
 		app.run(context)
@@ -57,6 +49,7 @@ abstract class WebServerModuleTest {
 	@Test
 	fun `Create and request an endpoint`() {
 		val context = GenericApplicationContext()
+		val webServerModule = getWebServerModule()
 		val app = application {
 			webflux {
 				server(webServerModule) {
@@ -67,7 +60,7 @@ abstract class WebServerModuleTest {
 			}
 		}
 		app.run(context)
-		val client = WebTestClient.bindToServer().baseUrl(serverUrl).build()
+		val client = WebTestClient.bindToServer().baseUrl(webServerModule.baseUrl).build()
 		client.get().uri("/").exchange().expectStatus().is2xxSuccessful
 		context.close()
 	}
@@ -75,6 +68,7 @@ abstract class WebServerModuleTest {
 	@Test
 	fun `Create a WebClient and request an endpoint`() {
 		val context = GenericApplicationContext()
+		val webServerModule = getWebServerModule()
 		val app = application {
 			webflux {
 				server(webServerModule) {
@@ -82,7 +76,7 @@ abstract class WebServerModuleTest {
 						GET("/") { noContent().build() }
 					}
 				}
-				client(serverUrl)
+				client(webServerModule.baseUrl)
 			}
 		}
 		app.run(context)
@@ -96,6 +90,7 @@ abstract class WebServerModuleTest {
 	@Test
 	fun `Create 2 WebClient with different names and request an endpoint`() {
 		val context = GenericApplicationContext()
+		val webServerModule = getWebServerModule()
 		val app = application {
 			webflux {
 				server(webServerModule) {
@@ -103,7 +98,7 @@ abstract class WebServerModuleTest {
 						GET("/") { noContent().build() }
 					}
 				}
-				client(baseUrl = serverUrl, name = "client1")
+				client(baseUrl = webServerModule.baseUrl, name = "client1")
 				client(name = "client2")
 			}
 		}
@@ -122,6 +117,7 @@ abstract class WebServerModuleTest {
 	@Test
 	open fun `Declare 2 routes blocks`() {
 		val context = GenericApplicationContext()
+		val webServerModule = getWebServerModule()
 		val app = application {
 			webflux {
 				server(webServerModule) {
@@ -135,7 +131,7 @@ abstract class WebServerModuleTest {
 			}
 		}
 		app.run(context)
-		val client = WebTestClient.bindToServer().baseUrl(serverUrl).build()
+		val client = WebTestClient.bindToServer().baseUrl(webServerModule.baseUrl).build()
 		client.get().uri("/foo").exchange().expectStatus().isNoContent
 		client.get().uri("/bar").exchange().expectStatus().isOk
 		context.close()

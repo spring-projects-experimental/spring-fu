@@ -17,11 +17,11 @@
 package org.springframework.fu.module.webflux.undertow
 
 import org.springframework.fu.module.webflux.WebFluxModule
-import org.springframework.fu.module.webflux.WebServerModuleTest
+import org.springframework.fu.module.webflux.AbstractWebServerModuleTests
 
 /**
  * @author Ruslan Ibragimov
  */
-class UndertowModuleTests: WebServerModuleTest() {
+class UndertowModuleTests: AbstractWebServerModuleTests() {
 	override fun getWebServerModule(port: Int, host: String): WebFluxModule.WebServerModule = UndertowModule(port, host)
 }

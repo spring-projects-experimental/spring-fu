@@ -178,7 +178,13 @@ open class WebFluxModule(private val init: WebFluxModule.() -> Unit): AbstractMo
 		}
 	}
 
-	interface WebServerModule: Module
+	interface WebServerModule: Module {
+		val baseUrl: String
+	}
+
+	abstract class AbstractWebServerModule(port: Int, host: String = "0.0.0.0"): AbstractModule(), WebServerModule {
+		override val baseUrl = "http://$host:$port"
+	}
 
 	interface WebFluxServerCodecModule: Module, (ServerCodecConfigurer) -> (Unit)
 

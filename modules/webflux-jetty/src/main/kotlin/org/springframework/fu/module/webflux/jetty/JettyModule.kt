@@ -19,7 +19,6 @@ package org.springframework.fu.module.webflux.jetty
 import org.eclipse.jetty.server.Server
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.registerBean
-import org.springframework.fu.AbstractModule
 import org.springframework.fu.module.webflux.WebFluxModule
 import org.springframework.fu.module.webflux.WebServer
 import java.net.InetSocketAddress
@@ -39,7 +38,7 @@ private const val DEFAULT_STOP_TIMEOUT: Long = 5000
 
 internal class JettyModule(
         private val port: Int,
-        private val host: String) : WebFluxModule.WebServerModule, AbstractModule() {
+        private val host: String) : WebFluxModule.AbstractWebServerModule(port, host) {
 
     override fun initialize(context: GenericApplicationContext) {
         context.registerBean {
