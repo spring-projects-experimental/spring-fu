@@ -1,6 +1,6 @@
 = WebFlux module
 
-This module configures https://docs.spring.io/spring/docs/current/spring-framework-reference/web-reactive.html#spring-webflux[WebFlux] client or server.
+This module configures https://docs.spring.io/spring/docs/current/spring-framework-reference/web-reactive.html#spring-webflux[WebFlux] client or server. 0..n clients are supported (you can specify the bean name to differentiate them) while only 0..1 server can ben declared. If multiple servers are needed, create one application per server (as usual in microservices architecture).
 
 ```kotlin
 application {

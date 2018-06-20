@@ -18,6 +18,7 @@ package org.springframework.fu.module.webflux
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.getBean
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.fu.application
@@ -134,6 +135,32 @@ abstract class AbstractWebServerModuleTests {
 		val client = WebTestClient.bindToServer().baseUrl(webServerModule.baseUrl).build()
 		client.get().uri("/foo").exchange().expectStatus().isNoContent
 		client.get().uri("/bar").exchange().expectStatus().isOk
+		context.close()
+	}
+
+	@Test
+	open fun `Declare 2 server blocks`() {
+		val context = GenericApplicationContext()
+		val webServerModule1 = getWebServerModule()
+		val webServerModule2 = getWebServerModule(8181)
+		val app = application {
+			webflux {
+				server(webServerModule1) {
+					routes {
+						GET("/foo") { noContent().build() }
+					}
+				}
+				server(webServerModule2) {
+					routes {
+						GET("/bar") { ok().build() }
+					}
+				}
+			}
+		}
+
+		assertThrows<IllegalStateException> {
+			app.run(context)
+		}
 		context.close()
 	}
 }

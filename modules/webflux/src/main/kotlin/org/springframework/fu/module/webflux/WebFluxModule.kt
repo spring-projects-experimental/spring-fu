@@ -67,6 +67,9 @@ open class WebFluxModule(private val init: WebFluxModule.() -> Unit): AbstractMo
 		private val routes = mutableListOf<() -> RouterFunction<ServerResponse>>()
 
 		override fun initialize(context: GenericApplicationContext) {
+			if (context.containsBeanDefinition("webHandler")) {
+				throw IllegalStateException("Only one server per application is supported")
+			}
 			this.context = context
 			init()
 			initializers.add(serverModule)
