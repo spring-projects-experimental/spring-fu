@@ -22,5 +22,5 @@ import org.springframework.fu.module.webflux.jetty.JettyModule
  * @author Alexey Nesterov
  */
 class JettyModuleTests: AbstractWebServerModuleTests() {
-    override fun getWebServerModule(port: Int, host: String): WebFluxModule.WebServerModule = JettyModule(port, host)
+	override fun getWebServerModule(port: Int, host: String): WebFluxModule.WebServerModule = JettyModule(port, host)
 }

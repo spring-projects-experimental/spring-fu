@@ -37,76 +37,76 @@ import org.springframework.web.server.adapter.WebHttpHandlerBuilder
 private const val DEFAULT_STOP_TIMEOUT: Long = 5000
 
 internal class JettyModule(
-        private val port: Int,
-        private val host: String) : WebFluxModule.AbstractWebServerModule(port, host) {
+		private val port: Int,
+		private val host: String) : WebFluxModule.AbstractWebServerModule(port, host) {
 
-    override fun initialize(context: GenericApplicationContext) {
-        context.registerBean {
-            JettyServerModule(port, host)
-        }
-    }
+	override fun initialize(context: GenericApplicationContext) {
+		context.registerBean {
+			JettyServerModule(port, host)
+		}
+	}
 }
 
 private class JettyServerModule(private val port: Int, private val host: String) : WebServer(port) {
 
-    private var contextHandler: ServletContextHandler? = null
-    private val logger = LoggerFactory.getLogger(JettyServerModule::class.java)
+	private var contextHandler: ServletContextHandler? = null
+	private val logger = LoggerFactory.getLogger(JettyServerModule::class.java)
 
-    private val jettyServer: Server by lazy {
-        Server(InetSocketAddress(host, port))
-    }
+	private val jettyServer: Server by lazy {
+		Server(InetSocketAddress(host, port))
+	}
 
-    override fun isRunning() = jettyServer.isRunning && this.contextHandler?.isRunning ?: false
+	override fun isRunning() = jettyServer.isRunning && this.contextHandler?.isRunning ?: false
 
-    override fun start() {
-        if (!isRunning) {
-            val httpHandler = WebHttpHandlerBuilder.applicationContext(context).build()
+	override fun start() {
+		if (!isRunning) {
+			val httpHandler = WebHttpHandlerBuilder.applicationContext(context).build()
 
-            val servlet = JettyHttpHandlerAdapter(httpHandler)
-            val servletHolder = ServletHolder(servlet).apply {
-                isAsyncSupported = true
-            }
+			val servlet = JettyHttpHandlerAdapter(httpHandler)
+			val servletHolder = ServletHolder(servlet).apply {
+				isAsyncSupported = true
+			}
 
-            this.contextHandler = ServletContextHandler(this.jettyServer, "", false, false).apply {
-                addServlet(servletHolder, "/")
-                start()
-            }
+			this.contextHandler = ServletContextHandler(this.jettyServer, "", false, false).apply {
+				addServlet(servletHolder, "/")
+				start()
+			}
 
-            val connector = ServerConnector(this.jettyServer).apply {
-                host = host
-                port = port
-            }
+			val connector = ServerConnector(this.jettyServer).apply {
+				host = host
+				port = port
+			}
 
-            this.jettyServer.addConnector(connector)
+			this.jettyServer.addConnector(connector)
 
-            jettyServer.start()
-        }
-    }
+			jettyServer.start()
+		}
+	}
 
-    override fun stop(callback: Runnable) {
-        this.stop()
-        callback.run()
-    }
+	override fun stop(callback: Runnable) {
+		this.stop()
+		callback.run()
+	}
 
-    override fun stop() {
-        try {
-            this.contextHandler?.stop()
-        } finally {
-            stopInternal()
-        }
-    }
+	override fun stop() {
+		try {
+			this.contextHandler?.stop()
+		} finally {
+			stopInternal()
+		}
+	}
 
-    private fun stopInternal() {
-        try {
-            if (this.jettyServer.isRunning) {
-                this.jettyServer.stopTimeout = DEFAULT_STOP_TIMEOUT
-                this.jettyServer.stop()
-                this.jettyServer.destroy()
-            }
-        } catch (ex: Exception) {
-            logger.error("Failed to stop jetty server", ex)
-        }
-    }
+	private fun stopInternal() {
+		try {
+			if (this.jettyServer.isRunning) {
+				this.jettyServer.stopTimeout = DEFAULT_STOP_TIMEOUT
+				this.jettyServer.stop()
+				this.jettyServer.destroy()
+			}
+		} catch (ex: Exception) {
+			logger.error("Failed to stop jetty server", ex)
+		}
+	}
 }
 
 fun WebFluxModule.jetty(port: Int = 8080, host: String = "0.0.0.0"): WebFluxModule.WebServerModule = JettyModule(port, host)
