@@ -10,7 +10,7 @@ kotlin {
 
 dependencies {
 	implementation(project(":modules:logging-logback"))
-	implementation(project(":modules:jackson"))
+	implementation(project(":modules:webflux-jackson"))
 	implementation(project(":modules:mongodb-coroutine"))
 	implementation(project(":modules:mustache"))
 	implementation(project(":modules:test"))

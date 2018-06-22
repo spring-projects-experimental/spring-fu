@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.fu.module.jackson
+package org.springframework.fu.module.webflux.jackson
 
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test

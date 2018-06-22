@@ -1,4 +1,4 @@
-package org.springframework.fu.module.jackson
+package org.springframework.fu.module.webflux.jackson
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.context.support.GenericApplicationContext
