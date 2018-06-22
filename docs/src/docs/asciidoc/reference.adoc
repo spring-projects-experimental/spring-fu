@@ -19,7 +19,7 @@ include::../../../../modules/mongodb-coroutine/README.adoc[leveloffset=+2]
 
 include::../../../../modules/dynamic-configuration/README.adoc[leveloffset=+2]
 
-include::../../../../modules/jackson/README.adoc[leveloffset=+2]
+include::../../../../modules/webflux-jackson/README.adoc[leveloffset=+2]
 
 include::../../../../modules/mustache/README.adoc[leveloffset=+2]
 

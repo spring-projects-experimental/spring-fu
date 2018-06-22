@@ -6,7 +6,7 @@ plugins {
 
 dependencies {
     implementation(project(":modules:logging-logback"))
-    implementation(project(":modules:jackson"))
+    implementation(project(":modules:webflux-jackson"))
     implementation(project(":modules:mongodb"))
     implementation(project(":modules:mustache"))
     implementation(project(":modules:webflux-netty"))
