@@ -25,6 +25,7 @@ import org.springframework.fu.module.webflux.netty.netty
 import org.springframework.fu.module.webflux.webflux
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.test.web.reactive.server.expectBody
+import org.thymeleaf.templatemode.TemplateMode
 
 /**
  * @author Artem Gavrilov
@@ -36,12 +37,16 @@ class ThymeleafModuleTests {
         val context = GenericApplicationContext()
         val app = application {
             webflux {
-                server(netty()) {
-                    thymeleaf()
-                    routes {
-                        GET("/view") { ok().render("template", mapOf("name" to "world")) }
-                    }
-                }
+server(netty()) {
+    thymeleaf {
+        cache(true)
+        suffix(".custom")
+        prefix("classpath:/views/")
+    }
+    routes {
+        GET("/view") { ok().render("template", mapOf("name" to "world")) }
+    }
+}
             }
         }
         app.run(context)

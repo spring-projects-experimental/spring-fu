@@ -20,6 +20,8 @@ import org.springframework.core.io.buffer.DataBufferUtils
 import org.springframework.http.MediaType
 import org.springframework.web.reactive.result.view.AbstractUrlBasedView
 import org.springframework.web.server.ServerWebExchange
+import org.thymeleaf.context.EngineContext
+import org.thymeleaf.spring5.SpringTemplateEngine
 import org.thymeleaf.spring5.SpringWebFluxTemplateEngine
 import org.thymeleaf.spring5.context.webflux.SpringWebFluxContext
 import reactor.core.publisher.Flux
@@ -42,13 +44,10 @@ class ThymeleafView : AbstractUrlBasedView() {
         val dataBuffer = exchange.response.bufferFactory().allocateBuffer()
         try {
             val engine = applicationContext!!.getBean(SpringWebFluxTemplateEngine::class.java)
-            val resourceStreamReader = InputStreamReader(applicationContext?.getResource(url!!)!!.inputStream)
             val charset = Optional.ofNullable(mediaType?.charset).orElse(defaultCharset)
-            resourceStreamReader.use { reader ->
-                OutputStreamWriter(dataBuffer.asOutputStream(), charset).use { writer ->
-                    engine.process(reader.readText(), SpringWebFluxContext(exchange, Locale.getDefault(), model), writer)
-                    writer.flush()
-                }
+            OutputStreamWriter(dataBuffer.asOutputStream(), charset).use { writer ->
+                engine.process(url!!, SpringWebFluxContext(exchange, Locale.getDefault(), model), writer)
+                writer.flush()
             }
         } catch (ex: Exception) {
             DataBufferUtils.release(dataBuffer)
