@@ -138,6 +138,7 @@ open class ApplicationDsl(private val init: ApplicationDsl.() -> Unit) : Abstrac
 
 	inline fun <reified E : ApplicationEvent>listener(crossinline listener: (E) -> Unit) {
 		context.registerBean {
+			// TODO Leverage SPR-16872 when it will be fixed
 			if (it is E) {
 				ApplicationListener<E> {
 					listener.invoke(it)
