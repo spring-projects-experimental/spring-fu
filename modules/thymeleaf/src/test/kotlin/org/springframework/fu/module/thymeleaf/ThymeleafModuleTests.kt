@@ -38,11 +38,7 @@ class ThymeleafModuleTests {
         val app = application {
             webflux {
 server(netty()) {
-    thymeleaf {
-        cache(true)
-        suffix(".custom")
-        prefix("classpath:/views/")
-    }
+    thymeleaf(cache = true, suffix = ".custom", prefix = "classpath:/views/")
     routes {
         GET("/view") { ok().render("template", mapOf("name" to "world")) }
     }
