@@ -1,6 +1,73 @@
 == Application configuration
 
-In Spring Fu, configuration is done via an application DSL augmented by the configuration DSL of the modules present in the classpath.
+Spring Fu functional configuration is leveraging Kotlin DSL that allows you to configure your application explicitly. Each custom block like `configuration`, `actuators` or `webflux` is in fact a more high level `beans {}` block with a custom DSL provided for easy configuration. Since this configuration is code, you can use any kind of custom programmatic bean registration without having to implement your own `@Conditional` annotation.
+
+Here is an example of a typical Spring Fu application functional configuration.
+```kotlin
+fun main(args: Array<String) = application {
+	configuration {
+		AppConfiguration(name = env["SYSTEM_ENV"] ?: "default")
+	}
+	actuators(beans = false, mapping = false)
+	logging {
+		level(INFO)
+		level("org.springframework", DEBUG)
+		logback {
+			consoleAppender()
+			rollingFileAppender(file = File("log.txt"))
+		}
+	}
+	profile("data") {
+		bean<UserRepository>()
+		bean<ArticleRepository>()
+		mongodb(uri = "mongodb://myserver.com/foo")
+		listener<ContextStartedEvent> {
+			ref<UserRepository>().init()
+			ref<ArticleRepository>().init()
+		}
+	}
+	profile("web") {
+		bean<HtmlHandler>()
+		bean<ApiHandler>()
+		webflux {
+			val port = if (profiles.contains("test")) 8181 else 8080
+			server(netty(port)) {
+				cors(origin = "example.com")
+				mustache()
+				codecs {
+					jackson()
+					protobuf()
+				}
+				routes(ref = ::routes)
+				security { // TODO }
+			}
+			client {
+				codecs {
+					jackson()
+				}
+			}
+		}
+	}
+}.app.run(await = true, profiles = "data, web")
+
+data class AppConfiguration(
+	val name: String,
+	val remoteUrl: String  = "http://localhost:8080"
+)
+
+fun routes() = routes {
+	val htmlHandler = ref<HtmlHandler>()
+	val apiHandler = ref<ApiHandler>()
+	GET("/", htmlHandler::blog)
+	GET("/article/{id}", htmlHandler::article)
+	"/api".nest {
+		GET("/", apiHandler::list)
+		POST("/", apiHandler::create)
+		PUT("/{id}", apiHandler::update)
+		DELETE("/{id}", apiHandler::delete)
+	}
+}
+```
 
 === Beans
 
@@ -55,3 +122,173 @@ application {
 	}
 }
 ```
+
+=== Comparison with annotation-based configuration
+
+==== JavaConfig
+
+Functional bean definition allows to define beans in an efficient way with minimal reflection usage, no proxy and with a concise Kotlin DSL that takes advantage of https://kotlinlang.org/docs/reference/inline-functions.html#reified-type-parameters[reified type parameters] to avoid type erasure. The `beans {}` block is in fact a regular https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/ApplicationContextInitializer.html[`ApplicationContextInitializer`].
+
+|=====
+a|**JavaConfig** |**Functional bean definition**
+a|
+```kotlin
+ @Configuration
+ class MyConfiguration {
+
+  @Bean
+  fun foo() = Foo()
+
+  @Bean
+  fun bar(foo: Foo) = Bar(foo)
+}
+```
+a|
+```kotlin
+val myConfiguration = beans {
+  bean<Foo>()
+  // Implicit autowiring by constructor
+  bean<Bar>()
+}
+|=====
+
+
+===== Conditional registration
+
+One key characteristic of functional bean definition is that you can
+register bean programmatically using `if`, for `for` or other control flow where in
+JavaConfig you rely on https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-developing-auto-configuration.html#boot-features-bean-conditions[predefined or custom `@Conditional` annotations].
+
+|=====
+a|**JavaConfig** |**Functional bean definition**
+a|
+```kotlin
+  class MyCustomCondition : Condition {
+
+    override fun matches(context: c,
+        m: AnnotatedTypeMetadata): Boolean {
+      val myCustomLib = MyCustomLib()
+      return myCustomLib.checkStatus()
+    }
+  }
+
+  @Configuration
+  class MyConfiguration {
+
+    @Bean
+    @Conditional(MyCustomCondition::class)
+    fun foo() = Foo()
+  }
+```
+a|
+```kotlin
+val testConfiguration = beans {
+
+  val myCustomLib = MyCustomLib()
+  if (myCustomLib.checkStatus()) {
+    bean<Foo>()
+  }
+}
+|=====
+
+
+===== Profiles
+
+A profiles shortcut (internally relying on programmatic bean registration) is provided in
+functional bean definition.
+
+|=====
+a|**JavaConfig** |**Functional bean definition**
+a|
+```kotlin
+ @Configuration
+ @Profile("test")
+ class TestConfiguration {
+
+  @Bean
+  fun foo() = Foo()
+
+  @Bean
+  fun bar(foo: Foo) = Bar(foo)
+}
+```
+a|
+```kotlin
+val testConfiguration = beans {
+  profile("test") {
+    bean<Foo>()
+    bean<Bar>()
+  }
+}
+|=====
+
+==== Component scanning
+
+Functional bean definition is explicit, does not imply any classpath scanning and supports constructor parameters autowiring.
+
+|=====
+a|**`@Component` scanning** |**Functional bean definition**
+a|
+```kotlin
+@Component
+class Foo {
+  // ...
+}
+
+@Component
+class Bar(private val f: Foo) {
+  // ...
+}
+```
+a|
+```kotlin
+class Foo {
+  // ...
+}
+class Bar(private val f: Foo) {
+  // ...
+}
+
+beans {
+  bean<Foo>()
+  bean<Bar>()
+}
+|=====
+
+==== Controllers
+
+Kotlin WebFlux router provides a simple but powerful way to implement your web application. HTTP API, streaming but also view rendering are supported.
+
+|=====
+a|**Annotation-based controller** |**Kotlin WebFlux routes**
+a|
+```kotlin
+@RestController
+@RequestMapping("/api/article")
+class MyController(private val r: MyRepository) {
+
+  @GetMapping("/")
+  fun findAll() =
+    r.findAll()
+
+  @GetMapping("/{id}")
+  fun findOne(@PathVariable id: Long) =
+    repository.findById(id)
+  }
+}
+```
+a|
+```kotlin
+routes {
+  val r = ref<MyRepository>()
+  "/api/article".nest {
+    GET("/") {
+      r.findAll()
+    }
+    GET("/{id}") {
+      val id = it.pathVariable("id")
+      r.findById(id)
+    }
+  }
+}
+|=====

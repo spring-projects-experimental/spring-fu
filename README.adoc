@@ -1,6 +1,8 @@
 image::https://ci.spring.io/api/v1/teams/spring-fu/pipelines/spring-fu/badge["Build Status", link="https://ci.spring.io/teams/spring-fu/pipelines/spring-fu"]
 
-Spring Fu (for **fu**nctional APIs) is an experimental https://kotlinlang.org/[Kotlin] micro-framework based on functional configuration intended to test ideas for upcoming https://spring.io/projects/spring-boot[Spring Boot] releases. It makes it easy to create lightweight https://spring.io/projects/spring-framework[Spring]-powered applications with <<functional-configuration,functional APIs>> instead of annotations. See the https://repo.spring.io/snapshot/org/springframework/fu/spring-fu-reference/0.0.1.BUILD-SNAPSHOT/spring-fu-reference-0.0.1.BUILD-SNAPSHOT.html[reference documentation] for more details.
+Spring Fu (for **fu**nctional APIs) is an experimental https://kotlinlang.org/[Kotlin] micro-framework based on functional configuration intended to test ideas for upcoming https://spring.io/projects/spring-boot[Spring Boot] releases. It makes it easy to create fast and lightweight https://spring.io/projects/spring-framework[Spring]-powered applications with <<functional-configuration,functional APIs>> instead of annotations.
+
+See the https://repo.spring.io/snapshot/org/springframework/fu/spring-fu-reference/0.0.1.BUILD-SNAPSHOT/spring-fu-reference-0.0.1.BUILD-SNAPSHOT.html[reference documentation] for more details.
 
 == Overview
 
@@ -29,31 +31,18 @@ fun routes() = routes {
 }
 ```
 
-It leverages a subset of Spring Boot, Spring Framework, Spring Data and Spring Security to provide an alternative configuration model for developing applications in Kotlin.
+It leverages a subset of Spring https://github.com/spring-projects/spring-fu/issues?q=is%3Aissue+label%3Aspring-framework[Framework], https://github.com/spring-projects/spring-fu/issues?q=is%3Aissue+label%3A%22spring+boot%22[Boot], https://github.com/spring-projects/spring-fu/issues?q=is%3Aissue+is%3Aopen+label%3Aspring-data[ Data] and Security to provide an alternative configuration model for developing applications in Kotlin:
 
-* https://spring.io/blog/2017/08/01/spring-framework-5-kotlin-apis-the-functional-way[Functional bean registration] instead of JavaConfig for both internals and application
-* Features are configured explicitly via expressive configuration leveraging Kotlin https://kotlinlang.org/docs/reference/type-safe-builders.html[domain-specific languages] (DSL)
-* Flexible programmatic configuration
-* https://github.com/spring-projects/spring-fu/labels/spring%20boot%20infra[Leverage a subset of Spring Boot]
-* Minimal reflection usage
-* No classpath scanning
-* No annotation processing
-* Modules provide configuration DSL and dependencies for other Spring projects and JVM ecosystem
-* Reactive and coroutines web client and server based on https://docs.spring.io/spring/docs/current/spring-framework-reference/html/web-reactive.html#web-reactive[WebFlux] functional API
-* Reactive and coroutines persistence via Spring Data (MongoDB supported)
-* No blocking web/persistence support is provided since https://github.com/Kotlin/kotlinx.coroutines/blob/master/coroutines-guide.md[coroutines] provides support for imperative programming.
-
-Upcoming features:
-
+* Functional configuration via https://dzone.com/articles/kotlin-dsl-from-theory-to-practice[Kotlin DSL] instead of annotations
+* Minimal reflection usage, no classpath scanning, no annotation processing required
+* Explicit configuration: minimal core, no feature enabled by classpath detection for example
+* Flexible programmatic configuration: https://kotlinlang.org/docs/reference/control-flow.html[control flow] like `if`, or `for` can be used to register conditionally your beans
+* Run as native image with instant startup via https://github.com/spring-projects/spring-fu/issues/29[GraalVM support]
+* https://github.com/Kotlin/kotlinx.coroutines/blob/master/coroutines-guide.md[Coroutines] allow to leverage Spring Reactive support (WebFlux, Data) with imperative programming style
 * https://github.com/spring-projects/spring-fu/issues/34[Spring packages filtering] in order to have a minimal classpath and deploy just what you need
-* Self-sufficient opinionated documentation (Kotlin, constructor injection, functional configuration, WebFlux, Coroutines, etc.)
+* Optional https://github.com/spring-projects/spring-fu/issues/23[single language fullstack support] with frontend written in Kotlin (compile to JavaScript or https://webassembly.org/[WebAssembly])
 * https://github.com/spring-projects/spring-fu/issues/14[Reactive/Coroutines SQL support]
-* https://github.com/spring-projects/spring-fu/issues/29[Graal native image support]
-* https://github.com/spring-projects/spring-fu/issues/23[Single language fullstack support] with frontend written in Kotlin
-* https://github.com/spring-projects/spring-fu/issues/13[Functional actuators]
-* https://github.com/spring-projects/spring-fu/issues/37[FaaS support]
-
-In addition to the whole Spring and Reactor teams, credits to https://github.com/tgirard12[Thomas Girard] for its https://github.com/tgirard12/spring-webflux-kotlin-dsl[spring-webflux-kotlin-dsl] experiment that initially demonstrated this approach was possible and to https://github.com/konrad-kaminski[Konrad Kaminski] for his awesome https://github.com/konrad-kaminski/spring-kotlin-coroutine[spring-kotlin-coroutine] project.
+* Self-sufficient opinionated documentation (Kotlin, constructor injection, functional configuration, WebFlux, Coroutines, etc.)
 
 Please send us your feedback on the `#spring` channel of http://slack.kotlinlang.org/[Kotlin Slack]. Feel free to open issues, https://github.com/spring-projects/spring-fu/blob/master/CONTRIBUTING.adoc[contribute] fixes or new modules via pull requests.
 
@@ -81,172 +70,11 @@ You can have a look to the sample applications:
 * https://github.com/spring-projects/spring-fu/tree/master/samples/coroutine-webapp[Coroutine webapp]
 * https://github.com/spring-projects/spring-fu/tree/master/samples/minimal-webapp[Minimal webapp]
 
-[[functional-configuration]]
-== Functional configuration
+=== Credits
 
-Spring Fu functional configuration is leveraging Kotlin DSL that allows you to configure your application explicitly. Each custom block like `configuration`, `actuators` or `webflux` is in fact a more high level `beans {}` block with a custom DSL provided for easy configuration. Since this configuration is code, you can use any kind of custom programmatic bean registration without having to implement your own `@Conditional` annotation.
+In addition to the whole Spring and Reactor teams, special credits to:
 
-Here is an example of a typical Spring Fu application functional configuration.
-```kotlin
-fun main(args: Array<String) = application {
-	configuration {
-		AppConfiguration(name = env["SYSTEM_ENV"] ?: "default")
-	}
-	actuators(beans = false, mapping = false)
-	logging {
-		level(INFO)
-		level("org.springframework", DEBUG)
-		logback {
-			consoleAppender()
-			rollingFileAppender(file = File("log.txt"))
-		}
-	}
-	profile("data") {
-		bean<UserRepository>()
-		bean<ArticleRepository>()
-		mongodb(uri = "mongodb://myserver.com/foo")
-		listener<ContextStartedEvent> {
-			ref<UserRepository>().init()
-			ref<ArticleRepository>().init()
-		}
-	}
-	profile("web") {
-		bean<HtmlHandler>()
-		bean<ApiHandler>()
-		webflux {
-			val port = if (profiles.contains("test")) 8181 else 8080
-			server(netty(port)) {
-				cors(origin = "example.com")
-				mustache()
-				codecs {
-					jackson()
-					protobuf()
-				}
-				routes(ref = ::routes)
-				security { // TODO }
-			}
-			client {
-				codecs {
-					jackson()
-				}
-			}
-		}
-	}
-}.app.run(await = true, profiles = "data, web")
-
-data class AppConfiguration(
-	val name: String,
-	val remoteUrl: String  = "http://localhost:8080"
-)
-
-fun routes() = routes {
-	val htmlHandler = ref<HtmlHandler>()
-	val apiHandler = ref<ApiHandler>()
-	GET("/", htmlHandler::blog)
-	GET("/article/{id}", htmlHandler::article)
-	"/api".nest {
-		GET("/", apiHandler::list)
-		POST("/", apiHandler::create)
-		PUT("/{id}", apiHandler::update)
-		DELETE("/{id}", apiHandler::delete)
-	}
-}
-```
-
-=== Comparison with JavaConfig
-
-Functional bean definition allows to define beans in an efficient way with minimal reflection usage, no proxy and with a concise Kotlin DSL that takes advantage of https://kotlinlang.org/docs/reference/inline-functions.html#reified-type-parameters[reified type parameters] to avoid type erasure. The `beans {}` block is in fact a regular https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/ApplicationContextInitializer.html[`ApplicationContextInitializer`].
-
-|=====
-a|**JavaConfig** |**Functional bean definition**
-a|
-```kotlin
- @Configuration
- class MyConfiguration {
-
-  @Bean
-  fun foo() = Foo()
-
-  @Bean
-  fun bar(foo: Foo) = Bar(foo)
-}
-```
-a|
-```kotlin
-val myConfiguration = beans {
-  bean<Foo>()
-  // Implicit autowiring by constructor
-  bean<Bar>()
-}
-|=====
-
-=== Comparison with `@Component`
-
-Functional bean definition is explicit, does not imply any classpath scanning and supports constructor parameters autowiring.
-
-|=====
-a|**`@Component` scanning** |**Functional bean definition**
-a|
-```kotlin
-@Component
-class Foo {
-  // ...
-}
-
-@Component
-class Bar(private val f: Foo) {
-  // ...
-}
-```
-a|
-```kotlin
-class Foo {
-  // ...
-}
-class Bar(private val f: Foo) {
-  // ...
-}
-
-beans {
-  bean<Foo>()
-  bean<Bar>()
-}
-|=====
-
-=== Comparison with controllers
-
-Kotlin WebFlux router provides a simple but powerful way to implement your web application. HTTP API, streaming but also view rendering are supported.
-
-|=====
-a|**Annotation-based controller** |**Kotlin WebFlux routes**
-a|
-```kotlin
-@RestController
-@RequestMapping("/api/article")
-class MyController(private val r: MyRepository) {
-
-  @GetMapping("/")
-  fun findAll() =
-    r.findAll()
-
-  @GetMapping("/{id}")
-  fun findOne(@PathVariable id: Long) =
-    repository.findById(id)
-  }
-}
-```
-a|
-```kotlin
-routes {
-  val r = ref<MyRepository>()
-  "/api/article".nest {
-    GET("/") {
-      r.findAll()
-    }
-    GET("/{id}") {
-      val id = it.pathVariable("id")
-      r.findById(id)
-    }
-  }
-}
-|=====
+ * https://github.com/jhoeller[Juergen Hoeller] for his support on Kotlin and the functional bean registration API
+ * https://github.com/poutsma[Arjen Poutsma] for creating the WebFlux functional API
+ * https://github.com/tgirard12[Thomas Girard] for its https://github.com/tgirard12/spring-webflux-kotlin-dsl[spring-webflux-kotlin-dsl] experiment that initially demonstrated this approach was possible
+ * https://github.com/konrad-kaminski[Konrad Kaminski] for his awesome https://github.com/konrad-kaminski/spring-kotlin-coroutine[spring-kotlin-coroutine] project
