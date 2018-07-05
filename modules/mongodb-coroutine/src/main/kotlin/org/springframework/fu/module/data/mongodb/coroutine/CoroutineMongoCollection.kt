@@ -22,12 +22,12 @@ import com.mongodb.reactivestreams.client.MongoCollection
  * See [MongoCollection]
  */
 interface CoroutineMongoCollection<TDocument> {
-    val mongoCollection: MongoCollection<TDocument>
+	val mongoCollection: MongoCollection<TDocument>
 }
 
 data class DefaultCoroutineMongoCollection<TDocument>(
-    override val mongoCollection: MongoCollection<TDocument>
-): CoroutineMongoCollection<TDocument>
+	override val mongoCollection: MongoCollection<TDocument>
+) : CoroutineMongoCollection<TDocument>
 
 internal fun <T> MongoCollection<T>.asCoroutineMongoCollection(): CoroutineMongoCollection<T> =
-		DefaultCoroutineMongoCollection(this)
+	DefaultCoroutineMongoCollection(this)

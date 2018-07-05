@@ -50,24 +50,28 @@ interface CoroutineServerRequest {
 	}
 }
 
-class DefaultCoroutineServerRequest(private val req: ServerRequest): CoroutineServerRequest {
+class DefaultCoroutineServerRequest(private val req: ServerRequest) : CoroutineServerRequest {
 	override fun <T> body(extractor: CoroutineBodyExtractor<T, CoroutineServerHttpRequest>): T =
-			req.body(extractor.asBodyExtractor())
+		req.body(extractor.asBodyExtractor())
 
-	override fun <T> body(extractor: CoroutineBodyExtractor<T, CoroutineServerHttpRequest>, hints: Map<String, Any>): T =
-			req.body(extractor.asBodyExtractor(), hints)
+	override fun <T> body(
+		extractor: CoroutineBodyExtractor<T, CoroutineServerHttpRequest>,
+		hints: Map<String, Any>
+	): T =
+		req.body(extractor.asBodyExtractor(), hints)
 
 	override suspend fun <T> body(elementClass: Class<out T>): T? =
-			req.bodyToMono(elementClass).awaitFirstOrDefault(null)
+		req.bodyToMono(elementClass).awaitFirstOrDefault(null)
 
 	override fun <T> bodyToReceiveChannel(elementClass: Class<out T>): ReceiveChannel<T> =
-			req.bodyToFlux(elementClass).openSubscription()
+		req.bodyToFlux(elementClass).openSubscription()
 
 	override fun headers(): ServerRequest.Headers = req.headers()
 
 	override fun pathVariable(name: String): String? = req.pathVariable(name)
 
-	override suspend fun session(): CoroutineWebSession? =  req.session().awaitFirstOrDefault(null)?.asCoroutineWebSession()
+	override suspend fun session(): CoroutineWebSession? =
+		req.session().awaitFirstOrDefault(null)?.asCoroutineWebSession()
 
 	override fun uri(): URI = req.uri()
 

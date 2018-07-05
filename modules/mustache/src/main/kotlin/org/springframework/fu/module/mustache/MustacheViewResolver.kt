@@ -34,8 +34,10 @@ import java.nio.charset.StandardCharsets
  * @author Brian Clozel
  * @author Sebastien Deleuze
  */
-class MustacheViewResolver(private val compiler: Compiler = Mustache.compiler(),
-						   private var charset: Charset = StandardCharsets.UTF_8) : UrlBasedViewResolver() {
+class MustacheViewResolver(
+	private val compiler: Compiler = Mustache.compiler(),
+	private var charset: Charset = StandardCharsets.UTF_8
+) : UrlBasedViewResolver() {
 
 	init {
 		viewClass = requiredViewClass()

@@ -63,9 +63,9 @@ inline fun <reified T> LoggingDsl.level(level: LogLevel) {
 }
 
 data class LoggingConfiguration(
-		var level: LogLevel = LogLevel.INFO,
-		var packagesLevels: MutableList<Pair<String, LogLevel>> = mutableListOf()
+	var level: LogLevel = LogLevel.INFO,
+	var packagesLevels: MutableList<Pair<String, LogLevel>> = mutableListOf()
 )
 
 fun ApplicationDsl.logging(init: LoggingDsl.() -> Unit): LoggingDsl =
-		LoggingDsl(init)
+	LoggingDsl(init)

@@ -23,7 +23,7 @@ import org.springframework.web.server.WebFilter
 import org.springframework.web.server.WebFilterChain
 import reactor.core.publisher.Mono
 
-interface CoroutineWebFilter: WebFilter {
+interface CoroutineWebFilter : WebFilter {
 
 	@Suppress("UNCHECKED_CAST")
 	override fun filter(exchange: ServerWebExchange, chain: WebFilterChain): Mono<Void> = mono(Unconfined) {

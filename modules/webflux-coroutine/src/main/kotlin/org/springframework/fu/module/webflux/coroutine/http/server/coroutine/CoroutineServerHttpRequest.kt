@@ -20,7 +20,7 @@ import org.springframework.fu.module.webflux.coroutine.http.CoroutineHttpInputMe
 import org.springframework.http.HttpRequest
 import org.springframework.http.server.reactive.ServerHttpRequest
 
-interface CoroutineServerHttpRequest: CoroutineHttpInputMessage, HttpRequest {
+interface CoroutineServerHttpRequest : CoroutineHttpInputMessage, HttpRequest {
 
 	fun mutate(): Builder
 
@@ -28,7 +28,7 @@ interface CoroutineServerHttpRequest: CoroutineHttpInputMessage, HttpRequest {
 
 	companion object {
 		operator fun invoke(request: ServerHttpRequest): CoroutineServerHttpRequest =
-				DefaultCoroutineServerHttpRequest(request)
+			DefaultCoroutineServerHttpRequest(request)
 	}
 
 	interface Builder {
@@ -40,7 +40,8 @@ interface CoroutineServerHttpRequest: CoroutineHttpInputMessage, HttpRequest {
 	}
 }
 
-class DefaultCoroutineServerHttpRequestBuilder(val builder: ServerHttpRequest.Builder) : CoroutineServerHttpRequest.Builder {
+class DefaultCoroutineServerHttpRequestBuilder(val builder: ServerHttpRequest.Builder) :
+	CoroutineServerHttpRequest.Builder {
 
 	override fun header(key: String, value: String): CoroutineServerHttpRequest.Builder = apply {
 		builder.header(key, value)

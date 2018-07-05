@@ -34,7 +34,7 @@ import org.springframework.web.server.adapter.WebHttpHandlerBuilder
 /**
  * @author Sebastien Deleuze
  */
-internal class TomcatModule(private val port: Int): WebFluxModule.AbstractWebServerModule(port) {
+internal class TomcatModule(private val port: Int) : WebFluxModule.AbstractWebServerModule(port) {
 
 	override fun initialize(context: GenericApplicationContext) {
 		context.registerBean {
@@ -97,4 +97,4 @@ private class TomcatWebServer(private val port: Int) : WebServer(port) {
 
 }
 
-fun WebFluxModule.tomcat(port: Int = 8080) : WebFluxModule.WebServerModule = TomcatModule(port)
+fun WebFluxModule.tomcat(port: Int = 8080): WebFluxModule.WebServerModule = TomcatModule(port)

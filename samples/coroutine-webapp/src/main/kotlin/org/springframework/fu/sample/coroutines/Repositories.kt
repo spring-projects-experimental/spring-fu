@@ -6,8 +6,10 @@ import org.springframework.core.io.ClassPathResource
 import org.springframework.fu.module.data.mongodb.coroutine.*
 import org.springframework.fu.module.data.mongodb.coroutine.data.mongodb.core.CoroutineMongoTemplate
 
-class UserRepository(private val template: CoroutineMongoTemplate,
-					 private val objectMapper: ObjectMapper) {
+class UserRepository(
+	private val template: CoroutineMongoTemplate,
+	private val objectMapper: ObjectMapper
+) {
 
 	suspend fun count() = template.count<User>()
 

@@ -41,16 +41,19 @@ import java.nio.charset.StandardCharsets
  * @see Mustache
  * @see Resource
  */
-class MustacheResourceTemplateLoader(var prefix: String = "",
-									 var suffix: String = "",
-									 var charset: Charset = StandardCharsets.UTF_8,
-									 private var loader: ResourceLoader = DefaultResourceLoader())
-									 : TemplateLoader, ResourceLoaderAware {
+class MustacheResourceTemplateLoader(
+	var prefix: String = "",
+	var suffix: String = "",
+	var charset: Charset = StandardCharsets.UTF_8,
+	private var loader: ResourceLoader = DefaultResourceLoader()
+) : TemplateLoader, ResourceLoaderAware {
 
 	override fun getTemplate(name: String): Reader {
-		return InputStreamReader(this.loader
+		return InputStreamReader(
+			this.loader
 				.getResource(this.prefix + name + this.suffix).inputStream,
-				charset)
+			charset
+		)
 	}
 
 	override fun setResourceLoader(resourceLoader: ResourceLoader) {

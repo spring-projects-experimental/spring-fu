@@ -6,8 +6,10 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import org.springframework.core.io.ClassPathResource
 import org.springframework.data.mongodb.core.*
 
-class UserRepository(private val template: ReactiveMongoTemplate,
-					 private val objectMapper: ObjectMapper) {
+class UserRepository(
+	private val template: ReactiveMongoTemplate,
+	private val objectMapper: ObjectMapper
+) {
 
 	fun count() = template.count<User>()
 

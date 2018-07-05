@@ -8,14 +8,14 @@ import org.springframework.core.env.Environment
 annotation class ModuleMarker
 
 @ModuleMarker
-interface Module: ApplicationContextInitializer<GenericApplicationContext> {
+interface Module : ApplicationContextInitializer<GenericApplicationContext> {
 
 	var context: GenericApplicationContext
 
-	val env : Environment
+	val env: Environment
 		get() = context.environment
 
-	val profiles : Array<String>
+	val profiles: Array<String>
 		get() = env.activeProfiles
 }
 
@@ -26,12 +26,12 @@ interface Module: ApplicationContextInitializer<GenericApplicationContext> {
  * @param name the name of the bean to retrieve
  * @param T type the bean must match, can be an interface or superclass
  */
-inline fun <reified T : Any> Module.ref(name: String? = null) : T = when (name) {
+inline fun <reified T : Any> Module.ref(name: String? = null): T = when (name) {
 	null -> context.getBean(T::class.java)
 	else -> context.getBean(name, T::class.java)
 }
 
-abstract class AbstractModule: Module {
+abstract class AbstractModule : Module {
 
 	override lateinit var context: GenericApplicationContext
 

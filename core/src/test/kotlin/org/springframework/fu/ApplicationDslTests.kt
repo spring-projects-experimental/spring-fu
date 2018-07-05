@@ -87,7 +87,7 @@ class ApplicationDslTests {
 	class Foo
 
 	data class TestConfiguration(
-			val name: String
+		val name: String
 	)
 }
 

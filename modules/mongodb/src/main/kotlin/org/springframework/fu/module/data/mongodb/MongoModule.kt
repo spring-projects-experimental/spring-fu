@@ -29,18 +29,21 @@ import org.springframework.data.mongodb.core.convert.*
 import org.springframework.data.mongodb.core.mapping.MongoMappingContext
 import org.springframework.data.mongodb.core.mapping.MongoPersistentEntity
 import org.springframework.data.mongodb.core.mapping.MongoPersistentProperty
-import org.springframework.fu.ApplicationDsl
 import org.springframework.fu.AbstractModule
+import org.springframework.fu.ApplicationDsl
 
 
 /**
  * @author Sebastien Deleuze
  */
-open class MongoModule(private val connectionString: String, private val init: MongoModule.() -> Unit) : AbstractModule() {
+open class MongoModule(
+	private val connectionString: String,
+	private val init: MongoModule.() -> Unit
+) : AbstractModule() {
 
 	override lateinit var context: GenericApplicationContext
 
-	override fun initialize(context : GenericApplicationContext) {
+	override fun initialize(context: GenericApplicationContext) {
 		this.context = context
 		init()
 
@@ -68,11 +71,20 @@ open class MongoModule(private val connectionString: String, private val init: M
 	}
 
 	class NoOpDbRefResolver : DbRefResolver {
-		override fun resolveDbRef(property: MongoPersistentProperty, dbref: DBRef?, callback: DbRefResolverCallback, proxyHandler: DbRefProxyHandler): Any? {
+		override fun resolveDbRef(
+			property: MongoPersistentProperty,
+			dbref: DBRef?,
+			callback: DbRefResolverCallback,
+			proxyHandler: DbRefProxyHandler
+		): Any? {
 			return null
 		}
 
-		override fun createDbRef(annotation: org.springframework.data.mongodb.core.mapping.DBRef?, entity: MongoPersistentEntity<*>, id: Any): DBRef {
+		override fun createDbRef(
+			annotation: org.springframework.data.mongodb.core.mapping.DBRef?,
+			entity: MongoPersistentEntity<*>,
+			id: Any
+		): DBRef {
 			return DBRef("", 0)
 		}
 
@@ -86,7 +98,10 @@ open class MongoModule(private val connectionString: String, private val init: M
 	}
 }
 
-fun ApplicationDsl.mongodb(connectionString: String = "mongodb://localhost/test", init: MongoModule.() -> Unit = {}) : MongoModule {
+fun ApplicationDsl.mongodb(
+	connectionString: String = "mongodb://localhost/test",
+	init: MongoModule.() -> Unit = {}
+): MongoModule {
 	val mongoModule = MongoModule(connectionString, init)
 	initializers.add(mongoModule)
 	return mongoModule

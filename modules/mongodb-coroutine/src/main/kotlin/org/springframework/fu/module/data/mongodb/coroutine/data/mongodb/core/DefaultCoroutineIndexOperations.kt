@@ -22,7 +22,7 @@ import org.springframework.data.mongodb.core.index.IndexOperationsAdapter
 import org.springframework.data.mongodb.core.index.ReactiveIndexOperations
 
 open class DefaultCoroutineIndexOperations(
-    private val reactiveIndexOperations: ReactiveIndexOperations
-): CoroutineIndexOperations {
-    override fun blocking(): IndexOperations = IndexOperationsAdapter.blocking(reactiveIndexOperations)
+	private val reactiveIndexOperations: ReactiveIndexOperations
+) : CoroutineIndexOperations {
+	override fun blocking(): IndexOperations = IndexOperationsAdapter.blocking(reactiveIndexOperations)
 }

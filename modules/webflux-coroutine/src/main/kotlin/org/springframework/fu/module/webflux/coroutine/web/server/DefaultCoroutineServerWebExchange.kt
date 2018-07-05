@@ -22,22 +22,23 @@ import org.springframework.fu.module.webflux.coroutine.http.server.coroutine.Cor
 import org.springframework.fu.module.webflux.coroutine.web.server.session.asCoroutineWebSession
 import org.springframework.web.server.ServerWebExchange
 
-class DefaultCoroutineServerWebExchange(val exchange: ServerWebExchange): CoroutineServerWebExchange {
+class DefaultCoroutineServerWebExchange(val exchange: ServerWebExchange) : CoroutineServerWebExchange {
 	override val request: CoroutineServerHttpRequest
 		get() = CoroutineServerHttpRequest(exchange.request)
 	override val response: CoroutineServerHttpResponse
 		get() = CoroutineServerHttpResponse(exchange.response)
 
 	override suspend fun getSession(): CoroutineWebSession? =
-			exchange.session.awaitFirstOrDefault(null)?.asCoroutineWebSession()
+		exchange.session.awaitFirstOrDefault(null)?.asCoroutineWebSession()
 
 	override fun mutate(): CoroutineServerWebExchange.Builder =
-			DefaultCoroutineServerWebExchangeBuilder(exchange.mutate())
+		DefaultCoroutineServerWebExchangeBuilder(exchange.mutate())
 
 	override fun extractServerWebExchange(): ServerWebExchange = exchange
 }
 
-class DefaultCoroutineServerWebExchangeBuilder(private val builder: ServerWebExchange.Builder) : CoroutineServerWebExchange.Builder {
+class DefaultCoroutineServerWebExchangeBuilder(private val builder: ServerWebExchange.Builder) :
+	CoroutineServerWebExchange.Builder {
 	override fun build(): CoroutineServerWebExchange = CoroutineServerWebExchange(builder.build())
 
 	override fun request(request: CoroutineServerHttpRequest): CoroutineServerWebExchange.Builder = apply {

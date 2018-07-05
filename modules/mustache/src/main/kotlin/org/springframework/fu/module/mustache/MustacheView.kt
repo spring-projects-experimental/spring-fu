@@ -16,22 +16,19 @@
 
 package org.springframework.fu.module.mustache
 
-import java.io.InputStreamReader
-import java.io.OutputStreamWriter
-import java.nio.charset.Charset
-import java.util.Locale
-import java.util.Optional
-
 import com.samskivert.mustache.Mustache.Compiler
-import reactor.core.publisher.Flux
-import reactor.core.publisher.Mono
-
 import org.springframework.core.io.Resource
 import org.springframework.core.io.buffer.DataBufferUtils
 import org.springframework.http.MediaType
 import org.springframework.web.reactive.result.view.AbstractUrlBasedView
 import org.springframework.web.reactive.result.view.View
 import org.springframework.web.server.ServerWebExchange
+import reactor.core.publisher.Flux
+import reactor.core.publisher.Mono
+import java.io.InputStreamReader
+import java.io.OutputStreamWriter
+import java.nio.charset.Charset
+import java.util.*
 
 /**
  * Spring WebFlux [View] using the Mustache template engine.
@@ -54,17 +51,24 @@ class MustacheView() : AbstractUrlBasedView() {
 		return resolveResource() != null
 	}
 
-	override fun renderInternal(model: MutableMap<String, Any>, contentType: MediaType?,
-								exchange: ServerWebExchange): Mono<Void> {
-		val resource = resolveResource() ?: return Mono.error(IllegalStateException(
-				"Could not find Mustache template with URL [$url]"))
+	override fun renderInternal(
+		model: MutableMap<String, Any>, contentType: MediaType?,
+		exchange: ServerWebExchange
+	): Mono<Void> {
+		val resource = resolveResource() ?: return Mono.error(
+			IllegalStateException(
+				"Could not find Mustache template with URL [$url]"
+			)
+		)
 		val dataBuffer = exchange.response.bufferFactory().allocateBuffer()
 		try {
 			getReader(resource).use { reader ->
 				val template = compiler.compile(reader)
 				val charset = getCharset(contentType).orElse(defaultCharset)
-				OutputStreamWriter(dataBuffer.asOutputStream(),
-						charset).use { writer ->
+				OutputStreamWriter(
+					dataBuffer.asOutputStream(),
+					charset
+				).use { writer ->
 					template.execute(model, writer)
 					writer.flush()
 				}
@@ -85,8 +89,10 @@ class MustacheView() : AbstractUrlBasedView() {
 	}
 
 	private fun getReader(resource: Resource) =
-			if (charset != null) { InputStreamReader(resource.inputStream, charset) }
-			else InputStreamReader(resource.inputStream)
+		if (charset != null) InputStreamReader(
+			resource.inputStream,
+			charset
+		) else InputStreamReader(resource.inputStream)
 
 	private fun getCharset(mediaType: MediaType?): Optional<Charset> {
 		return Optional.ofNullable(mediaType?.charset)

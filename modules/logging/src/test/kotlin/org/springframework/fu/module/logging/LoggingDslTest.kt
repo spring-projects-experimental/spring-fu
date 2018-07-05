@@ -75,8 +75,9 @@ internal class LoggingDslTest {
 
 		assertEquals(INFO, log.configuration.level)
 		assertEquals(
-				listOf("org.springframework" to DEBUG),
-				log.configuration.packagesLevels)
+			listOf("org.springframework" to DEBUG),
+			log.configuration.packagesLevels
+		)
 	}
 
 	@Test
@@ -91,7 +92,8 @@ internal class LoggingDslTest {
 
 		assertEquals(INFO, log.configuration.level)
 		assertEquals(
-				listOf("org.springframework.beans.factory.support.DefaultListableBeanFactory" to DEBUG),
-				log.configuration.packagesLevels)
+			listOf("org.springframework.beans.factory.support.DefaultListableBeanFactory" to DEBUG),
+			log.configuration.packagesLevels
+		)
 	}
 }

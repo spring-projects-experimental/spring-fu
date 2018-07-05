@@ -17,19 +17,19 @@ class CoroutineMongoModule : AbstractModule() {
 				val registry = (beanFactory as BeanDefinitionRegistry) //TODO: fix this hack
 
 				registry.beanDefinitionNames
-						.filter { it.startsWith("coroutine_") }
-						.map { it.substringAfter("coroutine_") }
-						.forEach {
-							registry.removeBeanDefinition(it)
-							registry.registerAlias("coroutine_$it", it)
-						}
+					.filter { it.startsWith("coroutine_") }
+					.map { it.substringAfter("coroutine_") }
+					.forEach {
+						registry.removeBeanDefinition(it)
+						registry.registerAlias("coroutine_$it", it)
+					}
 			}
 
 		}
 	}
 }
 
-fun MongoModule.coroutine() : CoroutineMongoModule {
+fun MongoModule.coroutine(): CoroutineMongoModule {
 	val coroutineModule = CoroutineMongoModule()
 	initializers.add(coroutineModule)
 	return coroutineModule

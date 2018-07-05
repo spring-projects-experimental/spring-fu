@@ -22,6 +22,6 @@ import org.springframework.fu.module.webflux.AbstractWebServerModuleTests
 /**
  * @author Sebastien Deleuze
  */
-class TomcatModuleTests: AbstractWebServerModuleTests() {
+class TomcatModuleTests : AbstractWebServerModuleTests() {
 	override fun getWebServerModule(port: Int, host: String): WebFluxModule.WebServerModule = TomcatModule(port)
 }

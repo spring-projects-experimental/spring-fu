@@ -19,5 +19,5 @@ package org.springframework.fu.module.data.mongodb.coroutine.data.mongodb.core.i
 import org.springframework.data.mongodb.core.index.IndexOperations
 
 interface CoroutineIndexOperations {
-    fun blocking(): IndexOperations
+	fun blocking(): IndexOperations
 }

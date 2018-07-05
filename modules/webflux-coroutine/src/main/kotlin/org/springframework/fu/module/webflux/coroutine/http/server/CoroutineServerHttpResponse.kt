@@ -21,20 +21,22 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.server.reactive.ServerHttpResponse
 
-interface CoroutineServerHttpResponse: CoroutineHttpOutputMessage {
+interface CoroutineServerHttpResponse : CoroutineHttpOutputMessage {
 
 	var statusCode: HttpStatus
 
 	companion object {
 		operator fun invoke(response: ServerHttpResponse): CoroutineServerHttpResponse =
-				DefaultCoroutineServerHttpResponse(response)
+			DefaultCoroutineServerHttpResponse(response)
 	}
 }
 
-open class DefaultCoroutineServerHttpResponse(val response: ServerHttpResponse): CoroutineServerHttpResponse {
+open class DefaultCoroutineServerHttpResponse(val response: ServerHttpResponse) : CoroutineServerHttpResponse {
 	override var statusCode: HttpStatus
 		get() = response.statusCode!!
-		set(value) { response.statusCode = value }
+		set(value) {
+			response.statusCode = value
+		}
 
 	override fun getHeaders(): HttpHeaders = response.headers
 }

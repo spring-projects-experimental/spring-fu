@@ -20,7 +20,7 @@ import kotlinx.coroutines.experimental.reactive.awaitFirstOrDefault
 import org.springframework.fu.module.webflux.coroutine.web.server.CoroutineWebSession
 import org.springframework.web.server.WebSession
 
-class DefaultCoroutineWebSession(val session: WebSession): CoroutineWebSession {
+class DefaultCoroutineWebSession(val session: WebSession) : CoroutineWebSession {
 	override val attributes: MutableMap<String, Any?>
 		get() = session.attributes
 
