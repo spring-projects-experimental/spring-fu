@@ -18,4 +18,4 @@ package org.springframework.fu.module.webflux.coroutine.http
 
 import org.springframework.http.HttpMessage
 
-interface CoroutineHttpOutputMessage: HttpMessage
+interface CoroutineHttpOutputMessage : HttpMessage

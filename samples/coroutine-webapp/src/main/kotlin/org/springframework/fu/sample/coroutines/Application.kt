@@ -37,7 +37,7 @@ import org.springframework.fu.ref
 import java.io.File
 
 
-val app =  application {
+val app = application {
 	bean<UserRepository>()
 	bean<UserHandler>()
 	listener<ContextStartedEvent> {

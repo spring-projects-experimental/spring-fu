@@ -25,6 +25,12 @@ The project can be built from the root directory using the standard Gradle comma
 	$ ./gradlew build
 ----
 
+==== Source code style
+With small exceptions described below Spring Fu uses official https://kotlinlang.org/docs/reference/coding-conventions.html[Kotlin Coding Conventions] (aka Kotlin Style Guide). Description and instructions on how to set it are provided at the link above.
+
+After following the instructions at the link above open Settings → Editor → Code style → Kotlin and on 'Tabls and Indents' tab check the 'Use tab character' checkbocks. Indentation in Spring projects is universally done with TAB character. Smart tabs must be disabled.
+
+
 ==== Documentation
 
 Documentation can be built via the following Gradle command:

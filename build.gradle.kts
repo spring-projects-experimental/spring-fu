@@ -27,7 +27,10 @@ allprojects {
 						username = repoUsername
 						password = repoPassword
 					}
-					url = uri(if (version.toString().endsWith(".BUILD-SNAPSHOT")) "https://repo.spring.io/libs-snapshot-local/" else "https://repo.spring.io/libs-release-local/")
+					url = uri(
+						if (version.toString().endsWith(".BUILD-SNAPSHOT")) "https://repo.spring.io/libs-snapshot-local/"
+						else "https://repo.spring.io/libs-release-local/"
+					)
 
 				} else {
 					url = uri("$buildDir/repo")

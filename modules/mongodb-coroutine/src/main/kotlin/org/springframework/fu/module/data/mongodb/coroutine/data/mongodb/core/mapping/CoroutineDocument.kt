@@ -32,12 +32,12 @@ import java.lang.annotation.Inherited
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.CLASS, AnnotationTarget.FILE)
 annotation class CoroutineDocument(
-        val collection: String = "",
-        /**
-        * Defines the default language to be used with this document.
-        *
-        * @since 1.6
-        * @return
-        */
-        val language: String = ""
+	val collection: String = "",
+	/**
+	 * Defines the default language to be used with this document.
+	 *
+	 * @since 1.6
+	 * @return
+	 */
+	val language: String = ""
 )

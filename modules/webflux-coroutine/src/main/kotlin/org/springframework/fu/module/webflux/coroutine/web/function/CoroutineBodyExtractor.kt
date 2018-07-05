@@ -22,11 +22,11 @@ import org.springframework.fu.module.webflux.coroutine.http.server.CoroutineServ
 import org.springframework.http.ReactiveHttpInputMessage
 import org.springframework.web.reactive.function.BodyExtractor
 
-interface CoroutineBodyExtractor<T, in M: CoroutineHttpInputMessage> {
+interface CoroutineBodyExtractor<T, in M : CoroutineHttpInputMessage> {
 
 	suspend fun extract(inputMessage: M, context: Context): T
 
-	fun <N: ReactiveHttpInputMessage> asBodyExtractor(): BodyExtractor<T, N> = TODO()
+	fun <N : ReactiveHttpInputMessage> asBodyExtractor(): BodyExtractor<T, N> = TODO()
 
 	interface Context {
 		fun messageReaders(): (() -> Sequence<CoroutineHttpMessageReader<*>>)

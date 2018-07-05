@@ -25,11 +25,13 @@ import org.springframework.fu.module.webflux.WebFluxModule
 /**
  * @author Sebastien Deleuze
  */
-class MustacheModule(private val prefix: String,
-					 private val suffix: String,
-					 private val f: MustacheViewResolver.() -> Unit) : AbstractModule() {
+class MustacheModule(
+	private val prefix: String,
+	private val suffix: String,
+	private val f: MustacheViewResolver.() -> Unit
+) : AbstractModule() {
 
-	override fun initialize(context : GenericApplicationContext) {
+	override fun initialize(context: GenericApplicationContext) {
 		context.registerBean {
 			MustacheResourceTemplateLoader(prefix, suffix).let {
 				MustacheViewResolver(Mustache.compiler().withLoader(it)).apply {
@@ -42,9 +44,11 @@ class MustacheModule(private val prefix: String,
 	}
 }
 
-fun WebFluxModule.WebFluxServerModule.mustache(prefix: String = "classpath:/templates/",
-											suffix: String = ".mustache",
-											f: MustacheViewResolver.() -> Unit = {}) : MustacheModule {
+fun WebFluxModule.WebFluxServerModule.mustache(
+	prefix: String = "classpath:/templates/",
+	suffix: String = ".mustache",
+	f: MustacheViewResolver.() -> Unit = {}
+): MustacheModule {
 	val mustacheDsl = MustacheModule(prefix, suffix, f)
 	initializers.add(mustacheDsl)
 	return mustacheDsl

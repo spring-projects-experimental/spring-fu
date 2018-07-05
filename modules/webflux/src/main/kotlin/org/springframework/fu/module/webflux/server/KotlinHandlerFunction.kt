@@ -13,7 +13,7 @@ class KotlinHandlerFunction {
 	 * @return the created builder
 	 */
 	fun from(other: ServerResponse): ServerResponse.BodyBuilder =
-			ServerResponse.from(other)
+		ServerResponse.from(other)
 
 	/**
 	 * Create a builder with the given HTTP status.
@@ -21,7 +21,7 @@ class KotlinHandlerFunction {
 	 * @return the created builder
 	 */
 	fun status(status: HttpStatus): ServerResponse.BodyBuilder =
-			ServerResponse.status(status)
+		ServerResponse.status(status)
 
 	/**
 	 * Create a builder with the given HTTP status.
@@ -30,14 +30,14 @@ class KotlinHandlerFunction {
 	 * @since 5.0.3
 	 */
 	fun status(status: Int): ServerResponse.BodyBuilder =
-			ServerResponse.status(status)
+		ServerResponse.status(status)
 
 	/**
 	 * Create a builder with the status set to [200 OK][HttpStatus.OK].
 	 * @return the created builder
 	 */
 	fun ok(): ServerResponse.BodyBuilder =
-			ServerResponse.ok()
+		ServerResponse.ok()
 
 	/**
 	 * Create a new builder with a [201 Created][HttpStatus.CREATED] status
@@ -46,21 +46,21 @@ class KotlinHandlerFunction {
 	 * @return the created builder
 	 */
 	fun created(location: URI): ServerResponse.BodyBuilder =
-			ServerResponse.created(location)
+		ServerResponse.created(location)
 
 	/**
 	 * Create a builder with an [202 Accepted][HttpStatus.ACCEPTED] status.
 	 * @return the created builder
 	 */
 	fun accepted(): ServerResponse.BodyBuilder =
-			ServerResponse.accepted()
+		ServerResponse.accepted()
 
 	/**
 	 * Create a builder with a [204 No Content][HttpStatus.NO_CONTENT] status.
 	 * @return the created builder
 	 */
 	fun noContent(): ServerResponse.HeadersBuilder<*> =
-			ServerResponse.noContent()
+		ServerResponse.noContent()
 
 	/**
 	 * Create a builder with a [303 See Other][HttpStatus.SEE_OTHER]
@@ -69,7 +69,7 @@ class KotlinHandlerFunction {
 	 * @return the created builder
 	 */
 	fun seeOther(location: URI): ServerResponse.BodyBuilder =
-			ServerResponse.seeOther(location)
+		ServerResponse.seeOther(location)
 
 	/**
 	 * Create a builder with a [307 Temporary Redirect][HttpStatus.TEMPORARY_REDIRECT]
@@ -78,7 +78,7 @@ class KotlinHandlerFunction {
 	 * @return the created builder
 	 */
 	fun temporaryRedirect(location: URI): ServerResponse.BodyBuilder =
-			ServerResponse.temporaryRedirect(location)
+		ServerResponse.temporaryRedirect(location)
 
 	/**
 	 * Create a builder with a [308 Permanent Redirect][HttpStatus.PERMANENT_REDIRECT]
@@ -87,21 +87,21 @@ class KotlinHandlerFunction {
 	 * @return the created builder
 	 */
 	fun permanentRedirect(location: URI): ServerResponse.BodyBuilder =
-			ServerResponse.permanentRedirect(location)
+		ServerResponse.permanentRedirect(location)
 
 	/**
 	 * Create a builder with a [400 Bad Request][HttpStatus.BAD_REQUEST] status.
 	 * @return the created builder
 	 */
 	fun badRequest(): ServerResponse.BodyBuilder =
-			ServerResponse.badRequest()
+		ServerResponse.badRequest()
 
 	/**
 	 * Create a builder with a [404 Not Found][HttpStatus.NOT_FOUND] status.
 	 * @return the created builder
 	 */
 	fun notFound(): ServerResponse.HeadersBuilder<*> =
-			ServerResponse.notFound()
+		ServerResponse.notFound()
 
 	/**
 	 * Create a builder with an
@@ -109,7 +109,7 @@ class KotlinHandlerFunction {
 	 * @return the created builder
 	 */
 	fun unprocessableEntity(): ServerResponse.BodyBuilder =
-			ServerResponse.unprocessableEntity()
+		ServerResponse.unprocessableEntity()
 }
 
 fun handler(init: KotlinHandlerFunction.() -> Mono<ServerResponse>) = KotlinHandlerFunction().init()

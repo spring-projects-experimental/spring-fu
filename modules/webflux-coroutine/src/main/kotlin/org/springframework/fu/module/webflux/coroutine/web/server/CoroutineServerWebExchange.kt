@@ -34,7 +34,7 @@ interface CoroutineServerWebExchange {
 
 	companion object {
 		operator fun invoke(exchange: ServerWebExchange): CoroutineServerWebExchange =
-				DefaultCoroutineServerWebExchange(exchange)
+			DefaultCoroutineServerWebExchange(exchange)
 	}
 
 	interface Builder {

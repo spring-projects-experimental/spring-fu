@@ -20,6 +20,6 @@ import kotlinx.coroutines.experimental.channels.ReceiveChannel
 import org.springframework.core.io.buffer.DataBuffer
 import org.springframework.http.HttpMessage
 
-interface CoroutineHttpInputMessage: HttpMessage {
+interface CoroutineHttpInputMessage : HttpMessage {
 	val body: ReceiveChannel<DataBuffer>
 }

@@ -40,5 +40,5 @@ class DynamicConfigurationModuleTests {
 }
 
 data class TestConfiguration(
-		val name: String
+	val name: String
 )

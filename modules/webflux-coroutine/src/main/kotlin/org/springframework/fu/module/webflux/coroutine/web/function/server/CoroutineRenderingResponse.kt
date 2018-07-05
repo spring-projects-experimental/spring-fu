@@ -18,12 +18,13 @@ package org.springframework.fu.module.webflux.coroutine.web.function.server
 
 import org.springframework.web.reactive.function.server.RenderingResponse
 
-interface CoroutineRenderingResponse: CoroutineServerResponse {
+interface CoroutineRenderingResponse : CoroutineServerResponse {
 	companion object {
 		fun from(other: CoroutineRenderingResponse): Builder =
-				DefaultCoroutineRenderingResponseBuilder(RenderingResponse.from(other.extractServerResponse() as RenderingResponse))
+			DefaultCoroutineRenderingResponseBuilder(RenderingResponse.from(other.extractServerResponse() as RenderingResponse))
 
-		operator fun invoke(resp: RenderingResponse): CoroutineRenderingResponse = DefaultCoroutineRenderingResponse(resp)
+		operator fun invoke(resp: RenderingResponse): CoroutineRenderingResponse =
+			DefaultCoroutineRenderingResponse(resp)
 	}
 
 	interface Builder {

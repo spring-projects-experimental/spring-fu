@@ -18,4 +18,4 @@ package org.springframework.fu.module.webflux.coroutine.web.function
 
 import org.springframework.fu.module.webflux.coroutine.http.CoroutineHttpOutputMessage
 
-interface CoroutineBodyInserter<T, M: CoroutineHttpOutputMessage>
+interface CoroutineBodyInserter<T, M : CoroutineHttpOutputMessage>

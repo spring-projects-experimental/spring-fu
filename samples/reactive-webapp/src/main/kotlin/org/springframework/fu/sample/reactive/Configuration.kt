@@ -6,6 +6,7 @@ import org.springframework.fu.configuration
 data class SampleConfiguration(val property: String)
 
 val configuration = configuration {
-	SampleConfiguration(property = env["ENV_VARIABLE"]
-			?: "debugConf")
+	SampleConfiguration(
+		property = env["ENV_VARIABLE"] ?: "debugConf"
+	)
 }

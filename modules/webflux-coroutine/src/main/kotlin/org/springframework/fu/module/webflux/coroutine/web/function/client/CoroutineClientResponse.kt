@@ -24,4 +24,4 @@ interface CoroutineClientResponse {
 
 internal class DefaultCoroutineClientResponse(
 	private val clientResponse: ClientResponse
-): CoroutineClientResponse
+) : CoroutineClientResponse

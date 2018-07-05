@@ -29,7 +29,7 @@ import java.util.concurrent.atomic.AtomicReference
 /**
  * @author Sebastien Deleuze
  */
-internal class NettyModule(private val port: Int = 8080): WebFluxModule.AbstractWebServerModule(port) {
+internal class NettyModule(private val port: Int = 8080) : WebFluxModule.AbstractWebServerModule(port) {
 
 	override fun initialize(context: GenericApplicationContext) {
 		context.registerBean {
@@ -46,7 +46,7 @@ private class NettyWebServer(private val port: Int) : WebServer(port) {
 	private val server: HttpServer by lazy { HttpServer.create().tcpConfiguration { it.host("0.0.0.0") }.port(port) }
 	private val disposableServer = AtomicReference<DisposableServer>()
 
-	override fun isRunning() = !(disposableServer.get()?.isDisposed ?: true )
+	override fun isRunning() = !(disposableServer.get()?.isDisposed ?: true)
 
 	override fun start() {
 		if (!isRunning) {
@@ -69,4 +69,4 @@ private class NettyWebServer(private val port: Int) : WebServer(port) {
 
 }
 
-fun WebFluxModule.netty(port: Int = 8080) : WebFluxModule.WebServerModule = NettyModule(port)
+fun WebFluxModule.netty(port: Int = 8080): WebFluxModule.WebServerModule = NettyModule(port)

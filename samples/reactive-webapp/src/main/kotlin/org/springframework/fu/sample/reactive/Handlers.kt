@@ -6,12 +6,14 @@ import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.body
 
 @Suppress("UNUSED_PARAMETER")
-class UserHandler(private val repository: UserRepository,
-				  private val configuration: SampleConfiguration) {
+class UserHandler(
+	private val repository: UserRepository,
+	private val configuration: SampleConfiguration
+) {
 
 	fun listApi(request: ServerRequest) = handler {
 		ok().contentType(MediaType.APPLICATION_JSON_UTF8)
-				.body(repository.findAll())
+			.body(repository.findAll())
 	}
 
 	fun listView(request: ServerRequest) = handler {

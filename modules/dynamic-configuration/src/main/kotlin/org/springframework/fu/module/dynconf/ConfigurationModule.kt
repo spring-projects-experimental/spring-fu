@@ -30,7 +30,7 @@ import javax.script.ScriptEngineManager
  */
 class DynamicConfigurationModule(private val filename: String) : AbstractModule() {
 
-	override fun initialize(context : GenericApplicationContext) {
+	override fun initialize(context: GenericApplicationContext) {
 		if (!context.containsBean("kotlinScriptEngine")) {
 			context.registerBean("kotlinScriptEngine") {
 				ScriptEngineManager(context.classLoader).getEngineByName("kotlin")
@@ -44,7 +44,7 @@ class DynamicConfigurationModule(private val filename: String) : AbstractModule(
 	}
 }
 
-fun ApplicationDsl.configuration(filename: String = "application.kts") : DynamicConfigurationModule {
+fun ApplicationDsl.configuration(filename: String = "application.kts"): DynamicConfigurationModule {
 	val configuration = DynamicConfigurationModule(filename)
 	initializers.add(configuration)
 	return configuration

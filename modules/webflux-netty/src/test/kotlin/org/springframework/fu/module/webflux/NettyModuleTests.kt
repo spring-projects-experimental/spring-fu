@@ -23,11 +23,12 @@ import org.springframework.fu.module.webflux.netty.NettyModule
 /**
  * @author Sebastien Deleuze
  */
-class NettyModuleTests: AbstractWebServerModuleTests() {
+class NettyModuleTests : AbstractWebServerModuleTests() {
 	override fun getWebServerModule(port: Int, host: String): WebFluxModule.WebServerModule = NettyModule(port)
 
 	// FIXME
 	@Disabled
 	@Test
-	override fun `Declare 2 routes blocks`() {}
+	override fun `Declare 2 routes blocks`() {
+	}
 }
