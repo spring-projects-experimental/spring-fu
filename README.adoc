@@ -33,9 +33,10 @@ fun routes() = routes {
 
 It leverages a subset of Spring https://github.com/spring-projects/spring-fu/issues?q=is%3Aissue+label%3Aspring-framework[Framework], https://github.com/spring-projects/spring-fu/issues?q=is%3Aissue+label%3A%22spring+boot%22[Boot], https://github.com/spring-projects/spring-fu/issues?q=is%3Aissue+is%3Aopen+label%3Aspring-data[ Data] and Security to provide an alternative configuration model for developing applications in Kotlin:
 
+* Provides a Kotlin idiomatic developer experience
 * Functional configuration via https://dzone.com/articles/kotlin-dsl-from-theory-to-practice[Kotlin DSL] instead of annotations
 * Minimal reflection usage, no classpath scanning, no annotation processing required
-* Explicit configuration: minimal core, no feature enabled by classpath detection for example
+* Explicit configuration: minimal core, no conventions, no classpath detection
 * Flexible programmatic configuration: https://kotlinlang.org/docs/reference/control-flow.html[control flow] like `if`, or `for` can be used to register conditionally your beans
 * Run as native image with instant startup via https://github.com/spring-projects/spring-fu/issues/29[GraalVM support]
 * https://github.com/Kotlin/kotlinx.coroutines/blob/master/coroutines-guide.md[Coroutines] allow to leverage Spring Reactive support (WebFlux, Data) with imperative programming style
