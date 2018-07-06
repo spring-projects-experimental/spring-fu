@@ -1,11 +1,9 @@
 package org.springframework.fu.sample.reactive
 
-import org.springframework.fu.module.webflux.routes
-import org.springframework.fu.ref
+import org.springframework.web.reactive.function.server.router
 
-fun routes() = routes {
-	val userHandler = ref<UserHandler>()
-	GET("/", ref = userHandler::listView)
-	GET("/api/user", ref = userHandler::listApi)
-	GET("/conf", ref = userHandler::conf)
+fun routes(userHandler: UserHandler) = router {
+	GET("/", userHandler::listView)
+	GET("/api/user", userHandler::listApi)
+	GET("/conf", userHandler::conf)
 }

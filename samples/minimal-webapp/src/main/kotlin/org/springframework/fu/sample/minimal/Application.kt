@@ -23,7 +23,7 @@ import org.springframework.fu.module.webflux.webflux
 val app = application {
 	webflux {
 		server(netty()) {
-			routes {
+			router {
 				GET("/") {
 					ok().syncBody("Hello world!")
 				}

@@ -46,7 +46,7 @@ class JacksonModuleTests {
 					codecs {
 						jackson()
 					}
-					routes {
+					router {
 						GET("/user") {
 							ok().header(CONTENT_TYPE, APPLICATION_JSON_UTF8_VALUE).syncBody(User("Brian"))
 						}
@@ -73,7 +73,7 @@ class JacksonModuleTests {
 					codecs {
 						jackson()
 					}
-					routes {
+					router {
 						GET("/user") {
 							ok().header(CONTENT_TYPE, APPLICATION_JSON_UTF8_VALUE).syncBody(User("Brian"))
 						}

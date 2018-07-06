@@ -54,7 +54,7 @@ abstract class AbstractWebServerModuleTests {
 		val app = application {
 			webflux {
 				server(webServerModule) {
-					routes {
+					router {
 						GET("/") { noContent().build() }
 					}
 				}
@@ -73,7 +73,7 @@ abstract class AbstractWebServerModuleTests {
 		val app = application {
 			webflux {
 				server(webServerModule) {
-					routes {
+					router {
 						GET("/") { noContent().build() }
 					}
 				}
@@ -95,7 +95,7 @@ abstract class AbstractWebServerModuleTests {
 		val app = application {
 			webflux {
 				server(webServerModule) {
-					routes {
+					router {
 						GET("/") { noContent().build() }
 					}
 				}
@@ -116,16 +116,16 @@ abstract class AbstractWebServerModuleTests {
 	}
 
 	@Test
-	open fun `Declare 2 routes blocks`() {
+	open fun `Declare 2 router blocks`() {
 		val context = GenericApplicationContext()
 		val webServerModule = getWebServerModule()
 		val app = application {
 			webflux {
 				server(webServerModule) {
-					routes {
+					router {
 						GET("/foo") { noContent().build() }
 					}
-					routes {
+					router {
 						GET("/bar") { ok().build() }
 					}
 				}
@@ -146,12 +146,12 @@ abstract class AbstractWebServerModuleTests {
 		val app = application {
 			webflux {
 				server(webServerModule1) {
-					routes {
+					router {
 						GET("/foo") { noContent().build() }
 					}
 				}
 				server(webServerModule2) {
-					routes {
+					router {
 						GET("/bar") { ok().build() }
 					}
 				}

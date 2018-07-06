@@ -38,7 +38,7 @@ fun main(args: Array<String) = application {
 					jackson()
 					protobuf()
 				}
-				routes(ref = ::routes)
+				router(routes(ref(), ref()))
 				security { // TODO }
 			}
 			client {
@@ -55,9 +55,7 @@ data class AppConfiguration(
 	val remoteUrl: String  = "http://localhost:8080"
 )
 
-fun routes() = routes {
-	val htmlHandler = ref<HtmlHandler>()
-	val apiHandler = ref<ApiHandler>()
+fun routes(htmlHandler: HtmlHandler, apiHandler: ApiHandler) = router {
 	GET("/", htmlHandler::blog)
 	GET("/article/{id}", htmlHandler::article)
 	"/api".nest {
@@ -279,7 +277,7 @@ class MyController(private val r: MyRepository) {
 ```
 a|
 ```kotlin
-routes {
+router {
   val r = ref<MyRepository>()
   "/api/article".nest {
     GET("/") {

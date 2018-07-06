@@ -53,7 +53,7 @@ class CorsModuleTests {
 							defaults = false
 						}
 					}
-					routes {
+					router {
 						GET("/") { noContent().build() }
 					}
 				}

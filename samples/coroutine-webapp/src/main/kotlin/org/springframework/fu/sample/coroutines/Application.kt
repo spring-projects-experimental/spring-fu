@@ -30,7 +30,6 @@ import org.springframework.fu.module.logging.logback.debug
 import org.springframework.fu.module.logging.logback.consoleAppender
 import org.springframework.fu.module.logging.logback.rollingFileAppender
 import org.springframework.fu.module.mustache.mustache
-import org.springframework.fu.module.webflux.coroutine.coroutineRoutes
 import org.springframework.fu.module.webflux.netty.netty
 import org.springframework.fu.module.webflux.webflux
 import org.springframework.fu.ref
@@ -63,7 +62,7 @@ val app = application {
 			codecs {
 				jackson()
 			}
-			coroutineRoutes(ref = ::routes)
+			router {routes(ref()) }
 		}
 	}
 	configuration(configuration)

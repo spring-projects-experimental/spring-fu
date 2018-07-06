@@ -38,7 +38,7 @@ class MustacheModuleTests {
 			webflux {
 				server(netty()) {
 					mustache()
-					routes {
+					router {
 						GET("/view") { ok().render("template", mapOf("name" to "world")) }
 					}
 				}

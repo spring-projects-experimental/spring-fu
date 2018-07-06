@@ -19,16 +19,14 @@ fun main(args: Array<String>) = application {
 			codecs {
 				jackson()
 			}
-			routes(ref = ::routes)
+			router {
+				val userHandler = ref<UserHandler>()
+				GET("/", userHandler::listView)
+				GET("/api/user", userHandler::listApi)
+			}
 		}
 	}
 }.run(await = true)
-
-fun routes() = routes {
-	val userHandler = ref<UserHandler>()
-	GET("/", userHandler::listView)
-	GET("/api/user", userHandler::listApi)
-}
 ```
 
 It leverages a subset of Spring https://github.com/spring-projects/spring-fu/issues?q=is%3Aissue+label%3Aspring-framework[Framework], https://github.com/spring-projects/spring-fu/issues?q=is%3Aissue+label%3A%22spring+boot%22[Boot], https://github.com/spring-projects/spring-fu/issues?q=is%3Aissue+is%3Aopen+label%3Aspring-data[ Data] and Security to provide an alternative configuration model for developing applications in Kotlin:

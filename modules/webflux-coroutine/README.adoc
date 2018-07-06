@@ -10,7 +10,7 @@ application {
 			codecs {
 				jackson()
 			}
-			coroutineRoutes {
+			coRouter {
 				val coroutineHandler = ref<CoroutineHandler>()
 				GET("/") { coroutineHandler.blog(it))
 				GET("/article/{id}") { coroutineHandler.article(it) )

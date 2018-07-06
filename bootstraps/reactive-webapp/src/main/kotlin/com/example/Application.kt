@@ -19,7 +19,7 @@ val app = application {
 	webflux {
 		val port = if (profiles.contains("test")) 8181 else 8080
 		server(netty(port)) {
-			routes {
+			router {
 				GET("/") { ok().syncBody("Hello world!") }
 			}
 		}

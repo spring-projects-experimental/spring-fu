@@ -20,7 +20,7 @@ val app = application {
 	webflux {
 		val port = if (profiles.contains("test")) 8181 else 8080
 		server(netty(port)) {
-			coroutineRoutes {
+			coRouter {
 				GET("/") { ok().syncBody("Hello world!") }
 			}
 		}

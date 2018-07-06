@@ -29,6 +29,6 @@ class NettyModuleTests : AbstractWebServerModuleTests() {
 	// FIXME
 	@Disabled
 	@Test
-	override fun `Declare 2 routes blocks`() {
+	override fun `Declare 2 router blocks`() {
 	}
 }
