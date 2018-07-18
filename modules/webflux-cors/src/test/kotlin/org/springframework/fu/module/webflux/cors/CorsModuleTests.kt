@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.fu.module.cors
+package org.springframework.fu.module.webflux.cors
 
 import org.junit.jupiter.api.Test
 import org.springframework.context.support.GenericApplicationContext

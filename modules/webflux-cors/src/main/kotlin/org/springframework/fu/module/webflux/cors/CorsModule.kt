@@ -1,4 +1,4 @@
-package org.springframework.fu.module.cors
+package org.springframework.fu.module.webflux.cors
 
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.registerBean
