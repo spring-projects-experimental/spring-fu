@@ -16,8 +16,6 @@
 
 package org.springframework.fu.module.webflux
 
-import org.junit.jupiter.api.Disabled
-import org.junit.jupiter.api.Test
 import org.springframework.fu.module.webflux.netty.NettyModule
 
 /**
@@ -26,9 +24,4 @@ import org.springframework.fu.module.webflux.netty.NettyModule
 class NettyModuleTests : AbstractWebServerModuleTests() {
 	override fun getWebServerModule(port: Int, host: String): WebFluxModule.WebServerModule = NettyModule(port)
 
-	// FIXME
-	@Disabled
-	@Test
-	override fun `Declare 2 router blocks`() {
-	}
 }
