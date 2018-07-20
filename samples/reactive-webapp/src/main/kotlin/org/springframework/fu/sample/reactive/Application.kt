@@ -31,7 +31,6 @@ import org.springframework.fu.module.mustache.mustache
 import org.springframework.fu.module.webflux.netty.netty
 import org.springframework.fu.module.webflux.webflux
 import org.springframework.fu.ref
-import org.springframework.web.reactive.function.server.router
 import java.io.File
 
 val app = application {
@@ -58,9 +57,10 @@ val app = application {
 			codecs {
 				jackson()
 			}
-			router(routes(ref()))
+			include { routes(ref()) }
 		}
 	}
+
 	configuration(configuration)
 	mongodb()
 }

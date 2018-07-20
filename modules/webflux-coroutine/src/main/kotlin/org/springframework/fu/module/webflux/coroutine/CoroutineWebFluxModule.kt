@@ -28,8 +28,8 @@ fun WebFluxModule.WebFluxClientModule.coroutine() : CoroutineWebFluxClientModule
 }
 
 fun coRouter(routes: (CoroutineRouterFunctionDsl.() -> Unit)) =
-		CoroutineRouterFunctionDsl(routes)
+		CoroutineRouterFunctionDsl(routes).invoke()
 
 fun WebFluxModule.WebFluxServerModule.coRouter(routes: (CoroutineRouterFunctionDsl.() -> Unit)) {
-	this.router { CoroutineRouterFunctionDsl(routes) }
+	this.include { CoroutineRouterFunctionDsl(routes).invoke() }
 }

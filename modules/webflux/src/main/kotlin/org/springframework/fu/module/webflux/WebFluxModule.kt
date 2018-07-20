@@ -119,8 +119,8 @@ open class WebFluxModule(private val init: WebFluxModule.() -> Unit): AbstractMo
 			this.routes.add(RouterFunctionDsl(routes))
 		}
 
-		fun router(routes: RouterFunction<ServerResponse>) {
-			this.routes.add{ routes }
+		fun include(router: () -> RouterFunction<ServerResponse>) {
+			this.routes.add(router)
 		}
 
 	}
