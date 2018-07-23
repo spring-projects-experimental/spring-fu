@@ -13,6 +13,8 @@ include::../../../../modules/README.adoc[leveloffset=+1]
 
 include::../../../../modules/logging/README.adoc[leveloffset=+2]
 
+include::../../../../modules/logging-logback/README.adoc[leveloffset=+2]
+
 include::../../../../modules/mongodb/README.adoc[leveloffset=+2]
 
 include::../../../../modules/mongodb-coroutine/README.adoc[leveloffset=+2]
