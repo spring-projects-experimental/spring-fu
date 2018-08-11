@@ -4,6 +4,6 @@ This module configures a `ReactiveMongoTemplate` bean.
 
 ```kotlin
 application {
-	mongodb(uri = "mongodb://myserver.com/foo")
+	mongodb("mongodb://myserver.com/foo")
 }
 ```
