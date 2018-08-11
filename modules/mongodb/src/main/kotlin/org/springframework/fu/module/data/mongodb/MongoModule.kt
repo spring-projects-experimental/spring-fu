@@ -37,7 +37,7 @@ import org.springframework.fu.ApplicationDsl
  * @author Sebastien Deleuze
  */
 open class MongoModule(
-	private val connectionString: String,
+	val connectionString: String,
 	private val init: MongoModule.() -> Unit
 ) : AbstractModule() {
 
