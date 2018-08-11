@@ -1,0 +1,11 @@
+= Embedded MongoDB module
+
+This module configures and runs a embedded MongoDB.
+
+```kotlin
+application {
+	mongodb("mongodb://myserver.com/foo") {
+	    embedded()
+	}
+}
+```

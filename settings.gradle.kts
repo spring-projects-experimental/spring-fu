@@ -11,6 +11,7 @@ include(
 		"modules:dynamic-configuration",
 		"modules:mongodb",
 		"modules:mongodb-coroutine",
+		"modules:mongodb-embedded",
 		"modules:test",
 		"modules:webflux",
 		"modules:webflux-coroutine",
