@@ -19,6 +19,7 @@ package org.springframework.fu.sample.reactive
 import org.springframework.beans.factory.support.DefaultListableBeanFactory
 import org.springframework.context.event.ContextStartedEvent
 import org.springframework.fu.application
+import org.springframework.fu.module.data.mongodb.embedded.embedded
 import org.springframework.fu.module.data.mongodb.mongodb
 import org.springframework.fu.module.webflux.jackson.jackson
 import org.springframework.fu.module.logging.*
@@ -62,7 +63,9 @@ val app = application {
 	}
 
 	configuration(configuration)
-	mongodb()
+	mongodb {
+		embedded()
+	}
 }
 
 fun main(args: Array<String>) = app.run(await = true)

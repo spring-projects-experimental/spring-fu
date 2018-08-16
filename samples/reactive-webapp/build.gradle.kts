@@ -8,6 +8,7 @@ dependencies {
 	implementation(project(":modules:logging-logback"))
 	implementation(project(":modules:webflux-jackson"))
 	implementation(project(":modules:mongodb"))
+	implementation(project(":modules:mongodb-embedded"))
 	implementation(project(":modules:webflux-netty"))
 	implementation(project(":modules:webflux-mustache"))
 

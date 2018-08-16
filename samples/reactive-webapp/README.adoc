@@ -1,5 +1,5 @@
 = Reactive webapp
 
-This is a Spring Fu example of a reactive webapp. Requires a local MongoDB server until Spring Fu supports embedded MongoDB server.
+This is a Spring Fu example of a reactive webapp.
 
 
