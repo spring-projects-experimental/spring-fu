@@ -25,7 +25,6 @@ import org.springframework.web.server.adapter.WebHttpHandlerBuilder
 import reactor.netty.DisposableServer
 import reactor.netty.http.server.HttpServer
 import java.util.concurrent.atomic.AtomicReference
-import reactor.netty.http.HttpResources
 
 /**
  * @author Sebastien Deleuze
@@ -60,8 +59,6 @@ private class NettyWebServer(private val port: Int) : WebServer(port) {
 		val disposableServer = this.disposableServer.get()
 		if (disposableServer != null) {
 			disposableServer.disposeNow()
-			// Temporary fix for https://github.com/reactor/reactor-netty/issues/90
-			HttpResources.reset()
 			callback.run()
 		}
 	}
