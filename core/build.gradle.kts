@@ -19,7 +19,7 @@ publishing {
 			artifactId = "spring-fu"
 			val sourcesJar by tasks.creating(Jar::class) {
 				classifier = "sources"
-				from(java.sourceSets["main"].allSource)
+				from(sourceSets["main"].allSource)
 			}
 			artifact(sourcesJar)
 		}
