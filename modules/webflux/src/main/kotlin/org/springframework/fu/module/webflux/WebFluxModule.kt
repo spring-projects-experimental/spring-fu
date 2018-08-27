@@ -22,12 +22,12 @@ import org.springframework.context.ApplicationContextAware
 import org.springframework.context.SmartLifecycle
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.beans
-import org.springframework.core.codec.*
 import org.springframework.http.codec.ServerCodecConfigurer
 import org.springframework.fu.ApplicationDsl
 import org.springframework.fu.AbstractModule
 import org.springframework.fu.Module
 import org.springframework.http.codec.ClientCodecConfigurer
+import org.springframework.http.codec.CodecConfigurer
 import org.springframework.web.reactive.function.client.ExchangeStrategies
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.server.*
@@ -74,22 +74,12 @@ open class WebFluxModule(private val init: WebFluxModule.() -> Unit): AbstractMo
 					builder.exceptionHandler(WebFluxResponseStatusExceptionHandler())
 					builder.localeContextResolver(AcceptHeaderLocaleContextResolver())
 					builder.codecs {
-						with(it.customCodecs()) {
-							encoder(CharSequenceEncoder.textPlainOnly())
-							decoder(org.springframework.core.codec.ResourceDecoder())
-							decoder(org.springframework.core.codec.StringDecoder.textPlainOnly())
-						}
+						fallbackCodecs(it)
 					}
-					for (c in initializers) {
-						if (c is WebFluxCodecsModule) {
-							for (codec in c.initializers) {
-								if (codec is WebFluxServerCodecModule) {
-									builder.codecs { codec.invoke(it) }
-								}
-							}
-						}
-					}
-
+					initializers.filterIsInstance<WebFluxCodecsModule>()
+							.flatMap { codecs -> codecs.initializers }
+							.filterIsInstance<WebFluxServerCodecModule>()
+							.forEach{codec ->  builder.codecs { codec.invoke(it) }}
 					try {
 						builder.viewResolver(ref())
 					}
@@ -130,37 +120,25 @@ open class WebFluxModule(private val init: WebFluxModule.() -> Unit): AbstractMo
 		private val builder = WebClient.builder()
 
 		override fun initialize(context: GenericApplicationContext) {
-			init()
-			super.initialize(context)
-		}
-
-		init {
 			initializers.add(beans {
+
 				bean(name = name) {
 					if (baseUrl != null) {
 						builder.baseUrl(baseUrl)
 					}
 					val exchangeStrategiesBuilder = ExchangeStrategies.builder()
 					exchangeStrategiesBuilder.codecs {
-						with(it.customCodecs()) {
-							encoder(CharSequenceEncoder.textPlainOnly())
-							decoder(ResourceDecoder())
-							decoder(StringDecoder.textPlainOnly())
-						}
+						fallbackCodecs(it)
 					}
-					for (c in initializers) {
-						if (c is WebFluxCodecsModule) {
-							for (codec in c.initializers) {
-								if (codec is WebFluxClientCodecModule) {
-									exchangeStrategiesBuilder.codecs({ codec.invoke(it) })
-								}
-							}
-						}
-					}
+					initializers.filterIsInstance<WebFluxCodecsModule>()
+							.flatMap { codecs -> codecs.initializers }
+							.filterIsInstance<WebFluxClientCodecModule>()
+							.forEach{clientCodec -> exchangeStrategiesBuilder.codecs{clientCodec.invoke(it)}}
 					builder.exchangeStrategies(exchangeStrategiesBuilder.build())
 					builder.build()
 				}
 			})
+			super.initialize(context)
 		}
 
 		fun codecs(init: WebFluxCodecsModule.() -> Unit =  {}) {
@@ -172,6 +150,14 @@ open class WebFluxModule(private val init: WebFluxModule.() -> Unit): AbstractMo
 		override fun initialize(context: GenericApplicationContext) {
 			init()
 			super.initialize(context)
+		}
+	}
+
+	companion object {
+		fun fallbackCodecs(codecConfigurer: CodecConfigurer)  = with(codecConfigurer.customCodecs()) {
+			encoder(org.springframework.core.codec.CharSequenceEncoder.textPlainOnly())
+			decoder(org.springframework.core.codec.ResourceDecoder())
+			decoder(org.springframework.core.codec.StringDecoder.textPlainOnly())
 		}
 	}
 
