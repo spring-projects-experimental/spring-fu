@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
 	id("org.jetbrains.kotlin.jvm") version "1.2.61" apply false
-	id("org.springframework.boot") version "2.1.0.BUILD-SNAPSHOT" apply false
+	id("org.springframework.boot") version "2.1.0.M2" apply false
 	id("io.spring.dependency-management") version "1.0.5.RELEASE"
 	id("org.asciidoctor.convert") version "1.5.6" apply false
 	id("java-library")
