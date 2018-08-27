@@ -22,12 +22,13 @@ import org.springframework.context.ApplicationContextAware
 import org.springframework.context.SmartLifecycle
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.beans
-import org.springframework.core.codec.*
-import org.springframework.http.codec.ServerCodecConfigurer
+import org.springframework.core.codec.CharSequenceEncoder
+import org.springframework.core.codec.ResourceDecoder
+import org.springframework.core.codec.StringDecoder
 import org.springframework.fu.ApplicationDsl
 import org.springframework.fu.AbstractModule
 import org.springframework.fu.Module
-import org.springframework.http.codec.ClientCodecConfigurer
+import org.springframework.http.codec.CodecConfigurer
 import org.springframework.web.reactive.function.client.ExchangeStrategies
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.server.*
@@ -40,6 +41,14 @@ import reactor.core.publisher.Mono
  * @author Sebastien Deleuze
  */
 open class WebFluxModule(private val init: WebFluxModule.() -> Unit): AbstractModule() {
+
+	companion object {
+		private fun defaultCodecs(codecConfigurer: CodecConfigurer)  = with(codecConfigurer.customCodecs()) {
+			encoder(CharSequenceEncoder.textPlainOnly())
+			decoder(ResourceDecoder())
+			decoder(StringDecoder.textPlainOnly())
+		}
+	}
 
 	override fun initialize(context: GenericApplicationContext) {
 		this.context = context
@@ -74,22 +83,12 @@ open class WebFluxModule(private val init: WebFluxModule.() -> Unit): AbstractMo
 					builder.exceptionHandler(WebFluxResponseStatusExceptionHandler())
 					builder.localeContextResolver(AcceptHeaderLocaleContextResolver())
 					builder.codecs {
-						with(it.customCodecs()) {
-							encoder(CharSequenceEncoder.textPlainOnly())
-							decoder(org.springframework.core.codec.ResourceDecoder())
-							decoder(org.springframework.core.codec.StringDecoder.textPlainOnly())
-						}
+						defaultCodecs(it)
 					}
-					for (c in initializers) {
-						if (c is WebFluxCodecsModule) {
-							for (codec in c.initializers) {
-								if (codec is WebFluxServerCodecModule) {
-									builder.codecs { codec.invoke(it) }
-								}
-							}
-						}
-					}
-
+					initializers.filterIsInstance<WebFluxCodecsModule>()
+							.flatMap { codecs -> codecs.initializers }
+							.filterIsInstance<WebFluxCodecModule>()
+							.forEach { codec ->  builder.codecs { codec.invoke(it) } }
 					try {
 						builder.viewResolver(ref())
 					}
@@ -130,37 +129,25 @@ open class WebFluxModule(private val init: WebFluxModule.() -> Unit): AbstractMo
 		private val builder = WebClient.builder()
 
 		override fun initialize(context: GenericApplicationContext) {
-			init()
-			super.initialize(context)
-		}
-
-		init {
 			initializers.add(beans {
+
 				bean(name = name) {
 					if (baseUrl != null) {
 						builder.baseUrl(baseUrl)
 					}
 					val exchangeStrategiesBuilder = ExchangeStrategies.builder()
 					exchangeStrategiesBuilder.codecs {
-						with(it.customCodecs()) {
-							encoder(CharSequenceEncoder.textPlainOnly())
-							decoder(ResourceDecoder())
-							decoder(StringDecoder.textPlainOnly())
-						}
+						defaultCodecs(it)
 					}
-					for (c in initializers) {
-						if (c is WebFluxCodecsModule) {
-							for (codec in c.initializers) {
-								if (codec is WebFluxClientCodecModule) {
-									exchangeStrategiesBuilder.codecs({ codec.invoke(it) })
-								}
-							}
-						}
-					}
+					initializers.filterIsInstance<WebFluxCodecsModule>()
+							.flatMap { codecs -> codecs.initializers }
+							.filterIsInstance<WebFluxCodecModule>()
+							.forEach { codec -> exchangeStrategiesBuilder.codecs{ codec.invoke(it) } }
 					builder.exchangeStrategies(exchangeStrategiesBuilder.build())
 					builder.build()
 				}
 			})
+			super.initialize(context)
 		}
 
 		fun codecs(init: WebFluxCodecsModule.() -> Unit =  {}) {
@@ -183,10 +170,7 @@ open class WebFluxModule(private val init: WebFluxModule.() -> Unit): AbstractMo
 		override val baseUrl = "http://$host:$port"
 	}
 
-	interface WebFluxServerCodecModule: Module, (ServerCodecConfigurer) -> (Unit)
-
-	interface WebFluxClientCodecModule: Module, (ClientCodecConfigurer) -> (Unit)
-
+	interface WebFluxCodecModule: Module, (CodecConfigurer) -> (Unit)
 }
 
 abstract class WebServer(private val port: Int) : SmartLifecycle, ApplicationContextAware {
@@ -207,4 +191,3 @@ fun ApplicationDsl.webflux(init: WebFluxModule.() -> Unit): WebFluxModule {
 	initializers.add(webFluxDsl)
 	return webFluxDsl
 }
-

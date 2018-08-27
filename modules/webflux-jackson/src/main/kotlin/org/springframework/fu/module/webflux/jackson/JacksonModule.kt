@@ -13,7 +13,7 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder
 /**
  * @author Sebastien Deleuze
  */
-class JacksonModule(val json: Boolean) : WebFluxModule.WebFluxServerCodecModule, AbstractModule() {
+class JacksonModule(val json: Boolean) : WebFluxModule.WebFluxCodecModule, AbstractModule() {
 
 	val mapper = Jackson2ObjectMapperBuilder.json().build<ObjectMapper>()
 
@@ -21,7 +21,7 @@ class JacksonModule(val json: Boolean) : WebFluxModule.WebFluxServerCodecModule,
 		context.registerBean { mapper }
 	}
 
-	override fun invoke(configurer: ServerCodecConfigurer) {
+	override fun invoke(configurer: CodecConfigurer) {
 		if (json) {
 			val encoder = Jackson2JsonEncoder(mapper)
 			configurer.customCodecs().decoder(Jackson2JsonDecoder(mapper))
