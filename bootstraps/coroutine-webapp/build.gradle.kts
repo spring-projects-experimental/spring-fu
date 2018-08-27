@@ -24,6 +24,7 @@ dependencies {
 repositories {
 	mavenCentral()
 	maven("https://repo.spring.io/libs-milestone")
+	maven("https://repo.spring.io/libs-snapshot")
 }
 
 tasks.withType<KotlinCompile> {
