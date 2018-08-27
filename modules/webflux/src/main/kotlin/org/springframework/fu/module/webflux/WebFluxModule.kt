@@ -43,7 +43,7 @@ import reactor.core.publisher.Mono
 open class WebFluxModule(private val init: WebFluxModule.() -> Unit): AbstractModule() {
 
 	companion object {
-		private fun defaultCodecs(codecConfigurer: CodecConfigurer)  = with(codecConfigurer.customCodecs()) {
+		private fun defaultCodecs(codecConfigurer: CodecConfigurer) = with(codecConfigurer.customCodecs()) {
 			encoder(CharSequenceEncoder.textPlainOnly())
 			decoder(ResourceDecoder())
 			decoder(StringDecoder.textPlainOnly())
@@ -82,13 +82,16 @@ open class WebFluxModule(private val init: WebFluxModule.() -> Unit): AbstractMo
 				bean("webHandler") {
 					builder.exceptionHandler(WebFluxResponseStatusExceptionHandler())
 					builder.localeContextResolver(AcceptHeaderLocaleContextResolver())
-					builder.codecs {
-						defaultCodecs(it)
-					}
 					initializers.filterIsInstance<WebFluxCodecsModule>()
 							.flatMap { codecs -> codecs.initializers }
 							.filterIsInstance<WebFluxCodecModule>()
-							.forEach { codec ->  builder.codecs { codec.invoke(it) } }
+							.apply {
+								if (isEmpty())
+									builder.codecs { defaultCodecs(it) }
+								else
+									forEach { codec ->  builder.codecs { codec.invoke(it) } }
+							}
+
 					try {
 						builder.viewResolver(ref())
 					}
@@ -126,25 +129,28 @@ open class WebFluxModule(private val init: WebFluxModule.() -> Unit): AbstractMo
 
 	class WebFluxClientModule(private val init: WebFluxClientModule.() -> Unit, val baseUrl: String?, val name: String?) : AbstractModule() {
 
-		private val builder = WebClient.builder()
+		private val clientBuilder = WebClient.builder()
 
 		override fun initialize(context: GenericApplicationContext) {
 			initializers.add(beans {
 
 				bean(name = name) {
 					if (baseUrl != null) {
-						builder.baseUrl(baseUrl)
+						clientBuilder.baseUrl(baseUrl)
 					}
 					val exchangeStrategiesBuilder = ExchangeStrategies.builder()
-					exchangeStrategiesBuilder.codecs {
-						defaultCodecs(it)
-					}
 					initializers.filterIsInstance<WebFluxCodecsModule>()
 							.flatMap { codecs -> codecs.initializers }
 							.filterIsInstance<WebFluxCodecModule>()
-							.forEach { codec -> exchangeStrategiesBuilder.codecs{ codec.invoke(it) } }
-					builder.exchangeStrategies(exchangeStrategiesBuilder.build())
-					builder.build()
+							.apply {
+								if (isEmpty())
+									exchangeStrategiesBuilder.codecs { defaultCodecs(it) }
+								else
+									forEach { codec ->  exchangeStrategiesBuilder.codecs { codec.invoke(it) } }
+							}
+
+					clientBuilder.exchangeStrategies(exchangeStrategiesBuilder.build())
+					clientBuilder.build()
 				}
 			})
 			super.initialize(context)
@@ -159,6 +165,31 @@ open class WebFluxModule(private val init: WebFluxModule.() -> Unit): AbstractMo
 		override fun initialize(context: GenericApplicationContext) {
 			init()
 			super.initialize(context)
+		}
+
+		fun string() {
+			initializers.add(StringCodecModule())
+		}
+
+		fun resource() {
+			initializers.add(ResourceCodecModule())
+		}
+	}
+
+	class StringCodecModule() : WebFluxModule.WebFluxCodecModule, AbstractModule() {
+		override fun invoke(configurer: CodecConfigurer) {
+			with(configurer.customCodecs()) {
+				encoder(CharSequenceEncoder.textPlainOnly())
+				decoder(StringDecoder.textPlainOnly())
+			}
+		}
+	}
+
+	class ResourceCodecModule() : WebFluxModule.WebFluxCodecModule, AbstractModule() {
+		override fun invoke(configurer: CodecConfigurer) {
+			with(configurer.customCodecs()) {
+				decoder(ResourceDecoder())
+			}
 		}
 	}
 

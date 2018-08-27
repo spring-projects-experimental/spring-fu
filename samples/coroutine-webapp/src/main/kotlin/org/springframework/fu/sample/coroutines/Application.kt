@@ -61,6 +61,7 @@ val app = application {
 		server(netty(port)) {
 			mustache()
 			codecs {
+				string()
 				jackson()
 			}
 			include { routes(ref()) }
