@@ -39,11 +39,10 @@ internal class LoggingDslTest {
 	@Test
 	fun `Default LoggingDsl Configuraton`() {
 		lateinit var log: LoggingDsl
-		val context = GenericApplicationContext()
 		application {
 			log = logging {
 			}
-		}.run(context)
+		}.run()
 
 		assertEquals(INFO, log.configuration.level)
 		assertEquals(listOf<Pair<String, LogLevel>>(), log.configuration.packagesLevels)
@@ -52,12 +51,11 @@ internal class LoggingDslTest {
 	@Test
 	fun `Change default ROOT Log level`() {
 		lateinit var log: LoggingDsl
-		val context = GenericApplicationContext()
 		application {
 			log = logging {
 				level(DEBUG)
 			}
-		}.run(context)
+		}.run()
 
 		assertEquals(DEBUG, log.configuration.level)
 		assertEquals(listOf<Pair<String, LogLevel>>(), log.configuration.packagesLevels)
@@ -66,12 +64,11 @@ internal class LoggingDslTest {
 	@Test
 	fun `Change package Log level`() {
 		lateinit var log: LoggingDsl
-		val context = GenericApplicationContext()
 		application {
 			log = logging {
 				level("org.springframework", DEBUG)
 			}
-		}.run(context)
+		}.run()
 
 		assertEquals(INFO, log.configuration.level)
 		assertEquals(
@@ -83,12 +80,11 @@ internal class LoggingDslTest {
 	@Test
 	fun `Change class Log level`() {
 		lateinit var log: LoggingDsl
-		val context = GenericApplicationContext()
 		application {
 			log = logging {
 				level<DefaultListableBeanFactory>(DEBUG)
 			}
-		}.run(context)
+		}.run()
 
 		assertEquals(INFO, log.configuration.level)
 		assertEquals(

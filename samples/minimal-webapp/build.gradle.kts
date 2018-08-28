@@ -9,12 +9,6 @@ dependencies {
 	testImplementation(project(":modules:test"))
 }
 
-configurations {
-	all {
-		exclude(module = "spring-aop")
-	}
-}
-
 /*tasks.withType<ShadowJar> {
 	exclude("org/springframework/cglib/**",
 			"org/springframework/beans/factory/groovy/**",

@@ -17,6 +17,7 @@
 package org.springframework.fu.module.webflux
 
 import org.springframework.beans.factory.NoSuchBeanDefinitionException
+import org.springframework.boot.WebApplicationType
 import org.springframework.context.ApplicationContext
 import org.springframework.context.ApplicationContextAware
 import org.springframework.context.SmartLifecycle
@@ -25,9 +26,7 @@ import org.springframework.context.support.beans
 import org.springframework.core.codec.CharSequenceEncoder
 import org.springframework.core.codec.ResourceDecoder
 import org.springframework.core.codec.StringDecoder
-import org.springframework.fu.ApplicationDsl
-import org.springframework.fu.AbstractModule
-import org.springframework.fu.Module
+import org.springframework.fu.*
 import org.springframework.http.codec.CodecConfigurer
 import org.springframework.web.reactive.function.client.ExchangeStrategies
 import org.springframework.web.reactive.function.client.WebClient
@@ -40,7 +39,7 @@ import reactor.core.publisher.Mono
 /**
  * @author Sebastien Deleuze
  */
-open class WebFluxModule(private val init: WebFluxModule.() -> Unit): AbstractModule() {
+open class WebFluxModule(private val init: WebFluxModule.() -> Unit): AbstractModule(), WebApplicationTypeProvider {
 
 	companion object {
 		private fun defaultCodecs(codecConfigurer: CodecConfigurer) = with(codecConfigurer.customCodecs()) {
@@ -56,6 +55,9 @@ open class WebFluxModule(private val init: WebFluxModule.() -> Unit): AbstractMo
 		super.initialize(context)
 	}
 
+	override val webApplicationType: WebApplicationType?
+		get() = initializers.filterIsInstance<WebApplicationTypeProvider>().firstOrNull()?.webApplicationType
+
 	fun server(server: WebServerModule, init: WebFluxServerModule.() -> Unit =  {}) {
 		initializers.add(WebFluxServerModule(init, server))
 	}
@@ -65,11 +67,14 @@ open class WebFluxModule(private val init: WebFluxModule.() -> Unit): AbstractMo
 	}
 
 	open class WebFluxServerModule(private val init: WebFluxServerModule.() -> Unit,
-							  private val serverModule: WebServerModule): AbstractModule() {
+							  private val serverModule: WebServerModule): AbstractModule(), WebApplicationTypeProvider {
 
 		private val builder = HandlerStrategies.empty()
 
 		private val routes = mutableListOf<() -> RouterFunction<ServerResponse>>()
+
+		override val webApplicationType: WebApplicationType
+			get() = WebApplicationType.REACTIVE
 
 		override fun initialize(context: GenericApplicationContext) {
 			if (context.containsBeanDefinition("webHandler")) {
@@ -217,7 +222,7 @@ abstract class WebServer(private val port: Int) : SmartLifecycle, ApplicationCon
 	}
 }
 
-fun ApplicationDsl.webflux(init: WebFluxModule.() -> Unit): WebFluxModule {
+fun SpringApplicationDsl.webflux(init: WebFluxModule.() -> Unit): WebFluxModule {
 	val webFluxDsl = WebFluxModule(init)
 	initializers.add(webFluxDsl)
 	return webFluxDsl

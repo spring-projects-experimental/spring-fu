@@ -32,20 +32,22 @@ class EmbeddedMongoModuleTest {
 
     @Test
     fun `enable mongodb embedded module`() {
-        val context = GenericApplicationContext()
         val port = SocketUtils.findAvailableTcpPort()
-        application {
+        val app = application {
             bean<TestRepository>()
             mongodb("mongodb://localhost:$port/test") {
                 embedded()
             }
-        }.run(context)
+        }
+        with(app){
+            run()
 
-        val repository = context.getBean<TestRepository>()
-        repository.save(TestUser("1", "foo")).block(Duration.ofSeconds(3))
-        assertEquals("foo", repository.findById("1").block(Duration.ofSeconds(3))?.name)
+            val repository = context.getBean<TestRepository>()
+            repository.save(TestUser("1", "foo")).block(Duration.ofSeconds(3))
+            assertEquals("foo", repository.findById("1").block(Duration.ofSeconds(3))?.name)
 
-        context.close()
+            stop()
+        }
     }
 }
 

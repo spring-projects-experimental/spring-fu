@@ -16,10 +16,11 @@
 
 package org.springframework.fu
 
-import org.slf4j.LoggerFactory
-import org.slf4j.impl.SimpleLogger
 import org.springframework.beans.factory.config.BeanDefinitionCustomizer
 import org.springframework.beans.factory.support.AbstractBeanDefinition
+import org.springframework.boot.SpringApplication
+import org.springframework.boot.WebApplicationType
+import org.springframework.boot.web.reactive.context.ReactiveWebServerApplicationContext
 import org.springframework.context.ApplicationEvent
 import org.springframework.context.ApplicationListener
 import org.springframework.context.support.BeanDefinitionDsl
@@ -27,26 +28,16 @@ import org.springframework.context.support.BeanDefinitionDsl.Autowire
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import org.springframework.context.support.registerBean
-import java.lang.management.ManagementFactory
-import java.time.Duration
 import java.util.function.Supplier
-import kotlin.system.measureTimeMillis
 
 /**
  * @author Sebastien Deleuze
  */
-open class ApplicationDsl(private val init: ApplicationDsl.() -> Unit) : AbstractModule() {
+open class SpringApplicationDsl(private val init: SpringApplicationDsl.() -> Unit) : AbstractModule() {
 
-	private val fuLogger by lazy { LoggerFactory.getLogger(ApplicationDsl::class.java) }
+	internal class Application
 
-	init {
-		System.setProperty(SimpleLogger.LOG_FILE_KEY, "System.out")
-		System.setProperty(SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "INFO")
-		System.setProperty(SimpleLogger.SHOW_LOG_NAME_KEY, "true")
-		System.setProperty(SimpleLogger.SHOW_THREAD_NAME_KEY, "true")
-		System.setProperty(SimpleLogger.SHOW_DATE_TIME_KEY, "true")
-		System.setProperty(SimpleLogger.DATE_TIME_FORMAT_KEY, "yyyy-MM-dd HH:mm:ss.SSS")
-	}
+	val application = SpringApplication(Application::class.java)
 
 	/**
 	 * Declare a bean definition from the given bean class which can be inferred when possible.
@@ -131,9 +122,14 @@ open class ApplicationDsl(private val init: ApplicationDsl.() -> Unit) : Abstrac
 	override fun initialize(context: GenericApplicationContext) {
 		this.context = context
 		init()
+		context.registerBean("messageSource") {
+			ReloadableResourceBundleMessageSource().apply {
+				setBasename("messages")
+				setDefaultEncoding("UTF-8")
+			}
+		}
 		super.initialize(context)
 	}
-
 
 
 	inline fun <reified E : ApplicationEvent>listener(crossinline listener: (E) -> Unit) {
@@ -151,36 +147,32 @@ open class ApplicationDsl(private val init: ApplicationDsl.() -> Unit) : Abstrac
 	 * Take in account functional configuration enclosed in the provided lambda only when the
 	 * specified profile is active.
 	 */
-	fun profile(profile: String, init: ApplicationDsl.() -> Unit) {
+	fun profile(profile: String, init: SpringApplicationDsl.() -> Unit) {
 		if (env.activeProfiles.contains(profile)) {
-			initializers.add(ApplicationDsl(init))
+			initializers.add(SpringApplicationDsl(init))
 		}
 	}
 
 	/**
-	 * @param context the [GenericApplicationContext] instance to use
+	 * @param args the application arguments (usually passed from a Java main method)
 	 * @param await set to `true` to block, useful when used in a `main()` function
 	 * @param profiles [ApplicationContext] profiles separated by commas.
 	 */
-	fun run(context: GenericApplicationContext = GenericApplicationContext(), await: Boolean = false, profiles: String = "") {
-		val startupTime = measureTimeMillis {
-			context.registerBean("messageSource") {
-				ReloadableResourceBundleMessageSource().apply {
-					setBasename("messages")
-					setDefaultEncoding("UTF-8")
-				}
-			}
-			if (!profiles.isEmpty()) {
-				context.environment.setActiveProfiles(*profiles.split(",").map { it.trim() }.toTypedArray())
-			}
-			initialize(context)
-			context.refresh()
-		}
-		val startupTimeDuration = Duration.ofMillis(startupTime)
-		fuLogger.info("Application started in " +
-				"${startupTimeDuration.seconds}.${startupTimeDuration.minusSeconds(startupTimeDuration.seconds).toMillis()} seconds " +
-				"(JVM running for ${ManagementFactory.getRuntimeMXBean().uptime / 1000.0})")
+	fun run(args: Array<String> = emptyArray(), await: Boolean = false, profiles: String = "") {
+		val provider = initializers.filterIsInstance<WebApplicationTypeProvider>().firstOrNull()
+		application.webApplicationType = provider?.webApplicationType ?: WebApplicationType.NONE
 
+		application.setApplicationContextClass(
+				if (application.webApplicationType == WebApplicationType.REACTIVE)
+					ReactiveWebServerApplicationContext::class.java
+				else
+					GenericApplicationContext::class.java
+		)
+		if (!profiles.isEmpty()) {
+			application.setAdditionalProfiles(*profiles.split(",").map { it.trim() }.toTypedArray())
+		}
+		application.addInitializers(this)
+		application.run(*args)
 		if (await) {
 			while (true)
 			{
@@ -194,4 +186,4 @@ open class ApplicationDsl(private val init: ApplicationDsl.() -> Unit) : Abstrac
 	}
 }
 
-fun application(init: ApplicationDsl.() -> Unit) = ApplicationDsl(init)
+fun application(init: SpringApplicationDsl.() -> Unit) = SpringApplicationDsl(init)

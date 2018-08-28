@@ -39,7 +39,6 @@ class JacksonModuleTests {
 
 	@Test
 	fun `Enable jackson module on server, create and request a JSON endpoint`() {
-		val context = GenericApplicationContext()
 		val app = application {
 			webflux {
 				server(netty()) {
@@ -54,19 +53,18 @@ class JacksonModuleTests {
 				}
 			}
 		}
-		app.run(context)
+		app.run()
 		val client = WebTestClient.bindToServer().baseUrl("http://localhost:8080").build()
 		client.get().uri("/user").exchange()
 				.expectStatus().is2xxSuccessful
 				.expectHeader().contentType(APPLICATION_JSON_UTF8_VALUE)
 				.expectBody<User>()
 				.isEqualTo(User("Brian"))
-		context.close()
+		app.stop()
 	}
 
 	@Test
 	fun `Enable jackson module on client and server, create and request a JSON endpoint`() {
-		val context = GenericApplicationContext()
 		val app = application {
 			webflux {
 				server(netty()) {
@@ -86,17 +84,18 @@ class JacksonModuleTests {
 				}
 			}
 		}
-		app.run(context)
-		val client = context.getBean<WebClient>()
-		val exchange = client.get().uri("http://localhost:8080/user").exchange()
-		exchange.test()
-				.consumeNextWith {
-					assertEquals(HttpStatus.OK, it.statusCode())
-					assertEquals(APPLICATION_JSON_UTF8, it.headers().contentType().get())
-				}
-				.verifyComplete()
-
-		context.close()
+		with(app) {
+			run()
+			val client = context.getBean<WebClient>()
+			val exchange = client.get().uri("http://localhost:8080/user").exchange()
+			exchange.test()
+					.consumeNextWith {
+						assertEquals(HttpStatus.OK, it.statusCode())
+						assertEquals(APPLICATION_JSON_UTF8, it.headers().contentType().get())
+					}
+					.verifyComplete()
+			stop()
+		}
 	}
 
 	data class User(val name: String)

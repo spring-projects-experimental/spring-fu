@@ -74,4 +74,4 @@ val app = application {
 	}
 }
 
-fun main(args: Array<String>) = app.run(await = true)
+fun main(args: Array<String>) = app.run(args, await = true)

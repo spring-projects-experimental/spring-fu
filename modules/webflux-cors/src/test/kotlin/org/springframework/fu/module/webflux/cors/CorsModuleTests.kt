@@ -30,7 +30,6 @@ class CorsModuleTests {
 
 	@Test
 	fun `Enable cors module on server, create and request a JSON endpoint`() {
-		val context = GenericApplicationContext()
 		val app = application {
 			webflux {
 				server(netty()) {
@@ -59,12 +58,14 @@ class CorsModuleTests {
 				}
 			}
 		}
-		app.run(context)
-		assert(context.containsBean("corsFilter"))
-		val client = WebTestClient.bindToServer().baseUrl("http://localhost:8080").build()
-		client.get().uri("/").exchange()
-			.expectStatus().is2xxSuccessful
-		context.close()
+		with(app) {
+			run()
+			assert(context.containsBean("corsFilter"))
+			val client = WebTestClient.bindToServer().baseUrl("http://localhost:8080").build()
+			client.get().uri("/").exchange()
+					.expectStatus().is2xxSuccessful
+			stop()
+		}
 	}
 }
 

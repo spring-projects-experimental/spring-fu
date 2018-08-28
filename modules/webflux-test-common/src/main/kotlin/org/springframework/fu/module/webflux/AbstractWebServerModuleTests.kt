@@ -36,20 +36,20 @@ abstract class AbstractWebServerModuleTests {
 
 	@Test
 	fun `Create an application with an empty server`() {
-		val context = GenericApplicationContext()
 		val app = application {
 			webflux {
 				server(getWebServerModule())
 			}
 		}
-		app.run(context)
-		context.getBean<WebServer>()
-		context.close()
+		with(app){
+			run()
+			context.getBean<WebServer>()
+			stop()
+		}
 	}
 
 	@Test
 	fun `Create and request an endpoint`() {
-		val context = GenericApplicationContext()
 		val webServerModule = getWebServerModule()
 		val app = application {
 			webflux {
@@ -60,15 +60,14 @@ abstract class AbstractWebServerModuleTests {
 				}
 			}
 		}
-		app.run(context)
+		app.run()
 		val client = WebTestClient.bindToServer().baseUrl(webServerModule.baseUrl).build()
 		client.get().uri("/").exchange().expectStatus().is2xxSuccessful
-		context.close()
+		app.stop()
 	}
 
 	@Test
 	fun `Create a WebClient and request an endpoint`() {
-		val context = GenericApplicationContext()
 		val webServerModule = getWebServerModule()
 		val app = application {
 			webflux {
@@ -80,17 +79,18 @@ abstract class AbstractWebServerModuleTests {
 				client(webServerModule.baseUrl)
 			}
 		}
-		app.run(context)
-		val client = context.getBean<WebClient>()
-		client.get().uri("/").exchange().test()
-				.consumeNextWith { assertEquals(NO_CONTENT, it.statusCode()) }
-				.verifyComplete()
-		context.close()
+		with(app) {
+			run()
+			val client = context.getBean<WebClient>()
+			client.get().uri("/").exchange().test()
+					.consumeNextWith { assertEquals(NO_CONTENT, it.statusCode()) }
+					.verifyComplete()
+			stop()
+		}
 	}
 
 	@Test
 	fun `Create 2 WebClient with different names and request an endpoint`() {
-		val context = GenericApplicationContext()
 		val webServerModule = getWebServerModule()
 		val app = application {
 			webflux {
@@ -103,21 +103,22 @@ abstract class AbstractWebServerModuleTests {
 				client(name = "client2")
 			}
 		}
-		app.run(context)
-		val client1 = context.getBean<WebClient>("client1")
-		client1.get().uri("/").exchange().test()
-				.consumeNextWith { assertEquals(NO_CONTENT, it.statusCode()) }
-				.verifyComplete()
-		val client2 = context.getBean<WebClient>("client2")
-		client2.get().uri("http://localhost:8080/").exchange().test()
-				.consumeNextWith { assertEquals(NO_CONTENT, it.statusCode()) }
-				.verifyComplete()
-		context.close()
+		with(app) {
+			app.run()
+			val client1 = context.getBean<WebClient>("client1")
+			client1.get().uri("/").exchange().test()
+					.consumeNextWith { assertEquals(NO_CONTENT, it.statusCode()) }
+					.verifyComplete()
+			val client2 = context.getBean<WebClient>("client2")
+			client2.get().uri("http://localhost:8080/").exchange().test()
+					.consumeNextWith { assertEquals(NO_CONTENT, it.statusCode()) }
+					.verifyComplete()
+			stop()
+		}
 	}
 
 	@Test
 	open fun `Declare 2 router blocks`() {
-		val context = GenericApplicationContext()
 		val webServerModule = getWebServerModule()
 		val app = application {
 			webflux {
@@ -131,16 +132,17 @@ abstract class AbstractWebServerModuleTests {
 				}
 			}
 		}
-		app.run(context)
-		val client = WebTestClient.bindToServer().baseUrl(webServerModule.baseUrl).build()
-		client.get().uri("/foo").exchange().expectStatus().isNoContent
-		client.get().uri("/bar").exchange().expectStatus().isOk
-		context.close()
+		with(app) {
+			run()
+			val client = WebTestClient.bindToServer().baseUrl(webServerModule.baseUrl).build()
+			client.get().uri("/foo").exchange().expectStatus().isNoContent
+			client.get().uri("/bar").exchange().expectStatus().isOk
+			stop()
+		}
 	}
 
 	@Test
 	open fun `Declare 2 server blocks`() {
-		val context = GenericApplicationContext()
 		val webServerModule1 = getWebServerModule()
 		val webServerModule2 = getWebServerModule(8181)
 		val app = application {
@@ -159,8 +161,8 @@ abstract class AbstractWebServerModuleTests {
 		}
 
 		assertThrows<IllegalStateException> {
-			app.run(context)
+			app.run()
 		}
-		context.close()
+		app.stop()
 	}
 }

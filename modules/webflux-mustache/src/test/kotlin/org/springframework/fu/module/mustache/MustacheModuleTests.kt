@@ -33,7 +33,6 @@ class MustacheModuleTests {
 
 	@Test
 	fun `Create and request a Mustache view`() {
-		val context = GenericApplicationContext()
 		val app = application {
 			webflux {
 				server(netty()) {
@@ -44,13 +43,13 @@ class MustacheModuleTests {
 				}
 			}
 		}
-		app.run(context)
+		app.run()
 		val client = WebTestClient.bindToServer().baseUrl("http://localhost:8080").build()
 		client.get().uri("/view").exchange()
 			.expectStatus().is2xxSuccessful
 			.expectBody<String>()
 			.isEqualTo("Hello world!")
-		context.close()
+		app.stop()
 	}
 
 }

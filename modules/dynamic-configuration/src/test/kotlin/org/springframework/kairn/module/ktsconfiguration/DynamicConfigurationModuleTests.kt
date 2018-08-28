@@ -18,7 +18,6 @@ package org.springframework.fu.module.dynconf
 
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.getBean
-import org.springframework.context.support.GenericApplicationContext
 import org.springframework.fu.application
 
 /**
@@ -28,13 +27,14 @@ class DynamicConfigurationModuleTests {
 
 	@Test
 	fun `Use kts properties to generate a TestConfiguration bean`() {
-		val context = GenericApplicationContext()
 		val app = application {
 			configuration("test.kts")
 		}
-		app.run(context)
-		context.getBean<TestConfiguration>()
-		context.close()
+		with(app) {
+			run()
+			context.getBean<TestConfiguration>()
+			stop()
+		}
 	}
 
 }

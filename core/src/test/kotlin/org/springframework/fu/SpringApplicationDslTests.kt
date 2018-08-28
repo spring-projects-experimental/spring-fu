@@ -26,46 +26,47 @@ import org.springframework.core.env.get
 /**
  * @author Sebastien Deleuze
  */
-class ApplicationDslTests {
+class SpringApplicationDslTests {
 
 	@Test
 	fun `Create an empty application`() {
-		val context = GenericApplicationContext()
 		val app = application { }
-		app.run(context)
-		context.getBean<ReloadableResourceBundleMessageSource>()
-		context.close()
+		with(app) {
+			run()
+			context.getBean<ReloadableResourceBundleMessageSource>()
+			stop()
+		}
 	}
 
 	@Test
 	fun `Create an application with a custom bean`() {
-		val context = GenericApplicationContext()
 		val app = application {
 			bean<Foo>()
 		}
-		app.run(context)
-		context.getBean<ReloadableResourceBundleMessageSource>()
-		context.getBean<Foo>()
-		context.close()
+		with(app) {
+			run()
+			context.getBean<ReloadableResourceBundleMessageSource>()
+			context.getBean<Foo>()
+			stop()
+		}
 	}
 
 	@Test
 	fun `Application configuration with default Environment property`() {
-		val context = GenericApplicationContext()
 		val app = application {
 			configuration {
 				TestConfiguration(name = env["NOT_EXIST"] ?: "default")
 			}
 		}
-		app.run(context)
-		val testConfig = context.getBean<TestConfiguration>()
-		assertEquals(testConfig.name, "default")
-		context.close()
+		with(app) {
+			run()
+			assertEquals(context.getBean<TestConfiguration>().name, "default")
+			stop()
+		}
 	}
 
 	@Test
 	fun `Application configuration depending on profile`() {
-		val context = GenericApplicationContext()
 		val app = application {
 			profile("foo") {
 				configuration {
@@ -78,10 +79,11 @@ class ApplicationDslTests {
 				}
 			}
 		}
-		app.run(context = context, profiles = "foo")
-		val testConfig = context.getBean<TestConfiguration>()
-		assertEquals("foo", testConfig.name)
-		context.close()
+		with(app) {
+			run(profiles = "foo")
+			assertEquals("foo", context.getBean<TestConfiguration>().name)
+			stop()
+		}
 	}
 
 	class Foo

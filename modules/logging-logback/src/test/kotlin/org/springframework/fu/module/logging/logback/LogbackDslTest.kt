@@ -40,12 +40,11 @@ internal class LogbackDslTest {
 	@Test
 	fun `Default Logback Configuration`() {
 		lateinit var logback: LogbackDsl
-		val context = GenericApplicationContext()
 		application {
 			logging {
 				logback = logback { }
 			}
-		}.run(context)
+		}.run()
 
 		assertEquals(false, logback.debug)
 		assertEquals(Level.INFO, logback.rootLogger.level)
@@ -55,14 +54,13 @@ internal class LogbackDslTest {
 	@Test
 	fun `Debug Logback Configuration`() {
 		lateinit var logback: LogbackDsl
-		val context = GenericApplicationContext()
 		application {
 			logging {
 				logback = logback {
 					debug(true)
 				}
 			}
-		}.run(context)
+		}.run()
 
 		assertEquals(true, logback.debug)
 	}
@@ -70,14 +68,13 @@ internal class LogbackDslTest {
 	@Test
 	fun `LogbackDsl rootLogger consoleAppender`() {
 		lateinit var logback: LogbackDsl
-		val context = GenericApplicationContext()
 		application {
 			logging {
 				logback = logback {
 					consoleAppender()
 				}
 			}
-		}.run(context)
+		}.run()
 
 		val console = logback.rootLogger.getAppender("STDOUT")
 		assertEquals(ConsoleAppender::class.java, console::class.java)
@@ -87,14 +84,13 @@ internal class LogbackDslTest {
 	@Test
 	fun `Logback consoleAppender custom`() {
 		lateinit var logback: LogbackDsl
-		val context = GenericApplicationContext()
 		application {
 			logging {
 				logback = logback {
 					consoleAppender(name = "MY_STDOUT")
 				}
 			}
-		}.run(context)
+		}.run()
 
 		val console = logback.rootLogger.getAppender("MY_STDOUT")
 		assertEquals(ConsoleAppender::class.java, console::class.java)
@@ -106,7 +102,6 @@ internal class LogbackDslTest {
 	@Test
 	fun `Logback rollingFileAppender`() {
 		lateinit var logback: LogbackDsl
-		val context = GenericApplicationContext()
 		val logFile = File(tmp, "log.txt")
 		application {
 			logging {
@@ -114,7 +109,7 @@ internal class LogbackDslTest {
 					rollingFileAppender(logFile)
 				}
 			}
-		}.run(context)
+		}.run()
 
 		val rolling = logback.rootLogger.getAppender("ROLLING")
 		assertEquals(RollingFileAppender::class.java, rolling::class.java)
@@ -134,7 +129,6 @@ internal class LogbackDslTest {
 	@Test
 	fun `Logback rollingFileAppender custom`() {
 		lateinit var logback: LogbackDsl
-		val context = GenericApplicationContext()
 		val logFile = File(tmp, "mylog.txt")
 		application {
 			logging {
@@ -151,7 +145,7 @@ internal class LogbackDslTest {
 					)
 				}
 			}
-		}.run(context)
+		}.run()
 
 		val rolling = logback.rootLogger.getAppender("MY_ROLLING")
 		assertEquals(RollingFileAppender::class.java, rolling::class.java)
