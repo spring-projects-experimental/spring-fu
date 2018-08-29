@@ -16,7 +16,7 @@
 
 package org.springframework.fu.module.logging
 
-import org.springframework.fu.ApplicationDsl
+import org.springframework.fu.SpringApplicationDsl
 
 
 /**
@@ -67,5 +67,5 @@ data class LoggingConfiguration(
 	var packagesLevels: MutableList<Pair<String, LogLevel>> = mutableListOf()
 )
 
-fun ApplicationDsl.logging(init: LoggingDsl.() -> Unit): LoggingDsl =
+fun SpringApplicationDsl.logging(init: LoggingDsl.() -> Unit): LoggingDsl =
 	LoggingDsl(init)
