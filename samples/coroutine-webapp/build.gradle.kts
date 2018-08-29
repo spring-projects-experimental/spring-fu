@@ -9,14 +9,17 @@ kotlin {
 }
 
 dependencies {
-	implementation(project(":modules:logging-logback"))
-	implementation(project(":modules:webflux-jackson"))
-	implementation(project(":modules:mongodb-coroutine"))
-	implementation(project(":modules:mongodb-embedded"))
-	implementation(project(":modules:test"))
-	implementation(project(":modules:webflux-netty"))
-	implementation(project(":modules:webflux-coroutine"))
-	implementation(project(":modules:webflux-mustache"))
-}
+	api("org.springframework.boot:spring-boot-starter")
 
-configurations.all { exclude(module = "slf4j-simple") }
+	api(project(":modules:logging-logback"))
+	api(project(":modules:webflux-jackson"))
+	api(project(":modules:mongodb-coroutine"))
+	api(project(":modules:mongodb-embedded"))
+	api(project(":modules:webflux-netty"))
+	api(project(":modules:webflux-coroutine"))
+	api(project(":modules:webflux-mustache"))
+
+	testImplementation("org.junit.jupiter:junit-jupiter-api")
+	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+	testImplementation("org.springframework:spring-test")
+}

@@ -5,14 +5,17 @@ plugins {
 }
 
 dependencies {
-	implementation(project(":modules:logging-logback"))
-	implementation(project(":modules:webflux-jackson"))
-	implementation(project(":modules:mongodb"))
-	implementation(project(":modules:mongodb-embedded"))
-	implementation(project(":modules:webflux-netty"))
-	implementation(project(":modules:webflux-mustache"))
+	api("org.springframework.boot:spring-boot-starter")
 
-	testImplementation(project(":modules:test"))
+	api(project(":modules:logging-logback"))
+	api(project(":modules:webflux-jackson"))
+	api(project(":modules:mongodb"))
+	api(project(":modules:mongodb-embedded"))
+	api(project(":modules:webflux-netty"))
+	api(project(":modules:webflux-mustache"))
+
+	testImplementation("org.junit.jupiter:junit-jupiter-api")
+	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+	testImplementation("org.springframework:spring-test")
+	testImplementation("io.projectreactor:reactor-test")
 }
-
-configurations.all { exclude(module = "slf4j-simple") }

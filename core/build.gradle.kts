@@ -4,11 +4,6 @@ dependencies {
 	api("org.springframework:spring-context")
 	api("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	api("org.jetbrains.kotlin:kotlin-reflect")
-	api("org.slf4j:slf4j-api")
-	implementation("org.slf4j:slf4j-simple")
-	implementation("org.slf4j:jul-to-slf4j")
-	implementation("org.apache.logging.log4j:log4j-to-slf4j")
-	testImplementation("org.springframework:spring-test")
 	testImplementation("org.junit.jupiter:junit-jupiter-api")
 	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
 }

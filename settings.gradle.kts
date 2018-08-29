@@ -12,7 +12,6 @@ include(
 		"modules:mongodb",
 		"modules:mongodb-coroutine",
 		"modules:mongodb-embedded",
-		"modules:test",
 		"modules:webflux",
 		"modules:webflux-coroutine",
 		"modules:webflux-cors",
@@ -34,7 +33,6 @@ pluginManagement {
 	repositories {
 		gradlePluginPortal()
 		maven("https://repo.spring.io/milestone")
-		maven("https://repo.spring.io/snapshot")
 	}
 	resolutionStrategy {
 		eachPlugin {

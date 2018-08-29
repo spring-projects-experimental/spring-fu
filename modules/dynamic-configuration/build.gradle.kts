@@ -7,6 +7,5 @@ dependencies {
 	runtimeOnly("org.jetbrains.kotlin:kotlin-compiler")
 
 	testImplementation("org.junit.jupiter:junit-jupiter-api")
-
 	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
 }

@@ -58,7 +58,6 @@ subprojects {
 	repositories {
 		mavenCentral()
 		maven("https://repo.spring.io/libs-milestone")
-		maven("https://repo.spring.io/libs-snapshot")
 	}
 	dependencyManagement {
 		val bootVersion: String by project

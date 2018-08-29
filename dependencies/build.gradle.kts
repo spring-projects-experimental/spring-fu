@@ -15,7 +15,6 @@ dependencyManagement {
 		dependency("org.springframework.fu.module:spring-fu-logging-logback:$version")
 		dependency("org.springframework.fu.module:spring-fu-mongodb:$version")
 		dependency("org.springframework.fu.module:spring-fu-mongodb-coroutine:$version")
-		dependency("org.springframework.fu.module:spring-fu-test:$version")
 		dependency("org.springframework.fu.module:spring-fu-webflux:$version")
 		dependency("org.springframework.fu.module:spring-fu-webflux-coroutine:$version")
 		dependency("org.springframework.fu.module:spring-fu-webflux-cors:$version")
