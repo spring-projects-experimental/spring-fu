@@ -17,11 +17,7 @@
 package org.springframework.fu.module.mustache
 
 import org.junit.jupiter.api.Test
-import org.springframework.context.support.GenericApplicationContext
 import org.springframework.fu.application
-import org.springframework.fu.module.webflux.netty.netty
-
-
 import org.springframework.fu.module.webflux.webflux
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.test.web.reactive.server.expectBody

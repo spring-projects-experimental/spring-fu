@@ -17,12 +17,13 @@
 package org.springframework.fu.module.webflux
 
 import org.springframework.beans.factory.NoSuchBeanDefinitionException
-import org.springframework.boot.WebApplicationType
-import org.springframework.context.ApplicationContext
-import org.springframework.context.ApplicationContextAware
-import org.springframework.context.SmartLifecycle
+import org.springframework.boot.web.embedded.jetty.JettyReactiveWebServerFactory
+import org.springframework.boot.web.embedded.netty.NettyReactiveWebServerFactory
+import org.springframework.boot.web.embedded.tomcat.TomcatReactiveWebServerFactory
+import org.springframework.boot.web.embedded.undertow.UndertowReactiveWebServerFactory
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.beans
+import org.springframework.context.support.registerBean
 import org.springframework.core.codec.CharSequenceEncoder
 import org.springframework.core.codec.ResourceDecoder
 import org.springframework.core.codec.StringDecoder
@@ -40,7 +41,7 @@ import reactor.core.publisher.Mono
 /**
  * @author Sebastien Deleuze
  */
-open class WebFluxModule(private val init: WebFluxModule.() -> Unit): AbstractModule(), WebApplicationTypeProvider {
+open class WebFluxModule(private val init: WebFluxModule.() -> Unit): AbstractModule() {
 
 	companion object {
 		private fun defaultCodecs(codecConfigurer: CodecConfigurer) = with(codecConfigurer.customCodecs()) {
@@ -57,9 +58,6 @@ open class WebFluxModule(private val init: WebFluxModule.() -> Unit): AbstractMo
 		super.initialize(context)
 	}
 
-	override val webApplicationType: WebApplicationType?
-		get() = initializers.filterIsInstance<WebApplicationTypeProvider>().firstOrNull()?.webApplicationType
-
 	fun server(server: WebServerModule, init: WebFluxServerModule.() -> Unit =  {}) {
 		initializers.add(WebFluxServerModule(init, server))
 	}
@@ -69,14 +67,11 @@ open class WebFluxModule(private val init: WebFluxModule.() -> Unit): AbstractMo
 	}
 
 	open class WebFluxServerModule(private val init: WebFluxServerModule.() -> Unit,
-							  private val serverModule: WebServerModule): AbstractModule(), WebApplicationTypeProvider {
+							  private val serverModule: WebServerModule): AbstractModule() {
 
 		private val builder = HandlerStrategies.empty()
 
 		private val routes = mutableListOf<() -> RouterFunction<ServerResponse>>()
-
-		override val webApplicationType: WebApplicationType
-			get() = WebApplicationType.REACTIVE
 
 		override fun initialize(context: GenericApplicationContext) {
 			if (context.containsBeanDefinition("webHandler")) {
@@ -110,7 +105,7 @@ open class WebFluxModule(private val init: WebFluxModule.() -> Unit): AbstractMo
 						RouterFunction<ServerResponse> { Mono.empty() }
 					}
 
-					RouterFunctions.toWebHandler(router, builder.build())
+					RouterFunctions.toHttpHandler(router, builder.build())
 				}
 			})
 			super.initialize(context)
@@ -183,7 +178,7 @@ open class WebFluxModule(private val init: WebFluxModule.() -> Unit): AbstractMo
 		}
 	}
 
-	class StringCodecModule() : WebFluxModule.WebFluxCodecModule, AbstractModule() {
+	class StringCodecModule : WebFluxModule.WebFluxCodecModule, AbstractModule() {
 		override fun invoke(configurer: CodecConfigurer) {
 			with(configurer.customCodecs()) {
 				encoder(CharSequenceEncoder.textPlainOnly())
@@ -192,7 +187,7 @@ open class WebFluxModule(private val init: WebFluxModule.() -> Unit): AbstractMo
 		}
 	}
 
-	class ResourceCodecModule() : WebFluxModule.WebFluxCodecModule, AbstractModule() {
+	class ResourceCodecModule : WebFluxModule.WebFluxCodecModule, AbstractModule() {
 		override fun invoke(configurer: CodecConfigurer) {
 			with(configurer.customCodecs()) {
 				decoder(ResourceDecoder())
@@ -204,24 +199,60 @@ open class WebFluxModule(private val init: WebFluxModule.() -> Unit): AbstractMo
 		val baseUrl: String
 	}
 
+	fun netty(port: Int = 8080): WebFluxModule.WebServerModule = NettyModule(port)
+
+	fun tomcat(port: Int = 8080): WebFluxModule.WebServerModule = TomcatModule(port)
+
+	fun undertow(port: Int = 8080): WebFluxModule.WebServerModule = UndertowModule(port)
+
+	fun jetty(port: Int = 8080): WebFluxModule.WebServerModule = JettyModule(port)
+
 	abstract class AbstractWebServerModule(port: Int, host: String = "0.0.0.0"): AbstractModule(), WebServerModule {
 		override val baseUrl = "http://$host:$port"
 	}
 
 	interface WebFluxCodecModule: Module, (CodecConfigurer) -> (Unit)
-}
 
-abstract class WebServer(private val port: Int) : SmartLifecycle, ApplicationContextAware {
+	class NettyModule(private val port: Int = 8080) : WebFluxModule.AbstractWebServerModule(port) {
 
-	lateinit var context: ApplicationContext
-
-	override fun isAutoStartup() = true
-
-	override fun getPhase() = Integer.MIN_VALUE
-
-	override fun setApplicationContext(context: ApplicationContext) {
-		this.context = context
+		override fun initialize(context: GenericApplicationContext) {
+			context.registerBean {
+				NettyReactiveWebServerFactory(port)
+			}
+		}
 	}
+
+	class TomcatModule(private val port: Int) : WebFluxModule.AbstractWebServerModule(port) {
+
+		override fun initialize(context: GenericApplicationContext) {
+			context.registerBean {
+				TomcatReactiveWebServerFactory(port)
+			}
+		}
+	}
+
+	class JettyModule(
+			private val port: Int) : WebFluxModule.AbstractWebServerModule(port) {
+
+		override fun initialize(context: GenericApplicationContext) {
+			context.registerBean {
+				JettyReactiveWebServerFactory(port)
+			}
+		}
+	}
+
+	/**
+	 * @author Ruslan Ibragimov
+	 */
+	class UndertowModule(private val port: Int): WebFluxModule.AbstractWebServerModule(port) {
+
+		override fun initialize(context: GenericApplicationContext) {
+			context.registerBean {
+				UndertowReactiveWebServerFactory(port)
+			}
+		}
+	}
+
 }
 
 fun SpringApplicationDsl.webflux(init: WebFluxModule.() -> Unit): WebFluxModule {

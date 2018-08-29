@@ -14,8 +14,8 @@ dependencyManagement {
 }
 
 dependencies {
-	implementation("org.springframework.fu.module:spring-fu-logging-logback")
-	implementation("org.springframework.fu.module:spring-fu-webflux-netty")
+	implementation("org.springframework.fu.module:spring-fu-webflux")
+	implementation("io.projectreactor.netty:reactor-netty")
 
 	testImplementation("org.junit.jupiter:junit-jupiter-api")
 	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")

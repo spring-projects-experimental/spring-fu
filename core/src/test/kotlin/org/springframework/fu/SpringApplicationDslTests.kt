@@ -16,9 +16,11 @@
 
 package org.springframework.fu
 
-import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.getBean
+import org.springframework.boot.WebApplicationType
+import org.springframework.boot.web.reactive.context.ReactiveWebServerApplicationContext
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import org.springframework.core.env.get
@@ -30,9 +32,10 @@ class SpringApplicationDslTests {
 
 	@Test
 	fun `Create an empty application`() {
-		val app = application { }
+		val app = application(false) { }
 		with(app) {
 			run()
+			assertFalse(context is ReactiveWebServerApplicationContext)
 			context.getBean<ReloadableResourceBundleMessageSource>()
 			stop()
 		}
@@ -40,7 +43,7 @@ class SpringApplicationDslTests {
 
 	@Test
 	fun `Create an application with a custom bean`() {
-		val app = application {
+		val app = application(false) {
 			bean<Foo>()
 		}
 		with(app) {
@@ -53,7 +56,7 @@ class SpringApplicationDslTests {
 
 	@Test
 	fun `Application configuration with default Environment property`() {
-		val app = application {
+		val app = application(false) {
 			configuration {
 				TestConfiguration(name = env["NOT_EXIST"] ?: "default")
 			}
@@ -67,7 +70,7 @@ class SpringApplicationDslTests {
 
 	@Test
 	fun `Application configuration depending on profile`() {
-		val app = application {
+		val app = application(false) {
 			profile("foo") {
 				configuration {
 					TestConfiguration(name = "foo")

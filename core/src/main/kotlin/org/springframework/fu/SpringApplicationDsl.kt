@@ -33,11 +33,9 @@ import java.util.function.Supplier
 /**
  * @author Sebastien Deleuze
  */
-open class SpringApplicationDsl(private val init: SpringApplicationDsl.() -> Unit) : AbstractModule() {
+open class SpringApplicationDsl(private val isServer: Boolean,  val init: SpringApplicationDsl.() -> Unit) : AbstractModule() {
 
 	internal class Application
-
-	val application = SpringApplication(Application::class.java)
 
 	/**
 	 * Declare a bean definition from the given bean class which can be inferred when possible.
@@ -149,7 +147,8 @@ open class SpringApplicationDsl(private val init: SpringApplicationDsl.() -> Uni
 	 */
 	fun profile(profile: String, init: SpringApplicationDsl.() -> Unit) {
 		if (env.activeProfiles.contains(profile)) {
-			initializers.add(SpringApplicationDsl(init))
+			// TODO Avoid using application here
+			initializers.add(SpringApplicationDsl(false, init))
 		}
 	}
 
@@ -159,11 +158,11 @@ open class SpringApplicationDsl(private val init: SpringApplicationDsl.() -> Uni
 	 * @param profiles [ApplicationContext] profiles separated by commas.
 	 */
 	fun run(args: Array<String> = emptyArray(), await: Boolean = false, profiles: String = "") {
-		val provider = initializers.filterIsInstance<WebApplicationTypeProvider>().firstOrNull()
-		application.webApplicationType = provider?.webApplicationType ?: WebApplicationType.NONE
 
+		val application = SpringApplication(Application::class.java)
+		application.webApplicationType = if(isServer) WebApplicationType.REACTIVE else WebApplicationType.NONE
 		application.setApplicationContextClass(
-				if (application.webApplicationType == WebApplicationType.REACTIVE)
+				if (isServer)
 					ReactiveWebServerApplicationContext::class.java
 				else
 					GenericApplicationContext::class.java
@@ -186,4 +185,4 @@ open class SpringApplicationDsl(private val init: SpringApplicationDsl.() -> Uni
 	}
 }
 
-fun application(init: SpringApplicationDsl.() -> Unit) = SpringApplicationDsl(init)
+fun application(isServer: Boolean = true, init: SpringApplicationDsl.() -> Unit) = SpringApplicationDsl(isServer, init)

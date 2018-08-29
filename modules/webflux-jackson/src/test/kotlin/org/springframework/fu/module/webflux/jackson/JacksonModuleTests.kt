@@ -19,12 +19,9 @@ package org.springframework.fu.module.webflux.jackson
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.getBean
-import org.springframework.context.support.GenericApplicationContext
 import org.springframework.http.HttpHeaders.*
 import org.springframework.http.MediaType.*
 import org.springframework.fu.application
-import org.springframework.fu.module.webflux.netty.netty
-
 import org.springframework.fu.module.webflux.webflux
 import org.springframework.http.HttpStatus
 import org.springframework.test.web.reactive.server.WebTestClient

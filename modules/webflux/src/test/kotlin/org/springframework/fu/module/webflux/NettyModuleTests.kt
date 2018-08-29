@@ -14,31 +14,12 @@
  * limitations under the License.
  */
 
-package org.springframework.fu.module.dynconf
-
-import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.getBean
-import org.springframework.fu.application
+package org.springframework.fu.module.webflux
 
 /**
  * @author Sebastien Deleuze
  */
-class DynamicConfigurationModuleTests {
-
-	@Test
-	fun `Use kts properties to generate a TestConfiguration bean`() {
-		val app = application(false) {
-			configuration("test.kts")
-		}
-		with(app) {
-			run()
-			context.getBean<TestConfiguration>()
-			stop()
-		}
-	}
+class NettyModuleTests : AbstractWebServerModuleTests() {
+	override fun getWebServerModule(port: Int): WebFluxModule.WebServerModule = WebFluxModule.NettyModule(port)
 
 }
-
-data class TestConfiguration(
-	val name: String
-)

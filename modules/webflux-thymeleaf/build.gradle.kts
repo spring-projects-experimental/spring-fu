@@ -5,7 +5,7 @@ dependencies {
 
 	testImplementation("org.junit.jupiter:junit-jupiter-api")
 	testImplementation("org.springframework:spring-test")
-	testImplementation(project(":modules:webflux-netty"))
+	testImplementation("io.projectreactor.netty:reactor-netty")
 
 	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
 }

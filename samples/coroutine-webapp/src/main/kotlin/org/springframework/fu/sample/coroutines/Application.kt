@@ -17,24 +17,15 @@
 package org.springframework.fu.sample.coroutines
 
 import kotlinx.coroutines.experimental.runBlocking
-import org.springframework.beans.factory.support.DefaultListableBeanFactory
 import org.springframework.context.event.ContextStartedEvent
 import org.springframework.fu.application
 import org.springframework.fu.module.data.mongodb.coroutine.coroutine
 import org.springframework.fu.module.data.mongodb.embedded.embedded
 import org.springframework.fu.module.data.mongodb.mongodb
 import org.springframework.fu.module.webflux.jackson.jackson
-import org.springframework.fu.module.logging.*
-import org.springframework.fu.module.logging.LogLevel.*
-import org.springframework.fu.module.logging.logback.logback
-import org.springframework.fu.module.logging.logback.debug
-import org.springframework.fu.module.logging.logback.consoleAppender
-import org.springframework.fu.module.logging.logback.rollingFileAppender
 import org.springframework.fu.module.mustache.mustache
-import org.springframework.fu.module.webflux.netty.netty
 import org.springframework.fu.module.webflux.webflux
 import org.springframework.fu.ref
-import java.io.File
 
 
 val app = application {
@@ -43,17 +34,6 @@ val app = application {
 	listener<ContextStartedEvent> {
 		runBlocking {
 			ref<UserRepository>().init()
-		}
-	}
-	logging {
-		level(INFO)
-		level("org.springframework", DEBUG)
-		level<DefaultListableBeanFactory>(WARN)
-
-		logback {
-			debug(true)
-			consoleAppender()
-			rollingFileAppender(File(System.getProperty("java.io.tmpdir"), "log.txt"))
 		}
 	}
 	webflux {

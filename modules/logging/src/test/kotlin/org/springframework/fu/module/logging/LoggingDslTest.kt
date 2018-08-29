@@ -39,7 +39,7 @@ internal class LoggingDslTest {
 	@Test
 	fun `Default LoggingDsl Configuraton`() {
 		lateinit var log: LoggingDsl
-		application {
+		application(false) {
 			log = logging {
 			}
 		}.run()
@@ -51,7 +51,7 @@ internal class LoggingDslTest {
 	@Test
 	fun `Change default ROOT Log level`() {
 		lateinit var log: LoggingDsl
-		application {
+		application(false) {
 			log = logging {
 				level(DEBUG)
 			}
@@ -64,7 +64,7 @@ internal class LoggingDslTest {
 	@Test
 	fun `Change package Log level`() {
 		lateinit var log: LoggingDsl
-		application {
+		application (false){
 			log = logging {
 				level("org.springframework", DEBUG)
 			}
@@ -80,7 +80,7 @@ internal class LoggingDslTest {
 	@Test
 	fun `Change class Log level`() {
 		lateinit var log: LoggingDsl
-		application {
+		application(false) {
 			log = logging {
 				level<DefaultListableBeanFactory>(DEBUG)
 			}
