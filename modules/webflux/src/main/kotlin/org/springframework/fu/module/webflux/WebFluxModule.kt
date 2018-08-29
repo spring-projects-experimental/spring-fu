@@ -28,6 +28,7 @@ import org.springframework.core.codec.ResourceDecoder
 import org.springframework.core.codec.StringDecoder
 import org.springframework.fu.*
 import org.springframework.http.codec.CodecConfigurer
+import org.springframework.http.codec.ResourceHttpMessageWriter
 import org.springframework.web.reactive.function.client.ExchangeStrategies
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.server.*
@@ -44,6 +45,7 @@ open class WebFluxModule(private val init: WebFluxModule.() -> Unit): AbstractMo
 	companion object {
 		private fun defaultCodecs(codecConfigurer: CodecConfigurer) = with(codecConfigurer.customCodecs()) {
 			encoder(CharSequenceEncoder.textPlainOnly())
+			writer(ResourceHttpMessageWriter())
 			decoder(ResourceDecoder())
 			decoder(StringDecoder.textPlainOnly())
 		}

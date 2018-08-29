@@ -16,6 +16,7 @@
 
 package org.springframework.fu.sample.minimal
 
+import org.springframework.core.io.ClassPathResource
 import org.springframework.fu.application
 import org.springframework.fu.module.webflux.netty.netty
 import org.springframework.fu.module.webflux.webflux
@@ -27,6 +28,7 @@ val app = application {
 				GET("/") {
 					ok().syncBody("Hello world!")
 				}
+				resources("/**", ClassPathResource("static/"))
 			}
 		}
 	}
