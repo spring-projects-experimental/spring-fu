@@ -1,17 +1,16 @@
 package com.example
 
 import org.springframework.fu.application
-import org.springframework.fu.module.webflux.webflux
+import org.springframework.fu.module.webflux.netty
+import org.springframework.fu.module.webflux.server
 
 val app = application {
-	webflux {
-		val port = if (profiles.contains("test")) 8181 else 8080
-		server(netty(port)) {
-			router {
-				GET("/") { ok().syncBody("Hello world!") }
-			}
+	val port = if (profiles.contains("test")) 8181 else 8080
+	server(netty(port)) {
+		router {
+			GET("/") { ok().syncBody("Hello world!") }
 		}
 	}
 }
 
-fun main(args: Array<String>) = app.run(await = true)
+fun main(args: Array<String>) = app.run()
