@@ -12,14 +12,12 @@ fun main(args: Array<String) = application {
 	logging {
 		level(INFO)
 		level("org.springframework", DEBUG)
-		logback {
-			consoleAppender()
-			rollingFileAppender(file = File("log.txt"))
-		}
 	}
 	profile("data") {
-		bean<UserRepository>()
-		bean<ArticleRepository>()
+		beans {
+			bean<UserRepository>()
+			bean<ArticleRepository>()
+		}
 		mongodb(uri = "mongodb://myserver.com/foo")
 		listener<ContextStartedEvent> {
 			ref<UserRepository>().init()
@@ -27,8 +25,10 @@ fun main(args: Array<String) = application {
 		}
 	}
 	profile("web") {
-		bean<HtmlHandler>()
-		bean<ApiHandler>()
+		beans {
+			bean<HtmlHandler>()
+			bean<ApiHandler>()
+		}
 		webflux {
 			val port = if (profiles.contains("test")) 8181 else 8080
 			server(netty(port)) {
@@ -73,10 +73,12 @@ Beans are simply defined as follows.
 
 ```kotlin
 application {
-	bean<UserRepository>()
-	bean<ArticleRepository>()
-	bean<HtmlHandler>()
-	bean<ApiHandler>()
+	beans {
+		bean<UserRepository>()
+		bean<ArticleRepository>()
+		bean<HtmlHandler>()
+		bean<ApiHandler>()
+	}
 }
 
 ```

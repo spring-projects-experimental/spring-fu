@@ -44,7 +44,9 @@ class SpringApplicationDslTests {
 	@Test
 	fun `Create an application with a custom bean`() {
 		val app = application(false) {
-			bean<Foo>()
+			beans {
+				bean<Foo>()
+			}
 		}
 		with(app) {
 			run()

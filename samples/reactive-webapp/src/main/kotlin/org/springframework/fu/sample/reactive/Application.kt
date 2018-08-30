@@ -27,8 +27,10 @@ import org.springframework.fu.module.webflux.webflux
 import org.springframework.fu.ref
 
 val app = application {
-	bean<UserRepository>()
-	bean<UserHandler>()
+	beans {
+		bean<UserRepository>()
+		bean<UserHandler>()
+	}
 	listener<ContextStartedEvent> {
 		ref<UserRepository>().init()
 	}

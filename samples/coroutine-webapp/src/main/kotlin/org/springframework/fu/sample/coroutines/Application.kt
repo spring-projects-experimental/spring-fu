@@ -30,8 +30,10 @@ import org.springframework.fu.ref
 
 
 val app = application {
-	bean<UserRepository>()
-	bean<UserHandler>()
+	beans {
+		bean<UserRepository>()
+		bean<UserHandler>()
+	}
 	listener<ContextStartedEvent> {
 		runBlocking {
 			ref<UserRepository>().init()

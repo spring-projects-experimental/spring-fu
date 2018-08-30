@@ -33,7 +33,9 @@ class EmbeddedMongoModuleTest {
     fun `enable mongodb embedded module`() {
         val port = SocketUtils.findAvailableTcpPort()
         val app = application(false) {
-            bean<TestRepository>()
+            beans {
+                bean<TestRepository>()
+            }
             mongodb("mongodb://localhost:$port/test") {
                 embedded()
             }
