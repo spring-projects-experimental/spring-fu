@@ -47,7 +47,7 @@ fun main(args: Array<String) = application {
 		}
 
 	}
-}.app.run(await = true, profiles = "data, web")
+}.run(profiles = "data, web")
 
 data class AppConfiguration(
 	val name: String,
