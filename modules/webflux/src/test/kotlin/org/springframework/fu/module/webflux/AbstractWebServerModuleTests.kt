@@ -20,7 +20,6 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.getBean
-import org.springframework.boot.web.server.WebServer
 import org.springframework.fu.application
 import org.springframework.http.HttpStatus.NO_CONTENT
 import org.springframework.test.web.reactive.server.WebTestClient
@@ -32,14 +31,12 @@ import reactor.test.test
  */
 abstract class AbstractWebServerModuleTests {
 
-	abstract fun getWebServerModule(port: Int = 8080): WebFluxModule.WebServerModule
+	abstract fun getWebServerModule(port: Int = 8080): WebFluxServerModule.WebServerModule
 
 	@Test
 	fun `Create an application with an empty server`() {
 		val app = application {
-			webflux {
-				server(getWebServerModule())
-			}
+			server(getWebServerModule())
 		}
 		with(app){
 			run()
@@ -51,11 +48,9 @@ abstract class AbstractWebServerModuleTests {
 	fun `Create and request an endpoint`() {
 		val webServerModule = getWebServerModule()
 		val app = application {
-			webflux {
-				server(webServerModule) {
-					router {
-						GET("/") { noContent().build() }
-					}
+			server(webServerModule) {
+				router {
+					GET("/") { noContent().build() }
 				}
 			}
 		}
@@ -69,14 +64,12 @@ abstract class AbstractWebServerModuleTests {
 	fun `Create a WebClient and request an endpoint`() {
 		val webServerModule = getWebServerModule()
 		val app = application {
-			webflux {
-				server(webServerModule) {
-					router {
-						GET("/") { noContent().build() }
-					}
+			server(webServerModule) {
+				router {
+					GET("/") { noContent().build() }
 				}
-				client(webServerModule.baseUrl)
 			}
+			client(webServerModule.baseUrl)
 		}
 		with(app) {
 			run()
@@ -92,15 +85,13 @@ abstract class AbstractWebServerModuleTests {
 	fun `Create 2 WebClient with different names and request an endpoint`() {
 		val webServerModule = getWebServerModule()
 		val app = application {
-			webflux {
-				server(webServerModule) {
-					router {
-						GET("/") { noContent().build() }
-					}
+			server(webServerModule) {
+				router {
+					GET("/") { noContent().build() }
 				}
-				client(baseUrl = webServerModule.baseUrl, name = "client1")
-				client(name = "client2")
 			}
+			client(baseUrl = webServerModule.baseUrl, name = "client1")
+			client(name = "client2")
 		}
 		with(app) {
 			app.run()
@@ -120,14 +111,12 @@ abstract class AbstractWebServerModuleTests {
 	open fun `Declare 2 router blocks`() {
 		val webServerModule = getWebServerModule()
 		val app = application {
-			webflux {
-				server(webServerModule) {
-					router {
-						GET("/foo") { noContent().build() }
-					}
-					router {
-						GET("/bar") { ok().build() }
-					}
+			server(webServerModule) {
+				router {
+					GET("/foo") { noContent().build() }
+				}
+				router {
+					GET("/bar") { ok().build() }
 				}
 			}
 		}
@@ -145,16 +134,14 @@ abstract class AbstractWebServerModuleTests {
 		val webServerModule1 = getWebServerModule()
 		val webServerModule2 = getWebServerModule(8181)
 		val app = application {
-			webflux {
-				server(webServerModule1) {
-					router {
-						GET("/foo") { noContent().build() }
-					}
+			server(webServerModule1) {
+				router {
+					GET("/foo") { noContent().build() }
 				}
-				server(webServerModule2) {
-					router {
-						GET("/bar") { ok().build() }
-					}
+			}
+			server(webServerModule2) {
+				router {
+					GET("/bar") { ok().build() }
 				}
 			}
 		}

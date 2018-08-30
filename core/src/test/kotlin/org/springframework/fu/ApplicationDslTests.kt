@@ -28,7 +28,7 @@ import org.springframework.core.env.get
 /**
  * @author Sebastien Deleuze
  */
-class SpringApplicationDslTests {
+class ApplicationDslTests {
 
 	@Test
 	fun `Create an empty application`() {

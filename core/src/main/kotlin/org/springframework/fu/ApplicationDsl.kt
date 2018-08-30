@@ -29,7 +29,7 @@ import org.springframework.context.support.registerBean
 /**
  * @author Sebastien Deleuze
  */
-open class SpringApplicationDsl(private val isServer: Boolean,  val init: SpringApplicationDsl.() -> Unit) : AbstractModule() {
+open class ApplicationDsl(private val isServer: Boolean, val init: ApplicationDsl.() -> Unit) : AbstractModule() {
 
 	internal class Application
 
@@ -72,10 +72,9 @@ open class SpringApplicationDsl(private val isServer: Boolean,  val init: Spring
 	 * Take in account functional configuration enclosed in the provided lambda only when the
 	 * specified profile is active.
 	 */
-	fun profile(profile: String, init: SpringApplicationDsl.() -> Unit) {
+	fun profile(profile: String, init: () -> Unit) {
 		if (env.activeProfiles.contains(profile)) {
-			// TODO Avoid using application here
-			initializers.add(SpringApplicationDsl(false, init))
+			init()
 		}
 	}
 
@@ -85,7 +84,6 @@ open class SpringApplicationDsl(private val isServer: Boolean,  val init: Spring
 	 * @param profiles [ApplicationContext] profiles separated by commas.
 	 */
 	fun run(args: Array<String> = emptyArray(), await: Boolean = false, profiles: String = "") {
-
 		val application = SpringApplication(Application::class.java)
 		application.webApplicationType = if(isServer) WebApplicationType.REACTIVE else WebApplicationType.NONE
 		application.setApplicationContextClass(
@@ -112,4 +110,4 @@ open class SpringApplicationDsl(private val isServer: Boolean,  val init: Spring
 	}
 }
 
-fun application(isServer: Boolean = true, init: SpringApplicationDsl.() -> Unit) = SpringApplicationDsl(isServer, init)
+fun application(isServer: Boolean = true, init: ApplicationDsl.() -> Unit) = ApplicationDsl(isServer, init)

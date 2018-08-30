@@ -18,17 +18,16 @@ package org.springframework.fu.sample.minimal
 
 import org.springframework.core.io.ClassPathResource
 import org.springframework.fu.application
-import org.springframework.fu.module.webflux.webflux
+import org.springframework.fu.module.webflux.netty
+import org.springframework.fu.module.webflux.server
 
 val app = application {
-	webflux {
-		server(netty()) {
-			router {
-				GET("/") {
-					ok().syncBody("Hello world!")
-				}
-				resources("/**", ClassPathResource("static/"))
+	server(netty()) {
+		router {
+			GET("/") {
+				ok().syncBody("Hello world!")
 			}
+			resources("/**", ClassPathResource("static/"))
 		}
 	}
 }

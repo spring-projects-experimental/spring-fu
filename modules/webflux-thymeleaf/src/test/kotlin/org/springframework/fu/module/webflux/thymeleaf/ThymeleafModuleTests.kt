@@ -18,7 +18,8 @@ package org.springframework.fu.module.webflux.thymeleaf
 
 import org.junit.jupiter.api.Test
 import org.springframework.fu.application
-import org.springframework.fu.module.webflux.webflux
+import org.springframework.fu.module.webflux.netty
+import org.springframework.fu.module.webflux.server
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.test.web.reactive.server.expectBody
 
@@ -30,16 +31,14 @@ class ThymeleafModuleTests {
 	@Test
 	fun `Create and request a Thymeleaf view`() {
 		val app = application {
-			webflux {
-				server(netty()) {
-					thymeleaf(
-							cache = true,
-							suffix = ".custom",
-							prefix = "classpath:/views/")
-					router {
-						GET("/view") { ok().render("template", mapOf("name" to "world")) }
-					}
-}
+			server(netty()) {
+				thymeleaf(
+						cache = true,
+						suffix = ".custom",
+						prefix = "classpath:/views/")
+				router {
+					GET("/view") { ok().render("template", mapOf("name" to "world")) }
+				}
 			}
 		}
 		app.run()

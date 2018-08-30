@@ -22,7 +22,9 @@ import org.springframework.beans.factory.getBean
 import org.springframework.http.HttpHeaders.*
 import org.springframework.http.MediaType.*
 import org.springframework.fu.application
-import org.springframework.fu.module.webflux.webflux
+import org.springframework.fu.module.webflux.client
+import org.springframework.fu.module.webflux.netty
+import org.springframework.fu.module.webflux.server
 import org.springframework.http.HttpStatus
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.test.web.reactive.server.expectBody
@@ -37,15 +39,13 @@ class JacksonModuleTests {
 	@Test
 	fun `Enable jackson module on server, create and request a JSON endpoint`() {
 		val app = application {
-			webflux {
-				server(netty()) {
-					codecs {
-						jackson()
-					}
-					router {
-						GET("/user") {
-							ok().header(CONTENT_TYPE, APPLICATION_JSON_UTF8_VALUE).syncBody(User("Brian"))
-						}
+			server(netty()) {
+				codecs {
+					jackson()
+				}
+				router {
+					GET("/user") {
+						ok().header(CONTENT_TYPE, APPLICATION_JSON_UTF8_VALUE).syncBody(User("Brian"))
 					}
 				}
 			}
@@ -63,21 +63,19 @@ class JacksonModuleTests {
 	@Test
 	fun `Enable jackson module on client and server, create and request a JSON endpoint`() {
 		val app = application {
-			webflux {
-				server(netty()) {
-					codecs {
-						jackson()
-					}
-					router {
-						GET("/user") {
-							ok().header(CONTENT_TYPE, APPLICATION_JSON_UTF8_VALUE).syncBody(User("Brian"))
-						}
+			server(netty()) {
+				codecs {
+					jackson()
+				}
+				router {
+					GET("/user") {
+						ok().header(CONTENT_TYPE, APPLICATION_JSON_UTF8_VALUE).syncBody(User("Brian"))
 					}
 				}
-				client {
-					codecs {
-						jackson()
-					}
+			}
+			client {
+				codecs {
+					jackson()
 				}
 			}
 		}

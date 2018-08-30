@@ -29,30 +29,28 @@ class CorsModuleTests {
 	@Test
 	fun `Enable cors module on server, create and request a JSON endpoint`() {
 		val app = application {
-			webflux {
-				server(netty()) {
-					cors {
-						"/api" {
-							allowedOrigins("first.example.com", "second.example.com")
-							allowedMethods("GET", "PUT", "POST", "DELETE")
-						}
-						"/public" {
-							allowedOrigins("**")
-							allowedMethods("GET")
-						}
-						"fullConfig" {
-							allowedOrigins("full.config.example.com")
-							allowedMethods("GET")
-							allowedHeaders("*")
-							exposedHeaders("Content-Location")
-							allowCredentials = true
-							maxAge = 3600
-							defaults = false
-						}
+			server(netty()) {
+				cors {
+					"/api" {
+						allowedOrigins("first.example.com", "second.example.com")
+						allowedMethods("GET", "PUT", "POST", "DELETE")
 					}
-					router {
-						GET("/") { noContent().build() }
+					"/public" {
+						allowedOrigins("**")
+						allowedMethods("GET")
 					}
+					"fullConfig" {
+						allowedOrigins("full.config.example.com")
+						allowedMethods("GET")
+						allowedHeaders("*")
+						exposedHeaders("Content-Location")
+						allowCredentials = true
+						maxAge = 3600
+						defaults = false
+					}
+				}
+				router {
+					GET("/") { noContent().build() }
 				}
 			}
 		}

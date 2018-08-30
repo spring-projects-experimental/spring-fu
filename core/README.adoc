@@ -29,24 +29,23 @@ fun main(args: Array<String) = application {
 			bean<HtmlHandler>()
 			bean<ApiHandler>()
 		}
-		webflux {
-			val port = if (profiles.contains("test")) 8181 else 8080
-			server(netty(port)) {
-				cors(origin = "example.com")
-				mustache()
-				codecs {
-					jackson()
-					protobuf()
-				}
-				router(routes(ref(), ref()))
-				security { // TODO }
+		val port = if (profiles.contains("test")) 8181 else 8080
+		server(netty(port)) {
+			cors(origin = "example.com")
+			mustache()
+			codecs {
+				jackson()
+				protobuf()
 			}
-			client {
-				codecs {
-					jackson()
-				}
+			router(routes(ref(), ref()))
+			security { // TODO }
+		}
+		client {
+			codecs {
+				jackson()
 			}
 		}
+
 	}
 }.app.run(await = true, profiles = "data, web")
 

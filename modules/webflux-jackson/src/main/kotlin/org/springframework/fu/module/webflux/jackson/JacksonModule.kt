@@ -4,16 +4,17 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.registerBean
 import org.springframework.fu.AbstractModule
+import org.springframework.fu.module.webflux.WebFluxCodecModule
+import org.springframework.fu.module.webflux.WebFluxCodecsModule
 import org.springframework.http.codec.*
 import org.springframework.http.codec.json.Jackson2JsonDecoder
 import org.springframework.http.codec.json.Jackson2JsonEncoder
-import org.springframework.fu.module.webflux.WebFluxModule
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder
 
 /**
  * @author Sebastien Deleuze
  */
-class JacksonModule(val json: Boolean) : WebFluxModule.WebFluxCodecModule, AbstractModule() {
+class JacksonModule(val json: Boolean) : WebFluxCodecModule, AbstractModule() {
 
 	val mapper = Jackson2ObjectMapperBuilder.json().build<ObjectMapper>()
 
@@ -31,7 +32,7 @@ class JacksonModule(val json: Boolean) : WebFluxModule.WebFluxCodecModule, Abstr
 	}
 }
 
-fun WebFluxModule.WebFluxCodecsModule.jackson(json: Boolean = true) : JacksonModule {
+fun WebFluxCodecsModule.jackson(json: Boolean = true) : JacksonModule {
 	val jacksonModule = JacksonModule(json)
 	initializers.add(jacksonModule)
 	return jacksonModule

@@ -45,7 +45,7 @@ internal class LoggingDslTests {
 	@Test
 	fun `Change package Log level`() {
 		val packageName = "org.springframework"
-		application (false){
+		application(false) {
 			logging {
 				level(packageName, LogLevel.DEBUG)
 			}

@@ -4,10 +4,8 @@ This module configures a https://github.com/thymeleaf/thymeleaf[Thymeleaf] view 
 
 ```kotlin
 application {
-	webflux {
-		server(netty()) {
-			thymeleaf()
-		}
+	server(netty()) {
+		thymeleaf()
 	}
 }
 ```

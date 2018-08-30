@@ -19,6 +19,6 @@ package org.springframework.fu.module.webflux
 /**
  * @author Ruslan Ibragimov
  */
-class UndertowModuleTests: AbstractWebServerModuleTests() {
-	override fun getWebServerModule(port: Int): WebFluxModule.WebServerModule = WebFluxModule.UndertowModule(port)
+class UndertowServerModuleTests: AbstractWebServerModuleTests() {
+	override fun getWebServerModule(port: Int): WebFluxServerModule.WebServerModule = WebFluxServerModule.UndertowServerModule(port)
 }

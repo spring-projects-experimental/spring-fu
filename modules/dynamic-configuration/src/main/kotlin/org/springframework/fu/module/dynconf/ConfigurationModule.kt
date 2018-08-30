@@ -20,7 +20,7 @@ import org.springframework.beans.factory.getBean
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.registerBean
 import org.springframework.fu.AbstractModule
-import org.springframework.fu.SpringApplicationDsl
+import org.springframework.fu.ApplicationDsl
 import java.io.InputStreamReader
 import javax.script.ScriptEngine
 import javax.script.ScriptEngineManager
@@ -44,7 +44,7 @@ class DynamicConfigurationModule(private val filename: String) : AbstractModule(
 	}
 }
 
-fun SpringApplicationDsl.configuration(filename: String = "application.kts"): DynamicConfigurationModule {
+fun ApplicationDsl.configuration(filename: String = "application.kts"): DynamicConfigurationModule {
 	val configuration = DynamicConfigurationModule(filename)
 	initializers.add(configuration)
 	return configuration

@@ -1,7 +1,5 @@
 dependencies {
 	api("org.springframework.boot:spring-boot")
-	api("org.springframework:spring-core")
-	api("org.springframework:spring-context")
 	api("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	api("org.jetbrains.kotlin:kotlin-reflect")
 	testImplementation("org.junit.jupiter:junit-jupiter-api")

@@ -20,7 +20,7 @@ import com.samskivert.mustache.Mustache
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.registerBean
 import org.springframework.fu.AbstractModule
-import org.springframework.fu.module.webflux.WebFluxModule
+import org.springframework.fu.module.webflux.WebFluxServerModule
 
 /**
  * @author Sebastien Deleuze
@@ -44,7 +44,7 @@ class MustacheModule(
 	}
 }
 
-fun WebFluxModule.WebFluxServerModule.mustache(
+fun WebFluxServerModule.mustache(
 	prefix: String = "classpath:/templates/",
 	suffix: String = ".mustache",
 	f: MustacheViewResolver.() -> Unit = {}

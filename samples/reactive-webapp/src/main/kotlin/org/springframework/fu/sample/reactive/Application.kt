@@ -16,14 +16,14 @@
 
 package org.springframework.fu.sample.reactive
 
-import org.springframework.beans.factory.support.DefaultListableBeanFactory
 import org.springframework.context.event.ContextStartedEvent
 import org.springframework.fu.application
 import org.springframework.fu.module.data.mongodb.embedded.embedded
 import org.springframework.fu.module.data.mongodb.mongodb
-import org.springframework.fu.module.webflux.jackson.jackson
 import org.springframework.fu.module.mustache.mustache
-import org.springframework.fu.module.webflux.webflux
+import org.springframework.fu.module.webflux.jackson.jackson
+import org.springframework.fu.module.webflux.netty
+import org.springframework.fu.module.webflux.server
 import org.springframework.fu.ref
 
 val app = application {
@@ -34,16 +34,15 @@ val app = application {
 	listener<ContextStartedEvent> {
 		ref<UserRepository>().init()
 	}
-	webflux {
-		val port = if (profiles.contains("test")) 8181 else 8080
-		server(netty(port)) {
-			mustache()
-			codecs {
-				string()
-				jackson()
-			}
-			include { routes(ref()) }
+
+	val port = if (profiles.contains("test")) 8181 else 8080
+	server(netty(port)) {
+		mustache()
+		codecs {
+			string()
+			jackson()
 		}
+		include { routes(ref()) }
 	}
 
 	configuration(configuration)

@@ -19,6 +19,6 @@ package org.springframework.fu.module.webflux
 /**
  * @author Alexey Nesterov
  */
-class JettyModuleTests: AbstractWebServerModuleTests() {
-	override fun getWebServerModule(port: Int): WebFluxModule.WebServerModule = WebFluxModule.JettyModule(port)
+class JettyServerModuleTests: AbstractWebServerModuleTests() {
+	override fun getWebServerModule(port: Int): WebFluxServerModule.WebServerModule = WebFluxServerModule.JettyServerModule(port)
 }

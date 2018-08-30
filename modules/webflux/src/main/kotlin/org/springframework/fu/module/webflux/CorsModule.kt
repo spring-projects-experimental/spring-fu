@@ -3,7 +3,7 @@ package org.springframework.fu.module.webflux.cors
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.registerBean
 import org.springframework.fu.AbstractModule
-import org.springframework.fu.module.webflux.WebFluxModule
+import org.springframework.fu.module.webflux.WebFluxServerModule
 import org.springframework.web.cors.reactive.CorsWebFilter
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource
 
@@ -31,7 +31,7 @@ class CorsModule(
 	}
 }
 
-fun WebFluxModule.WebFluxServerModule.cors(
+fun WebFluxServerModule.cors(
 	defaults: Boolean = true,
 	init: CorsModule.() -> Unit = {}
 ): CorsModule {

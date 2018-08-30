@@ -18,7 +18,8 @@ package org.springframework.fu.module.mustache
 
 import org.junit.jupiter.api.Test
 import org.springframework.fu.application
-import org.springframework.fu.module.webflux.webflux
+import org.springframework.fu.module.webflux.netty
+import org.springframework.fu.module.webflux.server
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.test.web.reactive.server.expectBody
 
@@ -30,12 +31,10 @@ class MustacheModuleTests {
 	@Test
 	fun `Create and request a Mustache view`() {
 		val app = application {
-			webflux {
-				server(netty()) {
-					mustache()
-					router {
-						GET("/view") { ok().render("template", mapOf("name" to "world")) }
-					}
+			server(netty()) {
+				mustache()
+				router {
+					GET("/view") { ok().render("template", mapOf("name" to "world")) }
 				}
 			}
 		}

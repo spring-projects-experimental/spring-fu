@@ -3,11 +3,12 @@ package org.springframework.fu.module.webflux.coroutine
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.registerBean
 import org.springframework.fu.AbstractModule
-import org.springframework.fu.module.webflux.WebFluxModule
+import org.springframework.fu.module.webflux.WebFluxClientModule
+import org.springframework.fu.module.webflux.WebFluxServerModule
 import org.springframework.fu.module.webflux.coroutine.web.function.client.CoroutineWebClient
 import org.springframework.fu.module.webflux.coroutine.web.function.server.CoroutineRouterFunctionDsl
 
-class CoroutineWebFluxClientModule(private val clientModule: WebFluxModule.WebFluxClientModule) : AbstractModule() {
+class CoroutineWebFluxClientModule(private val clientModule: WebFluxClientModule) : AbstractModule() {
 	override fun initialize(context: GenericApplicationContext) {
 		this.context = context
 		context.registerBean {
@@ -21,7 +22,7 @@ class CoroutineWebFluxClientModule(private val clientModule: WebFluxModule.WebFl
 	}
 }
 
-fun WebFluxModule.WebFluxClientModule.coroutine() : CoroutineWebFluxClientModule {
+fun WebFluxClientModule.coroutine() : CoroutineWebFluxClientModule {
 	val coroutinesModule = CoroutineWebFluxClientModule(this)
 	initializers.add(coroutinesModule)
 	return coroutinesModule
@@ -30,6 +31,6 @@ fun WebFluxModule.WebFluxClientModule.coroutine() : CoroutineWebFluxClientModule
 fun coRouter(routes: (CoroutineRouterFunctionDsl.() -> Unit)) =
 		CoroutineRouterFunctionDsl(routes).invoke()
 
-fun WebFluxModule.WebFluxServerModule.coRouter(routes: (CoroutineRouterFunctionDsl.() -> Unit)) {
+fun WebFluxServerModule.coRouter(routes: (CoroutineRouterFunctionDsl.() -> Unit)) {
 	this.include { CoroutineRouterFunctionDsl(routes).invoke() }
 }

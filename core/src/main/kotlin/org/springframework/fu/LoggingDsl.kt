@@ -18,7 +18,6 @@ package org.springframework.fu
 
 import org.springframework.boot.logging.LogLevel
 import org.springframework.boot.logging.LoggingSystem
-import org.springframework.fu.SpringApplicationDsl
 
 
 /**

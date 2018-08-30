@@ -10,20 +10,20 @@ A simple Spring Fu web application rendering an HTML page and exposing a JSON HT
 
 ```kotlin
 fun main(args: Array<String>) = application {
-	bean<UserRepository>()
-	bean<UserHandler>()
-	webflux {
-		val port = if (profiles.contains("test")) 8181 else 8080
-		server(netty(port)) {
-			mustache()
-			codecs {
-				jackson()
-			}
-			router {
-				val userHandler = ref<UserHandler>()
-				GET("/", userHandler::listView)
-				GET("/api/user", userHandler::listApi)
-			}
+	beans {
+		bean<UserRepository>()
+		bean<UserHandler>()
+	}
+	val port = if (profiles.contains("test")) 8181 else 8080
+	server(netty(port)) {
+		mustache()
+		codecs {
+			jackson()
+		}
+		router {
+			val userHandler = ref<UserHandler>()
+			GET("/", userHandler::listView)
+			GET("/api/user", userHandler::listApi)
 		}
 	}
 }.run(await = true)

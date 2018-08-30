@@ -7,32 +7,32 @@ When a `codecs { }` block is declared, no one is configured by default.
 
 ```kotlin
 application {
-	bean<HtmlHandler>()
-	bean<ApiHandler>()
-	webflux {
-		server(netty()) {
-			codecs {
-				string()
-				jackson()
-			}
-			router {
-				val htmlHandler = ref<HtmlHandler>()
-				val apiHandler = ref<ApiHandler>()
-				GET("/", htmlHandler::blog)
-				GET("/article/{id}", htmlHandler::article)
-				"/api".nest {
-					GET("/", apiHandler::list)
-					POST("/", apiHandler::create)
-					PUT("/{id}", apiHandler::update)
-					DELETE("/{id}", apiHandler::delete)
-				}
+	beans {
+		bean<HtmlHandler>()
+		bean<ApiHandler>()
+	}
+	server(netty()) {
+		codecs {
+			string()
+			jackson()
+		}
+		router {
+			val htmlHandler = ref<HtmlHandler>()
+			val apiHandler = ref<ApiHandler>()
+			GET("/", htmlHandler::blog)
+			GET("/article/{id}", htmlHandler::article)
+			"/api".nest {
+				GET("/", apiHandler::list)
+				POST("/", apiHandler::create)
+				PUT("/{id}", apiHandler::update)
+				DELETE("/{id}", apiHandler::delete)
 			}
 		}
-		client {
-			codecs {
-				string()
-				jackson()
-			}
+	}
+	client {
+		codecs {
+			string()
+			jackson()
 		}
 	}
 }

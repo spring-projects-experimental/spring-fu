@@ -20,7 +20,7 @@ import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.registerBean
 import org.springframework.core.Ordered
 import org.springframework.fu.AbstractModule
-import org.springframework.fu.module.webflux.WebFluxModule
+import org.springframework.fu.module.webflux.WebFluxServerModule
 import org.thymeleaf.spring5.SpringWebFluxTemplateEngine
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver
 
@@ -64,7 +64,7 @@ class ThymeleafModule(
 	}
 }
 
-fun WebFluxModule.WebFluxServerModule.thymeleaf(
+fun WebFluxServerModule.thymeleaf(
 		cache: Boolean = true,
 		suffix: String = ".html",
 		prefix: String = "classpath:/templates/"): ThymeleafModule {

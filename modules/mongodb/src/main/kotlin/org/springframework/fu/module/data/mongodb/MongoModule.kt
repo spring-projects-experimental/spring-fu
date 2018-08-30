@@ -30,7 +30,7 @@ import org.springframework.data.mongodb.core.mapping.MongoMappingContext
 import org.springframework.data.mongodb.core.mapping.MongoPersistentEntity
 import org.springframework.data.mongodb.core.mapping.MongoPersistentProperty
 import org.springframework.fu.AbstractModule
-import org.springframework.fu.SpringApplicationDsl
+import org.springframework.fu.ApplicationDsl
 
 
 /**
@@ -98,7 +98,7 @@ open class MongoModule(
 	}
 }
 
-fun SpringApplicationDsl.mongodb(
+fun ApplicationDsl.mongodb(
 	connectionString: String = "mongodb://localhost/test",
 	init: MongoModule.() -> Unit = {}
 ): MongoModule {
