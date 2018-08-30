@@ -28,43 +28,43 @@ import java.net.URI
 import java.net.URISyntaxException
 
 class EmbeddedMongoModule(
-        private val connectionString: String,
-        private val init: EmbeddedMongoModule.() -> Unit
+		private val connectionString: String,
+		private val init: EmbeddedMongoModule.() -> Unit
 ) : AbstractModule() {
 
-    private var version: Version.Main = Version.Main.PRODUCTION
+	private var version: Version.Main = Version.Main.PRODUCTION
 
-    override fun initialize(context: GenericApplicationContext) {
-        val connectionUri = try {
-            URI(connectionString)
-        } catch (e: URISyntaxException) {
-            return
-        }
-        val bindIp = connectionUri.host
-        val port = connectionUri.port.takeIf { it != -1 } ?: 27017
+	override fun initialize(context: GenericApplicationContext) {
+		val connectionUri = try {
+			URI(connectionString)
+		} catch (e: URISyntaxException) {
+			return
+		}
+		val bindIp = connectionUri.host
+		val port = connectionUri.port.takeIf { it != -1 } ?: 27017
 
-        init()
+		init()
 
-        val config = MongodConfigBuilder()
-                .version(version)
-                .net(Net(bindIp, port, Network.localhostIsIPv6()))
-                .build()
-        val runtime = MongodStarter.getDefaultInstance()
-        val executable = runtime.prepare(config)
-        executable.start()
-    }
+		val config = MongodConfigBuilder()
+				.version(version)
+				.net(Net(bindIp, port, Network.localhostIsIPv6()))
+				.build()
+		val runtime = MongodStarter.getDefaultInstance()
+		val executable = runtime.prepare(config)
+		executable.start()
+	}
 
-    fun developmentVersion() {
-        version(Version.Main.DEVELOPMENT)
-    }
+	fun developmentVersion() {
+		version(Version.Main.DEVELOPMENT)
+	}
 
-    fun version(version: Version.Main) {
-        this.version = version
-    }
+	fun version(version: Version.Main) {
+		this.version = version
+	}
 }
 
 fun MongoModule.embedded(init: EmbeddedMongoModule.() -> Unit = {}): EmbeddedMongoModule {
-    val embeddedMongoModule = EmbeddedMongoModule(connectionString, init)
-    initializers.add(embeddedMongoModule)
-    return embeddedMongoModule
+	val embeddedMongoModule = EmbeddedMongoModule(connectionString, init)
+	initializers.add(embeddedMongoModule)
+	return embeddedMongoModule
 }

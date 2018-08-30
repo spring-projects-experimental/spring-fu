@@ -16,8 +16,6 @@
 
 package org.springframework.fu
 
-import org.springframework.beans.factory.config.BeanDefinitionCustomizer
-import org.springframework.beans.factory.support.AbstractBeanDefinition
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.WebApplicationType
 import org.springframework.boot.web.reactive.context.ReactiveWebServerApplicationContext

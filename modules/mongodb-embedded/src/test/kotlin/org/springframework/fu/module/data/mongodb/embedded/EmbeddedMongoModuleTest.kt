@@ -29,37 +29,37 @@ import java.time.Duration
 
 class EmbeddedMongoModuleTest {
 
-    @Test
-    fun `enable mongodb embedded module`() {
-        val port = SocketUtils.findAvailableTcpPort()
-        val app = application(false) {
-            beans {
-                bean<TestRepository>()
-            }
-            mongodb("mongodb://localhost:$port/test") {
-                embedded()
-            }
-        }
-        with(app){
-            run()
+	@Test
+	fun `enable mongodb embedded module`() {
+		val port = SocketUtils.findAvailableTcpPort()
+		val app = application(false) {
+			beans {
+				bean<TestRepository>()
+			}
+			mongodb("mongodb://localhost:$port/test") {
+				embedded()
+			}
+		}
+		with(app){
+			run()
 
-            val repository = context.getBean<TestRepository>()
-            repository.save(TestUser("1", "foo")).block(Duration.ofSeconds(3))
-            assertEquals("foo", repository.findById("1").block(Duration.ofSeconds(3))?.name)
+			val repository = context.getBean<TestRepository>()
+			repository.save(TestUser("1", "foo")).block(Duration.ofSeconds(3))
+			assertEquals("foo", repository.findById("1").block(Duration.ofSeconds(3))?.name)
 
-            stop()
-        }
-    }
+			stop()
+		}
+	}
 }
 
 class TestRepository(
-        private val template: ReactiveMongoTemplate
+		private val template: ReactiveMongoTemplate
 ) {
-    fun findById(id: String) = template.findById<TestUser>(id)
-    fun save(user: TestUser) = template.save(user)
+	fun findById(id: String) = template.findById<TestUser>(id)
+	fun save(user: TestUser) = template.save(user)
 }
 
 data class TestUser(
-        @Id val id: String,
-        val name: String
+		@Id val id: String,
+		val name: String
 )
