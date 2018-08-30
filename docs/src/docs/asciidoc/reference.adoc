@@ -11,15 +11,9 @@ include::../../../../core/README.adoc[]
 
 include::../../../../modules/README.adoc[leveloffset=+1]
 
-include::../../../../modules/logging/README.adoc[leveloffset=+2]
-
-include::../../../../modules/logging-logback/README.adoc[leveloffset=+2]
-
 include::../../../../modules/mongodb/README.adoc[leveloffset=+2]
 
 include::../../../../modules/mongodb-coroutine/README.adoc[leveloffset=+2]
-
-include::../../../../modules/dynamic-configuration/README.adoc[leveloffset=+2]
 
 include::../../../../modules/webflux-jackson/README.adoc[leveloffset=+2]
 
@@ -30,6 +24,4 @@ include::../../../../modules/webflux-thymeleaf/README.adoc[leveloffset=+2]
 include::../../../../modules/webflux/README.adoc[leveloffset=+2]
 
 include::../../../../modules/webflux-coroutine/README.adoc[leveloffset=+2]
-
-include::../../../../modules/test/README.adoc[leveloffset=+2]
 
