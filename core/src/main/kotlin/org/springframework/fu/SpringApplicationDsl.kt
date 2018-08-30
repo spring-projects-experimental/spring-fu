@@ -117,6 +117,9 @@ open class SpringApplicationDsl(private val isServer: Boolean,  val init: Spring
 
 	inline fun <reified T : Any> configuration(noinline init: ConfigurationModule<*>.() -> T) = initializers.add(ConfigurationModule(init, T::class.java))
 
+	fun logging(init: LoggingDsl.() -> Unit): LoggingDsl = LoggingDsl(init)
+
+
 	override fun initialize(context: GenericApplicationContext) {
 		this.context = context
 		init()

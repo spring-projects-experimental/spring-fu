@@ -93,6 +93,20 @@ class HtmlHandler(
 }
 ----
 
+=== Logging
+
+Logging configuration can be done as following:
+
+```kotlin
+application {
+	logging {
+		level(INFO)
+		level("org.springframework", DEBUG)
+		level<DefaultListableBeanFactory>(WARN)
+	}
+}
+```
+
 === Configuration
 
 Configuration is usually done using `data` classes instantiation with environment and default values.

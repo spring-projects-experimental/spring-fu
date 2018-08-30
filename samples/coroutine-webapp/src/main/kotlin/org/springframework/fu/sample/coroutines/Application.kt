@@ -17,6 +17,7 @@
 package org.springframework.fu.sample.coroutines
 
 import kotlinx.coroutines.experimental.runBlocking
+import org.springframework.boot.logging.LogLevel
 import org.springframework.context.event.ContextStartedEvent
 import org.springframework.fu.application
 import org.springframework.fu.module.data.mongodb.coroutine.coroutine
