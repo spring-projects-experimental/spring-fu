@@ -29,7 +29,7 @@ import org.springframework.context.support.registerBean
 /**
  * @author Sebastien Deleuze
  */
-open class ApplicationDsl(private val isServer: Boolean, val init: ApplicationDsl.() -> Unit) : AbstractModule() {
+open class ApplicationDsl(private val startServer: Boolean, val init: ApplicationDsl.() -> Unit) : AbstractModule() {
 
 	internal class Application
 
@@ -84,9 +84,9 @@ open class ApplicationDsl(private val isServer: Boolean, val init: ApplicationDs
 	 */
 	fun run(args: Array<String> = emptyArray(), profiles: String = "") {
 		val application = SpringApplication(Application::class.java)
-		application.webApplicationType = if(isServer) WebApplicationType.REACTIVE else WebApplicationType.NONE
+		application.webApplicationType = if(startServer) WebApplicationType.REACTIVE else WebApplicationType.NONE
 		application.setApplicationContextClass(
-				if (isServer)
+				if (startServer)
 					ReactiveWebServerApplicationContext::class.java
 				else
 					GenericApplicationContext::class.java
