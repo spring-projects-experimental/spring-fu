@@ -5,14 +5,11 @@ Spring Fu functional configuration is leveraging Kotlin DSL that allows you to c
 Here is an example of a typical Spring Fu application functional configuration.
 ```kotlin
 fun main(args: Array<String) = application {
-	configuration {
-		AppConfiguration(name = env["SYSTEM_ENV"] ?: "default")
-	}
-	actuators(beans = false, mapping = false)
 	logging {
 		level(INFO)
 		level("org.springframework", DEBUG)
 	}
+	configuration<SampleConfiguration>("sample")
 	profile("data") {
 		beans {
 			bean<UserRepository>()
@@ -48,11 +45,6 @@ fun main(args: Array<String) = application {
 
 	}
 }.run(profiles = "data, web")
-
-data class AppConfiguration(
-	val name: String,
-	val remoteUrl: String  = "http://localhost:8080"
-)
 
 fun routes(htmlHandler: HtmlHandler, apiHandler: ApiHandler) = router {
 	GET("/", htmlHandler::blog)
@@ -110,19 +102,25 @@ application {
 
 === Configuration
 
-Configuration is usually done using `data` classes instantiation with environment and default values.
+Configuration properties mechanism is the same than regular https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html#boot-features-external-config-typesafe-configuration-properties[Spring Boot configuration properties mechanism], without the need to use `@ConfigurationProperties` annotation:
 
 ```kotlin
 application {
-	configuration {
-		TestConfiguration(name = env["SYSTEM_ENV"] ?: "default")
-	}
+	configuration<SampleConfiguration>(prefix = "sample")
 }
 
-data class TestConfiguration(
-		val name: String
-)
+// Switch to data classes when https://github.com/spring-projects/spring-boot/issues/8762 will be fixed
+class SampleConfiguration {
+	lateinit var message: String
+}
 ```
+
+Configure your application with following `application.properties` file:
+```
+sample.message=hello
+```
+
+And that's it, you can now inject `SampleConfiguration` where you need.
 
 === Listeners
 

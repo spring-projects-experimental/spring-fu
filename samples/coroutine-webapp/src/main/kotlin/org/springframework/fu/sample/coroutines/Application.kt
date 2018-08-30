@@ -39,6 +39,7 @@ val app = application {
 			ref<UserRepository>().init()
 		}
 	}
+	configuration<SampleConfiguration>("sample")
 	val port = if (profiles.contains("test")) 8181 else 8080
 	server(netty(port)) {
 		mustache()
@@ -48,7 +49,6 @@ val app = application {
 		}
 		include { routes(ref()) }
 	}
-	configuration(configuration)
 	mongodb {
 		coroutine()
 		embedded()

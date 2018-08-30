@@ -18,6 +18,7 @@ package org.springframework.fu
 
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.WebApplicationType
+import org.springframework.boot.context.properties.bind.Bindable
 import org.springframework.boot.web.reactive.context.ReactiveWebServerApplicationContext
 import org.springframework.context.ApplicationEvent
 import org.springframework.context.ApplicationListener
@@ -25,6 +26,7 @@ import org.springframework.context.support.BeanDefinitionDsl
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import org.springframework.context.support.registerBean
+import org.springframework.fu.properties.ConfigurationPropertiesBinder
 
 /**
  * @author Sebastien Deleuze
@@ -33,19 +35,9 @@ open class ApplicationDsl(private val startServer: Boolean, val init: Applicatio
 
 	internal class Application
 
-	fun beans(init: BeanDefinitionDsl.() -> Unit) {
-		initializers.add(BeanDefinitionDsl(init))
-	}
-
-	fun <T : Any> configuration(module: ConfigurationModule<T>) = initializers.add(module)
-
-	inline fun <reified T : Any> configuration(noinline init: ConfigurationModule<*>.() -> T) = initializers.add(ConfigurationModule(init, T::class.java))
-
-	fun logging(init: LoggingDsl.() -> Unit): LoggingDsl = LoggingDsl(init)
-
-
 	override fun initialize(context: GenericApplicationContext) {
 		this.context = context
+
 		init()
 		context.registerBean("messageSource") {
 			ReloadableResourceBundleMessageSource().apply {
@@ -56,6 +48,17 @@ open class ApplicationDsl(private val startServer: Boolean, val init: Applicatio
 		super.initialize(context)
 	}
 
+	fun beans(init: BeanDefinitionDsl.() -> Unit) {
+		initializers.add(BeanDefinitionDsl(init))
+	}
+
+	fun logging(init: LoggingDsl.() -> Unit): LoggingDsl = LoggingDsl(init)
+
+	inline fun <reified T : Any> configuration(prefix: String = "") {
+		context.registerBean("${T::class.java.simpleName.toLowerCase()}ConfigurationProperties") {
+			ConfigurationPropertiesBinder(context).bind(prefix, Bindable.of(T::class.java)).get()
+		}
+	}
 
 	inline fun <reified E : ApplicationEvent>listener(crossinline listener: (E) -> Unit) {
 		context.registerBean {

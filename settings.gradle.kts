@@ -6,7 +6,6 @@ include(
 		"dependencies",
 		"docs",
 		"modules",
-		"modules:dynamic-configuration",
 		"modules:mongodb",
 		"modules:mongodb-coroutine",
 		"modules:mongodb-embedded",

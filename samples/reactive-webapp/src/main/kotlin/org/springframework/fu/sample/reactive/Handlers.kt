@@ -23,6 +23,6 @@ class UserHandler(
 
 	fun conf(request: ServerRequest) = ServerResponse
 			.ok()
-			.syncBody(configuration.property)
+			.syncBody(configuration.message)
 
 }

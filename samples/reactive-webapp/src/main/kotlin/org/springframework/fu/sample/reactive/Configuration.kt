@@ -1,12 +1,6 @@
 package org.springframework.fu.sample.reactive
 
-import org.springframework.core.env.get
-import org.springframework.fu.configuration
-
-data class SampleConfiguration(val property: String)
-
-val configuration = configuration {
-	SampleConfiguration(
-		property = env["ENV_VARIABLE"] ?: "debugConf"
-	)
+// Switch to data classes when https://github.com/spring-projects/spring-boot/issues/8762 will be fixed
+class SampleConfiguration {
+	lateinit var message: String
 }

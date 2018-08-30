@@ -57,41 +57,25 @@ class ApplicationDslTests {
 	}
 
 	@Test
-	fun `Application configuration with default Environment property`() {
+	fun `Application configuration`() {
 		val app = application(false) {
-			configuration {
-				TestConfiguration(name = env["NOT_EXIST"] ?: "default")
-			}
+			configuration<City>("city")
 		}
 		with(app) {
 			run()
-			assertEquals(context.getBean<TestConfiguration>().name, "default")
+			assertEquals(context.getBean<City>().name, "San Francisco")
 			stop()
 		}
 	}
 
-	@Test
-	fun `Application configuration depending on profile`() {
-		val app = application(false) {
-			profile("foo") {
-				configuration {
-					TestConfiguration(name = "foo")
-				}
-			}
-			profile("bar") {
-				configuration {
-					TestConfiguration(name = "bar")
-				}
-			}
-		}
-		with(app) {
-			run(profiles = "foo")
-			assertEquals("foo", context.getBean<TestConfiguration>().name)
-			stop()
-		}
-	}
 
 	class Foo
+
+	// Switch to data classes when https://github.com/spring-projects/spring-boot/issues/8762 will be fixed
+	class City {
+		lateinit var name: String
+		lateinit var country: String
+	}
 
 	data class TestConfiguration(
 		val name: String

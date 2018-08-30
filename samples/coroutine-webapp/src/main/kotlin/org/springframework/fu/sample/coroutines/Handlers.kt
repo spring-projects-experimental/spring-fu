@@ -19,7 +19,7 @@ class UserHandler(
 	}
 
 	suspend fun conf() = coroutineHandler {
-		ok().syncBody(configuration.property)
+		ok().syncBody(configuration.message)
 	}
 
 }
