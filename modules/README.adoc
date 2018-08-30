@@ -18,5 +18,5 @@ fun main(args: Array<String>) = application {
 		feature1(param = 123)
 		feature2(param = "Hello world")
 	}
-}.run(await = true)
+}.run()
 ```

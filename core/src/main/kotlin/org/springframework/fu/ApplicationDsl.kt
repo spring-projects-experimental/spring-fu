@@ -80,10 +80,9 @@ open class ApplicationDsl(private val isServer: Boolean, val init: ApplicationDs
 
 	/**
 	 * @param args the application arguments (usually passed from a Java main method)
-	 * @param await set to `true` to block, useful when used in a `main()` function
 	 * @param profiles [ApplicationContext] profiles separated by commas.
 	 */
-	fun run(args: Array<String> = emptyArray(), await: Boolean = false, profiles: String = "") {
+	fun run(args: Array<String> = emptyArray(), profiles: String = "") {
 		val application = SpringApplication(Application::class.java)
 		application.webApplicationType = if(isServer) WebApplicationType.REACTIVE else WebApplicationType.NONE
 		application.setApplicationContextClass(
@@ -97,12 +96,6 @@ open class ApplicationDsl(private val isServer: Boolean, val init: ApplicationDs
 		}
 		application.addInitializers(this)
 		application.run(*args)
-		if (await) {
-			while (true)
-			{
-				Thread.sleep(100)
-			}
-		}
 	}
 
 	fun stop() {
