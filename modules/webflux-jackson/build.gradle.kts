@@ -1,14 +1,11 @@
 dependencies {
 	api(project(":modules:webflux"))
-	api("com.fasterxml.jackson.core:jackson-databind")
+	api("org.springframework.boot:spring-boot-starter-json")
 	api("com.fasterxml.jackson.module:jackson-module-kotlin")
-
-	implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
 
 	testImplementation("org.junit.jupiter:junit-jupiter-api")
 	testImplementation("org.springframework:spring-test")
 	testImplementation("io.projectreactor:reactor-test")
-	testImplementation("io.projectreactor.netty:reactor-netty")
 
 	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
 }

@@ -1,11 +1,10 @@
 dependencies {
 	api(project(":modules:webflux"))
 	api("org.thymeleaf:thymeleaf")
-	api("org.thymeleaf:thymeleaf-spring5")
+	api("org.springframework.boot:spring-boot-starter-thymeleaf")
 
 	testImplementation("org.junit.jupiter:junit-jupiter-api")
 	testImplementation("org.springframework:spring-test")
-	testImplementation("io.projectreactor.netty:reactor-netty")
 
 	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
 }

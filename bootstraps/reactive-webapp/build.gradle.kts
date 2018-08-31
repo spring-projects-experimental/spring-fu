@@ -14,8 +14,7 @@ dependencyManagement {
 }
 
 dependencies {
-	implementation("org.springframework.fu.module:spring-fu-webflux")
-	implementation("io.projectreactor.netty:reactor-netty")
+	implementation("org.springframework.fu:spring-fu-webflux")
 
 	testImplementation("org.junit.jupiter:junit-jupiter-api")
 	testImplementation("org.springframework:spring-test")

@@ -5,7 +5,6 @@ plugins {
 }
 
 dependencies {
-	api("org.springframework.boot:spring-boot-starter")
 	api(project(":modules:webflux-jackson"))
 	api(project(":modules:mongodb"))
 	api(project(":modules:mongodb-embedded"))

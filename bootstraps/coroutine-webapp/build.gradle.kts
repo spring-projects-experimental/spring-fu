@@ -15,9 +15,8 @@ dependencyManagement {
 }
 
 dependencies {
-	implementation("org.springframework.fu.module:spring-fu-webflux")
-	implementation("org.springframework.fu.module:spring-fu-webflux-coroutine")
-	implementation("io.projectreactor.netty:reactor-netty")
+	implementation("org.springframework.fu:spring-fu-webflux")
+	implementation("org.springframework.fu:spring-fu-webflux-coroutine")
 
 	testImplementation("org.junit.jupiter:junit-jupiter-api")
 	testImplementation("org.springframework:spring-test")
