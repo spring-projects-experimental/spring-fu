@@ -45,7 +45,7 @@ internal class PropertySourcesDeducer(private val applicationContext: Applicatio
 	private fun extractEnvironmentPropertySources(): MutablePropertySources? {
 		val environment = this.applicationContext.environment
 		return if (environment is ConfigurableEnvironment) {
-			(environment as ConfigurableEnvironment).propertySources
+			environment.propertySources
 		} else null
 	}
 
