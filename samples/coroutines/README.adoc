@@ -1,0 +1,4 @@
+= Coroutines webapp
+
+This is a Spring Fu example of a coroutines webapp.
+

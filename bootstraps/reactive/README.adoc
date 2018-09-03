@@ -1,0 +1,30 @@
+= Reactive webapp bootstrap
+
+This is a Spring Fu bootstrap project for a reactive webapp which provides a `http://localhost:8080/` endpoint that displays "Hello world!".
+
+After extracting the `.zip`, rename the default `reactive-webapp` directory name to a customized one.
+
+=== IDE
+
+ * Import it into our IDE
+ * Change the default `com.example` package name to a customized one
+ * Run `main()` top level function
+
+=== Command line
+
+==== Build
+
+```
+$ ./gradlew build
+```
+
+==== Run
+```
+$ ./gradlew bootRun
+```
+
+Or
+
+```
+$ java -jar build/libs/reactive-webapp-0.0.1.BUILD-SNAPSHOT.jar
+```

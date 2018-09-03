@@ -1,9 +1,0 @@
-= Spring Data MongoDB module
-
-This module configures a `ReactiveMongoTemplate` bean.
-
-```kotlin
-application {
-	mongodb("mongodb://myserver.com/foo")
-}
-```

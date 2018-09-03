@@ -2,21 +2,18 @@ rootProject.name = "spring-fu-build"
 
 include(
 		"bootstraps",
-		"core",
-		"dependencies",
+		"coroutines",
+		"coroutines:mongodb",
+		"coroutines:webflux",
+		"kofu",
 		"docs",
-		"modules",
-		"modules:mongodb",
-		"modules:mongodb-coroutine",
-		"modules:mongodb-embedded",
-		"modules:webflux",
-		"modules:webflux-coroutine",
-		"modules:webflux-jackson",
-		"modules:webflux-mustache",
-		"modules:webflux-thymeleaf",
-		"samples:coroutine-webapp",
-		"samples:graal-webapp",
-		"samples:reactive-webapp"
+		"starters",
+		"starters:mongodb-coroutines",
+		"starters:webflux-coroutines",
+		"samples",
+		"samples:coroutines",
+		"samples:graal",
+		"samples:reactive"
 )
 
 // Required since Boot 2.1 Gradle plugin is not available from Gradle portal

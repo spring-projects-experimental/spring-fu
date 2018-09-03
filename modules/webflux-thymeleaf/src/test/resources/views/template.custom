@@ -1,1 +1,0 @@
-<html xmlns:th="http://www.thymeleaf.org" th:text="'Hello ' + ${name} +'!'"></html>

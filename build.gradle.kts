@@ -71,7 +71,6 @@ subprojects {
 		}
 	}
 	configurations.all {
-		exclude(module = "spring-boot-autoconfigure")
 		exclude(module = "javax.annotation-api")
 	}
 }
