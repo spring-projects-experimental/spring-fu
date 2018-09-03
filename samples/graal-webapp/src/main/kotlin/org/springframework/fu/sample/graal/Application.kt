@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.fu.sample.minimal
+package org.springframework.fu.sample.graal
 
 import org.springframework.core.io.ClassPathResource
 import org.springframework.fu.application

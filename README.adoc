@@ -67,7 +67,7 @@ You can have a look to the sample applications:
 
 * https://github.com/spring-projects/spring-fu/tree/master/samples/reactive-webapp[Reactive webapp]
 * https://github.com/spring-projects/spring-fu/tree/master/samples/coroutine-webapp[Coroutine webapp]
-* https://github.com/spring-projects/spring-fu/tree/master/samples/minimal-webapp[Minimal webapp]
+* https://github.com/spring-projects/spring-fu/tree/master/samples/graal-webapp[Graal native image webapp]
 
 === Credits
 

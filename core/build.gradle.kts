@@ -1,10 +1,5 @@
 dependencies {
-	api("org.springframework.boot:spring-boot-starter") {
-		exclude("spring-boot-autoconfigure")
-		exclude("javax.annotation-api")
-		exclude("snakeyaml")
-
-	}
+	api("org.springframework.boot:spring-boot-starter")
 	api("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	api("org.jetbrains.kotlin:kotlin-reflect")
 

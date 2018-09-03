@@ -9,7 +9,6 @@ kotlin {
 }
 
 dependencies {
-	api("org.springframework.boot:spring-boot-starter")
 	api(project(":modules:webflux-jackson"))
 	api(project(":modules:mongodb-coroutine"))
 	api(project(":modules:mongodb-embedded"))

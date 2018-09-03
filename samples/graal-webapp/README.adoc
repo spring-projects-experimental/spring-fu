@@ -1,0 +1,4 @@
+= Graal webapp
+
+This is a Spring Fu example of a minimal webapp compiled as a https://github.com/oracle/graal/tree/master/substratevm[Graal native image]. You can build it by running `build.sh` with Graal 1.0 RC5 or above.
+

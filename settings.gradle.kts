@@ -15,7 +15,7 @@ include(
 		"modules:webflux-mustache",
 		"modules:webflux-thymeleaf",
 		"samples:coroutine-webapp",
-		"samples:minimal-webapp",
+		"samples:graal-webapp",
 		"samples:reactive-webapp"
 )
 

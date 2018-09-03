@@ -20,6 +20,7 @@ import org.springframework.boot.SpringApplication
 import org.springframework.boot.WebApplicationType
 import org.springframework.boot.context.properties.bind.Bindable
 import org.springframework.boot.web.reactive.context.ReactiveWebServerApplicationContext
+import org.springframework.context.ApplicationContext
 import org.springframework.context.ApplicationEvent
 import org.springframework.context.ApplicationListener
 import org.springframework.context.support.BeanDefinitionDsl
@@ -27,6 +28,9 @@ import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import org.springframework.context.support.registerBean
 import org.springframework.fu.properties.ConfigurationPropertiesBinder
+import org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor
+
+
 
 /**
  * @author Sebastien Deleuze
@@ -37,14 +41,15 @@ open class ApplicationDsl(private val startServer: Boolean, val init: Applicatio
 
 	override fun initialize(context: GenericApplicationContext) {
 		this.context = context
+		context.registerBean(AutowiredAnnotationBeanPostProcessor::class.java)
 
-		init()
 		context.registerBean("messageSource") {
 			ReloadableResourceBundleMessageSource().apply {
 				setBasename("messages")
 				setDefaultEncoding("UTF-8")
 			}
 		}
+		init()
 		super.initialize(context)
 	}
 
@@ -86,7 +91,11 @@ open class ApplicationDsl(private val startServer: Boolean, val init: Applicatio
 	 * @param profiles [ApplicationContext] profiles separated by commas.
 	 */
 	fun run(args: Array<String> = emptyArray(), profiles: String = "") {
-		val application = SpringApplication(Application::class.java)
+		val application = object: SpringApplication(Application::class.java) {
+			override fun load(context: ApplicationContext?, sources: Array<out Any>?) {
+				// We don't want the annotation bean definition reader
+			}
+		}
 		application.webApplicationType = if(startServer) WebApplicationType.REACTIVE else WebApplicationType.NONE
 		application.setApplicationContextClass(
 				if (startServer)
@@ -98,6 +107,7 @@ open class ApplicationDsl(private val startServer: Boolean, val init: Applicatio
 			application.setAdditionalProfiles(*profiles.split(",").map { it.trim() }.toTypedArray())
 		}
 		application.addInitializers(this)
+		application.setRegisterShutdownHook(false)
 		application.run(*args)
 	}
 

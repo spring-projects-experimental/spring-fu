@@ -1,4 +1,4 @@
-package org.springframework.fu.sample.minimal
+package org.springframework.fu.sample.graal
 
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll

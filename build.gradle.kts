@@ -70,4 +70,8 @@ subprojects {
 			dependency("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:$coroutinesVersion")
 		}
 	}
+	configurations.all {
+		exclude(module = "spring-boot-autoconfigure")
+		exclude(module = "javax.annotation-api")
+	}
 }
