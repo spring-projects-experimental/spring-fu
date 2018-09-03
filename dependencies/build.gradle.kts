@@ -11,14 +11,14 @@ dependencyManagement {
 	}
 	dependencies {
 		dependency("org.springframework.fu:spring-fu:$version")
-		dependency("org.springframework.fu.module:spring-fu-dynamic-configuration:$version")
-		dependency("org.springframework.fu.module:spring-fu-mongodb:$version")
-		dependency("org.springframework.fu.module:spring-fu-mongodb-coroutine:$version")
-		dependency("org.springframework.fu.module:spring-fu-webflux:$version")
-		dependency("org.springframework.fu.module:spring-fu-webflux-coroutine:$version")
-		dependency("org.springframework.fu.module:spring-fu-webflux-jackson:$version")
-		dependency("org.springframework.fu.module:spring-fu-webflux-mustache:$version")
-		dependency("org.springframework.fu.module:spring-fu-webflux-thymeleaf:$version")
+		dependency("org.springframework.fu:spring-fu-dynamic-configuration:$version")
+		dependency("org.springframework.fu:spring-fu-mongodb:$version")
+		dependency("org.springframework.fu:spring-fu-mongodb-coroutine:$version")
+		dependency("org.springframework.fu:spring-fu-webflux:$version")
+		dependency("org.springframework.fu:spring-fu-webflux-coroutine:$version")
+		dependency("org.springframework.fu:spring-fu-webflux-jackson:$version")
+		dependency("org.springframework.fu:spring-fu-webflux-mustache:$version")
+		dependency("org.springframework.fu:spring-fu-webflux-thymeleaf:$version")
 		dependency("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
 		dependency("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:$coroutinesVersion")
 	}
