@@ -1,8 +1,8 @@
 package org.springframework.fu.sample.coroutines
 
-import org.springframework.fu.coroutines.webflux.web.function.server.CoroutinesServerRequest
-import org.springframework.fu.coroutines.webflux.web.function.server.body
-import org.springframework.fu.coroutines.webflux.web.function.server.coroutineHandler
+import org.springframework.fu.web.function.server.CoroutinesServerRequest
+import org.springframework.fu.web.function.server.body
+import org.springframework.fu.web.function.server.coroutineHandler
 import org.springframework.http.MediaType
 
 @Suppress("UNUSED_PARAMETER")

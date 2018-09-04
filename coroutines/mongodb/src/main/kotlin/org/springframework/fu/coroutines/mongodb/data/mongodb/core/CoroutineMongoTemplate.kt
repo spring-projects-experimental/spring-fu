@@ -36,18 +36,18 @@ import org.springframework.data.mongodb.core.convert.MongoConverter
 import org.springframework.data.mongodb.core.query.NearQuery
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.data.mongodb.core.query.Update
-import org.springframework.fu.coroutines.mongodb.CoroutineMongoCollection
+import org.springframework.fu.coroutines.mongodb.CoroutinesMongoCollection
 import org.springframework.fu.coroutines.mongodb.asCoroutineMongoCollection
-import org.springframework.fu.coroutines.mongodb.data.mongodb.core.index.CoroutineIndexOperations
+import org.springframework.fu.coroutines.mongodb.data.mongodb.core.index.CoroutinesIndexOperations
 
 open class CoroutineMongoTemplate(
 	override val reactiveMongoOperations: ReactiveMongoOperations
-) : CoroutineMongoOperations {
-	override fun indexOps(collectionName: String): CoroutineIndexOperations =
-			DefaultCoroutineIndexOperations(reactiveMongoOperations.indexOps(collectionName))
+) : CoroutinesMongoOperations {
+	override fun indexOps(collectionName: String): CoroutinesIndexOperations =
+			DefaultCoroutinesIndexOperations(reactiveMongoOperations.indexOps(collectionName))
 
-	override fun indexOps(entityClass: Class<*>): CoroutineIndexOperations =
-			DefaultCoroutineIndexOperations(reactiveMongoOperations.indexOps(entityClass))
+	override fun indexOps(entityClass: Class<*>): CoroutinesIndexOperations =
+			DefaultCoroutinesIndexOperations(reactiveMongoOperations.indexOps(entityClass))
 
 	suspend override fun executeCommand(jsonCommand: String): Document? =
 		reactiveMongoOperations.executeCommand(jsonCommand).awaitFirstOrDefault(null)
@@ -61,31 +61,31 @@ open class CoroutineMongoTemplate(
 	suspend override fun <T> execute(action: CoroutineDatabaseCallback<T>): List<T> =
 		reactiveMongoOperations.execute(action.reactiveDatabaseCallback).collectList().awaitSingle()
 
-	suspend override fun <T> execute(entityClass: Class<*>, action: CoroutineCollectionCallback<T>): List<T> =
+	suspend override fun <T> execute(entityClass: Class<*>, action: CoroutinesCollectionCallback<T>): List<T> =
 		reactiveMongoOperations.execute(entityClass, action.reactiveCollectionCallback).collectList().awaitSingle()
 
-	suspend override fun <T> execute(collectionName: String, action: CoroutineCollectionCallback<T>): List<T> =
+	suspend override fun <T> execute(collectionName: String, action: CoroutinesCollectionCallback<T>): List<T> =
 		reactiveMongoOperations.execute(collectionName, action.reactiveCollectionCallback).collectList().awaitSingle()
 
-	suspend override fun <T> createCollection(entityClass: Class<T>): CoroutineMongoCollection<Document> =
+	suspend override fun <T> createCollection(entityClass: Class<T>): CoroutinesMongoCollection<Document> =
 		reactiveMongoOperations.createCollection(entityClass).awaitFirstOrDefault(null).asCoroutineMongoCollection()
 
 	suspend override fun <T> createCollection(
 		entityClass: Class<T>,
 		collectionOptions: CollectionOptions
-	): CoroutineMongoCollection<Document> =
+	): CoroutinesMongoCollection<Document> =
 		reactiveMongoOperations.createCollection(
 			entityClass,
 			collectionOptions
 		).awaitFirstOrDefault(null).asCoroutineMongoCollection()
 
-	suspend override fun createCollection(collectionName: String): CoroutineMongoCollection<Document> =
+	suspend override fun createCollection(collectionName: String): CoroutinesMongoCollection<Document> =
 		reactiveMongoOperations.createCollection(collectionName).awaitFirstOrDefault(null).asCoroutineMongoCollection()
 
 	suspend override fun createCollection(
 		collectionName: String,
 		collectionOptions: CollectionOptions
-	): CoroutineMongoCollection<Document> =
+	): CoroutinesMongoCollection<Document> =
 		reactiveMongoOperations.createCollection(
 			collectionName,
 			collectionOptions
@@ -94,7 +94,7 @@ open class CoroutineMongoTemplate(
 	suspend override fun getCollectionNames(): List<String> =
 		reactiveMongoOperations.collectionNames.collectList().awaitSingle()
 
-	override fun getCollection(collectionName: String): CoroutineMongoCollection<Document> =
+	override fun getCollection(collectionName: String): CoroutinesMongoCollection<Document> =
 		reactiveMongoOperations.getCollection(collectionName).asCoroutineMongoCollection()
 
 	suspend override fun <T> collectionExists(entityClass: Class<T>): Boolean =
