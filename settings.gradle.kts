@@ -2,7 +2,6 @@ rootProject.name = "spring-fu-build"
 
 include(
 		"bootstraps",
-		"coroutines",
 		"coroutines:mongodb",
 		"coroutines:webflux",
 		"kofu",

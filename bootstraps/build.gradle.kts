@@ -18,12 +18,12 @@ publishing {
 	publications {
 		create("reactive", MavenPublication::class.java) {
 			groupId = "org.springframework.fu"
-			artifactId = "reactive-bootstrap"
+			artifactId = "spring-fu-bootstrap-reactive"
 			artifact(reactiveWebapp)
 		}
 		create("coroutines", MavenPublication::class.java) {
 			groupId = "org.springframework.fu"
-			artifactId = "coroutines-bootstrap"
+			artifactId = "spring-fu-bootstrap-coroutines"
 			artifact(coroutineWebapp)
 		}
 	}

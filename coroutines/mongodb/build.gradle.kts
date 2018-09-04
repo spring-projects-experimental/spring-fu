@@ -11,3 +11,17 @@ dependencies {
 kotlin {
 	experimental.coroutines = Coroutines.ENABLE
 }
+
+publishing {
+	publications {
+		create(project.name, MavenPublication::class.java) {
+			from(components["java"])
+			artifactId = "spring-data-mongodb-coroutines"
+			val sourcesJar by tasks.creating(Jar::class) {
+				classifier = "sources"
+				from(sourceSets["main"].allSource)
+			}
+			artifact(sourcesJar)
+		}
+	}
+}
