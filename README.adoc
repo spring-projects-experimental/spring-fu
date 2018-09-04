@@ -1,18 +1,20 @@
 image::https://ci.spring.io/api/v1/teams/spring-fu/pipelines/spring-fu/badge["Build Status", link="https://ci.spring.io/teams/spring-fu/pipelines/spring-fu"]
 
-Spring Fu is an experimental project designed to bring Kotlin Spring support to the next level.
+Spring Fu is an experimental project designed to bring Spring support for Kotlin to the next level.
 
 It introduces Kofu (for **Ko**tlin and **fu**nctional) configuration which allows to configure your
-application with Kotlin DSL and lambdas instead of annotations, Coroutines native support and
-GraalVM native image support to compile your application to a native executable.
+application with Kotlin DSL and lambdas instead of annotations,
+https://jira.spring.io/browse/SPR-15413[Coroutines support] and
+https://jira.spring.io/browse/SPR-16991[GraalVM native image support] to compile your application
+to a native executable.
 
 It is not intended to be used in production, but rather get feedback and contributions from the
-community in order to reach a point where it's features can be integrated as part of existing
+community in order to reach a point where its features can be integrated as part of existing
 Spring projects like Framework, Boot and Data.
 
 == Kofu configuration
 
-Kofu (for **Ko**tlin and **fu**nctional) is an alternative way of configuring your Spring Boot application,
+Kofu (for **Ko**tlin and **fu**nctional) is an alternative way of configuring your Spring application,
 different from regular auto-configuration. It is based on Spring Boot (with no auto-configuration enabled)
 and has following characteristics:
 
@@ -92,7 +94,7 @@ See this https://github.com/spring-projects/spring-fu/blob/master/kofuconfig-jav
 
 === Getting started
 
-=== Via start.spring.io
+==== Via start.spring.io
 
  * Create a Spring 2.1.0.BUILD-SNAPSHOT project on https://start.spring.io/[start.spring.io],
  * Add the `org.springframework.fu:spring-boot-kofu:0.0.1.BUILD-SNAPSHOT` dependency
