@@ -16,10 +16,10 @@
 
 package org.springframework.fu.coroutines.webflux.web.function.server
 
-import kotlinx.coroutines.experimental.Unconfined
-import kotlinx.coroutines.experimental.channels.ReceiveChannel
-import kotlinx.coroutines.experimental.reactive.asPublisher
-import kotlinx.coroutines.experimental.reactive.awaitFirst
+import kotlinx.coroutines.Unconfined
+import kotlinx.coroutines.channels.ReceiveChannel
+import kotlinx.coroutines.reactive.asPublisher
+import kotlinx.coroutines.reactive.awaitFirst
 import org.springframework.fu.coroutines.webflux.http.server.CoroutinesServerHttpResponse
 import org.springframework.fu.coroutines.webflux.web.function.CoroutinesBodyInserter
 import org.springframework.http.server.reactive.ServerHttpResponse

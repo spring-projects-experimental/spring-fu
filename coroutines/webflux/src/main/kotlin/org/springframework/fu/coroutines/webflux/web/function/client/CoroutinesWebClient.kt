@@ -16,7 +16,7 @@
 
 package org.springframework.fu.coroutines.webflux.web.function.client
 
-import kotlinx.coroutines.experimental.reactive.awaitFirstOrDefault
+import kotlinx.coroutines.reactive.awaitFirstOrDefault
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
 import org.springframework.http.MediaType

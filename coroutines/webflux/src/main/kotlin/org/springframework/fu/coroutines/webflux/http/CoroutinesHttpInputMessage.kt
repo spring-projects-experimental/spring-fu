@@ -16,7 +16,7 @@
 
 package org.springframework.fu.coroutines.webflux.http
 
-import kotlinx.coroutines.experimental.channels.ReceiveChannel
+import kotlinx.coroutines.channels.ReceiveChannel
 import org.springframework.core.io.buffer.DataBuffer
 import org.springframework.http.HttpMessage
 

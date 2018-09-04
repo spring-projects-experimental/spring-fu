@@ -16,7 +16,7 @@
 
 package org.springframework.fu.coroutines.mongodb.data.repository.coroutine
 
-import kotlinx.coroutines.experimental.channels.ReceiveChannel
+import kotlinx.coroutines.channels.ReceiveChannel
 import org.springframework.data.repository.NoRepositoryBean
 import org.springframework.data.repository.Repository
 

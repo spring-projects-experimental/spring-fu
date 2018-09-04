@@ -16,7 +16,7 @@
 
 package org.springframework.fu.coroutines.webflux.web.server
 
-import kotlinx.coroutines.experimental.reactive.awaitFirstOrDefault
+import kotlinx.coroutines.reactive.awaitFirstOrDefault
 import org.springframework.fu.coroutines.webflux.http.server.CoroutinesServerHttpResponse
 import org.springframework.fu.coroutines.webflux.http.server.coroutine.CoroutinesServerHttpRequest
 import org.springframework.fu.coroutines.webflux.web.server.session.asCoroutineWebSession

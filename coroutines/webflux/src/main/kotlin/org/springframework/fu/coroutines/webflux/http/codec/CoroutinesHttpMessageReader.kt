@@ -16,7 +16,7 @@
 
 package org.springframework.fu.coroutines.webflux.http.codec
 
-import kotlinx.coroutines.experimental.channels.ReceiveChannel
+import kotlinx.coroutines.channels.ReceiveChannel
 import org.springframework.core.ResolvableType
 import org.springframework.fu.coroutines.webflux.http.CoroutinesHttpInputMessage
 import org.springframework.fu.coroutines.webflux.http.server.CoroutinesServerHttpResponse

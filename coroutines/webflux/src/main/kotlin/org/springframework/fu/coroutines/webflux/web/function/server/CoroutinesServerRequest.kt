@@ -16,9 +16,9 @@
 
 package org.springframework.fu.coroutines.webflux.web.function.server
 
-import kotlinx.coroutines.experimental.channels.ReceiveChannel
-import kotlinx.coroutines.experimental.reactive.awaitFirstOrDefault
-import kotlinx.coroutines.experimental.reactive.openSubscription
+import kotlinx.coroutines.channels.ReceiveChannel
+import kotlinx.coroutines.reactive.awaitFirstOrDefault
+import kotlinx.coroutines.reactive.openSubscription
 import org.springframework.fu.coroutines.webflux.http.server.coroutine.CoroutinesServerHttpRequest
 import org.springframework.fu.coroutines.webflux.web.function.CoroutinesBodyExtractor
 import org.springframework.fu.coroutines.webflux.web.server.CoroutinesWebSession

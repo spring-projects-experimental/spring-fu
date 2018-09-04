@@ -16,8 +16,8 @@
 
 package org.springframework.fu.coroutines.webflux.http.server.coroutine
 
-import kotlinx.coroutines.experimental.channels.ReceiveChannel
-import kotlinx.coroutines.experimental.reactive.openSubscription
+import kotlinx.coroutines.channels.ReceiveChannel
+import kotlinx.coroutines.reactive.openSubscription
 import org.springframework.core.io.buffer.DataBuffer
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod

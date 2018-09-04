@@ -16,8 +16,8 @@
 
 package org.springframework.fu.coroutines.webflux.web.server
 
-import kotlinx.coroutines.experimental.Unconfined
-import kotlinx.coroutines.experimental.reactor.mono
+import kotlinx.coroutines.Unconfined
+import kotlinx.coroutines.reactor.mono
 import org.springframework.web.server.ServerWebExchange
 import org.springframework.web.server.WebFilter
 import org.springframework.web.server.WebFilterChain

@@ -1,11 +1,5 @@
-import org.jetbrains.kotlin.gradle.dsl.Coroutines
-
 plugins {
 	id("org.springframework.boot")
-}
-
-kotlin {
-	experimental.coroutines = Coroutines.ENABLE
 }
 
 dependencies {

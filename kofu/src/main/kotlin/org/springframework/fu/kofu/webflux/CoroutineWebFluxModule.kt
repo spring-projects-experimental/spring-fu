@@ -20,7 +20,7 @@ class CoroutineWebFluxClientModule(private val clientModule: WebFluxClientModule
 	}
 }
 
-fun WebFluxClientModule.coroutine() : CoroutineWebFluxClientModule {
+fun WebFluxClientModule.coroutines() : CoroutineWebFluxClientModule {
 	val coroutinesModule = CoroutineWebFluxClientModule(this)
 	initializers.add(coroutinesModule)
 	return coroutinesModule

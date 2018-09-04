@@ -1,9 +1,9 @@
 package org.springframework.fu.sample.coroutines
 
-import kotlinx.coroutines.experimental.runBlocking
+import kotlinx.coroutines.runBlocking
 import org.springframework.boot.context.event.ApplicationReadyEvent
 import org.springframework.fu.kofu.application
-import org.springframework.fu.kofu.mongodb.coroutine
+import org.springframework.fu.kofu.mongodb.coroutines
 import org.springframework.fu.kofu.mongodb.embedded
 import org.springframework.fu.kofu.mongodb.mongodb
 import org.springframework.fu.kofu.webflux.netty
@@ -34,7 +34,7 @@ val app = application {
 		include { routes(ref()) }
 	}
 	mongodb {
-		coroutine()
+		coroutines()
 		embedded()
 	}
 }

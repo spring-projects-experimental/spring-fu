@@ -17,8 +17,8 @@
 package org.springframework.fu.coroutines.mongodb.data.mongodb.core
 
 import com.mongodb.reactivestreams.client.MongoDatabase
-import kotlinx.coroutines.experimental.channels.ReceiveChannel
-import kotlinx.coroutines.experimental.reactive.openSubscription
+import kotlinx.coroutines.channels.ReceiveChannel
+import kotlinx.coroutines.reactive.openSubscription
 import org.springframework.data.mongodb.core.ReactiveDatabaseCallback
 
 interface CoroutineDatabaseCallback<T> {

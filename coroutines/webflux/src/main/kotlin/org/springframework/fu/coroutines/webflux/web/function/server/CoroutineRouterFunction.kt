@@ -16,8 +16,8 @@
 
 package org.springframework.fu.coroutines.webflux.web.function.server
 
-import kotlinx.coroutines.experimental.Unconfined
-import kotlinx.coroutines.experimental.reactor.mono
+import kotlinx.coroutines.Unconfined
+import kotlinx.coroutines.reactor.mono
 import org.springframework.core.io.Resource
 import org.springframework.http.HttpMethod
 import org.springframework.http.MediaType
@@ -113,7 +113,7 @@ open class CoroutinesRouterFunctionDsl(private val init: (CoroutinesRouterFuncti
 	 * Route to the given handler function if the given request predicate applies.
 	 * @see RouterFunctions.route
 	 */
-	fun GET(pattern: String, f: suspend CoroutinesHandlerFunction.(CoroutinesServerRequest) -> CoroutineServerResponse) {
+	fun GET(pattern: String, f: suspend (CoroutinesServerRequest) -> CoroutineServerResponse) {
 		routes += RouterFunctions.route(RequestPredicates.GET(pattern), asHandlerFunction(f))
 	}
 
@@ -128,7 +128,7 @@ open class CoroutinesRouterFunctionDsl(private val init: (CoroutinesRouterFuncti
 	 * Route to the given handler function if the given request predicate applies.
 	 * @see RouterFunctions.route
 	 */
-	fun HEAD(pattern: String, f: suspend CoroutinesHandlerFunction.(CoroutinesServerRequest) -> CoroutineServerResponse) {
+	fun HEAD(pattern: String, f: suspend (CoroutinesServerRequest) -> CoroutineServerResponse) {
 		routes += RouterFunctions.route(RequestPredicates.HEAD(pattern), asHandlerFunction(f))
 	}
 
@@ -143,7 +143,7 @@ open class CoroutinesRouterFunctionDsl(private val init: (CoroutinesRouterFuncti
 	 * Route to the given handler function if the given POST predicate applies.
 	 * @see RouterFunctions.route
 	 */
-	fun POST(pattern: String, f: suspend CoroutinesHandlerFunction.(CoroutinesServerRequest) -> CoroutineServerResponse) {
+	fun POST(pattern: String, f: suspend (CoroutinesServerRequest) -> CoroutineServerResponse) {
 		routes += RouterFunctions.route(RequestPredicates.POST(pattern), asHandlerFunction(f))
 	}
 
@@ -158,7 +158,7 @@ open class CoroutinesRouterFunctionDsl(private val init: (CoroutinesRouterFuncti
 	 * Route to the given handler function if the given PUT predicate applies.
 	 * @see RouterFunctions.route
 	 */
-	fun PUT(pattern: String, f: suspend CoroutinesHandlerFunction.(CoroutinesServerRequest) -> CoroutineServerResponse) {
+	fun PUT(pattern: String, f: suspend (CoroutinesServerRequest) -> CoroutineServerResponse) {
 		routes += RouterFunctions.route(RequestPredicates.PUT(pattern), asHandlerFunction(f))
 	}
 
@@ -173,7 +173,7 @@ open class CoroutinesRouterFunctionDsl(private val init: (CoroutinesRouterFuncti
 	 * Route to the given handler function if the given PATCH predicate applies.
 	 * @see RouterFunctions.route
 	 */
-	fun PATCH(pattern: String, f: suspend CoroutinesHandlerFunction.(CoroutinesServerRequest) -> CoroutineServerResponse) {
+	fun PATCH(pattern: String, f: suspend (CoroutinesServerRequest) -> CoroutineServerResponse) {
 		routes += RouterFunctions.route(RequestPredicates.PATCH(pattern), asHandlerFunction(f))
 	}
 
@@ -190,7 +190,7 @@ open class CoroutinesRouterFunctionDsl(private val init: (CoroutinesRouterFuncti
 	 * Route to the given handler function if the given DELETE predicate applies.
 	 * @see RouterFunctions.route
 	 */
-	fun DELETE(pattern: String, f: suspend CoroutinesHandlerFunction.(CoroutinesServerRequest) -> CoroutineServerResponse) {
+	fun DELETE(pattern: String, f: suspend (CoroutinesServerRequest) -> CoroutineServerResponse) {
 		routes += RouterFunctions.route(RequestPredicates.DELETE(pattern), asHandlerFunction(f))
 	}
 
@@ -207,7 +207,7 @@ open class CoroutinesRouterFunctionDsl(private val init: (CoroutinesRouterFuncti
 	 * Route to the given handler function if the given OPTIONS predicate applies.
 	 * @see RouterFunctions.route
 	 */
-	fun OPTIONS(pattern: String, f: suspend CoroutinesHandlerFunction.(CoroutinesServerRequest) -> CoroutineServerResponse) {
+	fun OPTIONS(pattern: String, f: suspend (CoroutinesServerRequest) -> CoroutineServerResponse) {
 		routes += RouterFunctions.route(RequestPredicates.OPTIONS(pattern), asHandlerFunction(f))
 	}
 
@@ -224,7 +224,7 @@ open class CoroutinesRouterFunctionDsl(private val init: (CoroutinesRouterFuncti
 	 * Route to the given handler function if the given accept predicate applies.
 	 * @see RouterFunctions.route
 	 */
-	fun accept(mediaType: MediaType, f: suspend CoroutinesHandlerFunction.(CoroutinesServerRequest) -> CoroutineServerResponse) {
+	fun accept(mediaType: MediaType, f: suspend (CoroutinesServerRequest) -> CoroutineServerResponse) {
 		routes += RouterFunctions.route(RequestPredicates.accept(mediaType), asHandlerFunction(f))
 	}
 
@@ -241,7 +241,7 @@ open class CoroutinesRouterFunctionDsl(private val init: (CoroutinesRouterFuncti
 	 * Route to the given handler function if the given contentType predicate applies.
 	 * @see RouterFunctions.route
 	 */
-	fun contentType(mediaType: MediaType, f: suspend CoroutinesHandlerFunction.(CoroutinesServerRequest) -> CoroutineServerResponse) {
+	fun contentType(mediaType: MediaType, f: suspend (CoroutinesServerRequest) -> CoroutineServerResponse) {
 		routes += RouterFunctions.route(RequestPredicates.contentType(mediaType), asHandlerFunction(f))
 	}
 
@@ -258,7 +258,7 @@ open class CoroutinesRouterFunctionDsl(private val init: (CoroutinesRouterFuncti
 	 * Route to the given handler function if the given headers predicate applies.
 	 * @see RouterFunctions.route
 	 */
-	fun headers(headersPredicate: (ServerRequest.Headers) -> Boolean, f: suspend CoroutinesHandlerFunction.(CoroutinesServerRequest) -> CoroutineServerResponse) {
+	fun headers(headersPredicate: (ServerRequest.Headers) -> Boolean, f: suspend (CoroutinesServerRequest) -> CoroutineServerResponse) {
 		routes += RouterFunctions.route(RequestPredicates.headers(headersPredicate), asHandlerFunction(f))
 	}
 
@@ -274,7 +274,7 @@ open class CoroutinesRouterFunctionDsl(private val init: (CoroutinesRouterFuncti
 	 * Route to the given handler function if the given method predicate applies.
 	 * @see RouterFunctions.route
 	 */
-	fun method(httpMethod: HttpMethod, f: suspend CoroutinesHandlerFunction.(CoroutinesServerRequest) -> CoroutineServerResponse) {
+	fun method(httpMethod: HttpMethod, f: suspend (CoroutinesServerRequest) -> CoroutineServerResponse) {
 		routes += RouterFunctions.route(RequestPredicates.method(httpMethod), asHandlerFunction(f))
 	}
 
@@ -289,7 +289,7 @@ open class CoroutinesRouterFunctionDsl(private val init: (CoroutinesRouterFuncti
 	 * Route to the given handler function if the given path predicate applies.
 	 * @see RouterFunctions.route
 	 */
-	fun path(pattern: String, f: suspend CoroutinesHandlerFunction.(CoroutinesServerRequest) -> CoroutineServerResponse) {
+	fun path(pattern: String, f: suspend (CoroutinesServerRequest) -> CoroutineServerResponse) {
 		routes += RouterFunctions.route(RequestPredicates.path(pattern), asHandlerFunction(f))
 	}
 
@@ -303,7 +303,7 @@ open class CoroutinesRouterFunctionDsl(private val init: (CoroutinesRouterFuncti
 	 * Route to the given handler function if the given pathExtension predicate applies.
 	 * @see RouterFunctions.route
 	 */
-	fun pathExtension(extension: String, f: suspend CoroutinesHandlerFunction.(CoroutinesServerRequest) -> CoroutineServerResponse) {
+	fun pathExtension(extension: String, f: suspend (CoroutinesServerRequest) -> CoroutineServerResponse) {
 		routes += RouterFunctions.route(RequestPredicates.pathExtension(extension), asHandlerFunction(f))
 	}
 
@@ -318,7 +318,7 @@ open class CoroutinesRouterFunctionDsl(private val init: (CoroutinesRouterFuncti
 	 * Route to the given handler function if the given pathExtension predicate applies.
 	 * @see RouterFunctions.route
 	 */
-	fun pathExtension(predicate: (String) -> Boolean, f: suspend CoroutinesHandlerFunction.(CoroutinesServerRequest) -> CoroutineServerResponse) {
+	fun pathExtension(predicate: (String) -> Boolean, f: suspend (CoroutinesServerRequest) -> CoroutineServerResponse) {
 		routes += RouterFunctions.route(RequestPredicates.pathExtension(predicate), asHandlerFunction(f))
 	}
 
@@ -334,7 +334,7 @@ open class CoroutinesRouterFunctionDsl(private val init: (CoroutinesRouterFuncti
 	 * Route to the given handler function if the given queryParam predicate applies.
 	 * @see RouterFunctions.route
 	 */
-	fun queryParam(name: String, predicate: (String) -> Boolean, f: suspend CoroutinesHandlerFunction.(CoroutinesServerRequest) -> CoroutineServerResponse) {
+	fun queryParam(name: String, predicate: (String) -> Boolean, f: suspend (CoroutinesServerRequest) -> CoroutineServerResponse) {
 		routes += RouterFunctions.route(RequestPredicates.queryParam(name, predicate), asHandlerFunction(f))
 	}
 
@@ -353,7 +353,7 @@ open class CoroutinesRouterFunctionDsl(private val init: (CoroutinesRouterFuncti
 	 * Route to the given handler function if the given request predicate applies.
 	 * @see RouterFunctions.route
 	 */
-	operator fun RequestPredicate.invoke(f: suspend CoroutinesHandlerFunction.(CoroutinesServerRequest) -> CoroutineServerResponse) {
+	operator fun RequestPredicate.invoke(f: suspend (CoroutinesServerRequest) -> CoroutineServerResponse) {
 		routes += RouterFunctions.route(this, asHandlerFunction(f))
 	}
 
@@ -362,7 +362,7 @@ open class CoroutinesRouterFunctionDsl(private val init: (CoroutinesRouterFuncti
 	 * processed as a path predicate) applies.
 	 * @see RouterFunctions.route
 	 */
-	operator fun String.invoke(f: suspend CoroutinesHandlerFunction.(CoroutinesServerRequest) -> CoroutineServerResponse) {
+	operator fun String.invoke(f: suspend (CoroutinesServerRequest) -> CoroutineServerResponse) {
 		routes += RouterFunctions.route(RequestPredicates.path(this),  asHandlerFunction(f))
 	}
 
@@ -392,9 +392,9 @@ open class CoroutinesRouterFunctionDsl(private val init: (CoroutinesRouterFuncti
 		return routes.reduce(RouterFunction<ServerResponse>::and)
 	}
 
-	private fun asHandlerFunction(init: suspend CoroutinesHandlerFunction.(CoroutinesServerRequest) -> CoroutineServerResponse) = HandlerFunction {
+	private fun asHandlerFunction(init: suspend (CoroutinesServerRequest) -> CoroutineServerResponse) = HandlerFunction {
 		mono(Unconfined) {
-			CoroutinesHandlerFunction().init(CoroutinesServerRequest.invoke(it)).extractServerResponse()
+			init(CoroutinesServerRequest.invoke(it)).extractServerResponse()
 		}
 	}
 

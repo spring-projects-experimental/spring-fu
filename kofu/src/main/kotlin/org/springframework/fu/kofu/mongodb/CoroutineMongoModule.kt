@@ -28,7 +28,7 @@ class CoroutineMongoModule : AbstractModule() {
 	}
 }
 
-fun MongoModule.coroutine(): CoroutineMongoModule {
+fun MongoModule.coroutines(): CoroutineMongoModule {
 	val coroutineModule = CoroutineMongoModule()
 	initializers.add(coroutineModule)
 	return coroutineModule

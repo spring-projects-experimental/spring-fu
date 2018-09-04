@@ -3,6 +3,7 @@ pluginManagement {
     repositories {
         gradlePluginPortal()
         maven("https://repo.spring.io/milestone")
+        maven("http://dl.bintray.com/kotlin/kotlin-eap")
     }
     resolutionStrategy {
         eachPlugin {

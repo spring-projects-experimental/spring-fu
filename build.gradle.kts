@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.plugin.KotlinPluginWrapper
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-	id("org.jetbrains.kotlin.jvm") version "1.2.61" apply false
+	id("org.jetbrains.kotlin.jvm") version "1.3-M2" apply false
 	id("org.springframework.boot") version "2.1.0.M2" apply false
 	id("io.spring.dependency-management") version "1.0.5.RELEASE"
 	id("org.asciidoctor.convert") version "1.5.6" apply false
@@ -49,7 +49,7 @@ subprojects {
 	tasks.withType<KotlinCompile> {
 		kotlinOptions {
 			jvmTarget = "1.8"
-			freeCompilerArgs = listOf("-Xjsr305=strict", "-Xjvm-default=enable")
+			freeCompilerArgs = listOf("-Xskip-metadata-version-check", "-Xjsr305=strict", "-Xjvm-default=enable")
 		}
 	}
 	tasks.withType<Test> {
@@ -58,12 +58,15 @@ subprojects {
 	repositories {
 		mavenCentral()
 		maven("https://repo.spring.io/libs-milestone")
+		maven("http://dl.bintray.com/kotlin/kotlin-eap")
 	}
 	dependencyManagement {
 		val bootVersion: String by project
 		val coroutinesVersion: String by project
 		imports {
-			mavenBom("org.springframework.boot:spring-boot-dependencies:$bootVersion")
+			mavenBom("org.springframework.boot:spring-boot-dependencies:$bootVersion") {
+				bomProperty("kotlin.version", "1.3-M2")
+			}
 		}
 		dependencies {
 			dependency("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")

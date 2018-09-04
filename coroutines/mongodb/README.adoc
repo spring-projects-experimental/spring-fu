@@ -5,7 +5,7 @@ This module configures a `CoroutineMongoTemplate` bean.
 ```kotlin
 application {
 	mongodb("mongodb://myserver.com/foo") {
-		coroutine()
+		coroutines()
 	}
 }
 ```

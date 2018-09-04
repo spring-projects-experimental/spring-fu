@@ -19,7 +19,7 @@ package org.springframework.fu.coroutines.mongodb.data.mongodb.core
 import com.mongodb.ReadPreference
 import com.mongodb.client.result.DeleteResult
 import com.mongodb.client.result.UpdateResult
-import kotlinx.coroutines.experimental.channels.ReceiveChannel
+import kotlinx.coroutines.channels.ReceiveChannel
 import org.bson.Document
 import org.reactivestreams.Subscription
 import org.springframework.data.geo.GeoResult

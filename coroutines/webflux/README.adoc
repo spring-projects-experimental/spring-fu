@@ -12,13 +12,13 @@ application {
 			jackson()
 		}
 		coRouter {
-			val coroutineHandler = ref<CoroutineHandler>()
-			GET("/") { coroutineHandler.blog(it))
-			GET("/article/{id}") { coroutineHandler.article(it) )
+			val coroutinesHandler = ref<CoroutinesHandler>()
+			GET("/", coroutinesHandler::blog)
+			GET("/article/{id}", coroutinesHandler::article)
 		}
 	}
 	client {
-		coroutine()
+		coroutines()
 		codecs {
 			jackson()
 		}
