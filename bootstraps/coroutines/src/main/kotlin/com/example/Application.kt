@@ -1,9 +1,9 @@
 package com.example
 
 import org.springframework.fu.kofu.application
+import org.springframework.fu.kofu.webflux.coRouter
 import org.springframework.fu.kofu.webflux.netty
 import org.springframework.fu.kofu.webflux.server
-import org.springframework.fu.kofu.webflux.CoroutineWebFluxModuleKt.coRouter
 
 
 val app = application {

@@ -1,8 +1,9 @@
 dependencies {
 	api("org.springframework.boot:spring-boot")
-	api("org.springframework.boot:spring-boot-autoconfigure")
-	api("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-	api("org.jetbrains.kotlin:kotlin-reflect")
+
+	implementation("org.springframework.boot:spring-boot-autoconfigure")
+	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+	implementation("org.jetbrains.kotlin:kotlin-reflect")
 
 	compileOnly("org.springframework:spring-webflux")
 	compileOnly("de.flapdoodle.embed:de.flapdoodle.embed.mongo")
@@ -17,7 +18,6 @@ dependencies {
 	testImplementation("org.springframework:spring-test")
 	testImplementation("io.projectreactor:reactor-test")
 	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
-
 	testImplementation("org.springframework.boot:spring-boot-starter-webflux")
 	testImplementation("org.springframework.boot:spring-boot-starter-tomcat")
 	testImplementation("org.springframework.boot:spring-boot-starter-undertow")
@@ -33,7 +33,7 @@ publishing {
 	publications {
 		create(project.name, MavenPublication::class.java) {
 			from(components["java"])
-			artifactId = "kofu"
+			artifactId = "spring-boot-kofu"
 			val sourcesJar by tasks.creating(Jar::class) {
 				classifier = "sources"
 				from(sourceSets["main"].allSource)

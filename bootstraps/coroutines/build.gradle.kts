@@ -9,14 +9,13 @@ plugins {
 }
 
 dependencies {
-	api("org.springframework.fu:spring-fu-kofu:0.0.1.BUILD-SNAPSHOT")
-	api("org.springframework.fu:spring-fu-coroutines-webflux:0.0.1.BUILD-SNAPSHOT")
-	api("org.springframework.boot:spring-boot-starter-webflux")
-	implementation("org.springframework.fu:spring-fu-webflux-coroutine")
+	implementation("org.springframework.fu:spring-boot-kofu:0.0.1.BUILD-SNAPSHOT")
+	implementation("org.springframework.fu:spring-boot-starter-webflux-coroutines:0.0.1.BUILD-SNAPSHOT")
 
+	testImplementation("org.springframework.boot:spring-boot-starter-test") {
+		exclude(module = "junit")
+	}
 	testImplementation("org.junit.jupiter:junit-jupiter-api")
-	testImplementation("org.springframework:spring-test")
-
 	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
 }
 

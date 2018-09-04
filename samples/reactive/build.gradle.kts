@@ -5,17 +5,15 @@ plugins {
 }
 
 dependencies {
-
-	api("org.springframework.boot:spring-boot-starter-webflux")
-	api("org.springframework.boot:spring-boot-starter-mustache")
-	api("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")
-	api(project(":kofu"))
-	api("com.fasterxml.jackson.module:jackson-module-kotlin")
+	implementation("org.springframework.boot:spring-boot-starter-webflux")
+	implementation("org.springframework.boot:spring-boot-starter-mustache")
+	implementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")
+	implementation(project(":kofu"))
+	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("de.flapdoodle.embed:de.flapdoodle.embed.mongo")
 
 	testImplementation("org.junit.jupiter:junit-jupiter-api")
 	testImplementation("org.springframework:spring-test")
 	testImplementation("io.projectreactor:reactor-test")
-
 	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
 }

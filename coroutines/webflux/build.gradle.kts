@@ -6,6 +6,7 @@ dependencies {
 	api("org.springframework:spring-webflux")
 	api("org.jetbrains.kotlinx:kotlinx-coroutines-core")
 	api("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
+
 	constraints {
 		implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
 		implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:$coroutinesVersion")

@@ -8,9 +8,8 @@ include(
 		"kofu",
 		"docs",
 		"starters",
-		"starters:mongodb-coroutines",
+		"starters:data-mongodb-coroutines",
 		"starters:webflux-coroutines",
-		"samples",
 		"samples:coroutines",
 		"samples:graal",
 		"samples:reactive"

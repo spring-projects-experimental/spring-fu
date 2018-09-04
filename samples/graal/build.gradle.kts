@@ -5,8 +5,8 @@ plugins {
 }
 
 dependencies {
-	api("org.springframework.boot:spring-boot-starter-webflux")
-	api(project(":kofu"))
+	implementation("org.springframework.boot:spring-boot-starter-webflux")
+	implementation(project(":kofu"))
 
 	// Remove when Graal RC6 will be released
 	implementation("org.aspectj:aspectjweaver")
@@ -14,7 +14,6 @@ dependencies {
 
 	testImplementation("org.junit.jupiter:junit-jupiter-api")
 	testImplementation("org.springframework:spring-test")
-
 	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
 }
 
