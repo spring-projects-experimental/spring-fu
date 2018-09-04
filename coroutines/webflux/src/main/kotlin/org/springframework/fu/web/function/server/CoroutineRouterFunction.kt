@@ -20,9 +20,11 @@ import kotlinx.coroutines.Unconfined
 import kotlinx.coroutines.reactor.mono
 import org.springframework.core.io.Resource
 import org.springframework.http.HttpMethod
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.web.reactive.function.server.*
 import org.springframework.web.reactive.function.server.RouterFunctions.nest
+import java.net.URI
 
 open class CoroutinesRouterFunctionDsl(private val init: (CoroutinesRouterFunctionDsl.() -> Unit)): () -> RouterFunction<ServerResponse> {
 	private val routes = mutableListOf<RouterFunction<ServerResponse>>()
@@ -397,6 +399,39 @@ open class CoroutinesRouterFunctionDsl(private val init: (CoroutinesRouterFuncti
 			init(CoroutinesServerRequest.invoke(it)).extractServerResponse()
 		}
 	}
+
+	fun from(other: CoroutineServerResponse) =
+			ServerResponse.from(other.extractServerResponse()).asCoroutineBodyBuilder()
+
+	fun created(location: URI) =
+			ServerResponse.created(location).asCoroutineBodyBuilder()
+
+	fun ok() = ServerResponse.ok().asCoroutineBodyBuilder()
+
+	fun noContent(): CoroutineHeadersBuilder =
+			ServerResponse.noContent().asCoroutineHeadersBuilder()
+
+	fun accepted() = ServerResponse.accepted().asCoroutineBodyBuilder()
+
+	fun permanentRedirect(location: URI): CoroutineBodyBuilder =
+			ServerResponse.permanentRedirect(location).asCoroutineBodyBuilder()
+
+	fun temporaryRedirect(location: URI): CoroutineBodyBuilder =
+			ServerResponse.temporaryRedirect(location).asCoroutineBodyBuilder()
+
+	fun seeOther(location: URI): CoroutineBodyBuilder =
+			ServerResponse.seeOther(location).asCoroutineBodyBuilder()
+
+	fun badRequest() = ServerResponse.badRequest().asCoroutineBodyBuilder()
+
+	fun notFound(): CoroutineHeadersBuilder =
+			ServerResponse.notFound().asCoroutineHeadersBuilder()
+
+	fun unprocessableEntity() = ServerResponse.unprocessableEntity().asCoroutineBodyBuilder()
+
+	fun status(status: HttpStatus): CoroutineBodyBuilder = ServerResponse.status(status).asCoroutineBodyBuilder()
+
+	fun status(status: Int) = ServerResponse.status(status).asCoroutineBodyBuilder()
 
 }
 

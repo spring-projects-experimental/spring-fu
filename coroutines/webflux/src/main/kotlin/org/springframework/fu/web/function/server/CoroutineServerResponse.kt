@@ -69,7 +69,7 @@ class CoroutinesHandlerFunction {
 
 }
 
-suspend fun coroutineHandler(init: suspend CoroutinesHandlerFunction.() -> CoroutineServerResponse) =
+suspend fun coHandler(init: suspend CoroutinesHandlerFunction.() -> CoroutineServerResponse) =
 	CoroutinesHandlerFunction().init()
 
 interface CoroutineServerResponse {
@@ -236,9 +236,9 @@ class DefaultCoroutineRenderingResponseBuilder(private val builder: RenderingRes
 private fun CoroutinesBodyInserter<*, in CoroutinesServerHttpResponse>.asBodyInserter(): BodyInserter<Any, ServerHttpResponse> =
 	TODO()
 
-private fun ServerResponse.BodyBuilder.asCoroutineBodyBuilder(): CoroutineBodyBuilder = CoroutineBodyBuilder(this)
+internal fun ServerResponse.BodyBuilder.asCoroutineBodyBuilder(): CoroutineBodyBuilder = CoroutineBodyBuilder(this)
 
-private fun ServerResponse.HeadersBuilder<*>.asCoroutineHeadersBuilder(): CoroutineHeadersBuilder =
+internal fun ServerResponse.HeadersBuilder<*>.asCoroutineHeadersBuilder(): CoroutineHeadersBuilder =
 	CoroutineHeadersBuilder(this)
 
 suspend inline fun <reified T : Any> CoroutineBodyBuilder.body(channel: ReceiveChannel<T>): CoroutineServerResponse =
