@@ -87,7 +87,7 @@ fun routes(htmlHandler: HtmlHandler, apiHandler: ApiHandler) = router {
 }
 ```
 
-See this https://github.com/spring-projects/spring-fu/blob/master/kofuconfig-javaconfig.adoc<Kofu versus Javaconfig comparison> for more details.
+See this https://github.com/spring-projects/spring-fu/blob/master/kofuconfig-javaconfig.adoc[Kofu versus Javaconfig comparison] for more details.
 
 === Getting started
 
