@@ -1,0 +1,52 @@
+[
+  {
+    "name": "org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor",
+    "methods": [
+      { "name": "<init>", "parameterTypes": [] }
+    ]
+  },
+  {
+    "name": "org.apache.logging.log4j.message.ReusableMessageFactory",
+    "methods": [
+      { "name": "<init>", "parameterTypes": [] }
+    ]
+  },
+  {
+    "name": "org.apache.logging.log4j.message.DefaultFlowMessageFactory",
+    "methods": [
+      { "name": "<init>", "parameterTypes": [] }
+    ]
+  },
+  {
+    "name": "org.springframework.boot.web.reactive.context.ReactiveWebServerApplicationContext",
+    "methods": [
+      { "name": "<init>", "parameterTypes": [] }
+    ]
+  },
+  {
+    "name": "org.springframework.context.support.GenericApplicationContext",
+    "methods": [
+      { "name": "<init>", "parameterTypes": [] }
+    ]
+  },
+  {
+    "name": "org.springframework.context.annotation.ConfigurationClassPostProcessor",
+    "methods": [
+      { "name": "<init>", "parameterTypes": [] }
+    ]
+  },
+  {
+    "name": "org.eclipse.jetty.servlet.ServletMapping",
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "allDeclaredMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "[Lorg.eclipse.jetty.servlet.ServletMapping;",
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "allDeclaredMethods": true,
+    "allDeclaredFields": true
+  }
+]
