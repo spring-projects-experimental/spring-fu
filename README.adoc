@@ -54,7 +54,7 @@ Spring Fu https://github.com/spring-projects/spring-fu/milestone/1[`0.0.1`] is c
 A Spring Fu bootstrap is an archive containing minimal project templates designed to allow you getting started quickly and easily Spring Fu applications. To start a new project, download a bootstrap `.zip` archive, extract it and follow `README.adoc` instructions.
 
  * https://repo.spring.io/libs-snapshot-local/org/springframework/fu/reactive-bootstrap/0.0.1.BUILD-SNAPSHOT/reactive-bootstrap-0.0.1.BUILD-SNAPSHOT.zip[reactive-bootstrap.zip]
- * https://repo.spring.io/libs-snapshot-local/org/springframework/fu/coroutine-bootstrap/0.0.1.BUILD-SNAPSHOT/coroutine-bootstrap-0.0.1.BUILD-SNAPSHOT.zip[coroutine-bootstrap.zip]
+ * https://repo.spring.io/libs-snapshot-local/org/springframework/fu/coroutines-bootstrap/0.0.1.BUILD-SNAPSHOT/coroutines-bootstrap-0.0.1.BUILD-SNAPSHOT.zip[coroutines-bootstrap.zip]
 
 
 === Documentation
@@ -65,9 +65,9 @@ API documentation will be available https://github.com/spring-projects/spring-fu
 
 You can have a look to the sample applications:
 
-* https://github.com/spring-projects/spring-fu/tree/master/samples/reactive-webapp[Reactive webapp]
-* https://github.com/spring-projects/spring-fu/tree/master/samples/coroutine-webapp[Coroutine webapp]
-* https://github.com/spring-projects/spring-fu/tree/master/samples/graal-webapp[Graal native image webapp]
+* https://github.com/spring-projects/spring-fu/tree/master/samples/reactive[Reactive webapp]
+* https://github.com/spring-projects/spring-fu/tree/master/samples/coroutines[Coroutine webapp]
+* https://github.com/spring-projects/spring-fu/tree/master/samples/graal[Graal native image webapp]
 
 === Credits
 
