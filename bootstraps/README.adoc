@@ -1,3 +1,0 @@
-= Bootstraps
-
-A Spring Fu bootstrap is an archive containing minimal project templates designed to allow you getting started quickly and easily Spring Fu applications. To start a new project, follow `README.adoc` instructions.

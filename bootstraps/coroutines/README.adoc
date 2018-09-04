@@ -1,6 +1,6 @@
 = Coroutine webapp bootstrap
 
-This is a Spring Fu bootstrap project for a coroutine webapp which provides a `http://localhost:8080/` endpoint that displays "Hello world!".
+This is a Spring Fu bootstrap project for a roroutines webapp which provides a `http://localhost:8080/` endpoint that displays "Hello world!".
 
 After extracting the `.zip`, rename the default `coroutine-webapp` directory name to a customized one.
 
@@ -26,5 +26,5 @@ $ ./gradlew bootRun
 Or
 
 ```
-$ java -jar build/libs/coroutine-webapp-0.0.1.BUILD-SNAPSHOT.jar
+$ java -jar build/libs/spring-fu-bootstrap-coroutines-0.0.1.BUILD-SNAPSHOT.jar
 ```

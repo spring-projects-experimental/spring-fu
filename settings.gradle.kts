@@ -5,7 +5,6 @@ include(
 		"coroutines:mongodb",
 		"coroutines:webflux",
 		"kofu",
-		"docs",
 		"starters",
 		"starters:data-mongodb-coroutines",
 		"starters:webflux-coroutines",
