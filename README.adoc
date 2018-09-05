@@ -117,8 +117,8 @@ fun main(args: Array<String>) = app.run()
 
 A Spring Fu bootstrap is an archive containing minimal project templates designed to allow you getting started quickly and easily Spring Fu applications. To start a new project, download a bootstrap `.zip` archive, extract it and follow `README.adoc` instructions.
 
- * https://repo.spring.io/libs-snapshot-local/org/springframework/fu/reactive-bootstrap/0.0.1.BUILD-SNAPSHOT/reactive-bootstrap-0.0.1.BUILD-SNAPSHOT.zip[reactive-bootstrap.zip]
- * https://repo.spring.io/libs-snapshot-local/org/springframework/fu/coroutines-bootstrap/0.0.1.BUILD-SNAPSHOT/coroutines-bootstrap-0.0.1.BUILD-SNAPSHOT.zip[coroutines-bootstrap.zip]
+ * https://repo.spring.io/libs-snapshot-local/org/springframework/fu/spring-fu-bootstrap-reactive/0.0.1.BUILD-SNAPSHOT/spring-fu-bootstrap-reactive-0.0.1.BUILD-SNAPSHOT.zip[spring-fu-bootstrap-reactive.zip]
+ * https://repo.spring.io/libs-snapshot-local/org/springframework/fu/spring-fu-bootstrap-coroutines/0.0.1.BUILD-SNAPSHOT/spring-fu-bootstrap-coroutines-0.0.1.BUILD-SNAPSHOT.zip[spring-fu-bootstrap-coroutines.zip]
 
 ==== Samples
 
