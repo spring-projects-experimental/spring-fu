@@ -57,6 +57,7 @@ a|
 Work in progress in GraalVM and Spring Framework 5.1
 a|
 https://jira.spring.io/browse/SPR-16991[SPR-16991]
+
 https://github.com/spring-projects/spring-boot/issues?utf8=%E2%9C%93&q=is%3Aissue+label%3A%22theme%3A+graal%22+[spring-boot graal theme]
 
 a|
