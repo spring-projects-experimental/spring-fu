@@ -2,11 +2,11 @@
 
 image::https://ci.spring.io/api/v1/teams/spring-fu/pipelines/spring-fu/badge["Build Status", link="https://ci.spring.io/teams/spring-fu/pipelines/spring-fu"]
 
-Spring Fu is an experimental project designed to bring Spring support for Kotlin to the next level.
-
-It introduces new features like  Kofu (for **Ko**tlin and **fu**nctional) configuration which allows
-to configure your application with Kotlin DSL and lambdas instead of annotations, Coroutines support
-or GraalVM native image support to compile your application to a native executable.
+Spring Fu is an incubator for new Kotlin + Spring features. It introduces a consistent set of features
+intended to bring Kotlin support in Spring to the next level. The main one is an alternative way of
+configuring Spring Boot applications with Kotlin DSL and lambdas instead of annotations:
+Kofu (for **Ko**tlin and **fu**nctional) configuration. Other features like Coroutines or
+GraalVM support are also included.
 
 It is not intended to be used in production, but rather to incubate and get feedback and contributions
 from the community in order to reach a point where its features can be integrated as part of existing
@@ -44,6 +44,14 @@ a|
 To be created in Spring Data issue tracker
 
 a|
+https://github.com/spring-projects/spring-fu/issues/14[Data classes support for configuration properties]
+a|
+Expected in Spring Boot 2.2
+a|
+https://github.com/spring-projects/spring-boot/issues/8762[spring-boot#8762]
+
+
+a|
 https://github.com/spring-projects/spring-fu/tree/master/samples/graal[GraalVM support]
 a|
 Work in progress in GraalVM and Spring Framework 5.1
@@ -67,6 +75,44 @@ https://jira.spring.io/browse/SPR-17245[SPR-17245]
 
 |=====
 
+=== Getting started
+
+==== Via start.spring.io
+
+ * Create a Spring 2.1.0.BUILD-SNAPSHOT project on https://start.spring.io/[start.spring.io],
+ * Add the `org.springframework.fu:spring-boot-kofu:0.0.1.BUILD-SNAPSHOT` dependency
+ * Use Kotlin `1.3-M2` available from `http://dl.bintray.com/kotlin/kotlin-eap` Maven repository.
+ * Modify the generated `*Application.kt` file as following:
+
+```kotlin
+package com.example
+
+import org.springframework.fu.kofu.application
+
+val app = application {
+	// ...
+}
+
+fun main(args: Array<String>) = app.run()
+```
+
+==== Via bootstraps
+
+Bootstraps are zip archives containing minimal project templates designed to allow you getting started
+quickly and easily Spring Fu applications using a Gradle DSL build. To start a new project, download
+a bootstrap `.zip` archive, extract it and follow `README.adoc` instructions.
+
+ * https://repo.spring.io/libs-snapshot-local/org/springframework/fu/spring-fu-bootstrap-reactive/0.0.1.BUILD-SNAPSHOT/spring-fu-bootstrap-reactive-0.0.1.BUILD-SNAPSHOT.zip[spring-fu-bootstrap-reactive.zip]
+ * https://repo.spring.io/libs-snapshot-local/org/springframework/fu/spring-fu-bootstrap-coroutines/0.0.1.BUILD-SNAPSHOT/spring-fu-bootstrap-coroutines-0.0.1.BUILD-SNAPSHOT.zip[spring-fu-bootstrap-coroutines.zip]
+
+==== Samples
+
+You can have a look to the sample applications:
+
+* https://github.com/spring-projects/spring-fu/tree/master/samples/reactive[Reactive webapp]
+* https://github.com/spring-projects/spring-fu/tree/master/samples/coroutines[Coroutine webapp]
+* https://github.com/spring-projects/spring-fu/tree/master/samples/graal[Graal native image webapp]
+
 [[kofu-configuration]]
 == Kofu configuration
 
@@ -87,7 +133,10 @@ and has following characteristics:
  * https://github.com/oracle/graal/tree/master/substratevm[GraalVM native image] friendly
 
 
-The `application { }` Kotlin DSL allows you to configure your application explicitly. Each custom block like `configuration` or `server` is in fact a more high level `beans {}` block with a custom DSL provided for easy configuration. Since this configuration is code, you can use any kind of custom programmatic bean registration without having to implement your own `@Conditional` annotation.
+The `application { }` Kotlin DSL allows you to configure your application explicitly. Each custom
+block like `configuration` or `server` is in fact a more high level `beans {}` block with a custom
+DSL provided for easy configuration. Since this configuration is code, you can use any kind of
+custom programmatic bean registration without having to implement your own `@Conditional` annotation.
 
 Here is an example of a typical Spring Fu application functional configuration.
 ```kotlin
@@ -148,42 +197,6 @@ fun routes(htmlHandler: HtmlHandler, apiHandler: ApiHandler) = router {
 
 See this https://github.com/spring-projects/spring-fu/blob/master/kofuconfig-javaconfig.adoc[Kofu versus Javaconfig comparison] for more details.
 
-=== Getting started
-
-==== Via start.spring.io
-
- * Create a Spring 2.1.0.BUILD-SNAPSHOT project on https://start.spring.io/[start.spring.io],
- * Add the `org.springframework.fu:spring-boot-kofu:0.0.1.BUILD-SNAPSHOT` dependency
- * Use Kotlin `1.3-M2` available from `http://dl.bintray.com/kotlin/kotlin-eap` Maven repository.
- * Modify the generated `*Application.kt` file as following:
-
-```kotlin
-package com.example
-
-import org.springframework.fu.kofu.application
-
-val app = application {
-	// ...
-}
-
-fun main(args: Array<String>) = app.run()
-```
-
-==== Via bootstrap archives
-
-A Spring Fu bootstrap is an archive containing minimal project templates designed to allow you getting started quickly and easily Spring Fu applications. To start a new project, download a bootstrap `.zip` archive, extract it and follow `README.adoc` instructions.
-
- * https://repo.spring.io/libs-snapshot-local/org/springframework/fu/spring-fu-bootstrap-reactive/0.0.1.BUILD-SNAPSHOT/spring-fu-bootstrap-reactive-0.0.1.BUILD-SNAPSHOT.zip[spring-fu-bootstrap-reactive.zip]
- * https://repo.spring.io/libs-snapshot-local/org/springframework/fu/spring-fu-bootstrap-coroutines/0.0.1.BUILD-SNAPSHOT/spring-fu-bootstrap-coroutines-0.0.1.BUILD-SNAPSHOT.zip[spring-fu-bootstrap-coroutines.zip]
-
-==== Samples
-
-You can have a look to the sample applications:
-
-* https://github.com/spring-projects/spring-fu/tree/master/samples/reactive[Reactive webapp]
-* https://github.com/spring-projects/spring-fu/tree/master/samples/coroutines[Coroutine webapp]
-* https://github.com/spring-projects/spring-fu/tree/master/samples/graal[Graal native image webapp]
-
 === Beans
 
 Beans are simply defined as follows.
@@ -200,7 +213,9 @@ application {
 
 ```
 
-Since classes with a single constructor have their parameters automatically autowired, it is recommended to use constructor injection with `val` read-only (and non-nullable when possible) private https://kotlinlang.org/docs/reference/properties.html[properties].
+Since classes with a single constructor have their parameters automatically autowired, it is recommended
+to use constructor injection with `val` read-only (and non-nullable when possible) private
+https://kotlinlang.org/docs/reference/properties.html[properties].
 
 [source,kotlin]
 ----
@@ -228,7 +243,9 @@ application {
 
 === Configuration properties
 
-Configuration properties mechanism is the same than regular https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html#boot-features-external-config-typesafe-configuration-properties[Spring Boot configuration properties mechanism], without the need to use `@ConfigurationProperties` annotation:
+Configuration properties mechanism is the same than regular
+https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html#boot-features-external-config-typesafe-configuration-properties[Spring Boot configuration properties mechanism],
+without the need to use `@ConfigurationProperties` annotation:
 
 ```kotlin
 application {
@@ -250,7 +267,8 @@ And that's it, you can now inject `SampleConfiguration` where you need.
 
 === Listeners
 
-Declare application event Listeners in order to run tasks when `ApplicationContextEvent` like `ApplicationReadyEvent` are emitted.
+Declare application event Listeners in order to run tasks when `ApplicationContextEvent` like
+`ApplicationReadyEvent` are emitted.
 
 ```kotlin
 application {
@@ -391,9 +409,11 @@ application {
 
 ==== Jackson
 
-Require `org.springframework.boot:spring-boot-starter-json` dependency (included by default in `spring-boot-starter-webflux`).
+Require `org.springframework.boot:spring-boot-starter-json` dependency (included by default in
+`spring-boot-starter-webflux`).
 
-This DSL configures a https://github.com/FasterXML/jackson[Jackson] JSON codec on WebFlux server and client.
+This DSL configures a https://github.com/FasterXML/jackson[Jackson] JSON codec on WebFlux server
+and client.
 
 ```kotlin
 application {
