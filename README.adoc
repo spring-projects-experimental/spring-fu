@@ -1,17 +1,73 @@
+= Spring Fu
+
 image::https://ci.spring.io/api/v1/teams/spring-fu/pipelines/spring-fu/badge["Build Status", link="https://ci.spring.io/teams/spring-fu/pipelines/spring-fu"]
 
 Spring Fu is an experimental project designed to bring Spring support for Kotlin to the next level.
 
-It introduces Kofu (for **Ko**tlin and **fu**nctional) configuration which allows to configure your
-application with Kotlin DSL and lambdas instead of annotations,
-https://jira.spring.io/browse/SPR-15413[Coroutines support] and
-https://jira.spring.io/browse/SPR-16991[GraalVM native image support] to compile your application
-to a native executable.
+It introduces new features like  Kofu (for **Ko**tlin and **fu**nctional) configuration which allows
+to configure your application with Kotlin DSL and lambdas instead of annotations, Coroutines support
+or GraalVM native image support to compile your application to a native executable.
 
-It is not intended to be used in production, but rather get feedback and contributions from the
-community in order to reach a point where its features can be integrated as part of existing
-Spring projects like Framework, Boot and Data.
+It is not intended to be used in production, but rather to incubate and get feedback and contributions
+from the community in order to reach a point where its features can be integrated as part of existing
+Spring projects like Framework, Boot and Data. The table bellow summarize the status of current features.
 
+|=====
+a|**Feature** |**Status** |**Related issue**
+a|
+<<kofu-configuration,Kofu configuration>>
+a|
+Incubating in Spring Fu
+a|
+https://github.com/spring-projects/spring-boot/issues/8115[spring-boot#8115]
+
+a|
+https://github.com/spring-projects/spring-fu/tree/master/coroutines/webflux[Coroutines WebFlux support]
+a|
+Incubating in Spring Fu
+a|
+https://jira.spring.io/browse/SPR-15413[SPR-15413]
+
+a|
+https://github.com/spring-projects/spring-fu/tree/master/coroutines/mongodb[Coroutines MongoDB support]
+a|
+Incubating in Spring Fu
+a|
+To be created in Spring Data issue tracker
+
+
+a|
+https://github.com/spring-projects/spring-fu/issues/14[Coroutines SQL support]
+a|
+Not started yet
+a|
+To be created in Spring Data issue tracker
+
+a|
+https://github.com/spring-projects/spring-fu/tree/master/samples/graal[GraalVM support]
+a|
+Work in progress in GraalVM and Spring Framework 5.1
+a|
+https://jira.spring.io/browse/SPR-16991[SPR-16991]
+https://github.com/spring-projects/spring-boot/issues?utf8=%E2%9C%93&q=is%3Aissue+label%3A%22theme%3A+graal%22+[spring-boot graal theme]
+
+a|
+https://github.com/spring-projects/spring-fu/issues/14[Gradle Kotlin DSL]
+a|
+Pull-request to be contributed
+a|
+https://github.com/spring-io/initializr/issues/334[initializr#334]
+
+a|
+Better Kotlin documentation
+a|
+Not started yet
+a|
+https://jira.spring.io/browse/SPR-17245[SPR-17245]
+
+|=====
+
+[[kofu-configuration]]
 == Kofu configuration
 
 Kofu (for **Ko**tlin and **fu**nctional) is an alternative way of configuring your Spring application,
