@@ -2,11 +2,10 @@
 
 image::https://ci.spring.io/api/v1/teams/spring-fu/pipelines/spring-fu/badge["Build Status", link="https://ci.spring.io/teams/spring-fu/pipelines/spring-fu"]
 
-Spring Fu is an incubator for new Kotlin + Spring features. It introduces a consistent set of features
-intended to bring Kotlin support in Spring to the next level. The main one is an alternative way of
-configuring Spring Boot applications with Kotlin DSL and lambdas instead of annotations:
+Spring Fu is an incubator for new Spring features about Kotlin and functional bean registration.
+Its main feature is an alternative way of configuring Spring Boot applications with Kotlin DSL and lambdas instead of annotations:
 Kofu (for **Ko**tlin and **fu**nctional) configuration. Other features like Coroutines or
-GraalVM support are also included.
+GraalVM support are also included. A Java variant called Jafu (for **Ja**va and **fu**nctional) is also expected.
 
 It is not intended to be used in production, but rather to incubate and get feedback and contributions
 from the community in order to reach a point where its features can be integrated as part of existing
