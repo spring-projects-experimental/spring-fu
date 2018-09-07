@@ -75,44 +75,6 @@ https://jira.spring.io/browse/SPR-17245[SPR-17245]
 
 |=====
 
-=== Getting started
-
-==== Via start.spring.io
-
- * Create a Spring 2.1.0.BUILD-SNAPSHOT project on https://start.spring.io/[start.spring.io],
- * Add the `org.springframework.fu:spring-boot-kofu:0.0.1.BUILD-SNAPSHOT` dependency
- * Use Kotlin `1.3-M2` available from `http://dl.bintray.com/kotlin/kotlin-eap` Maven repository.
- * Modify the generated `*Application.kt` file as following:
-
-```kotlin
-package com.example
-
-import org.springframework.fu.kofu.application
-
-val app = application {
-	// ...
-}
-
-fun main(args: Array<String>) = app.run()
-```
-
-==== Via bootstraps
-
-Bootstraps are zip archives containing minimal project templates designed to allow you getting started
-quickly and easily Spring Fu applications using a Gradle DSL build. To start a new project, download
-a bootstrap `.zip` archive, extract it and follow `README.adoc` instructions.
-
- * https://repo.spring.io/libs-snapshot-local/org/springframework/fu/spring-fu-bootstrap-reactive/0.0.1.BUILD-SNAPSHOT/spring-fu-bootstrap-reactive-0.0.1.BUILD-SNAPSHOT.zip[spring-fu-bootstrap-reactive.zip]
- * https://repo.spring.io/libs-snapshot-local/org/springframework/fu/spring-fu-bootstrap-coroutines/0.0.1.BUILD-SNAPSHOT/spring-fu-bootstrap-coroutines-0.0.1.BUILD-SNAPSHOT.zip[spring-fu-bootstrap-coroutines.zip]
-
-==== Samples
-
-You can have a look to the sample applications:
-
-* https://github.com/spring-projects/spring-fu/tree/master/samples/reactive[Reactive webapp]
-* https://github.com/spring-projects/spring-fu/tree/master/samples/coroutines[Coroutine webapp]
-* https://github.com/spring-projects/spring-fu/tree/master/samples/graal[Graal native image webapp]
-
 [[kofu-configuration]]
 == Kofu configuration
 
@@ -127,9 +89,9 @@ and has following characteristics:
  * Minimal reflection usage
  * No classpath scanning
  * Functional configuration based on pure lambdas
- * No CGLIB proxies
+ * No CGLIB proxy
  * No annotation processing
- * Fast startup
+ * Faster startup and lower memory consumption than auto-configuration (see <<kofu-benchmarks,benchmarks>>)
  * https://github.com/oracle/graal/tree/master/substratevm[GraalVM native image] friendly
 
 
@@ -196,6 +158,58 @@ fun routes(htmlHandler: HtmlHandler, apiHandler: ApiHandler) = router {
 ```
 
 See this https://github.com/spring-projects/spring-fu/blob/master/kofuconfig-javaconfig.adoc[Kofu versus Javaconfig comparison] for more details.
+
+[[kofu-benchmarks]]
+=== Startup time and memory benchmarks
+
+Benchmarks done on a Dell Precision 5520, i7-7820HQ 2.90 GHz, 32G memory, Ubuntu 18.04 with Spring Boot 2.1 M2 on Java 8.0.172-zulu.
+
+On basic projects, Kofu configuration is significantly faster and consume less memory than
+auto-configuration. This is not surprising since Kofu configuration is by design explicit, minimal,
+involve fewer conditions, has missing features and is based on lambdas instead of CGLIB proxies.
+
+Relative startup time difference may be less important with bigger projects, to be validated with a
+Kofu version of https://github.com/mixitconf/mixit[MiXiT web application].
+
+==== Kofu configuration
+
+Reactive webapp without Jackson without kotlin-reflect:
+ * started application in 0.368 seconds (JVM running for 0.638)
+ * Used PSYoungGen  21071K
+ * Used ParOldGen      8K
+ * Used Metaspace   17059K
+
+Reactive webapp with Jackson without kotlin-reflect:
+ * started application in 0.516 seconds (JVM running for 0.779)
+ * Used PSYoungGen  41826K
+ * Used ParOldGen      16K
+ * Used Metaspace   19636K
+
+Reactive webapp with Jackson with kotlin-reflect:
+ * started application in 0.808 seconds (JVM running for 1.13)
+ * Used PSYoungGen  61169K
+ * Used ParOldGen    7029K
+ * Used Metaspace   23357K
+
+==== Auto configuration
+
+Reactive webapp without Jackson without kotlin-reflect:
+ * started application in 1.14 seconds (JVM running for 1.492)
+ * Used PSYoungGen  107083K
+ * Used ParOldGen     8270K
+ * Used Metaspace    25723K
+
+Reactive webapp with Jackson without kotlin-reflect:
+ * started application in 1.133 seconds (JVM running for 1.48)
+ * Used PSYoungGen  140088K
+ * Used ParOldGen    7233K
+ * Used Metaspace   29280K
+
+Reactive webapp with Jackson with kotlin-reflect:
+ * started application in 1.204 seconds (JVM running for 1.564)
+ * Used PSYoungGen  202924K
+ * Used ParOldGen     5776K
+ * Used Metaspace    31791K
 
 === Beans
 
@@ -471,6 +485,44 @@ application {
 	}
 }
 ```
+
+== Getting started
+
+=== Via start.spring.io
+
+ * Create a Spring 2.1.0.BUILD-SNAPSHOT project on https://start.spring.io/[start.spring.io],
+ * Add the `org.springframework.fu:spring-boot-kofu:0.0.1.BUILD-SNAPSHOT` dependency
+ * Use Kotlin `1.3-M2` available from `http://dl.bintray.com/kotlin/kotlin-eap` Maven repository.
+ * Modify the generated `*Application.kt` file as following:
+
+```kotlin
+package com.example
+
+import org.springframework.fu.kofu.application
+
+val app = application {
+	// ...
+}
+
+fun main(args: Array<String>) = app.run()
+```
+
+=== Via bootstraps
+
+Bootstraps are zip archives containing minimal project templates designed to allow you getting started
+quickly and easily Spring Fu applications using a Gradle DSL build. To start a new project, download
+a bootstrap `.zip` archive, extract it and follow `README.adoc` instructions.
+
+ * https://repo.spring.io/libs-snapshot-local/org/springframework/fu/spring-fu-bootstrap-reactive/0.0.1.BUILD-SNAPSHOT/spring-fu-bootstrap-reactive-0.0.1.BUILD-SNAPSHOT.zip[spring-fu-bootstrap-reactive.zip]
+ * https://repo.spring.io/libs-snapshot-local/org/springframework/fu/spring-fu-bootstrap-coroutines/0.0.1.BUILD-SNAPSHOT/spring-fu-bootstrap-coroutines-0.0.1.BUILD-SNAPSHOT.zip[spring-fu-bootstrap-coroutines.zip]
+
+=== Samples
+
+You can have a look to the sample applications:
+
+* https://github.com/spring-projects/spring-fu/tree/master/samples/reactive[Reactive webapp]
+* https://github.com/spring-projects/spring-fu/tree/master/samples/coroutines[Coroutine webapp]
+* https://github.com/spring-projects/spring-fu/tree/master/samples/graal[Graal native image webapp]
 
 === Credits
 
