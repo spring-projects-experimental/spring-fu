@@ -79,19 +79,20 @@ https://jira.spring.io/browse/SPR-17245[SPR-17245]
 == Kofu configuration
 
 Kofu (for **Ko**tlin and **fu**nctional) is an alternative way of configuring your Spring application,
-different from regular auto-configuration. It is based on Spring Boot (with no auto-configuration enabled)
+different from regular auto-configuration. It is based on Spring Boot without auto-configuration enabled
 and has following characteristics:
 
  * https://dzone.com/articles/kotlin-dsl-from-theory-to-practice[Kotlin DSL] instead of annotation
- * Explicit configuration instead of auto-configuration
- * Both declarative (via the DSL) and programmatic (allows any kind of `if`, `for` statements)
- * No feature enabled based on classpath detection
- * Minimal reflection usage
- * No classpath scanning
+ ** Minimal set of features enabled by default
+ ** Explicit configuration
+ ** No classpath scanning
+ ** No feature enabled based on classpath detection
+ ** Both declarative (via the DSL) and programmatic (code auto-complete, allow any kind of `if`, `for` statements)
  * Functional configuration based on pure lambdas
- * No CGLIB proxy
- * No annotation processing
- * Faster startup and lower memory consumption than auto-configuration (see <<kofu-benchmarks,benchmarks>>)
+ ** Minimal reflection usage
+ ** No CGLIB proxy
+ ** No annotation processing
+ * Faster startup and lower memory consumption (see <<kofu-benchmarks,benchmarks>>)
  * https://github.com/oracle/graal/tree/master/substratevm[GraalVM native image] friendly
 
 
@@ -174,18 +175,21 @@ Kofu version of https://github.com/mixitconf/mixit[MiXiT web application].
 ==== Kofu configuration
 
 Reactive webapp without Jackson without kotlin-reflect:
+
  * started application in 0.368 seconds (JVM running for 0.638)
  * Used PSYoungGen  21071K
  * Used ParOldGen      8K
  * Used Metaspace   17059K
 
 Reactive webapp with Jackson without kotlin-reflect:
+
  * started application in 0.516 seconds (JVM running for 0.779)
  * Used PSYoungGen  41826K
  * Used ParOldGen      16K
  * Used Metaspace   19636K
 
 Reactive webapp with Jackson with kotlin-reflect:
+
  * started application in 0.808 seconds (JVM running for 1.13)
  * Used PSYoungGen  61169K
  * Used ParOldGen    7029K
@@ -194,18 +198,21 @@ Reactive webapp with Jackson with kotlin-reflect:
 ==== Auto configuration
 
 Reactive webapp without Jackson without kotlin-reflect:
+
  * started application in 1.14 seconds (JVM running for 1.492)
  * Used PSYoungGen  107083K
  * Used ParOldGen     8270K
  * Used Metaspace    25723K
 
 Reactive webapp with Jackson without kotlin-reflect:
+
  * started application in 1.133 seconds (JVM running for 1.48)
  * Used PSYoungGen  140088K
  * Used ParOldGen    7233K
  * Used Metaspace   29280K
 
 Reactive webapp with Jackson with kotlin-reflect:
+
  * started application in 1.204 seconds (JVM running for 1.564)
  * Used PSYoungGen  202924K
  * Used ParOldGen     5776K
