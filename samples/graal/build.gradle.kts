@@ -8,9 +8,8 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
 	implementation(project(":kofu"))
 
-	// Remove when Graal RC6 will be released
-	implementation("org.aspectj:aspectjweaver")
-	implementation("com.jcraft:jzlib:1.1.3")
+	// Workaround for https://github.com/oracle/graal/issues/655
+	implementation("javax.servlet:javax.servlet-api")
 
 	testImplementation("org.junit.jupiter:junit-jupiter-api")
 	testImplementation("org.springframework:spring-test")
@@ -20,4 +19,6 @@ dependencies {
 configurations.all {
 	exclude(module = "netty-transport-native-epoll")
 	exclude(module = "netty-transport-native-unix-common")
+	exclude(module = "netty-codec-http2")
+	exclude(module = "hibernate-validator")
 }

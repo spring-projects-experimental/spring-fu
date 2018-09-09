@@ -46,5 +46,11 @@
     "methods": [
       { "name": "<init>", "parameterTypes": [] }
     ]
+  },
+  {
+    "name": "org.apache.logging.log4j.message.ParameterizedMessageFactory",
+    "methods": [
+      { "name": "<init>", "parameterTypes": [] }
+    ]
   }
 ]

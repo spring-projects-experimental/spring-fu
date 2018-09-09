@@ -36,6 +36,12 @@
     ]
   },
   {
+    "name": "org.apache.logging.log4j.message.ParameterizedMessageFactory",
+    "methods": [
+      { "name": "<init>", "parameterTypes": [] }
+    ]
+  },
+  {
     "name": "org.eclipse.jetty.servlet.ServletMapping",
     "allPublicFields": true,
     "allPublicMethods": true,
