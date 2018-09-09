@@ -35,3 +35,7 @@ tasks.withType<KotlinCompile> {
 tasks.withType<Test> {
 	useJUnitPlatform()
 }
+
+configurations.all {
+	exclude(module = "hibernate-validator")
+}
