@@ -100,7 +100,7 @@ abstract class AbstractWebServerModuleTests {
 					.consumeNextWith { assertEquals(NO_CONTENT, it.statusCode()) }
 					.verifyComplete()
 			val client2 = context.getBean<WebClient>("client2")
-			client2.get().uri("http://localhost:8080/").exchange().test()
+			client2.get().uri("http://127.0.0.1:8080/").exchange().test()
 					.consumeNextWith { assertEquals(NO_CONTENT, it.statusCode()) }
 					.verifyComplete()
 			stop()

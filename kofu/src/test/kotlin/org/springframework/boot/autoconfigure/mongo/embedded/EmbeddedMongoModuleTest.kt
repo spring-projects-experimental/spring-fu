@@ -24,7 +24,6 @@ import org.springframework.boot.autoconfigure.mongo.mongodb
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate
 import org.springframework.data.mongodb.core.findById
-import org.springframework.fu.kofu.mongodb.embedded
 import org.springframework.util.SocketUtils
 import java.time.Duration
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.fu.kofu.mongodb
+package org.springframework.boot.autoconfigure.mongo.embedded
 
 import de.flapdoodle.embed.mongo.MongodStarter
 import de.flapdoodle.embed.mongo.config.MongodConfigBuilder

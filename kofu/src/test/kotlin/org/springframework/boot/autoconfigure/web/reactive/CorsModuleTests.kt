@@ -57,7 +57,7 @@ class CorsModuleTests {
 		with(app) {
 			run()
 			assert(context.containsBean("corsFilter"))
-			val client = WebTestClient.bindToServer().baseUrl("http://localhost:8080").build()
+			val client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:8080").build()
 			client.get().uri("/").exchange()
 					.expectStatus().is2xxSuccessful
 			stop()

@@ -24,6 +24,7 @@ import org.springframework.boot.web.embedded.jetty.JettyReactiveWebServerFactory
 import org.springframework.boot.web.embedded.netty.NettyReactiveWebServerFactory
 import org.springframework.boot.web.embedded.tomcat.TomcatReactiveWebServerFactory
 import org.springframework.boot.web.embedded.undertow.UndertowReactiveWebServerFactory
+import org.springframework.context.ApplicationContext
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.beans
 import org.springframework.context.support.registerBean
@@ -65,7 +66,7 @@ open class WebFluxServerModule(private val init: WebFluxServerModule.() -> Unit,
 							if (isEmpty())
 								builder.codecs { defaultCodecs(it) }
 							else
-								forEach { codec ->  builder.codecs { codec.invoke(it) } }
+								forEach { codec ->  builder.codecs { codec.invoke(context, it) } }
 						}
 
 				try {
@@ -170,7 +171,7 @@ class WebFluxClientModule(private val init: WebFluxClientModule.() -> Unit, val 
 							if (isEmpty())
 								exchangeStrategiesBuilder.codecs { defaultCodecs(it) }
 							else
-								forEach { codec ->  exchangeStrategiesBuilder.codecs { codec.invoke(it) } }
+								forEach { codec ->  exchangeStrategiesBuilder.codecs { codec.invoke(context, it) } }
 						}
 
 				clientBuilder.exchangeStrategies(exchangeStrategiesBuilder.build())
@@ -201,7 +202,7 @@ class WebFluxCodecsModule(private val init: WebFluxCodecsModule.() -> Unit): Abs
 }
 
 class StringCodecModule : WebFluxCodecModule, AbstractModule() {
-	override fun invoke(configurer: CodecConfigurer) {
+	override fun invoke(context: ApplicationContext, configurer: CodecConfigurer) {
 		with(configurer.customCodecs()) {
 			encoder(CharSequenceEncoder.textPlainOnly())
 			decoder(StringDecoder.textPlainOnly())
@@ -209,10 +210,10 @@ class StringCodecModule : WebFluxCodecModule, AbstractModule() {
 	}
 }
 
-interface WebFluxCodecModule: Module, (CodecConfigurer) -> (Unit)
+interface WebFluxCodecModule: Module, (ApplicationContext, CodecConfigurer) -> (Unit)
 
 class ResourceCodecModule : WebFluxCodecModule, AbstractModule() {
-	override fun invoke(configurer: CodecConfigurer) {
+	override fun invoke(context: ApplicationContext, configurer: CodecConfigurer) {
 		with(configurer.customCodecs()) {
 			decoder(ResourceDecoder())
 		}

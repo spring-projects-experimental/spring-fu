@@ -14,12 +14,15 @@
  * limitations under the License.
  */
 
-package org.springframework.boot.autoconfigure.web.reactive
+package org.springframework.boot.autoconfigure.jackson
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.getBean
 import org.springframework.boot.application
+import org.springframework.boot.autoconfigure.web.reactive.client
+import org.springframework.boot.autoconfigure.web.reactive.netty
+import org.springframework.boot.autoconfigure.web.reactive.server
 import org.springframework.http.HttpHeaders.CONTENT_TYPE
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType.APPLICATION_JSON_UTF8
@@ -50,7 +53,7 @@ class JacksonModuleTests {
 			}
 		}
 		app.run()
-		val client = WebTestClient.bindToServer().baseUrl("http://localhost:8080").build()
+		val client = WebTestClient.bindToServer().baseUrl("http://127.0.1:8080").build()
 		client.get().uri("/user").exchange()
 				.expectStatus().is2xxSuccessful
 				.expectHeader().contentType(APPLICATION_JSON_UTF8_VALUE)
@@ -82,7 +85,7 @@ class JacksonModuleTests {
 		with(app) {
 			run()
 			val client = context.getBean<WebClient>()
-			val exchange = client.get().uri("http://localhost:8080/user").exchange()
+			val exchange = client.get().uri("http://127.0.1:8080/user").exchange()
 			exchange.test()
 					.consumeNextWith {
 						assertEquals(HttpStatus.OK, it.statusCode())
@@ -91,6 +94,7 @@ class JacksonModuleTests {
 					.verifyComplete()
 			stop()
 		}
+		HttpResources.reset() // TODO Possible bug with WebTestClient.bindToServer() + Reactor Netty
 	}
 
 	data class User(val name: String)
