@@ -16,19 +16,16 @@
 
 package org.springframework.boot
 
-import org.springframework.boot.SpringApplication
-import org.springframework.boot.WebApplicationType
+import org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor
+import org.springframework.boot.context.properties.FunctionalConfigurationPropertiesBinder
 import org.springframework.boot.context.properties.bind.Bindable
 import org.springframework.boot.web.reactive.context.ReactiveWebServerApplicationContext
 import org.springframework.context.ApplicationContext
 import org.springframework.context.ApplicationEvent
-import org.springframework.context.ApplicationListener
 import org.springframework.context.support.BeanDefinitionDsl
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import org.springframework.context.support.registerBean
-import org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor
-import org.springframework.boot.context.properties.FunctionalConfigurationPropertiesBinder
 
 
 /**

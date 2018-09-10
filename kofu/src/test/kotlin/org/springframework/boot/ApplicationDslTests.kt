@@ -16,7 +16,8 @@
 
 package org.springframework.boot
 
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.getBean
 import org.springframework.boot.web.reactive.context.ReactiveWebServerApplicationContext

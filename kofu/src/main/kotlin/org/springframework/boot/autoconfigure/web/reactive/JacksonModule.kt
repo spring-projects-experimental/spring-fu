@@ -1,10 +1,11 @@
 package org.springframework.boot.autoconfigure.web.reactive
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import org.springframework.boot.AbstractModule
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.registerBean
-import org.springframework.boot.AbstractModule
-import org.springframework.http.codec.*
+import org.springframework.http.codec.CodecConfigurer
+import org.springframework.http.codec.ServerSentEventHttpMessageWriter
 import org.springframework.http.codec.json.Jackson2JsonDecoder
 import org.springframework.http.codec.json.Jackson2JsonEncoder
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder

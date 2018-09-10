@@ -17,6 +17,9 @@
 package org.springframework.boot.autoconfigure.web.reactive
 
 import org.springframework.beans.factory.NoSuchBeanDefinitionException
+import org.springframework.boot.AbstractModule
+import org.springframework.boot.ApplicationDsl
+import org.springframework.boot.Module
 import org.springframework.boot.web.embedded.jetty.JettyReactiveWebServerFactory
 import org.springframework.boot.web.embedded.netty.NettyReactiveWebServerFactory
 import org.springframework.boot.web.embedded.tomcat.TomcatReactiveWebServerFactory
@@ -27,9 +30,6 @@ import org.springframework.context.support.registerBean
 import org.springframework.core.codec.CharSequenceEncoder
 import org.springframework.core.codec.ResourceDecoder
 import org.springframework.core.codec.StringDecoder
-import org.springframework.boot.AbstractModule
-import org.springframework.boot.ApplicationDsl
-import org.springframework.boot.Module
 import org.springframework.http.codec.CodecConfigurer
 import org.springframework.http.codec.ResourceHttpMessageWriter
 import org.springframework.web.reactive.function.client.ExchangeStrategies

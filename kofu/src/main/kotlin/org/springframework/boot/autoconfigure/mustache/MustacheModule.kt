@@ -17,10 +17,10 @@
 package org.springframework.boot.autoconfigure.mustache
 
 import org.springframework.beans.factory.getBean
-import org.springframework.context.support.GenericApplicationContext
-import org.springframework.context.support.registerBean
 import org.springframework.boot.AbstractModule
 import org.springframework.boot.autoconfigure.web.reactive.WebFluxServerModule
+import org.springframework.context.support.GenericApplicationContext
+import org.springframework.context.support.registerBean
 
 /**
  * @author Sebastien Deleuze

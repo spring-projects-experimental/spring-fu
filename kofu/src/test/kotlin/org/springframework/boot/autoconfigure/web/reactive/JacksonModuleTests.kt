@@ -20,9 +20,10 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.getBean
 import org.springframework.boot.application
-import org.springframework.http.HttpHeaders.*
+import org.springframework.http.HttpHeaders.CONTENT_TYPE
 import org.springframework.http.HttpStatus
-import org.springframework.http.MediaType.*
+import org.springframework.http.MediaType.APPLICATION_JSON_UTF8
+import org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.test.web.reactive.server.expectBody
 import org.springframework.web.reactive.function.client.WebClient

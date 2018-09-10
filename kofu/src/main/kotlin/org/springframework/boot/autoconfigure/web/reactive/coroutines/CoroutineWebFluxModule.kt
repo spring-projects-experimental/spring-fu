@@ -1,10 +1,10 @@
 package org.springframework.boot.autoconfigure.web.reactive.coroutines
 
-import org.springframework.context.support.GenericApplicationContext
-import org.springframework.context.support.registerBean
 import org.springframework.boot.AbstractModule
 import org.springframework.boot.autoconfigure.web.reactive.WebFluxClientModule
 import org.springframework.boot.autoconfigure.web.reactive.WebFluxServerModule
+import org.springframework.context.support.GenericApplicationContext
+import org.springframework.context.support.registerBean
 import org.springframework.fu.web.function.client.CoroutinesWebClient
 import org.springframework.fu.web.function.server.CoroutinesRouterFunctionDsl
 

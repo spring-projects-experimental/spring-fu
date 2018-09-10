@@ -3,10 +3,10 @@ package org.springframework.boot.autoconfigure.mongo.coroutines
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor
 import org.springframework.beans.factory.getBean
 import org.springframework.beans.factory.support.BeanDefinitionRegistry
-import org.springframework.context.support.GenericApplicationContext
-import org.springframework.context.support.registerBean
 import org.springframework.boot.AbstractModule
 import org.springframework.boot.autoconfigure.mongo.MongoModule
+import org.springframework.context.support.GenericApplicationContext
+import org.springframework.context.support.registerBean
 import org.springframework.fu.coroutines.mongodb.data.mongodb.core.CoroutineMongoTemplate
 
 class CoroutineMongoModule : AbstractModule() {

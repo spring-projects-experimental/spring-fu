@@ -21,6 +21,8 @@ import com.mongodb.MongoClientURI
 import com.mongodb.reactivestreams.client.MongoClients
 import org.bson.Document
 import org.springframework.beans.factory.getBean
+import org.springframework.boot.AbstractModule
+import org.springframework.boot.ApplicationDsl
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.registerBean
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate
@@ -29,8 +31,6 @@ import org.springframework.data.mongodb.core.convert.*
 import org.springframework.data.mongodb.core.mapping.MongoMappingContext
 import org.springframework.data.mongodb.core.mapping.MongoPersistentEntity
 import org.springframework.data.mongodb.core.mapping.MongoPersistentProperty
-import org.springframework.boot.AbstractModule
-import org.springframework.boot.ApplicationDsl
 
 
 /**
