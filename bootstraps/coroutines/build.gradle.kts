@@ -19,6 +19,7 @@ dependencies {
 }
 
 repositories {
+	mavenLocal()
 	mavenCentral()
 	maven("https://repo.spring.io/libs-milestone")
 	maven("https://repo.spring.io/libs-snapshot")

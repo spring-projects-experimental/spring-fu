@@ -4,8 +4,8 @@ import kotlinx.coroutines.runBlocking
 import org.springframework.boot.application
 import org.springframework.boot.autoconfigure.mongo.coroutines.coroutines
 import org.springframework.boot.autoconfigure.mongo.mongodb
+import org.springframework.boot.autoconfigure.mustache.mustache
 import org.springframework.boot.autoconfigure.web.reactive.jackson
-import org.springframework.boot.autoconfigure.web.reactive.mustache
 import org.springframework.boot.autoconfigure.web.reactive.netty
 import org.springframework.boot.autoconfigure.web.reactive.server
 import org.springframework.boot.context.event.ApplicationReadyEvent

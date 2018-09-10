@@ -39,7 +39,7 @@ class MustacheModuleTests {
 			}
 		}
 		app.run()
-		val client = WebTestClient.bindToServer().baseUrl("http://localhost:8080").build()
+		val client = WebTestClient.bindToServer().baseUrl("http://0.0.0.0:8080").build()
 		client.get().uri("/view").exchange()
 			.expectStatus().is2xxSuccessful
 			.expectBody<String>()

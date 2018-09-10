@@ -1,8 +1,8 @@
 package com.example
 
-import org.springframework.fu.kofu.application
-import org.springframework.fu.kofu.webflux.netty
-import org.springframework.fu.kofu.webflux.server
+import org.springframework.boot.application
+import org.springframework.boot.autoconfigure.web.reactive.netty
+import org.springframework.boot.autoconfigure.web.reactive.server
 
 
 val app = application {
