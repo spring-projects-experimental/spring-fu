@@ -43,7 +43,7 @@ a|
 To be created in Spring Data issue tracker
 
 a|
-https://github.com/spring-projects/spring-fu/issues/14[Data classes support for configuration properties]
+Data classes support for configuration properties
 a|
 Expected in Spring Boot 2.2
 a|
