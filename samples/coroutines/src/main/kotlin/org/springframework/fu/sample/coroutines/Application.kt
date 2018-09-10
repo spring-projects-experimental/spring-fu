@@ -9,7 +9,6 @@ import org.springframework.boot.autoconfigure.web.reactive.jackson
 import org.springframework.boot.autoconfigure.web.reactive.netty
 import org.springframework.boot.autoconfigure.web.reactive.server
 import org.springframework.boot.context.event.ApplicationReadyEvent
-import org.springframework.boot.context.properties.configuration
 import org.springframework.boot.ref
 import org.springframework.fu.kofu.mongodb.embedded
 

@@ -19,7 +19,6 @@ package org.springframework.boot
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.getBean
-import org.springframework.boot.context.properties.configuration
 import org.springframework.boot.web.reactive.context.ReactiveWebServerApplicationContext
 import org.springframework.context.support.ReloadableResourceBundleMessageSource
 

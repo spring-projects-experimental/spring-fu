@@ -28,7 +28,7 @@ import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import org.springframework.context.support.registerBean
 import org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor
-
+import org.springframework.boot.context.properties.FunctionalConfigurationPropertiesBinder
 
 
 /**
@@ -54,6 +54,12 @@ open class ApplicationDsl(private val startServer: Boolean, val init: Applicatio
 
 	fun beans(init: BeanDefinitionDsl.() -> Unit) {
 		initializers.add(BeanDefinitionDsl(init))
+	}
+
+	inline fun <reified T : Any> configuration(prefix: String = "") {
+		context.registerBean("${T::class.java.simpleName.toLowerCase()}ConfigurationProperties") {
+			FunctionalConfigurationPropertiesBinder(context).bind(prefix, Bindable.of(T::class.java)).get()
+		}
 	}
 
 	fun logging(init: LoggingDsl.() -> Unit): LoggingDsl = LoggingDsl(init)
