@@ -14,43 +14,46 @@
  * limitations under the License.
  */
 
-package org.springframework.boot.autoconfigure.web.reactive
+package org.springframework.boot.autoconfigure.mustache
 
-import com.samskivert.mustache.Mustache
-import org.springframework.boot.autoconfigure.mustache.MustacheResourceTemplateLoader
-import org.springframework.boot.web.reactive.result.view.MustacheViewResolver
+import org.springframework.beans.factory.getBean
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.registerBean
 import org.springframework.boot.AbstractModule
+import org.springframework.boot.autoconfigure.web.reactive.WebFluxServerModule
 
 /**
  * @author Sebastien Deleuze
  */
 class MustacheModule(
 	private val prefix: String,
-	private val suffix: String,
-	private val f: MustacheViewResolver.() -> Unit
+	private val suffix: String
 ) : AbstractModule() {
 
 	override fun initialize(context: GenericApplicationContext) {
+		val properties = MustacheProperties()
+		properties.prefix = prefix
+		properties.suffix = suffix
+
+		val mustacheConfiguration = MustacheAutoConfiguration(properties, context.environment, context)
 		context.registerBean {
-			MustacheResourceTemplateLoader(prefix, suffix).let {
-				MustacheViewResolver(Mustache.compiler().withLoader(it)).apply {
-					setPrefix(prefix)
-					setSuffix(suffix)
-					f()
-				}
-			}
+			mustacheConfiguration.mustacheTemplateLoader()
+		}
+		context.registerBean {
+			mustacheConfiguration.mustacheCompiler(context.getBean())
+		}
+		val mustacheReactiveConfiguration = MustacheReactiveWebConfiguration(properties)
+		context.registerBean {
+			mustacheReactiveConfiguration.mustacheViewResolver(context.getBean())
 		}
 	}
 }
 
 fun WebFluxServerModule.mustache(
 	prefix: String = "classpath:/templates/",
-	suffix: String = ".mustache",
-	f: MustacheViewResolver.() -> Unit = {}
+	suffix: String = ".mustache"
 ): MustacheModule {
-	val mustacheDsl = MustacheModule(prefix, suffix, f)
+	val mustacheDsl = MustacheModule(prefix, suffix)
 	initializers.add(mustacheDsl)
 	return mustacheDsl
 }

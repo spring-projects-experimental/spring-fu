@@ -14,9 +14,12 @@
  * limitations under the License.
  */
 
-package org.springframework.boot.autoconfigure.web.reactive
+package org.springframework.boot.autoconfigure.mustache
 
+import org.junit.jupiter.api.Test
 import org.springframework.boot.application
+import org.springframework.boot.autoconfigure.web.reactive.netty
+import org.springframework.boot.autoconfigure.web.reactive.server
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.test.web.reactive.server.expectBody
 
@@ -25,7 +28,7 @@ import org.springframework.test.web.reactive.server.expectBody
  */
 class MustacheModuleTests {
 
-	//@Test
+	@Test
 	fun `Create and request a Mustache view`() {
 		val app = application {
 			server(netty()) {
