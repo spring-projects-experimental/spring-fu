@@ -1,16 +1,17 @@
 package org.springframework.fu.sample.coroutines
 
 import kotlinx.coroutines.runBlocking
+import org.springframework.boot.application
+import org.springframework.boot.autoconfigure.mongo.coroutines.coroutines
+import org.springframework.boot.autoconfigure.mongo.mongodb
+import org.springframework.boot.autoconfigure.web.reactive.jackson
+import org.springframework.boot.autoconfigure.web.reactive.mustache
+import org.springframework.boot.autoconfigure.web.reactive.netty
+import org.springframework.boot.autoconfigure.web.reactive.server
 import org.springframework.boot.context.event.ApplicationReadyEvent
-import org.springframework.fu.kofu.application
-import org.springframework.fu.kofu.mongodb.coroutines
+import org.springframework.boot.context.properties.configuration
+import org.springframework.boot.ref
 import org.springframework.fu.kofu.mongodb.embedded
-import org.springframework.fu.kofu.mongodb.mongodb
-import org.springframework.fu.kofu.webflux.netty
-import org.springframework.fu.kofu.webflux.server
-import org.springframework.fu.kofu.ref
-import org.springframework.fu.kofu.webflux.jackson
-import org.springframework.fu.kofu.webflux.mustache
 
 
 val app = application {
