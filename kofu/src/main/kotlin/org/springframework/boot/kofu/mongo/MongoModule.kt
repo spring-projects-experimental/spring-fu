@@ -29,19 +29,20 @@ import org.springframework.context.support.GenericApplicationContext
  * @author Sebastien Deleuze
  */
 open class MongoModule(
-	val connectionString: String,
+	internal val properties: MongoProperties,
 	private val init: MongoModule.() -> Unit
 ) : AbstractModule() {
 
 	override lateinit var context: GenericApplicationContext
 
+	internal var embedded = false
+
 
 	override fun initialize(context: GenericApplicationContext) {
 		this.context = context
 		init()
-		val properties = MongoProperties()
-		properties.uri = connectionString
-		MongoInitializer(properties).initialize(context)
+
+		MongoInitializer(properties, embedded).initialize(context)
 		MongoDataInitializer(properties).initialize(context)
 		super.initialize(context)
 	}
@@ -51,5 +52,7 @@ open class MongoModule(
 fun ApplicationDsl.mongodb(
 	connectionString: String = "mongodb://localhost/test",
 	init: MongoModule.() -> Unit = {}) {
-	initializers.add(MongoModule(connectionString, init))
+	val properties = MongoProperties()
+	properties.uri = connectionString
+	initializers.add(MongoModule(properties, init))
 }

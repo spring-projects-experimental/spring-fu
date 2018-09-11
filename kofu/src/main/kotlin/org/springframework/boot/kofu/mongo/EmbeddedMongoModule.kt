@@ -16,53 +16,27 @@
 
 package org.springframework.boot.kofu.mongo
 
-import de.flapdoodle.embed.mongo.MongodStarter
-import de.flapdoodle.embed.mongo.config.MongodConfigBuilder
-import de.flapdoodle.embed.mongo.config.Net
-import de.flapdoodle.embed.mongo.distribution.Version
-import de.flapdoodle.embed.process.runtime.Network
+import org.springframework.boot.autoconfigure.mongo.MongoProperties
+import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoInitializer
+import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoProperties
 import org.springframework.boot.kofu.AbstractModule
 import org.springframework.context.support.GenericApplicationContext
-import java.net.URI
-import java.net.URISyntaxException
 
-class EmbeddedMongoModule(
-		private val connectionString: String,
-		private val init: EmbeddedMongoModule.() -> Unit
-) : AbstractModule() {
+class EmbeddedMongoModule(private val mongoProperties: MongoProperties) : AbstractModule() {
 
-	private var version: Version.Main = Version.Main.PRODUCTION
+	private val embeddedMongoProperties = EmbeddedMongoProperties()
 
 	override fun initialize(context: GenericApplicationContext) {
-		val connectionUri = try {
-			URI(connectionString)
-		} catch (e: URISyntaxException) {
-			return
-		}
-		val bindIp = connectionUri.host
-		val port = connectionUri.port.takeIf { it != -1 } ?: 27017
-
-		init()
-
-		val config = MongodConfigBuilder()
-				.version(version)
-				.net(Net(bindIp, port, Network.localhostIsIPv6()))
-				.build()
-		val runtime = MongodStarter.getDefaultInstance()
-		val executable = runtime.prepare(config)
-		executable.start()
+		EmbeddedMongoInitializer(mongoProperties, embeddedMongoProperties).initialize(context)
 	}
 
-	fun developmentVersion() {
-		version(Version.Main.DEVELOPMENT)
-	}
-
-	fun version(version: Version.Main) {
-		this.version = version
+	fun version(version: String) {
+		embeddedMongoProperties.version = version
 	}
 }
 
-fun MongoModule.embedded(init: EmbeddedMongoModule.() -> Unit = {}) {
-	val embeddedMongoModule = EmbeddedMongoModule(connectionString, init)
+fun MongoModule.embedded() {
+	val embeddedMongoModule = EmbeddedMongoModule(properties)
+	embedded = true
 	initializers.add(embeddedMongoModule)
 }
