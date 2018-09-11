@@ -26,16 +26,15 @@ class CorsModule(
 	operator fun String.invoke(defaults: Boolean = this@CorsModule.defaults, init: CorsConfigurationDsl.() -> Unit) {
 		val corsConfigurationDsl = CorsConfigurationDsl(defaults)
 		corsConfigurationDsl.init()
-		configuration.registerCorsConfiguration(this, corsConfigurationDsl())
+		configuration.registerCorsConfiguration(this, corsConfigurationDsl.corsConfiguration)
 	}
 }
 
 fun WebFluxServerModule.cors(
 	defaults: Boolean = true,
 	init: CorsModule.() -> Unit = {}
-): CorsModule {
-	val corsModule = CorsModule(defaults, init)
-	initializers.add(corsModule)
-	return corsModule
+) {
+	initializers.add(CorsModule(defaults, init))
+
 }
 

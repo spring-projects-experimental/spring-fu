@@ -22,10 +22,8 @@ class CoroutinesWebFluxClientModule(private val clientModule: WebFluxClientModul
 	}
 }
 
-fun WebFluxClientModule.coroutines() : CoroutinesWebFluxClientModule {
-	val coroutinesModule = CoroutinesWebFluxClientModule(this)
-	initializers.add(coroutinesModule)
-	return coroutinesModule
+fun WebFluxClientModule.coroutines()  {
+	initializers.add(CoroutinesWebFluxClientModule(this))
 }
 
 fun WebFluxServerModule.coRouter(routes: (CoroutinesRouterFunctionDsl.() -> Unit)) {

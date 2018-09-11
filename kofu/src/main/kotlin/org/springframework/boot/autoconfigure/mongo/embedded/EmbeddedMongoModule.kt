@@ -63,8 +63,7 @@ class EmbeddedMongoModule(
 	}
 }
 
-fun MongoModule.embedded(init: EmbeddedMongoModule.() -> Unit = {}): EmbeddedMongoModule {
+fun MongoModule.embedded(init: EmbeddedMongoModule.() -> Unit = {}) {
 	val embeddedMongoModule = EmbeddedMongoModule(connectionString, init)
 	initializers.add(embeddedMongoModule)
-	return embeddedMongoModule
 }

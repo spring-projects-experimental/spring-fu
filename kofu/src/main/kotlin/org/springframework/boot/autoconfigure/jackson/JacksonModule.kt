@@ -19,7 +19,7 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder
 /**
  * @author Sebastien Deleuze
  */
-class JacksonModule(val json: Boolean) : WebFluxCodecModule, AbstractModule() {
+internal class JacksonModule(private val json: Boolean) : WebFluxCodecModule, AbstractModule() {
 
 	override fun initialize(context: GenericApplicationContext) {
 		val properties = JacksonProperties()
@@ -43,8 +43,6 @@ class JacksonModule(val json: Boolean) : WebFluxCodecModule, AbstractModule() {
 	}
 }
 
-fun WebFluxCodecsModule.jackson(json: Boolean = true) : JacksonModule {
-	val jacksonModule = JacksonModule(json)
-	initializers.add(jacksonModule)
-	return jacksonModule
+fun WebFluxCodecsModule.jackson(json: Boolean = true) {
+	initializers.add(JacksonModule(json))
 }

@@ -4,8 +4,12 @@ import org.springframework.web.cors.CorsConfiguration
 
 class CorsConfigurationDsl(
 	var defaults: Boolean = true,
-	private val corsConfiguration: CorsConfiguration = CorsConfiguration()
-) {
+	val corsConfiguration: CorsConfiguration = CorsConfiguration()) {
+
+	init {
+		if (defaults) corsConfiguration.applyPermitDefaultValues()
+	}
+
 	fun allowedOrigins(vararg allowedOrigins: String) {
 		corsConfiguration.allowedOrigins = allowedOrigins.toList()
 	}
@@ -27,16 +31,10 @@ class CorsConfigurationDsl(
 			corsConfiguration.allowCredentials = allowCredentials
 		}
 
-	@Suppress("UNUSED_PARAMETER")
 	var maxAge: Long? = null
 		set(maxAge) {
-			corsConfiguration.maxAge
+			corsConfiguration.maxAge = maxAge
 		}
 
-	operator fun invoke(): CorsConfiguration {
-		if (defaults)
-			corsConfiguration.applyPermitDefaultValues()
-		return corsConfiguration
-	}
 }
 

@@ -100,9 +100,6 @@ open class MongoModule(
 
 fun ApplicationDsl.mongodb(
 	connectionString: String = "mongodb://localhost/test",
-	init: MongoModule.() -> Unit = {}
-): MongoModule {
-	val mongoModule = MongoModule(connectionString, init)
-	initializers.add(mongoModule)
-	return mongoModule
+	init: MongoModule.() -> Unit = {}) {
+	initializers.add(MongoModule(connectionString, init))
 }

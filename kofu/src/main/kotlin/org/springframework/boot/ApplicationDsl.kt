@@ -59,7 +59,9 @@ open class ApplicationDsl(private val startServer: Boolean, val init: Applicatio
 		}
 	}
 
-	fun logging(init: LoggingDsl.() -> Unit): LoggingDsl = LoggingDsl(init)
+	fun logging(init: LoggingDsl.() -> Unit) {
+		LoggingDsl(init)
+	}
 
 	inline fun <reified E : ApplicationEvent>listener(crossinline listener: (E) -> Unit) {
 		context.addApplicationListener {

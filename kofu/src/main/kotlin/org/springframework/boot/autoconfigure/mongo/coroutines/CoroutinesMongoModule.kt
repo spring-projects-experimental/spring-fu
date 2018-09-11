@@ -9,7 +9,7 @@ import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.registerBean
 import org.springframework.fu.coroutines.mongodb.data.mongodb.core.CoroutineMongoTemplate
 
-class CoroutineMongoModule : AbstractModule() {
+internal class CoroutinesMongoModule : AbstractModule() {
 	override fun initialize(context: GenericApplicationContext) {
 		context.registerBean { CoroutineMongoTemplate(context.getBean()) }
 		context.registerBean {
@@ -29,8 +29,6 @@ class CoroutineMongoModule : AbstractModule() {
 	}
 }
 
-fun MongoModule.coroutines(): CoroutineMongoModule {
-	val coroutineModule = CoroutineMongoModule()
-	initializers.add(coroutineModule)
-	return coroutineModule
+fun MongoModule.coroutines() {
+	initializers.add(CoroutinesMongoModule())
 }

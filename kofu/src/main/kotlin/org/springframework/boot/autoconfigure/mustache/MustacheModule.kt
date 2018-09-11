@@ -25,7 +25,7 @@ import org.springframework.context.support.registerBean
 /**
  * @author Sebastien Deleuze
  */
-class MustacheModule(
+internal class MustacheModule(
 	private val prefix: String,
 	private val suffix: String
 ) : AbstractModule() {
@@ -51,9 +51,6 @@ class MustacheModule(
 
 fun WebFluxServerModule.mustache(
 	prefix: String = "classpath:/templates/",
-	suffix: String = ".mustache"
-): MustacheModule {
-	val mustacheDsl = MustacheModule(prefix, suffix)
-	initializers.add(mustacheDsl)
-	return mustacheDsl
+	suffix: String = ".mustache") {
+	initializers.add(MustacheModule(prefix, suffix))
 }
