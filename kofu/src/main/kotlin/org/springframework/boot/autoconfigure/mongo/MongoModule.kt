@@ -16,21 +16,14 @@
 
 package org.springframework.boot.autoconfigure.mongo
 
-import com.mongodb.DBRef
-import com.mongodb.MongoClientURI
-import com.mongodb.reactivestreams.client.MongoClients
-import org.bson.Document
-import org.springframework.beans.factory.getBean
+
+import com.mongodb.async.client.MongoClientSettings
 import org.springframework.boot.AbstractModule
 import org.springframework.boot.ApplicationDsl
+import org.springframework.boot.autoconfigure.data.mongo.MongoDataInitializer
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.registerBean
-import org.springframework.data.mongodb.core.ReactiveMongoTemplate
-import org.springframework.data.mongodb.core.SimpleReactiveMongoDatabaseFactory
-import org.springframework.data.mongodb.core.convert.*
-import org.springframework.data.mongodb.core.mapping.MongoMappingContext
-import org.springframework.data.mongodb.core.mapping.MongoPersistentEntity
-import org.springframework.data.mongodb.core.mapping.MongoPersistentProperty
+import org.springframework.core.ResolvableType
 
 
 /**
@@ -43,59 +36,25 @@ open class MongoModule(
 
 	override lateinit var context: GenericApplicationContext
 
+	@Suppress("DEPRECATION")
 	override fun initialize(context: GenericApplicationContext) {
 		this.context = context
 		init()
 
+		val properties = MongoProperties()
+		properties.uri = connectionString
+
 		context.registerBean {
-			MongoClients.create(connectionString)
+			MongoReactiveAutoConfiguration(context.defaultListableBeanFactory
+					.getBeanProvider(MongoClientSettings::class.java)).reactiveStreamsMongoClient(properties, context.environment, context.defaultListableBeanFactory.getBeanProvider(ResolvableType.forClassWithGenerics(List::class.java, MongoClientSettingsBuilderCustomizer::class.java)))
 		}
 		context.registerBean {
-			SimpleReactiveMongoDatabaseFactory(context.getBean(), MongoClientURI(connectionString).database!!)
+			MongoReactiveAutoConfiguration.NettyDriverConfiguration().nettyDriverCustomizer(context.defaultListableBeanFactory.getBeanProvider(MongoClientSettings::class.java))
 		}
-		context.registerBean {
-			val conversions = MongoCustomConversions(emptyList<Any>())
-			val mappingContext = MongoMappingContext().apply {
-				setSimpleTypeHolder(conversions.simpleTypeHolder)
-				afterPropertiesSet()
-			}
-			MappingMongoConverter(NoOpDbRefResolver(), mappingContext).apply {
-				setCustomConversions(conversions)
-				afterPropertiesSet()
-			}
-		}
-		context.registerBean {
-			ReactiveMongoTemplate(context.getBean(), context.getBean<MongoConverter>())
-		}
+		MongoDataInitializer(properties).initialize(context)
 		super.initialize(context)
 	}
 
-	class NoOpDbRefResolver : DbRefResolver {
-		override fun resolveDbRef(
-			property: MongoPersistentProperty,
-			dbref: DBRef?,
-			callback: DbRefResolverCallback,
-			proxyHandler: DbRefProxyHandler
-		): Any? {
-			return null
-		}
-
-		override fun createDbRef(
-			annotation: org.springframework.data.mongodb.core.mapping.DBRef?,
-			entity: MongoPersistentEntity<*>,
-			id: Any
-		): DBRef {
-			return DBRef("", 0)
-		}
-
-		override fun fetch(dbRef: DBRef): Document? {
-			return null
-		}
-
-		override fun bulkFetch(dbRefs: MutableList<DBRef>): List<Document> {
-			return emptyList()
-		}
-	}
 }
 
 fun ApplicationDsl.mongodb(
