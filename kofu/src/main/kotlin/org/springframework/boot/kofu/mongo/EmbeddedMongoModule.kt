@@ -17,8 +17,8 @@
 package org.springframework.boot.kofu.mongo
 
 import org.springframework.boot.autoconfigure.mongo.MongoProperties
-import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoInitializer
 import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoProperties
+import org.springframework.boot.autoconfigure.mongo.embedded.registerEmbeddedMongoconfiguration
 import org.springframework.boot.kofu.AbstractModule
 import org.springframework.context.support.GenericApplicationContext
 
@@ -26,8 +26,8 @@ class EmbeddedMongoModule(private val mongoProperties: MongoProperties) : Abstra
 
 	private val embeddedMongoProperties = EmbeddedMongoProperties()
 
-	override fun initialize(context: GenericApplicationContext) {
-		EmbeddedMongoInitializer(mongoProperties, embeddedMongoProperties).initialize(context)
+	override fun registerBeans(context: GenericApplicationContext) {
+		registerEmbeddedMongoconfiguration(context, mongoProperties, embeddedMongoProperties)
 	}
 
 	fun version(version: String) {
@@ -36,7 +36,6 @@ class EmbeddedMongoModule(private val mongoProperties: MongoProperties) : Abstra
 }
 
 fun MongoModule.embedded() {
-	val embeddedMongoModule = EmbeddedMongoModule(properties)
 	embedded = true
-	initializers.add(embeddedMongoModule)
+	initializers.add(EmbeddedMongoModule(properties))
 }

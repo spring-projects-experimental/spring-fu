@@ -16,10 +16,12 @@
 
 package org.springframework.boot.kofu.web
 
+import org.springframework.boot.web.embedded.netty.NettyReactiveWebServerFactory
+
 /**
  * @author Sebastien Deleuze
  */
 class NettyServerModuleTests : AbstractWebServerModuleTests() {
-	override fun getWebServerModule(port: Int): WebFluxServerModule.WebServerModule = WebFluxServerModule.NettyServerModule(port)
+	override fun getServerFactory() = NettyReactiveWebServerFactory(port)
 
 }

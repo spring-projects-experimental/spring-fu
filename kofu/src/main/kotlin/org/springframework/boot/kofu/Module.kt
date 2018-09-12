@@ -38,9 +38,13 @@ abstract class AbstractModule : Module {
 	val initializers = mutableListOf<ApplicationContextInitializer<GenericApplicationContext>>()
 
 	override fun initialize(context: GenericApplicationContext) {
+		this.context = context
+		registerBeans(context)
 		for (child in initializers) {
 			child.initialize(context)
 		}
 	}
+
+	abstract fun registerBeans(context: GenericApplicationContext)
 
 }

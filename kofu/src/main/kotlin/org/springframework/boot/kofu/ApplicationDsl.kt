@@ -37,18 +37,15 @@ open class ApplicationDsl(private val startServer: Boolean, val init: Applicatio
 
 	internal class Application
 
-	override fun initialize(context: GenericApplicationContext) {
-		this.context = context
+	override fun registerBeans(context: GenericApplicationContext) {
+		init()
 		context.registerBean(AutowiredAnnotationBeanPostProcessor::class.java)
-
 		context.registerBean("messageSource") {
 			ReloadableResourceBundleMessageSource().apply {
 				setBasename("messages")
 				setDefaultEncoding("UTF-8")
 			}
 		}
-		init()
-		super.initialize(context)
 	}
 
 	fun beans(init: BeanDefinitionDsl.() -> Unit) {

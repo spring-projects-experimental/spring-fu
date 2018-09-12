@@ -19,9 +19,9 @@ package org.springframework.boot.kofu.mongo
 
 import org.springframework.boot.kofu.AbstractModule
 import org.springframework.boot.kofu.ApplicationDsl
-import org.springframework.boot.autoconfigure.data.mongo.MongoDataInitializer
-import org.springframework.boot.autoconfigure.mongo.MongoInitializer
+import org.springframework.boot.autoconfigure.data.mongo.registerMongoDataConfiguration
 import org.springframework.boot.autoconfigure.mongo.MongoProperties
+import org.springframework.boot.autoconfigure.mongo.registerMongoConfiguration
 import org.springframework.context.support.GenericApplicationContext
 
 
@@ -38,13 +38,10 @@ open class MongoModule(
 	internal var embedded = false
 
 
-	override fun initialize(context: GenericApplicationContext) {
-		this.context = context
+	override fun registerBeans(context: GenericApplicationContext) {
 		init()
-
-		MongoInitializer(properties, embedded).initialize(context)
-		MongoDataInitializer(properties).initialize(context)
-		super.initialize(context)
+		registerMongoConfiguration(context, properties, embedded)
+		registerMongoDataConfiguration(context, properties)
 	}
 
 }

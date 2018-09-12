@@ -16,9 +16,11 @@
 
 package org.springframework.boot.kofu.web
 
+import org.springframework.boot.web.embedded.undertow.UndertowReactiveWebServerFactory
+
 /**
  * @author Ruslan Ibragimov
  */
 class UndertowServerModuleTests: AbstractWebServerModuleTests() {
-	override fun getWebServerModule(port: Int): WebFluxServerModule.WebServerModule = WebFluxServerModule.UndertowServerModule(port)
+	override fun getServerFactory() = UndertowReactiveWebServerFactory(port)
 }

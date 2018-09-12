@@ -16,10 +16,12 @@
 
 package org.springframework.boot.kofu.web
 
+import org.springframework.boot.web.embedded.tomcat.TomcatReactiveWebServerFactory
+
 
 /**
  * @author Sebastien Deleuze
  */
 class TomcatServerModuleTests : AbstractWebServerModuleTests() {
-	override fun getWebServerModule(port: Int): WebFluxServerModule.WebServerModule = WebFluxServerModule.TomcatServerModule(port)
+	override fun getServerFactory() = TomcatReactiveWebServerFactory(port)
 }

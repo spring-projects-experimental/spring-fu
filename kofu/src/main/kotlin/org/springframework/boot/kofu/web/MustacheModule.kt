@@ -16,8 +16,8 @@
 
 package org.springframework.boot.kofu.web
 
-import org.springframework.boot.autoconfigure.mustache.MustacheInitializer
 import org.springframework.boot.autoconfigure.mustache.MustacheProperties
+import org.springframework.boot.autoconfigure.mustache.registerMustacheConfiguration
 import org.springframework.boot.kofu.AbstractModule
 import org.springframework.context.support.GenericApplicationContext
 
@@ -25,20 +25,19 @@ import org.springframework.context.support.GenericApplicationContext
  * @author Sebastien Deleuze
  */
 internal class MustacheModule(
-	private val prefix: String,
-	private val suffix: String
+	private val properties: MustacheProperties
 ) : AbstractModule() {
 
-	override fun initialize(context: GenericApplicationContext) {
-		val properties = MustacheProperties()
-		properties.prefix = prefix
-		properties.suffix = suffix
-		MustacheInitializer(properties).initialize(context)
+	override fun registerBeans(context: GenericApplicationContext) {
+		registerMustacheConfiguration(context, properties)
 	}
 }
 
 fun WebFluxServerModule.mustache(
 	prefix: String = "classpath:/templates/",
 	suffix: String = ".mustache") {
-	initializers.add(MustacheModule(prefix, suffix))
+	val properties = MustacheProperties()
+	properties.prefix = prefix
+	properties.suffix = suffix
+	initializers.add(MustacheModule(properties))
 }

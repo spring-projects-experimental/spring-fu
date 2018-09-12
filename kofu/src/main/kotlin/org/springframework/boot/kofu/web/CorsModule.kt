@@ -16,7 +16,7 @@ class CorsModule(
 
 	private val configuration = UrlBasedCorsConfigurationSource()
 
-	override fun initialize(context: GenericApplicationContext) {
+	override fun registerBeans(context: GenericApplicationContext) {
 		init()
 		context.registerBean("corsFilter") {
 			CorsWebFilter(configuration)
@@ -32,9 +32,7 @@ class CorsModule(
 
 fun WebFluxServerModule.cors(
 	defaults: Boolean = true,
-	init: CorsModule.() -> Unit = {}
-) {
+	init: CorsModule.() -> Unit = {}) {
 	initializers.add(CorsModule(defaults, init))
-
 }
 

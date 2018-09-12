@@ -16,227 +16,150 @@
 
 package org.springframework.boot.kofu.web
 
-import org.springframework.beans.factory.NoSuchBeanDefinitionException
+import org.springframework.beans.factory.config.BeanPostProcessor
+import org.springframework.boot.autoconfigure.mustache.MustacheProperties
+import org.springframework.boot.autoconfigure.mustache.registerMustacheConfiguration
+import org.springframework.boot.autoconfigure.web.ResourceProperties
+import org.springframework.boot.autoconfigure.web.ServerProperties
+import org.springframework.boot.autoconfigure.web.reactive.WebFluxProperties
+import org.springframework.boot.autoconfigure.web.reactive.registerReactiveWebServerConfiguration
 import org.springframework.boot.kofu.AbstractModule
 import org.springframework.boot.kofu.ApplicationDsl
-import org.springframework.boot.kofu.Module
 import org.springframework.boot.web.embedded.jetty.JettyReactiveWebServerFactory
 import org.springframework.boot.web.embedded.netty.NettyReactiveWebServerFactory
 import org.springframework.boot.web.embedded.tomcat.TomcatReactiveWebServerFactory
 import org.springframework.boot.web.embedded.undertow.UndertowReactiveWebServerFactory
-import org.springframework.context.ApplicationContext
+import org.springframework.boot.web.reactive.server.ConfigurableReactiveWebServerFactory
+import org.springframework.context.ApplicationContextInitializer
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.beans
 import org.springframework.context.support.registerBean
-import org.springframework.core.codec.CharSequenceEncoder
-import org.springframework.core.codec.ResourceDecoder
-import org.springframework.core.codec.StringDecoder
+import org.springframework.core.codec.*
 import org.springframework.http.codec.CodecConfigurer
+import org.springframework.http.codec.HttpMessageReader
+import org.springframework.http.codec.HttpMessageWriter
 import org.springframework.http.codec.ResourceHttpMessageWriter
 import org.springframework.web.reactive.function.client.ExchangeStrategies
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.server.*
-import org.springframework.web.reactive.handler.WebFluxResponseStatusExceptionHandler
 import org.springframework.web.server.WebFilter
-import org.springframework.web.server.i18n.AcceptHeaderLocaleContextResolver
-import reactor.core.publisher.Mono
 
-open class WebFluxServerModule(private val init: WebFluxServerModule.() -> Unit,
-							   private val serverModule: WebServerModule): AbstractModule() {
+class WebFluxCodecsModule : AbstractModule() {
 
-	private val builder = HandlerStrategies.empty()
 
-	private val routes = mutableListOf<() -> RouterFunction<ServerResponse>>()
+	internal val encoders = mutableListOf<Encoder<*>>()
 
-	override fun initialize(context: GenericApplicationContext) {
-		if (context.containsBeanDefinition("webHandler")) {
-			throw IllegalStateException("Only one server per application is supported")
-		}
-		this.context = context
-		init()
-		initializers.add(serverModule)
-		initializers.add(beans {
-			bean("webHandler") {
-				builder.exceptionHandler(WebFluxResponseStatusExceptionHandler())
-				builder.localeContextResolver(AcceptHeaderLocaleContextResolver())
-				initializers.filterIsInstance<WebFluxCodecsModule>()
-						.flatMap { codecs -> codecs.initializers }
-						.filterIsInstance<WebFluxCodecModule>()
-						.apply {
-							if (isEmpty())
-								builder.codecs { defaultCodecs(it) }
-							else
-								forEach { codec ->  builder.codecs { codec.invoke(context, it) } }
+	internal val decoders = mutableListOf<Decoder<*>>()
+
+	internal val writers = mutableListOf<HttpMessageWriter<*>>()
+
+	internal val readers = mutableListOf<HttpMessageReader<*>>()
+
+	override fun registerBeans(context: GenericApplicationContext) {
+		context.registerBean<BeanPostProcessor> {
+			object : BeanPostProcessor {
+				override fun postProcessBeforeInitialization(bean: Any, beanName: String): Any? {
+					if (bean is CodecConfigurer) {
+						with(bean.customCodecs()) {
+							encoders.forEach { this.encoder(it) }
+							decoders.forEach { this.decoder(it) }
+							writers.forEach { this.writer(it) }
+							readers.forEach { this.reader(it) }
 						}
-
-				try {
-					builder.viewResolver(ref())
+					}
+					return bean
 				}
-				catch (ex: NoSuchBeanDefinitionException) {}
-				val router = if (!routes.isEmpty()) {
-					routes.map { it() }.reduce(RouterFunction<ServerResponse>::and)
-				}
-				else {
-					RouterFunction<ServerResponse> { Mono.empty() }
-				}
-
-				RouterFunctions.toHttpHandler(router, builder.build())
-			}
-		})
-		super.initialize(context)
-	}
-
-	fun codecs(init: WebFluxCodecsModule.() -> Unit =  {}) {
-		initializers.add(WebFluxCodecsModule(init))
-	}
-
-	fun filter(filter: WebFilter) {
-		builder.webFilter(filter)
-	}
-
-	fun router(routes: (RouterFunctionDsl.() -> Unit)) {
-		this.routes.add(RouterFunctionDsl(routes))
-	}
-
-	fun include(router: () -> RouterFunction<ServerResponse>) {
-		this.routes.add(router)
-	}
-
-	interface WebServerModule: Module {
-		val baseUrl: String
-	}
-
-	abstract class AbstractWebServerModule(port: Int, host: String = "0.0.0.0"): AbstractModule(), WebServerModule {
-		override val baseUrl = "http://$host:$port"
-	}
-
-	class NettyServerModule(private val port: Int = 8080) : AbstractWebServerModule(port) {
-
-		override fun initialize(context: GenericApplicationContext) {
-			context.registerBean {
-				NettyReactiveWebServerFactory(port)
 			}
 		}
-	}
-
-	class TomcatServerModule(private val port: Int) : AbstractWebServerModule(port) {
-
-		override fun initialize(context: GenericApplicationContext) {
-			context.registerBean {
-				TomcatReactiveWebServerFactory(port)
-			}
-		}
-	}
-
-	class JettyServerModule(
-			private val port: Int) : AbstractWebServerModule(port) {
-
-		override fun initialize(context: GenericApplicationContext) {
-			context.registerBean {
-				JettyReactiveWebServerFactory(port)
-			}
-		}
-	}
-
-	/**
-	 * @author Ruslan Ibragimov
-	 */
-	class UndertowServerModule(private val port: Int): AbstractWebServerModule(port) {
-
-		override fun initialize(context: GenericApplicationContext) {
-			context.registerBean {
-				UndertowReactiveWebServerFactory(port)
-			}
-		}
-	}
-
-}
-
-class WebFluxClientModule(private val init: WebFluxClientModule.() -> Unit, val baseUrl: String?, val name: String?) : AbstractModule() {
-
-	private val clientBuilder = WebClient.builder()
-
-	override fun initialize(context: GenericApplicationContext) {
-		initializers.add(beans {
-
-			bean(name = name) {
-				if (baseUrl != null) {
-					clientBuilder.baseUrl(baseUrl)
-				}
-				val exchangeStrategiesBuilder = ExchangeStrategies.builder()
-				initializers.filterIsInstance<WebFluxCodecsModule>()
-						.flatMap { codecs -> codecs.initializers }
-						.filterIsInstance<WebFluxCodecModule>()
-						.apply {
-							if (isEmpty())
-								exchangeStrategiesBuilder.codecs { defaultCodecs(it) }
-							else
-								forEach { codec ->  exchangeStrategiesBuilder.codecs { codec.invoke(context, it) } }
-						}
-
-				clientBuilder.exchangeStrategies(exchangeStrategiesBuilder.build())
-				clientBuilder.build()
-			}
-		})
-		super.initialize(context)
-	}
-
-	fun codecs(init: WebFluxCodecsModule.() -> Unit =  {}) {
-		initializers.add(WebFluxCodecsModule(init))
-	}
-}
-
-class WebFluxCodecsModule(private val init: WebFluxCodecsModule.() -> Unit): AbstractModule() {
-	override fun initialize(context: GenericApplicationContext) {
-		init()
-		super.initialize(context)
 	}
 
 	fun string() {
-		initializers.add(StringCodecModule())
+		encoders.add(CharSequenceEncoder.textPlainOnly())
+		decoders.add(StringDecoder.textPlainOnly())
 	}
 
 	fun resource() {
-		initializers.add(ResourceCodecModule())
+		writers.add(ResourceHttpMessageWriter())
+		decoders.add(ResourceDecoder())
 	}
 }
 
-class StringCodecModule : WebFluxCodecModule, AbstractModule() {
-	override fun invoke(context: ApplicationContext, configurer: CodecConfigurer) {
-		with(configurer.customCodecs()) {
-			encoder(CharSequenceEncoder.textPlainOnly())
-			decoder(StringDecoder.textPlainOnly())
+open class WebFluxServerModule(private val init: WebFluxServerModule.() -> Unit,
+							   private val serverFactory: ConfigurableReactiveWebServerFactory): AbstractModule() {
+
+	private val serverProperties = ServerProperties()
+
+	private val resourceProperties = ResourceProperties()
+
+	private val webFluxProperties = WebFluxProperties()
+
+	override fun registerBeans(context: GenericApplicationContext) {
+		init()
+		if (context.containsBeanDefinition("webHandler")) {
+			throw IllegalStateException("Only one server per application is supported")
 		}
+		registerReactiveWebServerConfiguration(context, serverProperties, resourceProperties, webFluxProperties, serverFactory)
 	}
+
+	fun codecs(init: WebFluxCodecsModule.() -> Unit =  {}) {
+		val codecModule = WebFluxCodecsModule()
+		codecModule.init()
+		initializers.add(codecModule)
+	}
+
+	fun filter(filter: WebFilter) {
+		initializers.add(ApplicationContextInitializer { it.registerBean { filter } })
+	}
+
+	fun router(routes: (RouterFunctionDsl.() -> Unit)) {
+		initializers.add(ApplicationContextInitializer { it.registerBean { RouterFunctionDsl(routes).invoke() } })
+	}
+
+	fun include(router: () -> RouterFunction<ServerResponse>) {
+		initializers.add(ApplicationContextInitializer { it.registerBean { router.invoke() } })
+	}
+
 }
 
-interface WebFluxCodecModule: Module, (ApplicationContext, CodecConfigurer) -> (Unit)
+class WebFluxClientModule(private val init: WebFluxClientModule.() -> Unit, val baseUrl: String?, private val name: String?) : AbstractModule() {
 
-class ResourceCodecModule : WebFluxCodecModule, AbstractModule() {
-	override fun invoke(context: ApplicationContext, configurer: CodecConfigurer) {
-		with(configurer.customCodecs()) {
-			decoder(ResourceDecoder())
+	private val clientBuilder = WebClient.builder()
+
+	override fun registerBeans(context: GenericApplicationContext) {
+		init()
+		// TODO Fix registerBean extension signature to accept null names
+		if (name != null)
+			context.registerBean(name) { client() }
+		else
+			context.registerBean { client() }
+	}
+
+	private fun client() : WebClient {
+		if (baseUrl != null) {
+			clientBuilder.baseUrl(baseUrl)
 		}
+		val exchangeStrategiesBuilder = ExchangeStrategies.builder()
+		clientBuilder.exchangeStrategies(exchangeStrategiesBuilder.build())
+		return clientBuilder.build()
+	}
+
+	fun codecs(init: WebFluxCodecsModule.() -> Unit =  {}) {
+		val codecModule = WebFluxCodecsModule()
+		codecModule.init()
+		initializers.add(codecModule)
 	}
 }
 
-private fun defaultCodecs(codecConfigurer: CodecConfigurer) = with(codecConfigurer.customCodecs()) {
-	encoder(CharSequenceEncoder.textPlainOnly())
-	writer(ResourceHttpMessageWriter())
-	decoder(ResourceDecoder())
-	decoder(StringDecoder.textPlainOnly())
-}
+fun ApplicationDsl.netty(port: Int = 8080) = NettyReactiveWebServerFactory(port)
 
-fun ApplicationDsl.netty(port: Int = 8080): WebFluxServerModule.WebServerModule = WebFluxServerModule.NettyServerModule(port)
+fun ApplicationDsl.tomcat(port: Int = 8080) = TomcatReactiveWebServerFactory(port)
 
-fun ApplicationDsl.tomcat(port: Int = 8080): WebFluxServerModule.WebServerModule = WebFluxServerModule.TomcatServerModule(port)
+fun ApplicationDsl.undertow(port: Int = 8080) = UndertowReactiveWebServerFactory(port)
 
-fun ApplicationDsl.undertow(port: Int = 8080): WebFluxServerModule.WebServerModule = WebFluxServerModule.UndertowServerModule(port)
+fun ApplicationDsl.jetty(port: Int = 8080) = JettyReactiveWebServerFactory(port)
 
-fun ApplicationDsl.jetty(port: Int = 8080): WebFluxServerModule.WebServerModule = WebFluxServerModule.JettyServerModule(port)
-
-fun ApplicationDsl.server(server: WebFluxServerModule.WebServerModule, init: WebFluxServerModule.() -> Unit =  {}) {
-	initializers.add(WebFluxServerModule(init, server))
+fun ApplicationDsl.server(serverFactory: ConfigurableReactiveWebServerFactory, init: WebFluxServerModule.() -> Unit =  {}) {
+	initializers.add(WebFluxServerModule(init, serverFactory))
 }
 
 fun ApplicationDsl.client(baseUrl: String? = null, name: String? = null, init: WebFluxClientModule.() -> Unit =  {}) {

@@ -9,7 +9,7 @@ import org.springframework.context.support.registerBean
 import org.springframework.fu.coroutines.mongodb.data.mongodb.core.CoroutineMongoTemplate
 
 internal class CoroutinesMongoModule : AbstractModule() {
-	override fun initialize(context: GenericApplicationContext) {
+	override fun registerBeans(context: GenericApplicationContext) {
 		context.registerBean { CoroutineMongoTemplate(context.getBean()) }
 		context.registerBean {
 			BeanFactoryPostProcessor { beanFactory ->

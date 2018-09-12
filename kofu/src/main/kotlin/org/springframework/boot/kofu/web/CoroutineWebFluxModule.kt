@@ -7,8 +7,7 @@ import org.springframework.fu.web.function.client.CoroutinesWebClient
 import org.springframework.fu.web.function.server.CoroutinesRouterFunctionDsl
 
 class CoroutinesWebFluxClientModule(private val clientModule: WebFluxClientModule) : AbstractModule() {
-	override fun initialize(context: GenericApplicationContext) {
-		this.context = context
+	override fun registerBeans(context: GenericApplicationContext) {
 		context.registerBean {
 			if (clientModule.baseUrl != null) {
 				CoroutinesWebClient.create(clientModule.baseUrl)
@@ -16,7 +15,6 @@ class CoroutinesWebFluxClientModule(private val clientModule: WebFluxClientModul
 				CoroutinesWebClient.create()
 			}
 		}
-		super.initialize(context)
 	}
 }
 

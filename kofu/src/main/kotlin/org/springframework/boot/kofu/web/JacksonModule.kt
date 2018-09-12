@@ -1,38 +1,35 @@
 package org.springframework.boot.kofu.web
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import org.springframework.beans.factory.getBean
-import org.springframework.boot.autoconfigure.jackson.JacksonInitializer
 import org.springframework.boot.autoconfigure.jackson.JacksonProperties
+import org.springframework.boot.autoconfigure.jackson.registerJacksonConfiguration
 import org.springframework.boot.kofu.AbstractModule
-import org.springframework.context.ApplicationContext
 import org.springframework.context.support.GenericApplicationContext
-import org.springframework.http.codec.CodecConfigurer
 import org.springframework.http.codec.ServerSentEventHttpMessageWriter
 import org.springframework.http.codec.json.Jackson2JsonDecoder
 import org.springframework.http.codec.json.Jackson2JsonEncoder
 
+
 /**
  * @author Sebastien Deleuze
  */
-internal class JacksonModule(private val json: Boolean) : WebFluxCodecModule, AbstractModule() {
+internal class JacksonModule(private val json: Boolean, private val codecModule: WebFluxCodecsModule) : AbstractModule() {
 
-	override fun initialize(context: GenericApplicationContext) {
-		val properties = JacksonProperties()
-		JacksonInitializer(properties).initialize(context)
-	}
+	private val properties = JacksonProperties()
 
-	override fun invoke(context: ApplicationContext, configurer: CodecConfigurer) {
+	override fun registerBeans(context: GenericApplicationContext) {
+		registerJacksonConfiguration(context, properties)
 		if (json) {
-			val mapper: ObjectMapper = context.getBean()
-			val encoder = Jackson2JsonEncoder(mapper)
-			configurer.customCodecs().decoder(Jackson2JsonDecoder(mapper))
-			configurer.customCodecs().encoder(encoder)
-			configurer.customCodecs().writer(ServerSentEventHttpMessageWriter(encoder))
+			with(codecModule) {
+				// TODO Use ObjectMapper bean
+				val encoder = Jackson2JsonEncoder()
+				decoders.add(Jackson2JsonDecoder())
+				encoders.add(encoder)
+				writers.add(ServerSentEventHttpMessageWriter(encoder))
+			}
 		}
 	}
 }
 
 fun WebFluxCodecsModule.jackson(json: Boolean = true) {
-	initializers.add(JacksonModule(json))
+	initializers.add(JacksonModule(json, this))
 }

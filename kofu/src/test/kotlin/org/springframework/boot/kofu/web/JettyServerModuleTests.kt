@@ -16,9 +16,11 @@
 
 package org.springframework.boot.kofu.web
 
+import org.springframework.boot.web.embedded.jetty.JettyReactiveWebServerFactory
+
 /**
  * @author Alexey Nesterov
  */
 class JettyServerModuleTests: AbstractWebServerModuleTests() {
-	override fun getWebServerModule(port: Int): WebFluxServerModule.WebServerModule = WebFluxServerModule.JettyServerModule(port)
+	override fun getServerFactory() = JettyReactiveWebServerFactory(port)
 }
