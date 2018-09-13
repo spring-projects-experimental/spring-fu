@@ -1,5 +1,7 @@
 package org.springframework.boot.autoconfigure.web.reactive
 
+import org.springframework.beans.factory.ObjectProvider
+import org.springframework.beans.factory.config.DependencyDescriptor
 import org.springframework.boot.autoconfigure.web.ServerProperties
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.boot.web.server.WebServerFactoryCustomizerBeanPostProcessor
@@ -16,6 +18,7 @@ import org.springframework.web.server.adapter.WebHttpHandlerBuilder
 import org.springframework.boot.autoconfigure.web.reactive.WebFluxAutoConfiguration.EnableWebFluxConfiguration
 import org.springframework.boot.autoconfigure.web.reactive.WebFluxAutoConfiguration.WebFluxConfig
 import org.springframework.boot.web.codec.CodecCustomizer
+import org.springframework.core.MethodParameter
 import org.springframework.web.reactive.result.method.HandlerMethodArgumentResolver
 
 internal fun registerReactiveWebServerConfiguration(context: GenericApplicationContext, serverProperties: ServerProperties, resourceProperties: ResourceProperties, webFluxProperties: WebFluxProperties, serverFactory: ConfigurableReactiveWebServerFactory) {
@@ -24,12 +27,11 @@ internal fun registerReactiveWebServerConfiguration(context: GenericApplicationC
 	val config = ReactiveWebServerFactoryAutoConfiguration()
 	context.registerBean { config.reactiveWebServerFactoryCustomizer(serverProperties) }
 	context.registerBean { serverFactory }
-
 	context.registerBean<ErrorAttributes> { DefaultErrorAttributes(serverProperties.error.isIncludeException) }
+	// TODO Fix when SPR-17272 will be fixed and Boot updated as well
 	context.registerBean {
 		ErrorWebFluxAutoConfiguration(serverProperties, resourceProperties,
-				context.defaultListableBeanFactory.getBeanProvider(ResolvableType
-						.forClassWithGenerics(List::class.java, ViewResolver::class.java)),
+				context.defaultListableBeanFactory.resolveDependency(DependencyDescriptor(MethodParameter.forParameter(ErrorWebFluxAutoConfiguration::class.java.constructors[0].parameters[2]), true), null) as ObjectProvider<List<ViewResolver>>,
 				context.getBean(), context)
 				.errorWebExceptionHandler(context.getBean(ErrorAttributes::class.java))
 	}
@@ -80,16 +82,17 @@ internal fun registerReactiveWebServerConfiguration(context: GenericApplicationC
 		context.getBean<EnableWebFluxConfigurationWrapper>().webHandler()
 	}
 
+	// TODO Fix when SPR-17272 will be fixed and Boot updated as well
 	context.registerBean {
 		WebFluxConfig(resourceProperties, webFluxProperties, context,
-						context.getBeanProvider(ResolvableType.forClassWithGenerics(
-								List::class.java, HandlerMethodArgumentResolver::class.java)),
-						context.getBeanProvider(ResolvableType.forClassWithGenerics(List::class.java, CodecCustomizer::class.java)),
+						context.defaultListableBeanFactory.resolveDependency(DependencyDescriptor(MethodParameter.forParameter(WebFluxConfig::class.java.constructors[0].parameters[3]), true), null) as ObjectProvider<List<HandlerMethodArgumentResolver>>,
+						context.getBeanProvider(ResolvableType.forClass(CodecCustomizer::class.java)),
 						context.getBeanProvider(WebFluxAutoConfiguration.ResourceHandlerRegistrationCustomizer::class.java),
-						context.getBeanProvider(ResolvableType.forClassWithGenerics(List::class.java, ViewResolver::class.java)))
+						context.defaultListableBeanFactory.resolveDependency(DependencyDescriptor(MethodParameter.forParameter(WebFluxConfig::class.java.constructors[0].parameters[6]), true), null) as ObjectProvider<List<ViewResolver>>)
 	}
 }
 
 internal class EnableWebFluxConfigurationWrapper(context: GenericApplicationContext, webFluxProperties: WebFluxProperties) : EnableWebFluxConfiguration(webFluxProperties, context.getBeanProvider(WebFluxRegistrations::class.java))
+
 
 
