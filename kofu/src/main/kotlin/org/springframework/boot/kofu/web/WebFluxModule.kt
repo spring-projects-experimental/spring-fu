@@ -125,7 +125,6 @@ class WebFluxClientModule(private val init: WebFluxClientModule.() -> Unit, val 
 	override fun registerBeans(context: GenericApplicationContext) {
 		init()
 		registerReactiveWebClientConfiguration(context)
-		// TODO Fix registerBean extension signature to accept null names
 		if (name != null)
 			context.registerBean(name) { client() }
 		else
