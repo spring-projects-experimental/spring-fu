@@ -98,9 +98,9 @@ https://jira.spring.io/browse/SPR-17245[SPR-17245]
 [[kofu-configuration]]
 == Kofu configuration
 
-Kofu (for **Ko**tlin and **fu**nctional) is an alternative way of configuring your Spring application,
-different from regular auto-configuration. It is based on Spring Boot without auto-configuration enabled
-and has following characteristics:
+Kofu (for **Ko**tlin and **fu**nctional) is an alternative way of configuring your Spring Boot application,
+different from regular auto-configuration. It is based on Spring Boot infrastructure, but used in a functional
+way via lambdas instead of annotations. It has following characteristics:
 
  * https://dzone.com/articles/kotlin-dsl-from-theory-to-practice[Kotlin DSL] instead of annotation
  ** Minimal set of features enabled by default
