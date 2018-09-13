@@ -17,11 +17,11 @@
 package org.springframework.boot.kofu.web
 
 import org.springframework.beans.factory.config.BeanPostProcessor
-import org.springframework.boot.autoconfigure.mustache.MustacheProperties
-import org.springframework.boot.autoconfigure.mustache.registerMustacheConfiguration
+import org.springframework.beans.factory.getBean
 import org.springframework.boot.autoconfigure.web.ResourceProperties
 import org.springframework.boot.autoconfigure.web.ServerProperties
 import org.springframework.boot.autoconfigure.web.reactive.WebFluxProperties
+import org.springframework.boot.autoconfigure.web.reactive.registerReactiveWebClientConfiguration
 import org.springframework.boot.autoconfigure.web.reactive.registerReactiveWebServerConfiguration
 import org.springframework.boot.kofu.AbstractModule
 import org.springframework.boot.kofu.ApplicationDsl
@@ -32,7 +32,6 @@ import org.springframework.boot.web.embedded.undertow.UndertowReactiveWebServerF
 import org.springframework.boot.web.reactive.server.ConfigurableReactiveWebServerFactory
 import org.springframework.context.ApplicationContextInitializer
 import org.springframework.context.support.GenericApplicationContext
-import org.springframework.context.support.beans
 import org.springframework.context.support.registerBean
 import org.springframework.core.codec.*
 import org.springframework.http.codec.CodecConfigurer
@@ -123,10 +122,9 @@ open class WebFluxServerModule(private val init: WebFluxServerModule.() -> Unit,
 
 class WebFluxClientModule(private val init: WebFluxClientModule.() -> Unit, val baseUrl: String?, private val name: String?) : AbstractModule() {
 
-	private val clientBuilder = WebClient.builder()
-
 	override fun registerBeans(context: GenericApplicationContext) {
 		init()
+		registerReactiveWebClientConfiguration(context)
 		// TODO Fix registerBean extension signature to accept null names
 		if (name != null)
 			context.registerBean(name) { client() }
@@ -135,12 +133,13 @@ class WebFluxClientModule(private val init: WebFluxClientModule.() -> Unit, val 
 	}
 
 	private fun client() : WebClient {
+		val builder = context.getBean<WebClient.Builder>()
 		if (baseUrl != null) {
-			clientBuilder.baseUrl(baseUrl)
+			builder.baseUrl(baseUrl)
 		}
 		val exchangeStrategiesBuilder = ExchangeStrategies.builder()
-		clientBuilder.exchangeStrategies(exchangeStrategiesBuilder.build())
-		return clientBuilder.build()
+		builder.exchangeStrategies(exchangeStrategiesBuilder.build())
+		return builder.build()
 	}
 
 	fun codecs(init: WebFluxCodecsModule.() -> Unit =  {}) {

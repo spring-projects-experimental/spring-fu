@@ -20,6 +20,10 @@ import org.springframework.boot.autoconfigure.web.reactive.WebFluxAutoConfigurat
 import org.springframework.boot.web.codec.CodecCustomizer
 import org.springframework.core.MethodParameter
 import org.springframework.web.reactive.result.method.HandlerMethodArgumentResolver
+import org.springframework.boot.web.reactive.function.client.WebClientCustomizer
+import org.springframework.boot.autoconfigure.web.reactive.function.client.WebClientAutoConfiguration
+
+
 
 internal fun registerReactiveWebServerConfiguration(context: GenericApplicationContext, serverProperties: ServerProperties, resourceProperties: ResourceProperties, webFluxProperties: WebFluxProperties, serverFactory: ConfigurableReactiveWebServerFactory) {
 	context.registerBean<WebServerFactoryCustomizerBeanPostProcessor>("webServerFactoryCustomizerBeanPostProcessor")
@@ -90,6 +94,15 @@ internal fun registerReactiveWebServerConfiguration(context: GenericApplicationC
 						context.getBeanProvider(WebFluxAutoConfiguration.ResourceHandlerRegistrationCustomizer::class.java),
 						context.defaultListableBeanFactory.resolveDependency(DependencyDescriptor(MethodParameter.forParameter(WebFluxConfig::class.java.constructors[0].parameters[6]), true), null) as ObjectProvider<List<ViewResolver>>)
 	}
+}
+
+internal fun registerReactiveWebClientConfiguration(context: GenericApplicationContext) {
+	// TODO Fix when SPR-17272 will be fixed and Boot updated as well
+	context.registerBean {
+		WebClientAutoConfiguration(context.defaultListableBeanFactory.resolveDependency(DependencyDescriptor(MethodParameter.forParameter(WebClientAutoConfiguration::class.java.constructors[0].parameters[0]), true), null) as ObjectProvider<List<WebClientCustomizer>>).webClientBuilder()
+	}
+	// TODO Send a PR to make WebClientCodecsConfiguration package private
+
 }
 
 internal class EnableWebFluxConfigurationWrapper(context: GenericApplicationContext, webFluxProperties: WebFluxProperties) : EnableWebFluxConfiguration(webFluxProperties, context.getBeanProvider(WebFluxRegistrations::class.java))
