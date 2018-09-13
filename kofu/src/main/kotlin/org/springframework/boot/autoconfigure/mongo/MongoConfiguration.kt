@@ -2,7 +2,7 @@
 
 package org.springframework.boot.autoconfigure.mongo
 
-import com.mongodb.async.client.MongoClientSettings
+import com.mongodb.MongoClientSettings
 import org.springframework.beans.factory.config.BeanDefinitionCustomizer
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.registerBean

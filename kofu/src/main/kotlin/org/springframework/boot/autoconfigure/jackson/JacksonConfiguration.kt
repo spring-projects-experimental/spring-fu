@@ -7,7 +7,6 @@ import org.springframework.context.support.registerBean
 
 internal fun registerJacksonConfiguration(context: GenericApplicationContext, properties: JacksonProperties) {
 	context.registerBean<Jackson2ObjectMapperBuilderCustomizer> {
-		@Suppress("INACCESSIBLE_TYPE")
 		JacksonAutoConfiguration.Jackson2ObjectMapperBuilderCustomizerConfiguration().standardJacksonObjectMapperBuilderCustomizer(context, properties)
 	}
 	context.registerBean { JacksonAutoConfiguration.JacksonObjectMapperBuilderConfiguration(context).jacksonObjectMapperBuilder(context.getBeansOfType<Jackson2ObjectMapperBuilderCustomizer>().map { it.value }) }
