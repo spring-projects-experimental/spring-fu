@@ -1,14 +1,18 @@
-package com.example
+package org.springframework.sample.graal
 
 import org.springframework.boot.kofu.application
 import org.springframework.boot.kofu.web.netty
 import org.springframework.boot.kofu.web.server
+import org.springframework.core.io.ClassPathResource
+
 
 val app = application {
-	val port = if (profiles.contains("test")) 8181 else 8080
-	server(netty(port)) {
+	server(netty()) {
 		router {
-			GET("/") { ok().syncBody("Hello world!") }
+			GET("/") {
+				ok().syncBody("Hello world!")
+			}
+			resources("/**", ClassPathResource("static/"))
 		}
 	}
 }

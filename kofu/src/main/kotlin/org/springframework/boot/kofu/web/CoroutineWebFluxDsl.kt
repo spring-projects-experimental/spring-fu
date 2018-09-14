@@ -3,8 +3,8 @@ package org.springframework.boot.kofu.web
 import org.springframework.boot.kofu.AbstractDsl
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.registerBean
-import org.springframework.fu.web.function.client.CoroutinesWebClient
-import org.springframework.fu.web.function.server.CoroutinesRouterFunctionDsl
+import org.springframework.web.function.client.CoroutinesWebClient
+import org.springframework.web.function.server.CoroutinesRouterFunctionDsl
 
 class CoroutinesWebFluxClientDsl(private val clientModule: WebFluxClientDsl) : AbstractDsl() {
 	override fun register(context: GenericApplicationContext) {
