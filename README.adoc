@@ -15,12 +15,25 @@ Spring projects like Framework, Boot and Data. The table bellow summarize the st
 
 |=====
 a|**Feature** |**Status** |**Related issue**
+
 a|
 <<kofu-configuration,Kofu configuration>>
 a|
 Incubating in Spring Fu
 a|
-https://github.com/spring-projects/spring-boot/issues/8115[spring-boot#8115]
+Slightly related: https://github.com/spring-projects/spring-boot/issues/8115[spring-boot#8115]
+To be created in Spring Boot issue tracker
+
+a|
+Auto-configuration to functional configuration adapter
+a|
+Manually created in Spring Fu (see https://github.com/spring-projects/spring-fu/tree/master/initializers[initializers] module)
+
+Experimented by https://github.com/dsyer[Dave Syer] in https://github.com/dsyer/spring-init-experiment[spring-init-experiment] and https://github.com/dsyer/spring-boot-micro-apps[spring-boot-micro-apps]
+
+*Could* be generated during Spring Boot build in the future
+a|
+To be created in Spring Boot issue tracker
 
 a|
 https://github.com/spring-projects/spring-fu/tree/master/coroutines/webflux[Coroutines WebFlux support]
@@ -559,3 +572,5 @@ In addition to the whole Spring and Reactor teams, special credits to:
  * https://github.com/poutsma[Arjen Poutsma] for creating the WebFlux functional API
  * https://github.com/tgirard12[Thomas Girard] for its https://github.com/tgirard12/spring-webflux-kotlin-dsl[spring-webflux-kotlin-dsl] experiment that initially demonstrated this approach was possible
  * https://github.com/konrad-kaminski[Konrad Kaminski] for his awesome https://github.com/konrad-kaminski/spring-kotlin-coroutine[spring-kotlin-coroutine] project
+ * https://github.com/dsyer[Dave Syer] for his work on benchmarks, GraalVM support and functional bean registration applied to Boot
+ * The whole https://github.com/spring-projects/spring-boot[Spring Boot] team
