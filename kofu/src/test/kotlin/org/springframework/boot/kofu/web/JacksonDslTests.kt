@@ -33,7 +33,7 @@ import reactor.test.test
 /**
  * @author Sebastien Deleuze
  */
-class JacksonModuleTests {
+class JacksonDslTests {
 
 	@Test
 	fun `Enable jackson module on server, create and request a JSON endpoint`() {

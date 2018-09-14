@@ -24,7 +24,7 @@ import org.springframework.test.web.reactive.server.expectBody
 /**
  * @author Sebastien Deleuze
  */
-class MustacheModuleTests {
+class MustacheDslTests {
 
 	@Test
 	fun `Create and request a Mustache view`() {
