@@ -1,6 +1,7 @@
 dependencies {
 	api("org.springframework.boot:spring-boot")
 
+	implementation(project(":initializers"))
 	implementation("org.springframework.boot:spring-boot-autoconfigure")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")

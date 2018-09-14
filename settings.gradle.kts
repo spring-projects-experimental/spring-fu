@@ -4,6 +4,7 @@ include(
 		"bootstraps",
 		"coroutines:mongodb",
 		"coroutines:webflux",
+		"initializers",
 		"kofu",
 		"starters",
 		"starters:data-mongodb-coroutines",

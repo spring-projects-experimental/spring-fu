@@ -16,8 +16,9 @@
 
 package org.springframework.boot.kofu.web
 
+import org.springframework.boot.autoconfigure.mustache.MustacheInitializer
 import org.springframework.boot.autoconfigure.mustache.MustacheProperties
-import org.springframework.boot.autoconfigure.mustache.registerMustacheConfiguration
+import org.springframework.boot.autoconfigure.mustache.MustacheReactiveWebInitializer
 import org.springframework.boot.kofu.AbstractModule
 import org.springframework.context.support.GenericApplicationContext
 
@@ -29,7 +30,8 @@ internal class MustacheModule(
 ) : AbstractModule() {
 
 	override fun registerBeans(context: GenericApplicationContext) {
-		registerMustacheConfiguration(context, properties)
+		MustacheInitializer(properties).initialize(context)
+		MustacheReactiveWebInitializer(properties).initialize(context)
 	}
 }
 
