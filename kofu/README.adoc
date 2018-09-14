@@ -3,7 +3,7 @@
 Kofu (for **Ko**tlin and **fu**nctional) is an alternative way of configuring your Spring Boot application,
 different from regular auto-configuration. It is based on Spring Boot infrastructure, but used in a functional
 way via lambdas instead of annotations
-(see the https://github.com/spring-projects/spring-fu/tree/master/initializers[initializers module]).
+(see the https://github.com/spring-projects/spring-fu/tree/master/fuconfigure[fuconfigure] module).
 It has following characteristics:
 
  * https://dzone.com/articles/kotlin-dsl-from-theory-to-practice[Kotlin DSL] instead of annotation

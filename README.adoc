@@ -25,7 +25,7 @@ Slightly related: https://github.com/spring-projects/spring-boot/issues/8115[spr
 To be created in Spring Boot issue tracker
 
 a|
-https://github.com/spring-projects/spring-fu/tree/master/initializers[Auto-configuration to functional configuration adapter]
+https://github.com/spring-projects/spring-fu/tree/master/fuconfigure[Functional configuration adapters]
 a|
 Manually created in Spring Fu
 
