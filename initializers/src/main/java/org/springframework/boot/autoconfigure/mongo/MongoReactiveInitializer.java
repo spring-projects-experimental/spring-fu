@@ -33,7 +33,7 @@ public class MongoReactiveInitializer implements ApplicationContextInitializer<G
 		context.registerBean(MongoClient.class, () -> {
 			try {
 				ObjectProvider<List<MongoClientSettingsBuilderCustomizer>> customizers = (ObjectProvider<List<MongoClientSettingsBuilderCustomizer>>)context.getDefaultListableBeanFactory().resolveDependency(new DependencyDescriptor(MethodParameter.forParameter(MongoReactiveAutoConfiguration.class.getDeclaredMethod("reactiveStreamsMongoClient", MongoProperties.class, Environment.class, ObjectProvider.class).getParameters()[2]), true), null);
-				return new MongoReactiveAutoConfiguration(context.getBeanProvider(MongoClientSettings.class)).reactiveStreamsMongoClient(properties, context.getEnvironment(), customizers);
+				return new MongoReactiveAutoConfiguration(context.getBeanProvider(MongoClientSettings.class)).reactiveStreamsMongoClient(this.properties, context.getEnvironment(), customizers);
 			}
 			catch (NoSuchMethodException e) {
 				e.printStackTrace();

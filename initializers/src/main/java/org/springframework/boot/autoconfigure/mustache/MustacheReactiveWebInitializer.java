@@ -19,7 +19,7 @@ public class MustacheReactiveWebInitializer implements ApplicationContextInitial
 
 	@Override
 	public void initialize(GenericApplicationContext context) {
-		MustacheReactiveWebConfiguration configuration = new MustacheReactiveWebConfiguration(properties);
+		MustacheReactiveWebConfiguration configuration = new MustacheReactiveWebConfiguration(this.properties);
 		context.registerBean(ViewResolver .class, () -> configuration.mustacheViewResolver(context.getBean(Mustache.Compiler.class)));
 	}
 }

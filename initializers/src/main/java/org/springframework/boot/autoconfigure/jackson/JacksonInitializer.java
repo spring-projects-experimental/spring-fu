@@ -24,7 +24,7 @@ public class JacksonInitializer implements ApplicationContextInitializer<Generic
 	@Override
 	public void initialize(GenericApplicationContext context) {
 		context.registerBean(Jackson2ObjectMapperBuilderCustomizer.class, () ->
-				new Jackson2ObjectMapperBuilderCustomizerConfiguration().standardJacksonObjectMapperBuilderCustomizer(context, properties));
+				new Jackson2ObjectMapperBuilderCustomizerConfiguration().standardJacksonObjectMapperBuilderCustomizer(context, this.properties));
 		context.registerBean(Jackson2ObjectMapperBuilder.class, () ->
 				new JacksonObjectMapperBuilderConfiguration(context).jacksonObjectMapperBuilder(new ArrayList<>(context.getBeansOfType(Jackson2ObjectMapperBuilderCustomizer.class).values())));
 		context.registerBean(ObjectMapper.class, () -> new JacksonObjectMapperConfiguration().jacksonObjectMapper(context.getBean(Jackson2ObjectMapperBuilder.class)));

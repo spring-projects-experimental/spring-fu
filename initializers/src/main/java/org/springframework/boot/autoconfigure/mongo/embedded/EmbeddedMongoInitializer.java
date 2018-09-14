@@ -24,7 +24,7 @@ public class EmbeddedMongoInitializer implements ApplicationContextInitializer<G
 	@Override
 	public void initialize(GenericApplicationContext context) {
 		IRuntimeConfig config = new EmbeddedMongoAutoConfiguration.RuntimeConfigConfiguration().embeddedMongoRuntimeConfig();
-		EmbeddedMongoAutoConfiguration configuration = new EmbeddedMongoAutoConfiguration(properties, embeddedProperties, context, config);
+		EmbeddedMongoAutoConfiguration configuration = new EmbeddedMongoAutoConfiguration(this.properties, this.embeddedProperties, context, config);
 		context.registerBean(IMongodConfig.class, () -> {
 			try {
 				return configuration.embeddedMongoConfiguration();
