@@ -40,7 +40,7 @@ import org.springframework.fu.coroutines.mongodb.CoroutinesMongoCollection
 import org.springframework.fu.coroutines.mongodb.asCoroutineMongoCollection
 import org.springframework.fu.coroutines.mongodb.data.mongodb.core.index.CoroutinesIndexOperations
 
-open class CoroutineMongoTemplate(
+open class CoroutinesMongoTemplate(
 	override val reactiveMongoOperations: ReactiveMongoOperations
 ) : CoroutinesMongoOperations {
 	override fun indexOps(collectionName: String): CoroutinesIndexOperations =

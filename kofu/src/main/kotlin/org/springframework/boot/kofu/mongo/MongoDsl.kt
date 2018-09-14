@@ -17,39 +17,40 @@
 package org.springframework.boot.kofu.mongo
 
 
+import org.springframework.boot.autoconfigure.data.mongo.MongoDataInitializer
+import org.springframework.boot.autoconfigure.data.mongo.MongoReactiveDataInitializer
 import org.springframework.boot.kofu.AbstractModule
 import org.springframework.boot.kofu.ApplicationDsl
-import org.springframework.boot.autoconfigure.data.mongo.registerMongoDataConfiguration
 import org.springframework.boot.autoconfigure.mongo.MongoProperties
-import org.springframework.boot.autoconfigure.mongo.registerMongoConfiguration
+import org.springframework.boot.autoconfigure.mongo.MongoReactiveInitializer
 import org.springframework.context.support.GenericApplicationContext
 
 
 /**
  * @author Sebastien Deleuze
  */
-open class MongoModule(
+open class MongoDsl(
 	internal val properties: MongoProperties,
-	private val init: MongoModule.() -> Unit
+	private val init: MongoDsl.() -> Unit
 ) : AbstractModule() {
 
 	override lateinit var context: GenericApplicationContext
 
 	internal var embedded = false
 
-
 	override fun registerBeans(context: GenericApplicationContext) {
 		init()
-		registerMongoConfiguration(context, properties, embedded)
-		registerMongoDataConfiguration(context, properties)
+		MongoDataInitializer(properties).initialize(context)
+		MongoReactiveDataInitializer(properties).initialize(context)
+		MongoReactiveInitializer(properties, embedded).initialize(context)
 	}
 
 }
 
 fun ApplicationDsl.mongodb(
 	connectionString: String = "mongodb://localhost/test",
-	init: MongoModule.() -> Unit = {}) {
+	init: MongoDsl.() -> Unit = {}) {
 	val properties = MongoProperties()
 	properties.uri = connectionString
-	initializers.add(MongoModule(properties, init))
+	initializers.add(MongoDsl(properties, init))
 }

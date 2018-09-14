@@ -4,13 +4,13 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import org.springframework.core.io.ClassPathResource
 import org.springframework.fu.coroutines.mongodb.count
-import org.springframework.fu.coroutines.mongodb.data.mongodb.core.CoroutineMongoTemplate
+import org.springframework.fu.coroutines.mongodb.data.mongodb.core.CoroutinesMongoTemplate
 import org.springframework.fu.coroutines.mongodb.findAll
 import org.springframework.fu.coroutines.mongodb.findById
 import org.springframework.fu.coroutines.mongodb.remove
 
 class UserRepository(
-		private val template: CoroutineMongoTemplate,
+		private val template: CoroutinesMongoTemplate,
 		private val objectMapper: ObjectMapper
 ) {
 

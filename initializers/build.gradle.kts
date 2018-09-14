@@ -9,6 +9,8 @@ dependencies {
 	compileOnly("org.mongodb:mongodb-driver-reactivestreams")
 	compileOnly("com.fasterxml.jackson.core:jackson-databind")
 	compileOnly("com.samskivert:jmustache")
+	compileOnly(project(":coroutines:mongodb"))
+	compileOnly(project(":coroutines:webflux"))
 }
 
 publishing {
