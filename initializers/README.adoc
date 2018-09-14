@@ -1,0 +1,10 @@
+= Spring Boot Initializers
+
+This Java library provides a collection of `ApplicationContextInitializer` that
+leverage Spring Boot auto-configurations to register the same beans but in a functional
+way. For now, it mostly targets the Reactive stack and conditions are not managed yet.
+
+Ideally in the future, such library should be generated during Spring Boot build based
+on `spring-boot-autoconfigure` classes.
+
+The dependency to use is `org.springframework.fu:spring-boot-initializers`.
