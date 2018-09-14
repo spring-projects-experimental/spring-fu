@@ -25,9 +25,9 @@ Slightly related: https://github.com/spring-projects/spring-boot/issues/8115[spr
 To be created in Spring Boot issue tracker
 
 a|
-Auto-configuration to functional configuration adapter
+https://github.com/spring-projects/spring-fu/tree/master/initializers[Auto-configuration to functional configuration adapter]
 a|
-Manually created in Spring Fu (see https://github.com/spring-projects/spring-fu/tree/master/initializers[initializers] module)
+Manually created in Spring Fu
 
 Experimented by https://github.com/dsyer[Dave Syer] in https://github.com/dsyer/spring-init-experiment[spring-init-experiment] and https://github.com/dsyer/spring-boot-micro-apps[spring-boot-micro-apps]
 
@@ -77,7 +77,6 @@ https://github.com/spring-projects/spring-fu/issues/34[Spring classpath filterin
 a|
 Not started yet
 a|
-
 
 
 
