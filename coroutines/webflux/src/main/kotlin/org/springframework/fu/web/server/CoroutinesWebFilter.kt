@@ -16,7 +16,8 @@
 
 package org.springframework.fu.web.server
 
-import kotlinx.coroutines.Unconfined
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.reactor.mono
 import org.springframework.web.server.ServerWebExchange
 import org.springframework.web.server.WebFilter
@@ -26,9 +27,9 @@ import reactor.core.publisher.Mono
 interface CoroutinesWebFilter : WebFilter {
 
 	@Suppress("UNCHECKED_CAST")
-	override fun filter(exchange: ServerWebExchange, chain: WebFilterChain): Mono<Void> = mono(Unconfined) {
+	override fun filter(exchange: ServerWebExchange, chain: WebFilterChain): Mono<Void> = GlobalScope.mono(Dispatchers.Unconfined, {
 		filter(CoroutinesServerWebExchange(exchange), CoroutinesWebFilterChain(chain))
-	} as Mono<Void>
+	}) as Mono<Void>
 
 	suspend fun filter(exchange: CoroutinesServerWebExchange, chain: CoroutinesWebFilterChain)
 }

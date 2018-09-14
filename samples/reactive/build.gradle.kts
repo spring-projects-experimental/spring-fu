@@ -17,7 +17,3 @@ dependencies {
 	testImplementation("io.projectreactor:reactor-test")
 	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
 }
-
-configurations.all {
-	exclude(module = "hibernate-validator")
-}

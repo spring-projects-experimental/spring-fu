@@ -3,8 +3,8 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
 	id("org.jetbrains.kotlin.jvm") version "1.3-M2"
-	id("io.spring.dependency-management") version "1.0.5.RELEASE"
-	id("org.springframework.boot") version "2.1.0.M3"
+	id("io.spring.dependency-management") version "1.0.6.RELEASE"
+	id("org.springframework.boot") version "2.1.0.BUILD-SNAPSHOT"
 }
 
 dependencies {
@@ -20,8 +20,8 @@ dependencies {
 
 repositories {
 	mavenCentral()
-	maven("https://repo.spring.io/libs-milestone")
-	maven("https://repo.spring.io/libs-snapshot")
+	maven("https://repo.spring.io/milestone")
+	maven("https://repo.spring.io/snapshot")
 	maven("http://dl.bintray.com/kotlin/kotlin-eap")
 }
 
@@ -37,5 +37,6 @@ tasks.withType<Test> {
 }
 
 configurations.all {
+	exclude(module = "javax.annotation-api")
 	exclude(module = "hibernate-validator")
 }

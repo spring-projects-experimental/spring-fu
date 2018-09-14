@@ -16,7 +16,7 @@
 
 package org.springframework.fu.web.function.server
 
-import kotlinx.coroutines.Unconfined
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.reactive.asPublisher
 import kotlinx.coroutines.reactive.awaitFirst
@@ -200,7 +200,7 @@ internal open class DefaultCoroutineBodyBuilder(private val bodyBuilder: ServerR
 		bodyBuilder.body(Mono.justOrEmpty(value), elementClass).asCoroutineServerResponse()
 
 	override suspend fun <T> body(channel: ReceiveChannel<T>, elementClass: Class<T>): CoroutineServerResponse =
-		bodyBuilder.body(channel.asPublisher(Unconfined), elementClass).asCoroutineServerResponse()
+		bodyBuilder.body(channel.asPublisher(Dispatchers.Unconfined), elementClass).asCoroutineServerResponse()
 
 	override fun contentType(contentType: MediaType): CoroutineBodyBuilder = apply {
 		bodyBuilder.contentType(contentType)

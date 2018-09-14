@@ -12,7 +12,6 @@ import org.springframework.boot.context.event.ApplicationReadyEvent
 import org.springframework.boot.kofu.ref
 import org.springframework.boot.kofu.mongo.embedded
 
-
 val app = application {
 	beans {
 		bean<UserRepository>()

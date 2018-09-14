@@ -2,18 +2,20 @@ import org.jetbrains.kotlin.gradle.plugin.KotlinPluginWrapper
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-	id("org.jetbrains.kotlin.jvm") version "1.3-M2" apply false
-	id("org.springframework.boot") version "2.1.0.M3" apply false
-	id("io.spring.dependency-management") version "1.0.5.RELEASE"
-	id("org.asciidoctor.convert") version "1.5.6" apply false
-	id("java-library")
+	id("org.jetbrains.kotlin.jvm") version "1.3-M2"
+	id("org.springframework.boot") version "2.1.0.BUILD-SNAPSHOT" apply false
+	id("io.spring.dependency-management") version "1.0.6.RELEASE"
 	id("maven-publish")
 }
 
 allprojects {
 	apply {
+		plugin("org.jetbrains.kotlin.jvm")
 		plugin("maven-publish")
+		plugin("java-library")
+		plugin("io.spring.dependency-management")
 	}
+
 	version = "0.0.1.BUILD-SNAPSHOT"
 	group = "org.springframework.fu"
 
@@ -28,8 +30,8 @@ allprojects {
 						password = repoPassword
 					}
 					url = uri(
-						if (version.toString().endsWith(".BUILD-SNAPSHOT")) "https://repo.spring.io/libs-snapshot-local/"
-						else "https://repo.spring.io/libs-release-local/"
+							if (version.toString().endsWith(".BUILD-SNAPSHOT")) "https://repo.spring.io/libs-snapshot-local/"
+							else "https://repo.spring.io/libs-release-local/"
 					)
 
 				} else {
@@ -38,42 +40,40 @@ allprojects {
 			}
 		}
 	}
-}
 
-subprojects {
-	apply {
-		plugin("org.jetbrains.kotlin.jvm")
-		plugin("java-library")
-		plugin("io.spring.dependency-management")
-	}
 	tasks.withType<KotlinCompile> {
 		kotlinOptions {
 			jvmTarget = "1.8"
 			freeCompilerArgs = listOf("-Xjsr305=strict", "-Xjvm-default=enable")
 		}
 	}
+
 	tasks.withType<Test> {
 		useJUnitPlatform()
 	}
+
 	repositories {
 		mavenCentral()
-		maven("https://repo.spring.io/libs-milestone")
+		maven("https://repo.spring.io/milestone")
+		maven("https://repo.spring.io/snapshot")
 		maven("http://dl.bintray.com/kotlin/kotlin-eap")
 	}
+
 	dependencyManagement {
 		val bootVersion: String by project
 		val coroutinesVersion: String by project
 		imports {
-			mavenBom("org.springframework.boot:spring-boot-dependencies:$bootVersion") {
-				bomProperty("kotlin.version", "1.3-M2")
-			}
+			mavenBom("org.springframework.boot:spring-boot-dependencies:$bootVersion")
 		}
 		dependencies {
 			dependency("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
 			dependency("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:$coroutinesVersion")
 		}
 	}
+
 	configurations.all {
 		exclude(module = "javax.annotation-api")
+		exclude(module = "hibernate-validator")
 	}
+
 }

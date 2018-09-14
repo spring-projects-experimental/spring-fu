@@ -16,7 +16,8 @@
 
 package org.springframework.fu.web.function.server
 
-import kotlinx.coroutines.Unconfined
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.reactor.mono
 import org.springframework.core.io.Resource
 import org.springframework.http.HttpMethod
@@ -383,9 +384,9 @@ open class CoroutinesRouterFunctionDsl(private val init: (CoroutinesRouterFuncti
 	 */
 	fun resources(lookupFunction: suspend (CoroutinesServerRequest) -> Resource) {
 		routes += RouterFunctions.resources {
-			mono(Unconfined) {
+			GlobalScope.mono(Dispatchers.Unconfined, {
 				lookupFunction.invoke(CoroutinesServerRequest.invoke(it))
-			}
+			})
 		}
 	}
 
@@ -395,9 +396,9 @@ open class CoroutinesRouterFunctionDsl(private val init: (CoroutinesRouterFuncti
 	}
 
 	private fun asHandlerFunction(init: suspend (CoroutinesServerRequest) -> CoroutineServerResponse) = HandlerFunction {
-		mono(Unconfined) {
+		GlobalScope.mono(Dispatchers.Unconfined, {
 			init(CoroutinesServerRequest.invoke(it)).extractServerResponse()
-		}
+		})
 	}
 
 	fun from(other: CoroutineServerResponse) =

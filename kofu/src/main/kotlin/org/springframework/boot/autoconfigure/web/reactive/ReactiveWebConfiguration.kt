@@ -8,10 +8,10 @@ import org.springframework.boot.web.server.WebServerFactoryCustomizerBeanPostPro
 import org.springframework.context.support.registerBean
 import org.springframework.boot.web.reactive.server.ConfigurableReactiveWebServerFactory
 import org.springframework.beans.factory.getBean
+import org.springframework.beans.factory.getBeanProvider
 import org.springframework.boot.web.reactive.error.DefaultErrorAttributes
 import org.springframework.boot.web.reactive.error.ErrorAttributes
 import org.springframework.web.reactive.result.view.ViewResolver
-import org.springframework.core.ResolvableType
 import org.springframework.boot.autoconfigure.web.reactive.error.ErrorWebFluxAutoConfiguration
 import org.springframework.boot.autoconfigure.web.ResourceProperties
 import org.springframework.web.server.adapter.WebHttpHandlerBuilder
@@ -86,26 +86,29 @@ internal fun registerReactiveWebServerConfiguration(context: GenericApplicationC
 		context.getBean<EnableWebFluxConfigurationWrapper>().webHandler()
 	}
 
-	// TODO Fix when SPR-17272 will be fixed and Boot updated as well
 	context.registerBean {
 		WebFluxConfig(resourceProperties, webFluxProperties, context,
+						// TODO Fix when SPR-17272 will be fixed and Boot updated as well
 						context.defaultListableBeanFactory.resolveDependency(DependencyDescriptor(MethodParameter.forParameter(WebFluxConfig::class.java.constructors[0].parameters[3]), true), null) as ObjectProvider<List<HandlerMethodArgumentResolver>>,
-						context.getBeanProvider(ResolvableType.forClass(CodecCustomizer::class.java)),
-						context.getBeanProvider(WebFluxAutoConfiguration.ResourceHandlerRegistrationCustomizer::class.java),
+						// TODO Fix when SPR-17272 will be fixed and Boot updated as well
+						context.defaultListableBeanFactory.resolveDependency(DependencyDescriptor(MethodParameter.forParameter(WebFluxConfig::class.java.constructors[0].parameters[4]), true), null) as ObjectProvider<List<CodecCustomizer>>,
+						context.getBeanProvider(),
+						// TODO Fix when SPR-17272 will be fixed and Boot updated as well
 						context.defaultListableBeanFactory.resolveDependency(DependencyDescriptor(MethodParameter.forParameter(WebFluxConfig::class.java.constructors[0].parameters[6]), true), null) as ObjectProvider<List<ViewResolver>>)
 	}
 }
 
 internal fun registerReactiveWebClientConfiguration(context: GenericApplicationContext) {
-	// TODO Fix when SPR-17272 will be fixed and Boot updated as well
 	context.registerBean {
-		WebClientAutoConfiguration(context.defaultListableBeanFactory.resolveDependency(DependencyDescriptor(MethodParameter.forParameter(WebClientAutoConfiguration::class.java.constructors[0].parameters[0]), true), null) as ObjectProvider<List<WebClientCustomizer>>).webClientBuilder()
+		// TODO Fix when SPR-17272 will be fixed and Boot updated as well
+		val customizers = context.defaultListableBeanFactory.resolveDependency(DependencyDescriptor(MethodParameter.forParameter(WebClientAutoConfiguration::class.java.constructors[0].parameters[0]), true), null) as ObjectProvider<List<WebClientCustomizer>>
+		WebClientAutoConfiguration(customizers).webClientBuilder()
 	}
 	// TODO Send a PR to make WebClientCodecsConfiguration package private
 
 }
 
-internal class EnableWebFluxConfigurationWrapper(context: GenericApplicationContext, webFluxProperties: WebFluxProperties) : EnableWebFluxConfiguration(webFluxProperties, context.getBeanProvider(WebFluxRegistrations::class.java))
+internal class EnableWebFluxConfigurationWrapper(context: GenericApplicationContext, webFluxProperties: WebFluxProperties) : EnableWebFluxConfiguration(webFluxProperties, context.getBeanProvider())
 
 
 
