@@ -1,8 +1,9 @@
-package org.springframework.sample.coroutines
+package org.springframework.fu.sample.reactive
 
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
+import org.springframework.fu.sample.reactive.app
 import org.springframework.http.MediaType
 import org.springframework.test.web.reactive.server.WebTestClient
 
@@ -18,22 +19,22 @@ class IntegrationTests {
 	@Test
 	fun `Request HTML endpoint`() {
 		client.get().uri("/").exchange()
-				.expectStatus().is2xxSuccessful
-				.expectHeader().contentType("text/html;charset=UTF-8")
+			.expectStatus().is2xxSuccessful
+			.expectHeader().contentType("text/html;charset=UTF-8")
 	}
 
 	@Test
 	fun `Request HTTP API endpoint`() {
 		client.get().uri("/api/user").exchange()
-				.expectStatus().is2xxSuccessful
-				.expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+			.expectStatus().is2xxSuccessful
+			.expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
 	}
 
 	@Test
 	fun `Request conf endpoint`() {
 		client.get().uri("/conf").exchange()
-				.expectStatus().is2xxSuccessful
-				.expectHeader().contentType("text/plain;charset=UTF-8")
+			.expectStatus().is2xxSuccessful
+			.expectHeader().contentType("text/plain;charset=UTF-8")
 	}
 
 	@AfterAll

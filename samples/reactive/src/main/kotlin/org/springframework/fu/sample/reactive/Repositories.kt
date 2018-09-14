@@ -1,4 +1,4 @@
-package org.springframework.sample.reactive
+package org.springframework.fu.sample.reactive
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue

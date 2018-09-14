@@ -1,4 +1,4 @@
-package org.springframework.sample.coroutines
+package org.springframework.fu.sample.coroutines
 
 import kotlinx.coroutines.runBlocking
 import org.springframework.boot.kofu.application

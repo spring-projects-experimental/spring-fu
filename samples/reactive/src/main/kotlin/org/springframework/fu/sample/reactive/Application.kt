@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.sample.reactive
+package org.springframework.fu.sample.reactive
 
 import org.springframework.boot.kofu.application
 import org.springframework.boot.kofu.web.jackson

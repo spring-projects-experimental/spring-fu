@@ -1,4 +1,4 @@
-package org.springframework.sample.reactive
+package org.springframework.fu.sample.reactive
 
 import org.springframework.data.annotation.Id
 

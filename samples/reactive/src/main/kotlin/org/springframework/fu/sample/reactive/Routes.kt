@@ -1,4 +1,4 @@
-package org.springframework.sample.reactive
+package org.springframework.fu.sample.reactive
 
 import org.springframework.web.reactive.function.server.router
 
