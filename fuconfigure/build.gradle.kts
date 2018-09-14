@@ -17,7 +17,7 @@ publishing {
 	publications {
 		create(project.name, MavenPublication::class.java) {
 			from(components["java"])
-			artifactId = "spring-boot-initializers"
+			artifactId = "spring-boot-fuconfigure"
 			val sourcesJar by tasks.creating(Jar::class) {
 				classifier = "sources"
 				from(sourceSets["main"].allSource)
