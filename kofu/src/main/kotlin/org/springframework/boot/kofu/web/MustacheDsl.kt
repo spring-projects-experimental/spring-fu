@@ -23,7 +23,7 @@ import org.springframework.boot.autoconfigure.mustache.MustacheReactiveWebInitia
 /**
  * @author Sebastien Deleuze
  */
-fun WebFluxServerModule.mustache(
+fun WebFluxServerDsl.mustache(
 	prefix: String = "classpath:/templates/", suffix: String = ".mustache") {
 
 	val properties = MustacheProperties()

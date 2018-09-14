@@ -31,7 +31,7 @@ import reactor.test.test
 /**
  * @author Alexey Nesterov
  */
-abstract class AbstractWebServerModuleTests(protected val port: Int = 8080) {
+abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
 
 	abstract fun getServerFactory(): ConfigurableReactiveWebServerFactory
 

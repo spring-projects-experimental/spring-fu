@@ -5,10 +5,10 @@ import org.springframework.context.support.GenericApplicationContext
 import org.springframework.core.env.Environment
 
 @DslMarker
-annotation class ModuleMarker
+annotation class DslMarker
 
-@ModuleMarker
-interface Module : ApplicationContextInitializer<GenericApplicationContext> {
+@DslMarker
+interface Dsl : ApplicationContextInitializer<GenericApplicationContext> {
 
 	var context: GenericApplicationContext
 
@@ -26,12 +26,12 @@ interface Module : ApplicationContextInitializer<GenericApplicationContext> {
  * @param name the name of the bean to retrieve
  * @param T type the bean must match, can be an interface or superclass
  */
-inline fun <reified T : Any> Module.ref(name: String? = null): T = when (name) {
+inline fun <reified T : Any> Dsl.ref(name: String? = null): T = when (name) {
 	null -> context.getBean(T::class.java)
 	else -> context.getBean(name, T::class.java)
 }
 
-abstract class AbstractModule : Module {
+abstract class AbstractDsl : Dsl {
 
 	override lateinit var context: GenericApplicationContext
 
@@ -39,12 +39,12 @@ abstract class AbstractModule : Module {
 
 	override fun initialize(context: GenericApplicationContext) {
 		this.context = context
-		registerBeans(context)
+		register(context)
 		for (child in initializers) {
 			child.initialize(context)
 		}
 	}
 
-	abstract fun registerBeans(context: GenericApplicationContext)
+	abstract fun register(context: GenericApplicationContext)
 
 }

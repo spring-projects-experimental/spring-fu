@@ -27,7 +27,7 @@ import reactor.netty.http.HttpResources
 /**
  * @author Ireneusz Kozłowski
  */
-class CorsModuleTests {
+class CorsDslTests {
 
 	@Test
 	fun `Enable cors module on server, create and request a JSON endpoint`() {

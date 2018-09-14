@@ -16,12 +16,12 @@
 
 package org.springframework.boot.kofu.web
 
-import org.springframework.boot.web.embedded.netty.NettyReactiveWebServerFactory
+import org.springframework.boot.web.embedded.tomcat.TomcatReactiveWebServerFactory
+
 
 /**
  * @author Sebastien Deleuze
  */
-class NettyServerModuleTests : AbstractWebServerModuleTests() {
-	override fun getServerFactory() = NettyReactiveWebServerFactory(port)
-
+class TomcatServerDslTests : AbstractWebServerDslTests() {
+	override fun getServerFactory() = TomcatReactiveWebServerFactory(port)
 }

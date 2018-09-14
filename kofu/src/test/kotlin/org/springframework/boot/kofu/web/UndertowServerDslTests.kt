@@ -21,6 +21,6 @@ import org.springframework.boot.web.embedded.undertow.UndertowReactiveWebServerF
 /**
  * @author Ruslan Ibragimov
  */
-class UndertowServerModuleTests: AbstractWebServerModuleTests() {
+class UndertowServerDslTests: AbstractWebServerDslTests() {
 	override fun getServerFactory() = UndertowReactiveWebServerFactory(port)
 }

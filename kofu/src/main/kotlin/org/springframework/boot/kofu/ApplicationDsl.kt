@@ -33,11 +33,11 @@ import org.springframework.context.support.registerBean
 /**
  * @author Sebastien Deleuze
  */
-open class ApplicationDsl(private val startServer: Boolean, val init: ApplicationDsl.() -> Unit) : AbstractModule() {
+open class ApplicationDsl(private val startServer: Boolean, val init: ApplicationDsl.() -> Unit) : AbstractDsl() {
 
 	internal class Application
 
-	override fun registerBeans(context: GenericApplicationContext) {
+	override fun register(context: GenericApplicationContext) {
 		init()
 		context.registerBean(AutowiredAnnotationBeanPostProcessor::class.java)
 		context.registerBean("messageSource") {

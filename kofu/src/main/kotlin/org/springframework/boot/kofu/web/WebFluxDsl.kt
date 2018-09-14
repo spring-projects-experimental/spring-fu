@@ -18,12 +18,11 @@ package org.springframework.boot.kofu.web
 
 import org.springframework.beans.factory.config.BeanPostProcessor
 import org.springframework.beans.factory.getBean
+import org.springframework.boot.autoconfigure.web.reactive.function.client.ReactiveWebClientInitializer
 import org.springframework.boot.autoconfigure.web.ResourceProperties
 import org.springframework.boot.autoconfigure.web.ServerProperties
-import org.springframework.boot.autoconfigure.web.reactive.WebFluxProperties
-import org.springframework.boot.autoconfigure.web.reactive.registerReactiveWebClientConfiguration
-import org.springframework.boot.autoconfigure.web.reactive.registerReactiveWebServerConfiguration
-import org.springframework.boot.kofu.AbstractModule
+import org.springframework.boot.autoconfigure.web.reactive.*
+import org.springframework.boot.kofu.AbstractDsl
 import org.springframework.boot.kofu.ApplicationDsl
 import org.springframework.boot.web.embedded.jetty.JettyReactiveWebServerFactory
 import org.springframework.boot.web.embedded.netty.NettyReactiveWebServerFactory
@@ -43,7 +42,7 @@ import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.server.*
 import org.springframework.web.server.WebFilter
 
-class WebFluxCodecsModule : AbstractModule() {
+class WebFluxCodecsDsl : AbstractDsl() {
 
 
 	internal val encoders = mutableListOf<Encoder<*>>()
@@ -54,7 +53,7 @@ class WebFluxCodecsModule : AbstractModule() {
 
 	internal val readers = mutableListOf<HttpMessageReader<*>>()
 
-	override fun registerBeans(context: GenericApplicationContext) {
+	override fun register(context: GenericApplicationContext) {
 		context.registerBean<BeanPostProcessor> {
 			object : BeanPostProcessor {
 				override fun postProcessBeforeInitialization(bean: Any, beanName: String): Any? {
@@ -83,8 +82,8 @@ class WebFluxCodecsModule : AbstractModule() {
 	}
 }
 
-open class WebFluxServerModule(private val init: WebFluxServerModule.() -> Unit,
-							   private val serverFactory: ConfigurableReactiveWebServerFactory): AbstractModule() {
+open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit,
+							private val serverFactory: ConfigurableReactiveWebServerFactory): AbstractDsl() {
 
 	private val serverProperties = ServerProperties()
 
@@ -92,16 +91,16 @@ open class WebFluxServerModule(private val init: WebFluxServerModule.() -> Unit,
 
 	private val webFluxProperties = WebFluxProperties()
 
-	override fun registerBeans(context: GenericApplicationContext) {
+	override fun register(context: GenericApplicationContext) {
 		init()
 		if (context.containsBeanDefinition("webHandler")) {
 			throw IllegalStateException("Only one server per application is supported")
 		}
-		registerReactiveWebServerConfiguration(context, serverProperties, resourceProperties, webFluxProperties, serverFactory)
+		ReactiveWebServerInitializer(serverProperties, resourceProperties, webFluxProperties, serverFactory).initialize(context)
 	}
 
-	fun codecs(init: WebFluxCodecsModule.() -> Unit =  {}) {
-		val codecModule = WebFluxCodecsModule()
+	fun codecs(init: WebFluxCodecsDsl.() -> Unit =  {}) {
+		val codecModule = WebFluxCodecsDsl()
 		codecModule.init()
 		initializers.add(codecModule)
 	}
@@ -120,11 +119,11 @@ open class WebFluxServerModule(private val init: WebFluxServerModule.() -> Unit,
 
 }
 
-class WebFluxClientModule(private val init: WebFluxClientModule.() -> Unit, val baseUrl: String?, private val name: String?) : AbstractModule() {
+class WebFluxClientDsl(private val init: WebFluxClientDsl.() -> Unit, val baseUrl: String?, private val name: String?) : AbstractDsl() {
 
-	override fun registerBeans(context: GenericApplicationContext) {
+	override fun register(context: GenericApplicationContext) {
 		init()
-		registerReactiveWebClientConfiguration(context)
+		ReactiveWebClientInitializer().initialize(context)
 		if (name != null)
 			context.registerBean(name) { client() }
 		else
@@ -141,8 +140,8 @@ class WebFluxClientModule(private val init: WebFluxClientModule.() -> Unit, val 
 		return builder.build()
 	}
 
-	fun codecs(init: WebFluxCodecsModule.() -> Unit =  {}) {
-		val codecModule = WebFluxCodecsModule()
+	fun codecs(init: WebFluxCodecsDsl.() -> Unit =  {}) {
+		val codecModule = WebFluxCodecsDsl()
 		codecModule.init()
 		initializers.add(codecModule)
 	}
@@ -156,10 +155,10 @@ fun ApplicationDsl.undertow(port: Int = 8080) = UndertowReactiveWebServerFactory
 
 fun ApplicationDsl.jetty(port: Int = 8080) = JettyReactiveWebServerFactory(port)
 
-fun ApplicationDsl.server(serverFactory: ConfigurableReactiveWebServerFactory, init: WebFluxServerModule.() -> Unit =  {}) {
-	initializers.add(WebFluxServerModule(init, serverFactory))
+fun ApplicationDsl.server(serverFactory: ConfigurableReactiveWebServerFactory, init: WebFluxServerDsl.() -> Unit =  {}) {
+	initializers.add(WebFluxServerDsl(init, serverFactory))
 }
 
-fun ApplicationDsl.client(baseUrl: String? = null, name: String? = null, init: WebFluxClientModule.() -> Unit =  {}) {
-	initializers.add(WebFluxClientModule(init, baseUrl, name))
+fun ApplicationDsl.client(baseUrl: String? = null, name: String? = null, init: WebFluxClientDsl.() -> Unit =  {}) {
+	initializers.add(WebFluxClientDsl(init, baseUrl, name))
 }

@@ -19,14 +19,14 @@ package org.springframework.boot.kofu.mongo
 import org.springframework.boot.autoconfigure.mongo.MongoProperties
 import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoInitializer
 import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoProperties
-import org.springframework.boot.kofu.AbstractModule
+import org.springframework.boot.kofu.AbstractDsl
 import org.springframework.context.support.GenericApplicationContext
 
-class EmbeddedMongoModule(private val mongoProperties: MongoProperties) : AbstractModule() {
+class EmbeddedMongoModule(private val mongoProperties: MongoProperties) : AbstractDsl() {
 
 	private val embeddedMongoProperties = EmbeddedMongoProperties()
 
-	override fun registerBeans(context: GenericApplicationContext) {
+	override fun register(context: GenericApplicationContext) {
 		EmbeddedMongoInitializer(mongoProperties, embeddedMongoProperties).initialize(context)
 	}
 
