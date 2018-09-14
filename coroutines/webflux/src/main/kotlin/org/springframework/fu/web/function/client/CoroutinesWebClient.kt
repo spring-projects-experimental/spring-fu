@@ -183,7 +183,7 @@ open class DefaultRequestBodyUriSpec(
 	}
 
 	override suspend fun exchange(): CoroutinesClientResponse? = spec.exchange().awaitFirstOrDefault(null)?.let {
-		DefaultCoroutineClientResponse(it)
+		DefaultCoroutinesClientResponse(it)
 	}
 
 	override suspend fun retrieve(): CoroutinesWebClient.CoroutineResponseSpec =

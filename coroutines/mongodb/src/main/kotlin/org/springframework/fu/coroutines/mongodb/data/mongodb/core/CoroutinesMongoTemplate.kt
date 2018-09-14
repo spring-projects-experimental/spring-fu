@@ -49,28 +49,28 @@ open class CoroutinesMongoTemplate(
 	override fun indexOps(entityClass: Class<*>): CoroutinesIndexOperations =
 			DefaultCoroutinesIndexOperations(reactiveMongoOperations.indexOps(entityClass))
 
-	suspend override fun executeCommand(jsonCommand: String): Document? =
+	override suspend fun executeCommand(jsonCommand: String): Document? =
 		reactiveMongoOperations.executeCommand(jsonCommand).awaitFirstOrDefault(null)
 
-	suspend override fun executeCommand(command: Document): Document? =
+	override suspend fun executeCommand(command: Document): Document? =
 		reactiveMongoOperations.executeCommand(command).awaitFirstOrDefault(null)
 
-	suspend override fun executeCommand(command: Document, readPreference: ReadPreference): Document? =
+	override suspend fun executeCommand(command: Document, readPreference: ReadPreference): Document? =
 		reactiveMongoOperations.executeCommand(command, readPreference).awaitFirstOrDefault(null)
 
-	suspend override fun <T> execute(action: CoroutineDatabaseCallback<T>): List<T> =
+	override suspend fun <T> execute(action: CoroutineDatabaseCallback<T>): List<T> =
 		reactiveMongoOperations.execute(action.reactiveDatabaseCallback).collectList().awaitSingle()
 
-	suspend override fun <T> execute(entityClass: Class<*>, action: CoroutinesCollectionCallback<T>): List<T> =
+	override suspend fun <T> execute(entityClass: Class<*>, action: CoroutinesCollectionCallback<T>): List<T> =
 		reactiveMongoOperations.execute(entityClass, action.reactiveCollectionCallback).collectList().awaitSingle()
 
-	suspend override fun <T> execute(collectionName: String, action: CoroutinesCollectionCallback<T>): List<T> =
+	override suspend fun <T> execute(collectionName: String, action: CoroutinesCollectionCallback<T>): List<T> =
 		reactiveMongoOperations.execute(collectionName, action.reactiveCollectionCallback).collectList().awaitSingle()
 
-	suspend override fun <T> createCollection(entityClass: Class<T>): CoroutinesMongoCollection<Document> =
+	override suspend fun <T> createCollection(entityClass: Class<T>): CoroutinesMongoCollection<Document> =
 		reactiveMongoOperations.createCollection(entityClass).awaitFirstOrDefault(null).asCoroutineMongoCollection()
 
-	suspend override fun <T> createCollection(
+	override suspend fun <T> createCollection(
 		entityClass: Class<T>,
 		collectionOptions: CollectionOptions
 	): CoroutinesMongoCollection<Document> =
@@ -79,10 +79,10 @@ open class CoroutinesMongoTemplate(
 			collectionOptions
 		).awaitFirstOrDefault(null).asCoroutineMongoCollection()
 
-	suspend override fun createCollection(collectionName: String): CoroutinesMongoCollection<Document> =
+	override suspend fun createCollection(collectionName: String): CoroutinesMongoCollection<Document> =
 		reactiveMongoOperations.createCollection(collectionName).awaitFirstOrDefault(null).asCoroutineMongoCollection()
 
-	suspend override fun createCollection(
+	override suspend fun createCollection(
 		collectionName: String,
 		collectionOptions: CollectionOptions
 	): CoroutinesMongoCollection<Document> =
@@ -91,93 +91,93 @@ open class CoroutinesMongoTemplate(
 			collectionOptions
 		).awaitFirstOrDefault(null).asCoroutineMongoCollection()
 
-	suspend override fun getCollectionNames(): List<String> =
+	override suspend fun getCollectionNames(): List<String> =
 		reactiveMongoOperations.collectionNames.collectList().awaitSingle()
 
 	override fun getCollection(collectionName: String): CoroutinesMongoCollection<Document> =
 		reactiveMongoOperations.getCollection(collectionName).asCoroutineMongoCollection()
 
-	suspend override fun <T> collectionExists(entityClass: Class<T>): Boolean =
+	override suspend fun <T> collectionExists(entityClass: Class<T>): Boolean =
 		reactiveMongoOperations.collectionExists(entityClass).awaitFirst()
 
-	suspend override fun collectionExists(collectionName: String): Boolean =
+	override suspend fun collectionExists(collectionName: String): Boolean =
 		reactiveMongoOperations.collectionExists(collectionName).awaitFirst()
 
-	suspend override fun <T> dropCollection(entityClass: Class<T>) {
+	override suspend fun <T> dropCollection(entityClass: Class<T>) {
 		reactiveMongoOperations.dropCollection(entityClass).awaitLast()
 	}
 
-	suspend override fun dropCollection(collectionName: String) {
+	override suspend fun dropCollection(collectionName: String) {
 		reactiveMongoOperations.dropCollection(collectionName).awaitLast()
 	}
 
-	suspend override fun <T> findAll(entityClass: Class<T>): List<T> =
+	override suspend fun <T> findAll(entityClass: Class<T>): List<T> =
 		reactiveMongoOperations.findAll(entityClass).collectList().awaitSingle()
 
-	suspend override fun <T> findAll(entityClass: Class<T>, collectionName: String): List<T> =
+	override suspend fun <T> findAll(entityClass: Class<T>, collectionName: String): List<T> =
 		reactiveMongoOperations.findAll(entityClass, collectionName).collectList().awaitSingle()
 
-	suspend override fun <T> findOne(query: Query, entityClass: Class<T>): T? =
+	override suspend fun <T> findOne(query: Query, entityClass: Class<T>): T? =
 		reactiveMongoOperations.findOne(query, entityClass).awaitFirstOrDefault(null)
 
-	suspend override fun <T> findOne(query: Query, entityClass: Class<T>, collectionName: String): T? =
+	override suspend fun <T> findOne(query: Query, entityClass: Class<T>, collectionName: String): T? =
 		reactiveMongoOperations.findOne(query, entityClass, collectionName).awaitFirstOrDefault(null)
 
-	suspend override fun exists(query: Query, collectionName: String): Boolean =
+	override suspend fun exists(query: Query, collectionName: String): Boolean =
 		reactiveMongoOperations.exists(query, collectionName).awaitFirst()
 
-	suspend override fun exists(query: Query, entityClass: Class<*>): Boolean =
+	override suspend fun exists(query: Query, entityClass: Class<*>): Boolean =
 		reactiveMongoOperations.exists(query, entityClass).awaitFirst()
 
-	suspend override fun exists(query: Query, entityClass: Class<*>, collectionName: String): Boolean =
+	override suspend fun exists(query: Query, entityClass: Class<*>, collectionName: String): Boolean =
 		reactiveMongoOperations.exists(query, entityClass, collectionName).awaitFirst()
 
-	suspend override fun <T> find(query: Query, entityClass: Class<T>): List<T> =
+	override suspend fun <T> find(query: Query, entityClass: Class<T>): List<T> =
 		reactiveMongoOperations.find(query, entityClass).collectList().awaitSingle()
 
-	suspend override fun <T> find(query: Query, entityClass: Class<T>, collectionName: String): List<T> =
+	override suspend fun <T> find(query: Query, entityClass: Class<T>, collectionName: String): List<T> =
 		reactiveMongoOperations.find(query, entityClass, collectionName).collectList().awaitSingle()
 
-	suspend override fun <T> findById(id: Any, entityClass: Class<T>): T? =
+	override suspend fun <T> findById(id: Any, entityClass: Class<T>): T? =
 		reactiveMongoOperations.findById(id, entityClass).awaitFirstOrDefault(null)
 
-	suspend override fun <T> findById(id: Any, entityClass: Class<T>, collectionName: String): T? =
+	override suspend fun <T> findById(id: Any, entityClass: Class<T>, collectionName: String): T? =
 		reactiveMongoOperations.findById(id, entityClass, collectionName).awaitFirstOrDefault(null)
 
-	suspend override fun <O> aggregate(
+	override suspend fun <O> aggregate(
 		aggregation: TypedAggregation<*>,
 		collectionName: String,
 		outputType: Class<O>
 	): List<O> =
 		reactiveMongoOperations.aggregate(aggregation, collectionName, outputType).collectList().awaitSingle()
 
-	suspend override fun <O> aggregate(aggregation: TypedAggregation<*>, outputType: Class<O>): List<O> =
+	override suspend fun <O> aggregate(aggregation: TypedAggregation<*>, outputType: Class<O>): List<O> =
 		reactiveMongoOperations.aggregate(aggregation, outputType).collectList().awaitSingle()
 
-	suspend override fun <O> aggregate(aggregation: Aggregation, inputType: Class<*>, outputType: Class<O>): List<O> =
+	override suspend fun <O> aggregate(aggregation: Aggregation, inputType: Class<*>, outputType: Class<O>): List<O> =
 		reactiveMongoOperations.aggregate(aggregation, inputType, outputType).collectList().awaitSingle()
 
-	suspend override fun <O> aggregate(
+	override suspend fun <O> aggregate(
 		aggregation: Aggregation,
 		collectionName: String,
 		outputType: Class<O>
 	): List<O> =
 		reactiveMongoOperations.aggregate(aggregation, collectionName, outputType).collectList().awaitSingle()
 
-	suspend override fun <T> geoNear(near: NearQuery, entityClass: Class<T>): List<GeoResult<T>> =
+	override suspend fun <T> geoNear(near: NearQuery, entityClass: Class<T>): List<GeoResult<T>> =
 		reactiveMongoOperations.geoNear(near, entityClass).collectList().awaitSingle()
 
-	suspend override fun <T> geoNear(
+	override suspend fun <T> geoNear(
 		near: NearQuery,
 		entityClass: Class<T>,
 		collectionName: String
 	): List<GeoResult<T>> =
 		reactiveMongoOperations.geoNear(near, entityClass, collectionName).collectList().awaitSingle()
 
-	suspend override fun <T> findAndModify(query: Query, update: Update, entityClass: Class<T>): T? =
+	override suspend fun <T> findAndModify(query: Query, update: Update, entityClass: Class<T>): T? =
 		reactiveMongoOperations.findAndModify(query, update, entityClass).awaitFirstOrDefault(null)
 
-	suspend override fun <T> findAndModify(
+	override suspend fun <T> findAndModify(
 		query: Query,
 		update: Update,
 		entityClass: Class<T>,
@@ -185,7 +185,7 @@ open class CoroutinesMongoTemplate(
 	): T? =
 		reactiveMongoOperations.findAndModify(query, update, entityClass, collectionName).awaitFirstOrDefault(null)
 
-	suspend override fun <T> findAndModify(
+	override suspend fun <T> findAndModify(
 		query: Query,
 		update: Update,
 		options: FindAndModifyOptions,
@@ -193,7 +193,7 @@ open class CoroutinesMongoTemplate(
 	): T? =
 		reactiveMongoOperations.findAndModify(query, update, options, entityClass).awaitFirstOrDefault(null)
 
-	suspend override fun <T> findAndModify(
+	override suspend fun <T> findAndModify(
 		query: Query,
 		update: Update,
 		options: FindAndModifyOptions,
@@ -204,69 +204,69 @@ open class CoroutinesMongoTemplate(
 			null
 		)
 
-	suspend override fun <T> findAndRemove(query: Query, entityClass: Class<T>): T? =
+	override suspend fun <T> findAndRemove(query: Query, entityClass: Class<T>): T? =
 		reactiveMongoOperations.findAndRemove(query, entityClass).awaitFirstOrDefault(null)
 
-	suspend override fun <T> findAndRemove(query: Query, entityClass: Class<T>, collectionName: String): T? =
+	override suspend fun <T> findAndRemove(query: Query, entityClass: Class<T>, collectionName: String): T? =
 		reactiveMongoOperations.findAndRemove(query, entityClass, collectionName).awaitFirstOrDefault(null)
 
-	suspend override fun count(query: Query, entityClass: Class<*>): Long =
+	override suspend fun count(query: Query, entityClass: Class<*>): Long =
 		reactiveMongoOperations.count(query, entityClass).awaitFirst()
 
-	suspend override fun count(query: Query, collectionName: String): Long =
+	override suspend fun count(query: Query, collectionName: String): Long =
 		reactiveMongoOperations.count(query, collectionName).awaitFirst()
 
-	suspend override fun count(query: Query, entityClass: Class<*>, collectionName: String): Long =
+	override suspend fun count(query: Query, entityClass: Class<*>, collectionName: String): Long =
 		reactiveMongoOperations.count(query, entityClass, collectionName).awaitFirst()
 
-	suspend override fun <T> insert(objectToSave: T): T? =
+	override suspend fun <T> insert(objectToSave: T): T? =
 		reactiveMongoOperations.insert(objectToSave).awaitFirstOrDefault(null)
 
-	suspend override fun <T> insert(objectToSave: T, collectionName: String): T? =
+	override suspend fun <T> insert(objectToSave: T, collectionName: String): T? =
 		reactiveMongoOperations.insert(objectToSave, collectionName).awaitFirstOrDefault(null)
 
-	suspend override fun <T> insert(batchToSave: Collection<T>, entityClass: Class<*>): List<T> =
+	override suspend fun <T> insert(batchToSave: Collection<T>, entityClass: Class<*>): List<T> =
 		reactiveMongoOperations.insert(batchToSave, entityClass).collectList().awaitSingle()
 
-	suspend override fun <T> insert(batchToSave: Collection<T>, collectionName: String): List<T> =
+	override suspend fun <T> insert(batchToSave: Collection<T>, collectionName: String): List<T> =
 		reactiveMongoOperations.insert(batchToSave, collectionName).collectList().awaitSingle()
 
-	suspend override fun <T> insertAll(objectsToSave: Collection<T>): List<T> =
+	override suspend fun <T> insertAll(objectsToSave: Collection<T>): List<T> =
 		reactiveMongoOperations.insertAll(objectsToSave).collectList().awaitSingle()
 
-	suspend override fun <T> insert(objectToSave: suspend () -> T?): T? =
+	override suspend fun <T> insert(objectToSave: suspend () -> T?): T? =
 		objectToSave()?.let {
 			reactiveMongoOperations.insert(it).awaitFirstOrDefault(null)
 		}
 
-	suspend override fun <T> insertAll(batchToSave: suspend () -> Collection<T>, entityClass: Class<*>): List<T> =
+	override suspend fun <T> insertAll(batchToSave: suspend () -> Collection<T>, entityClass: Class<*>): List<T> =
 		insert(batchToSave(), entityClass)
 
-	suspend override fun <T> insertAll(batchToSave: suspend () -> Collection<T>, collectionName: String): List<T> =
+	override suspend fun <T> insertAll(batchToSave: suspend () -> Collection<T>, collectionName: String): List<T> =
 		insert(batchToSave(), collectionName)
 
-	suspend override fun <T> insertAll(objectsToSave: suspend () -> Collection<T>): List<T> =
+	override suspend fun <T> insertAll(objectsToSave: suspend () -> Collection<T>): List<T> =
 		insertAll(objectsToSave())
 
-	suspend override fun <T> save(objectToSave: T): T? =
+	override suspend fun <T> save(objectToSave: T): T? =
 		reactiveMongoOperations.save(objectToSave).awaitFirstOrDefault(null)
 
-	suspend override fun <T> save(objectToSave: T, collectionName: String): T? =
+	override suspend fun <T> save(objectToSave: T, collectionName: String): T? =
 		reactiveMongoOperations.save(objectToSave, collectionName).awaitFirstOrDefault(null)
 
-	suspend override fun <T> save(objectToSave: suspend () -> T?): T? =
+	override suspend fun <T> save(objectToSave: suspend () -> T?): T? =
 		objectToSave()?.let { save(it) }
 
-	suspend override fun <T> save(objectToSave: suspend () -> T?, collectionName: String): T? =
+	override suspend fun <T> save(objectToSave: suspend () -> T?, collectionName: String): T? =
 		objectToSave()?.let { save(it, collectionName) }
 
-	suspend override fun upsert(query: Query, update: Update, entityClass: Class<*>): UpdateResult? =
+	override suspend fun upsert(query: Query, update: Update, entityClass: Class<*>): UpdateResult? =
 		reactiveMongoOperations.upsert(query, update, entityClass).awaitFirstOrDefault(null)
 
-	suspend override fun upsert(query: Query, update: Update, collectionName: String): UpdateResult? =
+	override suspend fun upsert(query: Query, update: Update, collectionName: String): UpdateResult? =
 		reactiveMongoOperations.upsert(query, update, collectionName).awaitFirstOrDefault(null)
 
-	suspend override fun upsert(
+	override suspend fun upsert(
 		query: Query,
 		update: Update,
 		entityClass: Class<*>,
@@ -274,13 +274,13 @@ open class CoroutinesMongoTemplate(
 	): UpdateResult? =
 		reactiveMongoOperations.upsert(query, update, entityClass, collectionName).awaitFirstOrDefault(null)
 
-	suspend override fun updateFirst(query: Query, update: Update, entityClass: Class<*>): UpdateResult? =
+	override suspend fun updateFirst(query: Query, update: Update, entityClass: Class<*>): UpdateResult? =
 		reactiveMongoOperations.updateFirst(query, update, entityClass).awaitFirstOrDefault(null)
 
-	suspend override fun updateFirst(query: Query, update: Update, collectionName: String): UpdateResult? =
+	override suspend fun updateFirst(query: Query, update: Update, collectionName: String): UpdateResult? =
 		reactiveMongoOperations.updateFirst(query, update, collectionName).awaitFirstOrDefault(null)
 
-	suspend override fun updateFirst(
+	override suspend fun updateFirst(
 		query: Query,
 		update: Update,
 		entityClass: Class<*>,
@@ -288,13 +288,13 @@ open class CoroutinesMongoTemplate(
 	): UpdateResult? =
 		reactiveMongoOperations.updateFirst(query, update, entityClass, collectionName).awaitFirstOrDefault(null)
 
-	suspend override fun updateMulti(query: Query, update: Update, entityClass: Class<*>): UpdateResult? =
+	override suspend fun updateMulti(query: Query, update: Update, entityClass: Class<*>): UpdateResult? =
 		reactiveMongoOperations.updateMulti(query, update, entityClass).awaitFirstOrDefault(null)
 
-	suspend override fun updateMulti(query: Query, update: Update, collectionName: String): UpdateResult? =
+	override suspend fun updateMulti(query: Query, update: Update, collectionName: String): UpdateResult? =
 		reactiveMongoOperations.updateMulti(query, update, collectionName).awaitFirstOrDefault(null)
 
-	suspend override fun updateMulti(
+	override suspend fun updateMulti(
 		query: Query,
 		update: Update,
 		entityClass: Class<*>,
@@ -302,34 +302,34 @@ open class CoroutinesMongoTemplate(
 	): UpdateResult? =
 		reactiveMongoOperations.updateMulti(query, update, entityClass, collectionName).awaitFirstOrDefault(null)
 
-	suspend override fun remove(`object`: Any): DeleteResult? =
+	override suspend fun remove(`object`: Any): DeleteResult? =
 		reactiveMongoOperations.remove(`object`).awaitFirstOrDefault(null)
 
-	suspend override fun remove(`object`: Any, collection: String): DeleteResult? =
+	override suspend fun remove(`object`: Any, collection: String): DeleteResult? =
 		reactiveMongoOperations.remove(`object`, collection).awaitFirstOrDefault(null)
 
-	suspend override fun remove(objectToRemove: suspend () -> Any?): DeleteResult? =
+	override suspend fun remove(objectToRemove: suspend () -> Any?): DeleteResult? =
 		objectToRemove()?.let { remove(it) }
 
-	suspend override fun remove(objectToRemove: () -> Any?, collection: String): DeleteResult? =
+	override suspend fun remove(objectToRemove: () -> Any?, collection: String): DeleteResult? =
 		objectToRemove()?.let { remove(it, collection) }
 
-	suspend override fun remove(query: Query, entityClass: Class<*>): DeleteResult? =
+	override suspend fun remove(query: Query, entityClass: Class<*>): DeleteResult? =
 		reactiveMongoOperations.remove(query, entityClass).awaitFirstOrDefault(null)
 
-	suspend override fun remove(query: Query, entityClass: Class<*>, collectionName: String): DeleteResult? =
+	override suspend fun remove(query: Query, entityClass: Class<*>, collectionName: String): DeleteResult? =
 		reactiveMongoOperations.remove(query, entityClass, collectionName).awaitFirstOrDefault(null)
 
-	suspend override fun remove(query: Query, collectionName: String): DeleteResult? =
+	override suspend fun remove(query: Query, collectionName: String): DeleteResult? =
 		reactiveMongoOperations.remove(query, collectionName).awaitFirstOrDefault(null)
 
-	suspend override fun <T> findAllAndRemove(query: Query, collectionName: String): List<T> =
+	override suspend fun <T> findAllAndRemove(query: Query, collectionName: String): List<T> =
 		reactiveMongoOperations.findAllAndRemove<T>(query, collectionName).collectList().awaitSingle()
 
-	suspend override fun <T> findAllAndRemove(query: Query, entityClass: Class<T>): List<T> =
+	override suspend fun <T> findAllAndRemove(query: Query, entityClass: Class<T>): List<T> =
 		reactiveMongoOperations.findAllAndRemove(query, entityClass).collectList().awaitSingle()
 
-	suspend override fun <T> findAllAndRemove(query: Query, entityClass: Class<T>, collectionName: String): List<T> =
+	override suspend fun <T> findAllAndRemove(query: Query, entityClass: Class<T>, collectionName: String): List<T> =
 		reactiveMongoOperations.findAllAndRemove(query, entityClass, collectionName).collectList().awaitSingle()
 
 	override val converter: MongoConverter

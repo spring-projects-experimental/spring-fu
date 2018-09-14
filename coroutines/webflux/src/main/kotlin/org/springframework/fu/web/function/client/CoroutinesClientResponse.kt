@@ -22,6 +22,6 @@ interface CoroutinesClientResponse {
 //    fun <T> body(extractor: BodyExtractor<T, in ClientHttpResponse>): T
 }
 
-internal class DefaultCoroutineClientResponse(
+internal class DefaultCoroutinesClientResponse(
 	private val clientResponse: ClientResponse
 ) : CoroutinesClientResponse

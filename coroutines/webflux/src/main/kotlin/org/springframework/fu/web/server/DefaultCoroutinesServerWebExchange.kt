@@ -22,7 +22,7 @@ import org.springframework.fu.http.server.coroutine.CoroutinesServerHttpRequest
 import org.springframework.fu.web.server.session.asCoroutineWebSession
 import org.springframework.web.server.ServerWebExchange
 
-class DefaultCoroutinesServerWebExchange(val exchange: ServerWebExchange) : CoroutinesServerWebExchange {
+class DefaultCoroutinesServerWebExchange(private val exchange: ServerWebExchange) : CoroutinesServerWebExchange {
 	override val request: CoroutinesServerHttpRequest
 		get() = CoroutinesServerHttpRequest(exchange.request)
 	override val response: CoroutinesServerHttpResponse
@@ -32,12 +32,12 @@ class DefaultCoroutinesServerWebExchange(val exchange: ServerWebExchange) : Coro
 		exchange.session.awaitFirstOrDefault(null)?.asCoroutineWebSession()
 
 	override fun mutate(): CoroutinesServerWebExchange.Builder =
-		DefaultCoroutineServerWebExchangeBuilder(exchange.mutate())
+		DefaultCoroutinesServerWebExchangeBuilder(exchange.mutate())
 
 	override fun extractServerWebExchange(): ServerWebExchange = exchange
 }
 
-class DefaultCoroutineServerWebExchangeBuilder(private val builder: ServerWebExchange.Builder) :
+class DefaultCoroutinesServerWebExchangeBuilder(private val builder: ServerWebExchange.Builder) :
 	CoroutinesServerWebExchange.Builder {
 	override fun build(): CoroutinesServerWebExchange = CoroutinesServerWebExchange(builder.build())
 

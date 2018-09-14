@@ -23,11 +23,11 @@ interface CoroutinesWebFilterChain {
 	suspend fun filter(exchange: CoroutinesServerWebExchange): Unit
 
 	companion object {
-		operator fun invoke(chain: WebFilterChain): CoroutinesWebFilterChain = DefaultCoroutineWebFilterChain(chain)
+		operator fun invoke(chain: WebFilterChain): CoroutinesWebFilterChain = DefaultCoroutinesWebFilterChain(chain)
 	}
 }
 
-class DefaultCoroutineWebFilterChain(val chain: WebFilterChain) : CoroutinesWebFilterChain {
+class DefaultCoroutinesWebFilterChain(val chain: WebFilterChain) : CoroutinesWebFilterChain {
 	override suspend fun filter(exchange: CoroutinesServerWebExchange) {
 		chain.filter(exchange.extractServerWebExchange()).awaitFirstOrDefault(null)
 	}
