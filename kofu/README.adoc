@@ -32,7 +32,7 @@ fun main(args: Array<String) = application {
 		level(INFO)
 		level("org.springframework", DEBUG)
 	}
-	configuration<SampleConfiguration>("sample")
+	properties<SampleProperties>("sample")
 	profile("data") {
 		beans {
 			bean<UserRepository>()
@@ -137,11 +137,11 @@ without the need to use `@ConfigurationProperties` annotation:
 
 ```kotlin
 application {
-	configuration<SampleConfiguration>(prefix = "sample")
+	properties<SampleProperties>(prefix = "sample")
 }
 
 // TODO Switch to data classes when https://github.com/spring-projects/spring-boot/issues/8762 will be fixed
-class SampleConfiguration {
+class SampleProperties {
 	lateinit var message: String
 }
 ```
@@ -151,7 +151,7 @@ Configure your application with following `application.properties` file:
 sample.message=hello
 ```
 
-And that's it, you can now inject `SampleConfiguration` where you need.
+And that's it, you can now inject `SampleProperties` where you need.
 
 == Listeners
 

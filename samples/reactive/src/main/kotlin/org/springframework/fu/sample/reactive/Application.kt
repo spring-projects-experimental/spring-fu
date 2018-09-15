@@ -34,7 +34,7 @@ val app = application {
 	listener<ApplicationReadyEvent> {
 		ref<UserRepository>().init()
 	}
-	configuration<SampleConfiguration>("sample")
+	properties<SampleConfiguration>("sample")
 	val port = if (profiles.contains("test")) 8181 else 8080
 	server(netty(port)) {
 		mustache()

@@ -57,7 +57,7 @@ class ApplicationDslTests {
 	@Test
 	fun `Application configuration`() {
 		val app = application(false) {
-			configuration<City>("city")
+			properties<City>("city")
 		}
 		with(app) {
 			run()

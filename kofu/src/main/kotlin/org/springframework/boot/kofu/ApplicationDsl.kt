@@ -54,7 +54,7 @@ open class ApplicationDsl(private val startServer: Boolean, val init: Applicatio
 		initializers.add(BeanDefinitionDsl(init))
 	}
 
-	inline fun <reified T : Any> configuration(prefix: String = "") {
+	inline fun <reified T : Any> properties(prefix: String = "") {
 		context.registerBean("${T::class.java.simpleName.toLowerCase()}ConfigurationProperties") {
 			FunctionalConfigurationPropertiesBinder(context).bind(prefix, Bindable.of(T::class.java)).get()
 		}
@@ -74,7 +74,7 @@ open class ApplicationDsl(private val startServer: Boolean, val init: Applicatio
 	}
 
 	/**
-	 * Take in account functional configuration enclosed in the provided lambda only when the
+	 * Take in account functional properties enclosed in the provided lambda only when the
 	 * specified profile is active.
 	 */
 	fun profile(profile: String, init: () -> Unit) {

@@ -19,12 +19,12 @@ package org.springframework.boot.kofu.samples
 import org.springframework.boot.kofu.application
 
 private fun applicationWithCustomBeanApplication() {
-	/// This standalone application registers a custom bean `Foo` and a `City` configuration properties
+	/// This standalone application registers a custom bean `Foo` and a `City` properties properties
 	val app = application(startServer = false) {
 		beans {
 			bean<Foo>()
 		}
-		configuration<City>("city")
+		properties<City>("city")
 	}
 	app.run()
 }
