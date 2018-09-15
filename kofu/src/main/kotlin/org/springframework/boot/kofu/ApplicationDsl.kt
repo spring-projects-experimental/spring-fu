@@ -31,7 +31,9 @@ import org.springframework.context.support.registerBean
 
 
 /**
+ *
  * @author Sebastien Deleuze
+ * @see application
  */
 open class ApplicationDsl(private val startServer: Boolean, val init: ApplicationDsl.() -> Unit) : AbstractDsl() {
 
@@ -110,4 +112,11 @@ open class ApplicationDsl(private val startServer: Boolean, val init: Applicatio
 	}
 }
 
-fun application(isServer: Boolean = true, init: ApplicationDsl.() -> Unit) = ApplicationDsl(isServer, init)
+/**
+ * Declare an `application` DSL that allows to configure a Spring Boot application using functional bean registration.
+ * ### Sample
+ * @sample org.springframework.boot.kofu.samples.applicationWithCustomBeanApplication
+ * @param startServer Define if Spring Boot should start a web server or not
+ * @param init The `application { }` DSL
+ */
+fun application(startServer: Boolean = true, init: ApplicationDsl.() -> Unit) = ApplicationDsl(startServer, init)

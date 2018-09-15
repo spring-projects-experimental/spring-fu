@@ -1,3 +1,11 @@
+import org.jetbrains.dokka.DokkaConfiguration
+import org.jetbrains.dokka.gradle.DokkaTask
+import java.net.URL
+
+plugins {
+	id("org.jetbrains.dokka")
+}
+
 dependencies {
 	api("org.springframework.boot:spring-boot")
 
@@ -28,6 +36,25 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")
 	testImplementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	testRuntimeOnly("de.flapdoodle.embed:de.flapdoodle.embed.mongo")
+}
+
+tasks.withType<DokkaTask> {
+	//reportUndocumented = false
+	outputFormat = "html"
+	samples = listOf("src/test/kotlin")
+	externalDocumentationLink(delegateClosureOf<DokkaConfiguration.ExternalDocumentationLink.Builder> {
+		url = URL("https://docs.spring.io/spring-framework/docs/5.1.0.BUILD-SNAPSHOT/javadoc-api/")
+	})
+}
+
+val javadocJar by tasks.creating(Jar::class) {
+	dependsOn("dokka")
+	classifier = "javadoc"
+	from(buildDir.resolve("javadoc"))
+}
+
+artifacts {
+	add("archives", javadocJar)
 }
 
 publishing {

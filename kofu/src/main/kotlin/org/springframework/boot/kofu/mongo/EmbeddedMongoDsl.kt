@@ -22,7 +22,7 @@ import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoProper
 import org.springframework.boot.kofu.AbstractDsl
 import org.springframework.context.support.GenericApplicationContext
 
-class EmbeddedMongoModule(private val mongoProperties: MongoProperties) : AbstractDsl() {
+class EmbeddedMongoDsl(private val mongoProperties: MongoProperties) : AbstractDsl() {
 
 	private val embeddedMongoProperties = EmbeddedMongoProperties()
 
@@ -37,5 +37,5 @@ class EmbeddedMongoModule(private val mongoProperties: MongoProperties) : Abstra
 
 fun MongoDsl.embedded() {
 	embedded = true
-	initializers.add(EmbeddedMongoModule(properties))
+	initializers.add(EmbeddedMongoDsl(properties))
 }

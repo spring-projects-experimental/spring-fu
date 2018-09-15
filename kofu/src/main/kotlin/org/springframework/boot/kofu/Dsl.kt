@@ -21,7 +21,7 @@ import org.springframework.context.support.GenericApplicationContext
 import org.springframework.core.env.Environment
 
 @DslMarker
-annotation class DslMarker
+internal annotation class DslMarker
 
 @DslMarker
 interface Dsl : ApplicationContextInitializer<GenericApplicationContext> {
@@ -51,7 +51,7 @@ abstract class AbstractDsl : Dsl {
 
 	override lateinit var context: GenericApplicationContext
 
-	val initializers = mutableListOf<ApplicationContextInitializer<GenericApplicationContext>>()
+	internal val initializers = mutableListOf<ApplicationContextInitializer<GenericApplicationContext>>()
 
 	override fun initialize(context: GenericApplicationContext) {
 		this.context = context
@@ -61,6 +61,6 @@ abstract class AbstractDsl : Dsl {
 		}
 	}
 
-	abstract fun register(context: GenericApplicationContext)
+	internal abstract fun register(context: GenericApplicationContext)
 
 }

@@ -6,6 +6,7 @@ plugins {
 	id("org.springframework.boot") version "2.1.0.BUILD-SNAPSHOT" apply false
 	id("io.spring.dependency-management") version "1.0.6.RELEASE"
 	id("maven-publish")
+	id("org.jetbrains.dokka") version "0.9.17" apply false
 }
 
 allprojects {

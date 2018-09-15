@@ -25,7 +25,8 @@ import org.springframework.boot.logging.LoggingSystem
  */
 class LoggingDsl(init: LoggingDsl.() -> Unit) {
 
-	val loggingSystem = LoggingSystem.get(LoggingDsl::class.java.classLoader)
+	@PublishedApi
+	internal val loggingSystem: LoggingSystem = LoggingSystem.get(LoggingDsl::class.java.classLoader)
 
 	init {
 		init()

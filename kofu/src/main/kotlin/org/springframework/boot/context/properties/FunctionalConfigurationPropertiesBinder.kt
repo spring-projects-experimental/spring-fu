@@ -30,7 +30,8 @@ import java.util.function.Consumer
 /**
  * Allow to access to package private Boot classes like {@code PropertySourcesDeducer}.
  */
-class FunctionalConfigurationPropertiesBinder(private var applicationContext: ConfigurableApplicationContext) {
+@PublishedApi
+internal class FunctionalConfigurationPropertiesBinder(private var applicationContext: ConfigurableApplicationContext) {
 
 	private val propertySources = PropertySourcesDeducer(applicationContext).propertySources
 
@@ -48,6 +49,5 @@ class FunctionalConfigurationPropertiesBinder(private var applicationContext: Co
 		val handler = NoUnboundElementsBindHandler(IgnoreTopLevelConverterNotFoundBindHandler(), filter)
 		return binder.bind(prefix, target, handler)
 	}
-
 
 }
