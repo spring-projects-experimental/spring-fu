@@ -48,6 +48,10 @@ class WebFluxCodecsDsl : AbstractDsl() {
 	fun resource() {
 		initializers.add(ResourceCodecInitializer())
 	}
+
+	fun protobuf() {
+		initializers.add(ProtobufCodecInitializer())
+	}
 }
 
 open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit,
