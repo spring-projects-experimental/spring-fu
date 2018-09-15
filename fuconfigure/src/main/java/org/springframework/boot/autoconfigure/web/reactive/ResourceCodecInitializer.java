@@ -14,23 +14,23 @@
  * limitations under the License.
  */
 
-package org.springframework.boot.autoconfigure.jackson;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
+package org.springframework.boot.autoconfigure.web.reactive;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
+import org.springframework.core.codec.CharSequenceEncoder;
+import org.springframework.core.codec.ResourceDecoder;
+import org.springframework.core.codec.StringDecoder;
+import org.springframework.core.io.Resource;
 import org.springframework.http.codec.CodecConfigurer;
-import org.springframework.http.codec.ServerSentEventHttpMessageWriter;
-import org.springframework.http.codec.json.Jackson2JsonDecoder;
-import org.springframework.http.codec.json.Jackson2JsonEncoder;
+import org.springframework.http.codec.ResourceHttpMessageWriter;
 
 /**
- * {@link ApplicationContextInitializer} adapter for registering Jackson JSON codecs.
+ * {@link ApplicationContextInitializer} adapter for registering {@link Resource} codecs.
  */
-public class JacksonJsonReactiveWebInitializer implements ApplicationContextInitializer<GenericApplicationContext> {
+public class ResourceCodecInitializer implements ApplicationContextInitializer<GenericApplicationContext> {
 
 	@Override
 	public void initialize(GenericApplicationContext context) {
@@ -40,11 +40,8 @@ public class JacksonJsonReactiveWebInitializer implements ApplicationContextInit
 			public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
 				if (bean instanceof CodecConfigurer) {
 					CodecConfigurer.CustomCodecs codecs = ((CodecConfigurer)bean).customCodecs();
-					ObjectMapper mapper = context.getBean(ObjectMapper.class);
-					Jackson2JsonEncoder encoder = new Jackson2JsonEncoder(mapper);
-					codecs.decoder(new Jackson2JsonDecoder(mapper));
-					codecs.encoder(encoder);
-					codecs.writer(new ServerSentEventHttpMessageWriter(encoder));
+					codecs.writer(new ResourceHttpMessageWriter());
+					codecs.decoder(new ResourceDecoder());
 				}
 				return bean;
 			}

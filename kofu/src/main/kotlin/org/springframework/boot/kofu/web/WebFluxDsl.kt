@@ -16,7 +16,6 @@
 
 package org.springframework.boot.kofu.web
 
-import org.springframework.beans.factory.config.BeanPostProcessor
 import org.springframework.beans.factory.getBean
 import org.springframework.boot.autoconfigure.web.reactive.function.client.ReactiveWebClientInitializer
 import org.springframework.boot.autoconfigure.web.ResourceProperties
@@ -32,11 +31,6 @@ import org.springframework.boot.web.reactive.server.ConfigurableReactiveWebServe
 import org.springframework.context.ApplicationContextInitializer
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.registerBean
-import org.springframework.core.codec.*
-import org.springframework.http.codec.CodecConfigurer
-import org.springframework.http.codec.HttpMessageReader
-import org.springframework.http.codec.HttpMessageWriter
-import org.springframework.http.codec.ResourceHttpMessageWriter
 import org.springframework.web.reactive.function.client.ExchangeStrategies
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.server.*
@@ -44,41 +38,15 @@ import org.springframework.web.server.WebFilter
 
 class WebFluxCodecsDsl : AbstractDsl() {
 
-
-	internal val encoders = mutableListOf<Encoder<*>>()
-
-	internal val decoders = mutableListOf<Decoder<*>>()
-
-	internal val writers = mutableListOf<HttpMessageWriter<*>>()
-
-	internal val readers = mutableListOf<HttpMessageReader<*>>()
-
 	override fun register(context: GenericApplicationContext) {
-		context.registerBean<BeanPostProcessor> {
-			object : BeanPostProcessor {
-				override fun postProcessBeforeInitialization(bean: Any, beanName: String): Any? {
-					if (bean is CodecConfigurer) {
-						with(bean.customCodecs()) {
-							encoders.forEach { this.encoder(it) }
-							decoders.forEach { this.decoder(it) }
-							writers.forEach { this.writer(it) }
-							readers.forEach { this.reader(it) }
-						}
-					}
-					return bean
-				}
-			}
-		}
 	}
 
 	fun string() {
-		encoders.add(CharSequenceEncoder.textPlainOnly())
-		decoders.add(StringDecoder.textPlainOnly())
+		initializers.add(StringCodecInitializer())
 	}
 
 	fun resource() {
-		writers.add(ResourceHttpMessageWriter())
-		decoders.add(ResourceDecoder())
+		initializers.add(ResourceCodecInitializer())
 	}
 }
 
