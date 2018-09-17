@@ -53,16 +53,6 @@ tasks.withType<DokkaTask> {
 	})
 }
 
-val javadocJar by tasks.creating(Jar::class) {
-	dependsOn("dokka")
-	classifier = "javadoc"
-	from(buildDir.resolve("javadoc"))
-}
-
-artifacts {
-	add("archives", javadocJar)
-}
-
 publishing {
 	publications {
 		create(project.name, MavenPublication::class.java) {
@@ -73,6 +63,12 @@ publishing {
 				from(sourceSets["main"].allSource)
 			}
 			artifact(sourcesJar)
+			val dokkaJar by tasks.creating(Jar::class) {
+				dependsOn("dokka")
+				classifier = "javadoc"
+				from(buildDir.resolve("dokka"))
+			}
+			artifact(dokkaJar)
 		}
 	}
 }
