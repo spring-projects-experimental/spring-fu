@@ -23,7 +23,10 @@ import org.springframework.web.cors.reactive.CorsWebFilter
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource
 
 /**
+ * Kofu DSL for WebFlux CORS configuration.
+ *
  * @author Ireneusz Kozłowski
+ * @author Sebastien Deleuze
  */
 class CorsDsl(
 	private val defaults: Boolean = true,
@@ -39,16 +42,26 @@ class CorsDsl(
 		}
 	}
 
-	operator fun String.invoke(defaults: Boolean = this@CorsDsl.defaults, init: CorsConfigurationDsl.() -> Unit) {
+	/**
+	 * Define a CORS configuration mapped to this path via a [dedicated DSL][CorsConfigurationDsl].
+	 * @receiver the path to map the [CORS configuration][CorsConfigurationDsl]
+	 */
+	operator fun String.invoke(defaults: Boolean = this@CorsDsl.defaults, init: CorsConfigurationDsl.() -> Unit = {}) {
 		val corsConfigurationDsl = CorsConfigurationDsl(defaults)
 		corsConfigurationDsl.init()
 		configuration.registerCorsConfiguration(this, corsConfigurationDsl.corsConfiguration)
 	}
 }
 
-fun WebFluxServerDsl.cors(
-	defaults: Boolean = true,
-	init: CorsDsl.() -> Unit = {}) {
+/**
+ * Configure CORS via a [dedicated DSL][CorsDsl].
+ *
+ * Exact path mapping URIs (such as `/admin`) are supported
+ * as well as Ant-style path patterns.
+ *
+ * @sample org.springframework.boot.kofu.samples.corsDsl
+ */
+fun WebFluxServerDsl.cors(defaults: Boolean = true,
+						  init: CorsDsl.() -> Unit = {}) {
 	initializers.add(CorsDsl(defaults, init))
 }
-

@@ -27,6 +27,9 @@ import org.springframework.web.reactive.function.server.*
 import org.springframework.web.reactive.function.server.RouterFunctions.nest
 import java.net.URI
 
+/**
+ * Coroutines variant of [RouterFunctionDsl].
+ */
 open class CoroutinesRouterFunctionDsl(private val init: (CoroutinesRouterFunctionDsl.() -> Unit)): () -> RouterFunction<ServerResponse> {
 	private val routes = mutableListOf<RouterFunction<ServerResponse>>()
 
@@ -97,7 +100,7 @@ open class CoroutinesRouterFunctionDsl(private val init: (CoroutinesRouterFuncti
 	 * common path (prefix), header, or other request predicate.
 	 * @see RouterFunctions.nest
 	 */
-	suspend fun RequestPredicate.nest(r: (CoroutinesRouterFunctionDsl.() -> Unit)) {
+	fun RequestPredicate.nest(r: (CoroutinesRouterFunctionDsl.() -> Unit)) {
 		routes += nest(this, CoroutinesRouterFunctionDsl(r).invoke())
 	}
 
@@ -110,7 +113,7 @@ open class CoroutinesRouterFunctionDsl(private val init: (CoroutinesRouterFuncti
 	 * @see RouterFunctions.nest
 	 * @see RequestPredicates.path
 	 */
-	suspend fun String.nest(r: (CoroutinesRouterFunctionDsl.() -> Unit)) = path(this).nest(r)
+	fun String.nest(r: (CoroutinesRouterFunctionDsl.() -> Unit)) = path(this).nest(r)
 
 	/**
 	 * Route to the given handler function if the given request predicate applies.

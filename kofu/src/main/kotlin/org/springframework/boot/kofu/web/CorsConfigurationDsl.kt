@@ -18,9 +18,11 @@ package org.springframework.boot.kofu.web
 
 import org.springframework.web.cors.CorsConfiguration
 
-class CorsConfigurationDsl(
-	var defaults: Boolean = true,
-	val corsConfiguration: CorsConfiguration = CorsConfiguration()) {
+/**
+ * Kofu DSL for WebFlux CORS configuration.
+ */
+class CorsConfigurationDsl(private val defaults: Boolean = true,
+						   internal val corsConfiguration: CorsConfiguration = CorsConfiguration()) {
 
 	init {
 		if (defaults) corsConfiguration.applyPermitDefaultValues()
@@ -53,4 +55,3 @@ class CorsConfigurationDsl(
 		}
 
 }
-

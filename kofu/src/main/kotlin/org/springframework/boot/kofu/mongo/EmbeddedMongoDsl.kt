@@ -22,6 +22,9 @@ import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoProper
 import org.springframework.boot.kofu.AbstractDsl
 import org.springframework.context.support.GenericApplicationContext
 
+/**
+ * Kofu DSL for embedded MongoDB configuration.
+ */
 class EmbeddedMongoDsl(private val mongoProperties: MongoProperties) : AbstractDsl() {
 
 	private val embeddedMongoProperties = EmbeddedMongoProperties()
@@ -35,6 +38,13 @@ class EmbeddedMongoDsl(private val mongoProperties: MongoProperties) : AbstractD
 	}
 }
 
+/**
+ * Enable MongoDB embedded server.
+ *
+ * Require `de.flapdoodle.embed:de.flapdoodle.embed.mongo` dependency.
+ *
+ * @sample org.springframework.boot.kofu.samples.mongoEmbedded
+ */
 fun MongoDsl.embedded() {
 	embedded = true
 	initializers.add(EmbeddedMongoDsl(properties))

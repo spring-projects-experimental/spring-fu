@@ -25,6 +25,7 @@ import org.springframework.boot.autoconfigure.mongo.MongoReactiveInitializer
 import org.springframework.context.support.GenericApplicationContext
 
 /**
+ * Kofu DSL for MongoDB configuration.
  * @author Sebastien Deleuze
  */
 open class MongoDsl(
@@ -45,10 +46,17 @@ open class MongoDsl(
 
 }
 
+/**
+ * Enable and [configure][MongoDsl] Reactive MongoDB support by registering a [org.springframework.data.mongodb.core.ReactiveMongoTemplate].
+ *
+ * Require `org.springframework.boot:spring-boot-starter-data-mongodb-reactive` dependency.
+ *
+ * @sample org.springframework.boot.kofu.samples.mongo
+ */
 fun ApplicationDsl.mongodb(
-	connectionString: String = "mongodb://localhost/test",
-	init: MongoDsl.() -> Unit = {}) {
+		uri: String = "mongodb://localhost/test",
+		init: MongoDsl.() -> Unit = {}) {
 	val properties = MongoProperties()
-	properties.uri = connectionString
+	properties.uri = uri
 	initializers.add(MongoDsl(properties, init))
 }

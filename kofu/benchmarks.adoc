@@ -1,0 +1,56 @@
+= Startup time and memory benchmarks
+
+Benchmarks done on a Dell Precision 5520, i7-7820HQ 2.90 GHz, 32G memory, Ubuntu 18.04 with Spring Boot 2.1 M2 on Java 8.0.172-zulu.
+
+On basic projects, Kofu configuration is significantly faster and consume less memory than
+auto-configuration. This is not surprising since Kofu configuration is by design explicit, minimal,
+involve fewer conditions, has missing features and is based on lambdas instead of CGLIB proxies.
+
+Relative startup time difference may be less important with bigger projects, to be validated with a
+Kofu version of https://github.com/mixitconf/mixit[MiXiT web application].
+
+== Kofu configuration
+
+Reactive webapp without Jackson without kotlin-reflect:
+
+ * started application in 0.368 seconds (JVM running for 0.638)
+ * Used PSYoungGen  21071K
+ * Used ParOldGen      8K
+ * Used Metaspace   17059K
+
+Reactive webapp with Jackson without kotlin-reflect:
+
+ * started application in 0.516 seconds (JVM running for 0.779)
+ * Used PSYoungGen  41826K
+ * Used ParOldGen      16K
+ * Used Metaspace   19636K
+
+Reactive webapp with Jackson with kotlin-reflect:
+
+ * started application in 0.808 seconds (JVM running for 1.13)
+ * Used PSYoungGen  61169K
+ * Used ParOldGen    7029K
+ * Used Metaspace   23357K
+
+== Auto configuration
+
+Reactive webapp without Jackson without kotlin-reflect:
+
+ * started application in 1.14 seconds (JVM running for 1.492)
+ * Used PSYoungGen  107083K
+ * Used ParOldGen     8270K
+ * Used Metaspace    25723K
+
+Reactive webapp with Jackson without kotlin-reflect:
+
+ * started application in 1.133 seconds (JVM running for 1.48)
+ * Used PSYoungGen  140088K
+ * Used ParOldGen    7233K
+ * Used Metaspace   29280K
+
+Reactive webapp with Jackson with kotlin-reflect:
+
+ * started application in 1.204 seconds (JVM running for 1.564)
+ * Used PSYoungGen  202924K
+ * Used ParOldGen     5776K
+ * Used Metaspace    31791K

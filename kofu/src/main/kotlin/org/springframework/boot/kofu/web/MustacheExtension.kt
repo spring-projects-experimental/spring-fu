@@ -21,6 +21,11 @@ import org.springframework.boot.autoconfigure.mustache.MustacheProperties
 import org.springframework.boot.autoconfigure.mustache.MustacheReactiveWebInitializer
 
 /**
+ * Configure a [Mustache](https://github.com/samskivert/jmustache) view resolver.
+ *
+ * Require `org.springframework.boot:spring-boot-starter-mustache` dependency.
+ *
+ * @sample org.springframework.boot.kofu.samples.mustache
  * @author Sebastien Deleuze
  */
 fun WebFluxServerDsl.mustache(

@@ -34,11 +34,20 @@ class CoroutinesWebFluxClientDsl(private val clientModule: WebFluxClientDsl) : A
 	}
 }
 
+/**
+ * Enable Coroutines support for WebFLux client, registering a [CoroutinesWebClient] bean.
+ *
+ * @sample org.springframework.boot.kofu.samples.clientCoroutines
+ */
 fun WebFluxClientDsl.coroutines()  {
 	initializers.add(CoroutinesWebFluxClientDsl(this))
 }
 
+/**
+ * Define Coroutines router.
+ *
+ * @sample org.springframework.boot.kofu.samples.coRouterDsl
+ */
 fun WebFluxServerDsl.coRouter(routes: (CoroutinesRouterFunctionDsl.() -> Unit)) {
 	this.include { CoroutinesRouterFunctionDsl(routes).invoke() }
 }
-

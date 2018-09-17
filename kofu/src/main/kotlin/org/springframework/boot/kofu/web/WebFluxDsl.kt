@@ -36,24 +36,40 @@ import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.server.*
 import org.springframework.web.server.WebFilter
 
+/**
+ * Kofu DSL for WebFlux codecs configuration.
+ */
 class WebFluxCodecsDsl : AbstractDsl() {
 
 	override fun register(context: GenericApplicationContext) {
 	}
 
+	/**
+	 * Enable [org.springframework.core.codec.CharSequenceEncoder] and [org.springframework.core.codec.StringDecoder]
+	 */
 	fun string() {
 		initializers.add(StringCodecInitializer())
 	}
 
+	/**
+	 * Enable [org.springframework.http.codec.ResourceHttpMessageWriter] and [org.springframework.core.codec.ResourceDecoder]
+	 */
 	fun resource() {
 		initializers.add(ResourceCodecInitializer())
 	}
 
+	/**
+	 * Enable [org.springframework.http.codec.protobuf.ProtobufEncoder] and [org.springframework.http.codec.protobuf.ProtobufDecoder]
+	 */
 	fun protobuf() {
 		initializers.add(ProtobufCodecInitializer())
 	}
 }
 
+/**
+ * Kofu DSL for WebFlux server configuration.
+ * @author Sebastien Deleuze
+ */
 open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit,
 							private val serverFactory: ConfigurableReactiveWebServerFactory): AbstractDsl() {
 
@@ -71,26 +87,44 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit,
 		ReactiveWebServerInitializer(serverProperties, resourceProperties, webFluxProperties, serverFactory).initialize(context)
 	}
 
+	/**
+	 * Configure codecs via a [dedicated DSL][WebFluxCodecsDsl].
+	 */
 	fun codecs(init: WebFluxCodecsDsl.() -> Unit =  {}) {
 		val codecModule = WebFluxCodecsDsl()
 		codecModule.init()
 		initializers.add(codecModule)
 	}
 
+	/**
+	 * Define a request filter for this server
+	 */
 	fun filter(filter: WebFilter) {
 		initializers.add(ApplicationContextInitializer { it.registerBean { filter } })
 	}
 
+	/**
+	 * Configure codecs via a [dedicated DSL][RouterFunctionDsl].
+	 * @sample org.springframework.boot.kofu.samples.routerDsl
+	 */
 	fun router(routes: (RouterFunctionDsl.() -> Unit)) {
 		initializers.add(ApplicationContextInitializer { it.registerBean { RouterFunctionDsl(routes).invoke() } })
 	}
 
+	/**
+	 * Include and define an external router block for this server
+	 * @sample org.springframework.boot.kofu.samples.includeRouter
+	 */
 	fun include(router: () -> RouterFunction<ServerResponse>) {
 		initializers.add(ApplicationContextInitializer { it.registerBean { router.invoke() } })
 	}
 
 }
 
+/**
+ * Kofu DSL for WebFlux client configuration.
+ * @author Sebastien Deleuze
+ */
 class WebFluxClientDsl(private val init: WebFluxClientDsl.() -> Unit, val baseUrl: String?, private val name: String?) : AbstractDsl() {
 
 	override fun register(context: GenericApplicationContext) {
@@ -112,6 +146,9 @@ class WebFluxClientDsl(private val init: WebFluxClientDsl.() -> Unit, val baseUr
 		return builder.build()
 	}
 
+	/**
+	 * Configure codecs via a [dedicated DSL][WebFluxCodecsDsl].
+	 */
 	fun codecs(init: WebFluxCodecsDsl.() -> Unit =  {}) {
 		val codecModule = WebFluxCodecsDsl()
 		codecModule.init()
@@ -119,18 +156,52 @@ class WebFluxClientDsl(private val init: WebFluxClientDsl.() -> Unit, val baseUr
 	}
 }
 
+/** Use Netty engine in WebFlux server **/
 fun ApplicationDsl.netty(port: Int = 8080) = NettyReactiveWebServerFactory(port)
 
+/** Use Tomcat engine in WebFlux server **/
 fun ApplicationDsl.tomcat(port: Int = 8080) = TomcatReactiveWebServerFactory(port)
 
+/** Use Undertow engine in WebFlux server **/
 fun ApplicationDsl.undertow(port: Int = 8080) = UndertowReactiveWebServerFactory(port)
 
+/** Use Jetty engine in WebFlux server **/
 fun ApplicationDsl.jetty(port: Int = 8080) = JettyReactiveWebServerFactory(port)
 
-fun ApplicationDsl.server(serverFactory: ConfigurableReactiveWebServerFactory, init: WebFluxServerDsl.() -> Unit =  {}) {
+/**
+ * Configure a WebFlux server via a via a [dedicated DSL][WebFluxServerDsl].
+ *
+ * This DSL configures [WebFlux server](https://docs.spring.io/spring/docs/current/spring-framework-reference/web-reactive.html#spring-webflux).
+ * When no codec is configured, `String` and `Resource` ones are configured by default (to be checked after latest refactoring).
+ * When a `codecs { }` block is declared, no one is configured by default (to be checked after latest refactoring).
+ * [ApplicationDsl.startServer] needs to be set to `true` (it is by default).
+ *
+ * You can chose the underlying engine used:
+ *  * Netty (the default)
+ *  * Tomcat
+ *  * Jetty
+ *  * Undertow
+ *
+ * Require `org.springframework.boot:spring-boot-starter-webflux` dependency.
+ *
+ * @sample org.springframework.boot.kofu.samples.routerDsl
+ */
+fun ApplicationDsl.server(serverFactory: ConfigurableReactiveWebServerFactory = netty(), init: WebFluxServerDsl.() -> Unit =  {}) {
 	initializers.add(WebFluxServerDsl(init, serverFactory))
 }
 
+/**
+ * Configure a WebFlux client via a [dedicated DSL][WebFluxClientDsl].
+ *
+ * This DSL configures [WebFlux client](https://docs.spring.io/spring/docs/current/spring-framework-reference/web-reactive.html#spring-webflux).
+ * When no codec is configured, `String` and `Resource` ones are configured by default (to be checked after latest refactoring).
+ * When a `codecs { }` block is declared, no one is configured by default (to be checked after latest refactoring).
+ * 0..n clients are supported (you can specify the bean name to differentiate them.
+ *
+ * Require `org.springframework.boot:spring-boot-starter-webflux` dependency.
+ *
+ * @sample org.springframework.boot.kofu.samples.clientDsl
+ */
 fun ApplicationDsl.client(baseUrl: String? = null, name: String? = null, init: WebFluxClientDsl.() -> Unit =  {}) {
 	initializers.add(WebFluxClientDsl(init, baseUrl, name))
 }

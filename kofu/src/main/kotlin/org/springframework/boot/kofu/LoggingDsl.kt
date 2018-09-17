@@ -20,6 +20,8 @@ import org.springframework.boot.logging.LogLevel
 import org.springframework.boot.logging.LoggingSystem
 
 /**
+ * Kofu DSL for logging configuration.
+ *
  * @author Thomas Girard
  * @author Sebastien Deleuze
  */

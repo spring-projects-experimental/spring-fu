@@ -18,6 +18,11 @@ package org.springframework.boot.kofu.mongo
 
 import org.springframework.boot.autoconfigure.mongo.coroutines.CoroutinesMongoInitializer
 
+/**
+ * Enable Coroutines support for MongoDB, registering a [org.springframework.data.mongodb.core.CoroutinesMongoTemplate] bean.
+ *
+ * @sample org.springframework.boot.kofu.samples.mongoCoroutines
+ */
 fun MongoDsl.coroutines() {
 	initializers.add(CoroutinesMongoInitializer())
 }

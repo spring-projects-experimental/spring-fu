@@ -20,6 +20,15 @@ import org.springframework.boot.autoconfigure.jackson.JacksonInitializer
 import org.springframework.boot.autoconfigure.jackson.JacksonJsonCodecInitializer
 import org.springframework.boot.autoconfigure.jackson.JacksonProperties
 
+/**
+ * Register an `ObjectMapper` bean and configure a [Jackson](https://github.com/FasterXML/jackson)
+ * JSON codec on WebFlux server and client.
+ *
+ * Require `org.springframework.boot:spring-boot-starter-json` dependency
+ * (included by default in `spring-boot-starter-webflux`).
+ *
+ * @sample org.springframework.boot.kofu.samples.jackson
+ */
 fun WebFluxCodecsDsl.jackson(json: Boolean = true) {
 	val properties = JacksonProperties()
 	initializers.add(JacksonInitializer(properties))

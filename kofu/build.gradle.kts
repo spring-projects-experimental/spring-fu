@@ -36,14 +36,20 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")
 	testImplementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	testRuntimeOnly("de.flapdoodle.embed:de.flapdoodle.embed.mongo")
+	testImplementation(project(":coroutines:mongodb"))
+	testImplementation(project(":coroutines:webflux"))
 }
 
 tasks.withType<DokkaTask> {
 	//reportUndocumented = false
 	outputFormat = "html"
 	samples = listOf("src/test/kotlin")
+	includes = listOf("README.md")
 	externalDocumentationLink(delegateClosureOf<DokkaConfiguration.ExternalDocumentationLink.Builder> {
 		url = URL("https://docs.spring.io/spring-framework/docs/5.1.0.BUILD-SNAPSHOT/javadoc-api/")
+	})
+	externalDocumentationLink(delegateClosureOf<DokkaConfiguration.ExternalDocumentationLink.Builder> {
+		url = URL("https://docs.spring.io/spring-framework/docs/5.1.0.BUILD-SNAPSHOT/kdoc-api/spring-framework/")
 	})
 }
 
