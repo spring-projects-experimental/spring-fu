@@ -49,7 +49,6 @@ class CorsDslTests {
 						exposedHeaders("Content-Location")
 						allowCredentials = true
 						maxAge = 3600
-						defaults = false
 					}
 				}
 				router {
