@@ -81,7 +81,7 @@ open class ApplicationDsl internal constructor(private val startServer: Boolean,
 	}
 
 	/**
-	 * Configure global, package or class logging .
+	 * Configure global, package or class logging  via a [dedicated DSL][LoggingDsl].
 	 * @sample org.springframework.boot.kofu.samples.loggingDsl
 	 */
 	fun logging(dsl: LoggingDsl.() -> Unit) {
