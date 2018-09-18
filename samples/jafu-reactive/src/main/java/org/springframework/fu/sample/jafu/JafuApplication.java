@@ -7,18 +7,16 @@ import org.springframework.core.io.ClassPathResource;
 
 public class JafuApplication {
 
-	public static SpringApplication app = application(applicationDsl -> {
-		applicationDsl.beans(context -> {
-			applicationDsl.registerBean(SampleService.class);
-			applicationDsl.registerBean(SampleHandler.class);
+	public static SpringApplication app = application(app -> {
+		app.beans(context -> {
+			app.registerBean(SampleService.class);
+			app.registerBean(SampleHandler.class);
 		});
-		applicationDsl.server(serverDsl -> {
-			serverDsl.router(routerDsl -> {
-				SampleHandler sampleHandler = serverDsl.ref(SampleHandler.class);
-				routerDsl.GET("/", sampleHandler::hello);
-				routerDsl.resources("/**", new ClassPathResource("static/"));
-			});
-		});
+		app.server(server -> server.router(router -> {
+			SampleHandler sampleHandler = app.ref(SampleHandler.class);
+			router.GET("/", sampleHandler::hello);
+			router.resources("/**", new ClassPathResource("static/"));
+		}));
 	});
 
 	public static void main (String[] args) {
