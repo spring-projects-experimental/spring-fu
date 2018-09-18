@@ -124,7 +124,7 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit,
 		if (context.containsBeanDefinition("webHandler")) {
 			throw IllegalStateException("Only one server per application is supported")
 		}
-		ReactiveWebServerInitializer(serverProperties, resourceProperties, webFluxProperties, serverFactory).initialize(context)
+		initializers.add(ReactiveWebServerInitializer(serverProperties, resourceProperties, webFluxProperties, serverFactory))
 	}
 
 	/**

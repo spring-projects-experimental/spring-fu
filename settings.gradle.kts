@@ -6,12 +6,14 @@ include(
 		"coroutines:webflux",
 		"fuconfigure",
 		"kofu",
+		"jafu",
 		"starters",
 		"starters:data-mongodb-coroutines",
 		"starters:webflux-coroutines",
 		"samples:kofu-coroutines",
 		"samples:kofu-graal",
-		"samples:kofu-reactive"
+		"samples:kofu-reactive",
+		"samples:jafu-reactive"
 )
 
 // Required since Boot 2.1 Gradle plugin is not available from Gradle portal

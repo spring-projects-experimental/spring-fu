@@ -1,0 +1,4 @@
+= Jafu DSL
+
+Jafu (for **Ja**va and **fu**nctional) is an experimental Java variant of Kofu DSL.
+
