@@ -62,7 +62,11 @@ abstract class WebFluxCodecDsl : AbstractDsl() {
 	abstract fun protobuf()
 }
 
-class WebFluxClientCodecDsl : WebFluxCodecDsl() {
+class WebFluxClientCodecDsl(private val init: WebFluxClientCodecDsl.() -> Unit) : WebFluxCodecDsl() {
+
+	override fun register(context: GenericApplicationContext) {
+		init()
+	}
 
 	override fun string() {
 		initializers.add(StringCodecInitializer(true))
@@ -77,7 +81,11 @@ class WebFluxClientCodecDsl : WebFluxCodecDsl() {
 	}
 }
 
-class WebFluxServerCodecDsl : WebFluxCodecDsl() {
+class WebFluxServerCodecDsl(private val init: WebFluxServerCodecDsl.() -> Unit) : WebFluxCodecDsl() {
+
+	override fun register(context: GenericApplicationContext) {
+		init()
+	}
 
 	override fun string() {
 		initializers.add(StringCodecInitializer(false))
@@ -105,8 +113,14 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit,
 
 	private val webFluxProperties = WebFluxProperties()
 
+	private var codecsConfigured: Boolean = false
+
 	override fun register(context: GenericApplicationContext) {
 		init()
+		if (!codecsConfigured) {
+			initializers.add(StringCodecInitializer(false))
+			initializers.add(ResourceCodecInitializer(false))
+		}
 		if (context.containsBeanDefinition("webHandler")) {
 			throw IllegalStateException("Only one server per application is supported")
 		}
@@ -117,9 +131,8 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit,
 	 * Configure codecs via a [dedicated DSL][WebFluxServerCodecDsl].
 	 */
 	fun codecs(init: WebFluxServerCodecDsl.() -> Unit =  {}) {
-		val codecModule = WebFluxServerCodecDsl()
-		codecModule.init()
-		initializers.add(codecModule)
+		initializers.add(WebFluxServerCodecDsl(init))
+		codecsConfigured = true
 	}
 
 	/**
@@ -153,8 +166,14 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit,
  */
 class WebFluxClientDsl(private val init: WebFluxClientDsl.() -> Unit, val baseUrl: String?, private val name: String?) : AbstractDsl() {
 
+	private var codecsConfigured: Boolean = false
+
 	override fun register(context: GenericApplicationContext) {
 		init()
+		if (!codecsConfigured) {
+			initializers.add(StringCodecInitializer(true))
+			initializers.add(ResourceCodecInitializer(true))
+		}
 		ReactiveWebClientInitializer().initialize(context)
 		if (name != null)
 			context.registerBean(name) { client() }
@@ -176,9 +195,8 @@ class WebFluxClientDsl(private val init: WebFluxClientDsl.() -> Unit, val baseUr
 	 * Configure codecs via a [dedicated DSL][WebFluxClientCodecDsl].
 	 */
 	fun codecs(init: WebFluxClientCodecDsl.() -> Unit =  {}) {
-		val codecModule = WebFluxClientCodecDsl()
-		codecModule.init()
-		initializers.add(codecModule)
+		initializers.add(WebFluxClientCodecDsl(init))
+		codecsConfigured = true
 	}
 }
 
@@ -198,8 +216,8 @@ fun ApplicationDsl.jetty(port: Int = 8080) = JettyReactiveWebServerFactory(port)
  * Configure a WebFlux server via a via a [dedicated DSL][WebFluxServerDsl].
  *
  * This DSL configures [WebFlux server](https://docs.spring.io/spring/docs/current/spring-framework-reference/web-reactive.html#spring-webflux).
- * When no codec is configured, `String` and `Resource` ones are configured by default (to be checked after latest refactoring).
- * When a `codecs { }` block is declared, no one is configured by default (to be checked after latest refactoring).
+ * When no codec is configured, `String` and `Resource` ones are configured by default.
+ * When a `codecs { }` block is declared, no one is configured by default.
  * [ApplicationDsl.startServer] needs to be set to `true` (it is by default).
  *
  * You can chose the underlying engine used:
@@ -220,8 +238,8 @@ fun ApplicationDsl.server(serverFactory: ConfigurableReactiveWebServerFactory = 
  * Configure a WebFlux client via a [dedicated DSL][WebFluxClientDsl].
  *
  * This DSL configures [WebFlux client](https://docs.spring.io/spring/docs/current/spring-framework-reference/web-reactive.html#spring-webflux).
- * When no codec is configured, `String` and `Resource` ones are configured by default (to be checked after latest refactoring).
- * When a `codecs { }` block is declared, no one is configured by default (to be checked after latest refactoring).
+ * When no codec is configured, `String` and `Resource` ones are configured by default.
+ * When a `codecs { }` block is declared, no one is configured by default.
  * 0..n clients are supported (you can specify the bean name to differentiate them.
  *
  * Require `org.springframework.boot:spring-boot-starter-webflux` dependency.

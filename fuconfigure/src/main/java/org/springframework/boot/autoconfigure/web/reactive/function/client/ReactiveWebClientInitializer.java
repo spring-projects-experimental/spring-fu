@@ -26,6 +26,7 @@ import org.springframework.boot.web.reactive.function.client.WebClientCustomizer
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.core.MethodParameter;
+import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 
 /**
@@ -40,6 +41,27 @@ public class ReactiveWebClientInitializer implements ApplicationContextInitializ
 			ObjectProvider<List<WebClientCustomizer>> customizers = (ObjectProvider<List<WebClientCustomizer>>)context.getDefaultListableBeanFactory().resolveDependency(new DependencyDescriptor(MethodParameter.forParameter(WebClientAutoConfiguration.class.getConstructors()[0].getParameters()[0]), true), null);
 			return new WebClientAutoConfiguration(customizers).webClientBuilder();
 		});
-		context.registerBean(WebClientCodecCustomizer.class, () -> new WebClientAutoConfiguration.WebClientCodecsConfiguration().exchangeStrategiesCustomizer(new ArrayList<>(context.getBeansOfType(CodecCustomizer.class).values())));
+		context.registerBean(EmptyWebClientCodecCustomizer.class, () -> new EmptyWebClientCodecCustomizer(new ArrayList<>(context.getBeansOfType(CodecCustomizer.class).values())));
+	}
+
+	/**
+	 * Variant of {@link WebClientCodecCustomizer} that configure empty default codecs by defaults
+	 */
+	static public class EmptyWebClientCodecCustomizer implements WebClientCustomizer {
+
+		private final List<CodecCustomizer> codecCustomizers;
+
+		public EmptyWebClientCodecCustomizer(List<CodecCustomizer> codecCustomizers) {
+			this.codecCustomizers = codecCustomizers;
+		}
+
+		@Override
+		public void customize(WebClient.Builder webClientBuilder) {
+			webClientBuilder
+					.exchangeStrategies(ExchangeStrategies.empty()
+							.codecs((codecs) -> this.codecCustomizers
+									.forEach((customizer) -> customizer.customize(codecs)))
+							.build());
+		}
 	}
 }
