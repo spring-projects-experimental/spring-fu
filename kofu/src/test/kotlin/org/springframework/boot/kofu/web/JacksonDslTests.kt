@@ -16,9 +16,11 @@
 
 package org.springframework.boot.kofu.web
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.getBean
+import org.springframework.beans.factory.getBeanProvider
 import org.springframework.boot.kofu.application
 import org.springframework.http.HttpHeaders.CONTENT_TYPE
 import org.springframework.http.HttpStatus
@@ -27,7 +29,6 @@ import org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.test.web.reactive.server.expectBody
 import org.springframework.web.reactive.function.client.WebClient
-import reactor.netty.http.HttpResources
 import reactor.test.test
 
 /**
@@ -38,7 +39,7 @@ class JacksonDslTests {
 	@Test
 	fun `Enable jackson module on server, create and request a JSON endpoint`() {
 		val app = application {
-			server(netty()) {
+			server {
 				codecs {
 					jackson()
 				}
@@ -57,13 +58,12 @@ class JacksonDslTests {
 				.expectBody<User>()
 				.isEqualTo(User("Brian"))
 		app.stop()
-		HttpResources.reset() // TODO Possible bug with WebTestClient.bindToServer() + Reactor Netty
 	}
 
 	@Test
 	fun `Enable jackson module on client and server, create and request a JSON endpoint`() {
 		val app = application {
-			server(netty()) {
+			server {
 				codecs {
 					jackson()
 				}
@@ -89,9 +89,11 @@ class JacksonDslTests {
 						assertEquals(APPLICATION_JSON_UTF8, it.headers().contentType().get())
 					}
 					.verifyComplete()
+			val mappers = context.getBeanProvider<ObjectMapper>().toList()
+			assertEquals(1, mappers.size)
+
 			stop()
 		}
-		HttpResources.reset() // TODO Possible bug with WebTestClient.bindToServer() + Reactor Netty
 	}
 
 	data class User(val name: String)

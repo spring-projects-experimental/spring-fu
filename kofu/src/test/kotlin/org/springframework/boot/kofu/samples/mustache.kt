@@ -6,7 +6,7 @@ import org.springframework.boot.kofu.web.server
 
 fun mustache() {
 	application {
-		server(netty()) {
+		server {
 			mustache()
 		}
 	}

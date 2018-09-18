@@ -29,7 +29,7 @@ class MustacheDslTests {
 	@Test
 	fun `Create and request a Mustache view`() {
 		val app = application {
-			server(netty()) {
+			server {
 				mustache()
 				router {
 					GET("/view") { ok().render("template", mapOf("name" to "world")) }

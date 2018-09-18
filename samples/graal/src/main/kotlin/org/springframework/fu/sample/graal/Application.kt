@@ -7,7 +7,7 @@ import org.springframework.core.io.ClassPathResource
 
 
 val app = application {
-	server(netty()) {
+	server {
 		router {
 			GET("/") {
 				ok().syncBody("Hello world!")

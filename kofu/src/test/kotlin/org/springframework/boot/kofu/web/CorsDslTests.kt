@@ -18,11 +18,7 @@ package org.springframework.boot.kofu.web
 
 import org.junit.jupiter.api.Test
 import org.springframework.boot.kofu.application
-import org.springframework.boot.kofu.web.cors
-import org.springframework.boot.kofu.web.netty
-import org.springframework.boot.kofu.web.server
 import org.springframework.test.web.reactive.server.WebTestClient
-import reactor.netty.http.HttpResources
 
 /**
  * @author Ireneusz Kozłowski
@@ -32,7 +28,7 @@ class CorsDslTests {
 	@Test
 	fun `Enable cors module on server, create and request a JSON endpoint`() {
 		val app = application {
-			server(netty()) {
+			server {
 				cors {
 					"/api" {
 						allowedOrigins("first.example.com", "second.example.com")
@@ -63,7 +59,6 @@ class CorsDslTests {
 			client.get().uri("/").exchange()
 					.expectStatus().is2xxSuccessful
 			stop()
-			HttpResources.reset() // TODO Possible bug with WebTestClient.bindToServer() + Reactor Netty
 		}
 	}
 }

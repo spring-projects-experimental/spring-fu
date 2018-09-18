@@ -7,7 +7,7 @@ import org.springframework.boot.kofu.web.server
 
 fun corsDsl() {
 	application {
-		server(netty()) {
+		server {
 			cors {
 				"/api" {
 					allowedOrigins("first.example.com", "second.example.com")

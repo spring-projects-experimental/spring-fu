@@ -27,7 +27,7 @@ import org.springframework.boot.autoconfigure.jackson.JacksonProperties
  * Require `org.springframework.boot:spring-boot-starter-json` dependency
  * (included by default in `spring-boot-starter-webflux`).
  *
- * @sample org.springframework.boot.kofu.samples.jackson
+ * @sample org.springframework.boot.kofu.samples.jacksonDsl
  */
 fun WebFluxCodecsDsl.jackson(json: Boolean = true) {
 	val properties = JacksonProperties()
