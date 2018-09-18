@@ -1,5 +1,0 @@
-= Reactive webapp
-
-This is a Spring Fu example of a reactive webapp.
-
-

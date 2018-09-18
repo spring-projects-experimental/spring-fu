@@ -9,9 +9,9 @@ include(
 		"starters",
 		"starters:data-mongodb-coroutines",
 		"starters:webflux-coroutines",
-		"samples:coroutines",
-		"samples:graal",
-		"samples:reactive"
+		"samples:kofu-coroutines",
+		"samples:kofu-graal",
+		"samples:kofu-reactive"
 )
 
 // Required since Boot 2.1 Gradle plugin is not available from Gradle portal

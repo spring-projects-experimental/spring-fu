@@ -81,7 +81,7 @@ a|
 
 
 a|
-https://github.com/spring-projects/spring-fu/tree/master/samples/graal[GraalVM support]
+https://github.com/spring-projects/spring-fu/tree/master/samples/kofu-graal[GraalVM support]
 a|
 Initial support done in Spring Framework 5.1
 
@@ -141,9 +141,9 @@ a bootstrap `.zip` archive, extract it and follow `README.adoc` instructions.
 
 You can have a look to the sample applications:
 
-* https://github.com/spring-projects/spring-fu/tree/master/samples/reactive[Reactive webapp]
-* https://github.com/spring-projects/spring-fu/tree/master/samples/coroutines[Coroutine webapp]
-* https://github.com/spring-projects/spring-fu/tree/master/samples/graal[Graal native image webapp]
+* https://github.com/spring-projects/spring-fu/tree/master/samples/kofu-reactive[Reactive webapp]
+* https://github.com/spring-projects/spring-fu/tree/master/samples/kofu-coroutines[Coroutine webapp]
+* https://github.com/spring-projects/spring-fu/tree/master/samples/kofu-graal[Graal native image webapp]
 
 === Credits
 

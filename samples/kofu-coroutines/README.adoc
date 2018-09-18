@@ -1,0 +1,3 @@
+= Kofu coroutines webapp
+
+This is a sample coroutines webapp with Kofu configuration.

@@ -1,0 +1,3 @@
+= Kofu reactive webapp
+
+This is a sample reactive webapp with Kofu configuration.

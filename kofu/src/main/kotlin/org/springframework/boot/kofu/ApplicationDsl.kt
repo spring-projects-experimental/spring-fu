@@ -45,7 +45,6 @@ open class ApplicationDsl internal constructor(private val startServer: Boolean,
 	override fun register(context: GenericApplicationContext) {
 		init()
 		context.registerBean(AutowiredConstructorBeanPostProcessor::class.java)
-
 		context.registerBean("messageSource") {
 			ReloadableResourceBundleMessageSource().apply {
 				setBasename("messages")
