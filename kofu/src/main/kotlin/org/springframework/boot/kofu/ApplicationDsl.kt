@@ -16,6 +16,7 @@
 
 package org.springframework.boot.kofu
 
+import org.springframework.beans.BeanUtils
 import org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.WebApplicationType
@@ -28,6 +29,7 @@ import org.springframework.context.support.BeanDefinitionDsl
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import org.springframework.context.support.registerBean
+import java.lang.reflect.Constructor
 
 
 /**
@@ -42,12 +44,22 @@ open class ApplicationDsl internal constructor(private val startServer: Boolean,
 
 	override fun register(context: GenericApplicationContext) {
 		init()
-		context.registerBean(AutowiredAnnotationBeanPostProcessor::class.java)
+		context.registerBean(AutowiredConstructorBeanPostProcessor::class.java)
+
 		context.registerBean("messageSource") {
 			ReloadableResourceBundleMessageSource().apply {
 				setBasename("messages")
 				setDefaultEncoding("UTF-8")
 			}
+		}
+	}
+
+	class AutowiredConstructorBeanPostProcessor: AutowiredAnnotationBeanPostProcessor() {
+
+		@Suppress("UNCHECKED_CAST")
+		override fun determineCandidateConstructors(beanClass: Class<*>, beanName: String): Array<Constructor<*>>? {
+			val primaryConstructor = BeanUtils.findPrimaryConstructor(beanClass)
+			return if (primaryConstructor != null) arrayOf(primaryConstructor) else null
 		}
 	}
 
