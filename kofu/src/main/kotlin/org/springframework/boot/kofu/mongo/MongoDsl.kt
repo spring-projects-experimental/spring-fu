@@ -18,10 +18,10 @@ package org.springframework.boot.kofu.mongo
 
 import org.springframework.boot.autoconfigure.data.mongo.MongoDataInitializer
 import org.springframework.boot.autoconfigure.data.mongo.MongoReactiveDataInitializer
-import org.springframework.boot.kofu.AbstractDsl
-import org.springframework.boot.kofu.ApplicationDsl
 import org.springframework.boot.autoconfigure.mongo.MongoProperties
 import org.springframework.boot.autoconfigure.mongo.MongoReactiveInitializer
+import org.springframework.boot.kofu.AbstractDsl
+import org.springframework.boot.kofu.ApplicationDsl
 import org.springframework.context.support.GenericApplicationContext
 
 /**

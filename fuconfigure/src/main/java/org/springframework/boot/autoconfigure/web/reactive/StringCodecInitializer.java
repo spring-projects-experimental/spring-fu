@@ -16,8 +16,6 @@
 
 package org.springframework.boot.autoconfigure.web.reactive;
 
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.core.codec.CharSequenceEncoder;
@@ -27,21 +25,15 @@ import org.springframework.http.codec.CodecConfigurer;
 /**
  * {@link ApplicationContextInitializer} adapter for registering {@link String} codecs.
  */
-public class StringCodecInitializer implements ApplicationContextInitializer<GenericApplicationContext> {
+public class StringCodecInitializer extends AbstractCodecInitializer {
+
+	public StringCodecInitializer(boolean isClientCodec) {
+		super(isClientCodec);
+	}
 
 	@Override
-	public void initialize(GenericApplicationContext context) {
-		context.registerBean(BeanPostProcessor.class, () -> new BeanPostProcessor() {
-
-			@Override
-			public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
-				if (bean instanceof CodecConfigurer) {
-					CodecConfigurer.CustomCodecs codecs = ((CodecConfigurer)bean).customCodecs();
-					codecs.encoder(CharSequenceEncoder.textPlainOnly());
-					codecs.decoder(StringDecoder.textPlainOnly());
-				}
-				return bean;
-			}
-		});
+	protected void register(GenericApplicationContext context, CodecConfigurer configurer) {
+		configurer.customCodecs().encoder(CharSequenceEncoder.textPlainOnly());
+		configurer.customCodecs().decoder(StringDecoder.textPlainOnly());
 	}
 }

@@ -32,12 +32,12 @@ import org.springframework.context.support.GenericApplicationContext
 import java.util.*
 import kotlin.reflect.KClass
 
-class JacksonDsl(private val properties: JacksonProperties, private val init: JacksonDsl.() -> Unit): AbstractDsl() {
+class JacksonDsl(private val properties: JacksonProperties, private val isClientCodec: Boolean, private val init: JacksonDsl.() -> Unit): AbstractDsl() {
 
 	override fun register(context: GenericApplicationContext) {
 		init()
 		initializers.add(JacksonInitializer(properties))
-		initializers.add(JacksonJsonCodecInitializer())
+		initializers.add(JacksonJsonCodecInitializer(isClientCodec))
 	}
 
 	/**
@@ -144,16 +144,28 @@ class JacksonDsl(private val properties: JacksonProperties, private val init: Ja
 
 /**
  * Register an `ObjectMapper` bean and configure a [Jackson](https://github.com/FasterXML/jackson)
- * JSON codec on WebFlux server and client.
+ * JSON codec on WebFlux client via a [dedicated DSL][JacksonDsl].
  *
  * Require `org.springframework.boot:spring-boot-starter-json` dependency
  * (included by default in `spring-boot-starter-webflux`).
- * @param dateFormat
- * @param propertyNamingStrategy [PropertyNamingStrategy] constant or subclass
 
  * @sample org.springframework.boot.kofu.samples.jacksonDsl
  */
-fun WebFluxCodecsDsl.jackson(dsl: JacksonDsl.() -> Unit = {}) {
+fun WebFluxClientCodecDsl.jackson(dsl: JacksonDsl.() -> Unit = {}) {
 	val properties = JacksonProperties()
-	initializers.add(JacksonDsl(properties, dsl))
+	initializers.add(JacksonDsl(properties, true, dsl))
+}
+
+/**
+ * Register an `ObjectMapper` bean and configure a [Jackson](https://github.com/FasterXML/jackson)
+ * JSON codec on WebFlux client via a [dedicated DSL][JacksonDsl].
+ *
+ * Require `org.springframework.boot:spring-boot-starter-json` dependency
+ * (included by default in `spring-boot-starter-webflux`).
+
+ * @sample org.springframework.boot.kofu.samples.jacksonDsl
+ */
+fun WebFluxServerCodecDsl.jackson(dsl: JacksonDsl.() -> Unit = {}) {
+	val properties = JacksonProperties()
+	initializers.add(JacksonDsl(properties, false, dsl))
 }

@@ -16,13 +16,9 @@
 
 package org.springframework.boot.autoconfigure.web.reactive;
 
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
-import org.springframework.core.codec.CharSequenceEncoder;
 import org.springframework.core.codec.ResourceDecoder;
-import org.springframework.core.codec.StringDecoder;
 import org.springframework.core.io.Resource;
 import org.springframework.http.codec.CodecConfigurer;
 import org.springframework.http.codec.ResourceHttpMessageWriter;
@@ -30,21 +26,15 @@ import org.springframework.http.codec.ResourceHttpMessageWriter;
 /**
  * {@link ApplicationContextInitializer} adapter for registering {@link Resource} codecs.
  */
-public class ResourceCodecInitializer implements ApplicationContextInitializer<GenericApplicationContext> {
+public class ResourceCodecInitializer extends AbstractCodecInitializer {
+
+	public ResourceCodecInitializer(boolean isClientCodec) {
+		super(isClientCodec);
+	}
 
 	@Override
-	public void initialize(GenericApplicationContext context) {
-		context.registerBean(BeanPostProcessor.class, () -> new BeanPostProcessor() {
-
-			@Override
-			public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
-				if (bean instanceof CodecConfigurer) {
-					CodecConfigurer.CustomCodecs codecs = ((CodecConfigurer)bean).customCodecs();
-					codecs.writer(new ResourceHttpMessageWriter());
-					codecs.decoder(new ResourceDecoder());
-				}
-				return bean;
-			}
-		});
+	protected void register(GenericApplicationContext context, CodecConfigurer configurer) {
+		configurer.customCodecs().writer(new ResourceHttpMessageWriter());
+		configurer.customCodecs().decoder(new ResourceDecoder());
 	}
 }

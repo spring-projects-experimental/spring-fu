@@ -22,7 +22,6 @@ import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.getBean
 import org.springframework.boot.kofu.application
 import org.springframework.boot.web.reactive.server.ConfigurableReactiveWebServerFactory
-import org.springframework.boot.web.server.ConfigurableWebServerFactory
 import org.springframework.http.HttpStatus.NO_CONTENT
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.web.reactive.function.client.WebClient

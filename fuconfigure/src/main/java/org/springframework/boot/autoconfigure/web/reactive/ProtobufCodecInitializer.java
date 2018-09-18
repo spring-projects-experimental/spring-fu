@@ -16,8 +16,6 @@
 
 package org.springframework.boot.autoconfigure.web.reactive;
 
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.http.codec.CodecConfigurer;
@@ -29,21 +27,17 @@ import org.springframework.http.codec.protobuf.ProtobufEncoder;
  * @see ProtobufEncoder
  * @see ProtobufDecoder
  */
-public class ProtobufCodecInitializer implements ApplicationContextInitializer<GenericApplicationContext> {
+public class ProtobufCodecInitializer extends AbstractCodecInitializer {
+
+
+	public ProtobufCodecInitializer(boolean isClientCodec) {
+		super(isClientCodec);
+	}
 
 	@Override
-	public void initialize(GenericApplicationContext context) {
-		context.registerBean(BeanPostProcessor.class, () -> new BeanPostProcessor() {
+	protected void register(GenericApplicationContext context, CodecConfigurer configurer) {
+		configurer.customCodecs().encoder(new ProtobufEncoder());
+		configurer.customCodecs().decoder(new ProtobufDecoder());
 
-			@Override
-			public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
-				if (bean instanceof CodecConfigurer) {
-					CodecConfigurer.CustomCodecs codecs = ((CodecConfigurer)bean).customCodecs();
-					codecs.encoder(new ProtobufEncoder());
-					codecs.decoder(new ProtobufDecoder());
-				}
-				return bean;
-			}
-		});
 	}
 }

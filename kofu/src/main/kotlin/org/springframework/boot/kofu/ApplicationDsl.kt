@@ -28,7 +28,6 @@ import org.springframework.context.support.BeanDefinitionDsl
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import org.springframework.context.support.registerBean
-import org.springframework.web.reactive.function.server.RouterFunctionDsl
 
 
 /**
@@ -81,7 +80,7 @@ open class ApplicationDsl internal constructor(private val startServer: Boolean,
 	}
 
 	/**
-	 * Configure global, package or class logging  via a [dedicated DSL][LoggingDsl].
+	 * Configure global, package or class logging via a [dedicated DSL][LoggingDsl].
 	 * @sample org.springframework.boot.kofu.samples.loggingDsl
 	 */
 	fun logging(dsl: LoggingDsl.() -> Unit) {

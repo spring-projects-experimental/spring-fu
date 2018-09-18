@@ -4,8 +4,8 @@ import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.springframework.fu.sample.graal.app
-import org.springframework.test.web.reactive.server.*
 import org.springframework.test.web.reactive.server.WebTestClient
+import org.springframework.test.web.reactive.server.expectBody
 
 class IntegrationTests {
 

@@ -1,16 +1,16 @@
 package org.springframework.fu.sample.coroutines
 
 import kotlinx.coroutines.runBlocking
+import org.springframework.boot.context.event.ApplicationReadyEvent
 import org.springframework.boot.kofu.application
-import org.springframework.boot.kofu.web.jackson
 import org.springframework.boot.kofu.mongo.coroutines
+import org.springframework.boot.kofu.mongo.embedded
 import org.springframework.boot.kofu.mongo.mongodb
+import org.springframework.boot.kofu.ref
+import org.springframework.boot.kofu.web.jackson
 import org.springframework.boot.kofu.web.mustache
 import org.springframework.boot.kofu.web.netty
 import org.springframework.boot.kofu.web.server
-import org.springframework.boot.context.event.ApplicationReadyEvent
-import org.springframework.boot.kofu.ref
-import org.springframework.boot.kofu.mongo.embedded
 
 val app = application {
 	beans {

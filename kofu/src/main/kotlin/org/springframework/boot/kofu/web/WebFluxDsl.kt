@@ -17,10 +17,10 @@
 package org.springframework.boot.kofu.web
 
 import org.springframework.beans.factory.getBean
-import org.springframework.boot.autoconfigure.web.reactive.function.client.ReactiveWebClientInitializer
 import org.springframework.boot.autoconfigure.web.ResourceProperties
 import org.springframework.boot.autoconfigure.web.ServerProperties
 import org.springframework.boot.autoconfigure.web.reactive.*
+import org.springframework.boot.autoconfigure.web.reactive.function.client.ReactiveWebClientInitializer
 import org.springframework.boot.kofu.AbstractDsl
 import org.springframework.boot.kofu.ApplicationDsl
 import org.springframework.boot.web.embedded.jetty.JettyReactiveWebServerFactory
@@ -33,13 +33,15 @@ import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.registerBean
 import org.springframework.web.reactive.function.client.ExchangeStrategies
 import org.springframework.web.reactive.function.client.WebClient
-import org.springframework.web.reactive.function.server.*
+import org.springframework.web.reactive.function.server.RouterFunction
+import org.springframework.web.reactive.function.server.RouterFunctionDsl
+import org.springframework.web.reactive.function.server.ServerResponse
 import org.springframework.web.server.WebFilter
 
 /**
  * Kofu DSL for WebFlux codecs configuration.
  */
-class WebFluxCodecsDsl : AbstractDsl() {
+abstract class WebFluxCodecDsl : AbstractDsl() {
 
 	override fun register(context: GenericApplicationContext) {
 	}
@@ -47,22 +49,46 @@ class WebFluxCodecsDsl : AbstractDsl() {
 	/**
 	 * Enable [org.springframework.core.codec.CharSequenceEncoder] and [org.springframework.core.codec.StringDecoder]
 	 */
-	fun string() {
-		initializers.add(StringCodecInitializer())
-	}
+	abstract fun string()
 
 	/**
 	 * Enable [org.springframework.http.codec.ResourceHttpMessageWriter] and [org.springframework.core.codec.ResourceDecoder]
 	 */
-	fun resource() {
-		initializers.add(ResourceCodecInitializer())
-	}
+	abstract fun resource()
 
 	/**
 	 * Enable [org.springframework.http.codec.protobuf.ProtobufEncoder] and [org.springframework.http.codec.protobuf.ProtobufDecoder]
 	 */
-	fun protobuf() {
-		initializers.add(ProtobufCodecInitializer())
+	abstract fun protobuf()
+}
+
+class WebFluxClientCodecDsl : WebFluxCodecDsl() {
+
+	override fun string() {
+		initializers.add(StringCodecInitializer(true))
+	}
+
+	override fun resource() {
+		initializers.add(ResourceCodecInitializer(true))
+	}
+
+	override fun protobuf() {
+		initializers.add(ProtobufCodecInitializer(true))
+	}
+}
+
+class WebFluxServerCodecDsl : WebFluxCodecDsl() {
+
+	override fun string() {
+		initializers.add(StringCodecInitializer(false))
+	}
+
+	override fun resource() {
+		initializers.add(ResourceCodecInitializer(false))
+	}
+
+	override fun protobuf() {
+		initializers.add(ProtobufCodecInitializer(false))
 	}
 }
 
@@ -88,10 +114,10 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit,
 	}
 
 	/**
-	 * Configure codecs via a [dedicated DSL][WebFluxCodecsDsl].
+	 * Configure codecs via a [dedicated DSL][WebFluxServerCodecDsl].
 	 */
-	fun codecs(init: WebFluxCodecsDsl.() -> Unit =  {}) {
-		val codecModule = WebFluxCodecsDsl()
+	fun codecs(init: WebFluxServerCodecDsl.() -> Unit =  {}) {
+		val codecModule = WebFluxServerCodecDsl()
 		codecModule.init()
 		initializers.add(codecModule)
 	}
@@ -147,10 +173,10 @@ class WebFluxClientDsl(private val init: WebFluxClientDsl.() -> Unit, val baseUr
 	}
 
 	/**
-	 * Configure codecs via a [dedicated DSL][WebFluxCodecsDsl].
+	 * Configure codecs via a [dedicated DSL][WebFluxClientCodecDsl].
 	 */
-	fun codecs(init: WebFluxCodecsDsl.() -> Unit =  {}) {
-		val codecModule = WebFluxCodecsDsl()
+	fun codecs(init: WebFluxClientCodecDsl.() -> Unit =  {}) {
+		val codecModule = WebFluxClientCodecDsl()
 		codecModule.init()
 		initializers.add(codecModule)
 	}

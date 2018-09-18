@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
+@file:Suppress("UNUSED_PARAMETER")
+
 package org.springframework.boot.kofu.samples
 
-import org.springframework.web.function.server.coHandler
 import org.springframework.boot.kofu.application
 import org.springframework.boot.kofu.mongo.mongodb
 import org.springframework.boot.kofu.ref
@@ -24,6 +25,7 @@ import org.springframework.boot.kofu.web.*
 import org.springframework.boot.logging.LogLevel
 import org.springframework.context.event.ContextStartedEvent
 import org.springframework.web.function.server.CoroutinesServerRequest
+import org.springframework.web.function.server.coHandler
 import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse
 import reactor.core.publisher.Mono

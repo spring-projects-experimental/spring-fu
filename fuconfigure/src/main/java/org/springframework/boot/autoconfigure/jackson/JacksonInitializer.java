@@ -16,7 +16,9 @@
 
 package org.springframework.boot.autoconfigure.jackson;
 
-import static org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration.*;
+import static org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration.Jackson2ObjectMapperBuilderCustomizerConfiguration;
+import static org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration.JacksonObjectMapperBuilderConfiguration;
+import static org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration.JacksonObjectMapperConfiguration;
 
 import java.util.ArrayList;
 

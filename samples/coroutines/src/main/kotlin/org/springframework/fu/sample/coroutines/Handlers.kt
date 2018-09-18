@@ -1,9 +1,9 @@
 package org.springframework.fu.sample.coroutines
 
-import org.springframework.web.function.server.CoroutinesServerRequest
-import org.springframework.web.function.server.coHandler
 import org.springframework.http.MediaType
+import org.springframework.web.function.server.CoroutinesServerRequest
 import org.springframework.web.function.server.body
+import org.springframework.web.function.server.coHandler
 
 @Suppress("UNUSED_PARAMETER")
 class UserHandler(
