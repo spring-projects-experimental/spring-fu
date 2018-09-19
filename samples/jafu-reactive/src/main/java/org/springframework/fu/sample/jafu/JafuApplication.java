@@ -8,9 +8,9 @@ import org.springframework.core.io.ClassPathResource;
 public class JafuApplication {
 
 	public static SpringApplication app = application(app -> {
-		app.beans(context -> {
-			app.registerBean(SampleService.class);
-			app.registerBean(SampleHandler.class);
+		app.beans(beans -> {
+			beans.registerBean(SampleService.class);
+			beans.registerBean(SampleHandler.class);
 		});
 		app.server(server -> server.router(router -> {
 			SampleHandler sampleHandler = app.ref(SampleHandler.class);

@@ -6,6 +6,7 @@ import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.BeanCreationException;
@@ -69,9 +70,7 @@ abstract public class Jafu {
 		}
 	}
 
-	public static class ApplicationDsl extends AbstractDsl implements ApplicationContextInitializer<GenericApplicationContext> {
-
-		private final List<ApplicationContextInitializer<GenericApplicationContext>> initializers = new ArrayList<>();
+	public static class ApplicationDsl extends AbstractDsl {
 
 		private final Consumer<ApplicationDsl> dsl;
 
@@ -91,24 +90,18 @@ abstract public class Jafu {
 			this.initializers.add(new ServerDsl(dsl));
 		}
 
-		public void beans(Consumer<GenericApplicationContext> contextConsumer) {
-			this.initializers.add(context -> contextConsumer.accept(context));
+		public void beans(Consumer<BeanDsl> dsl) {
+			this.initializers.add(new BeanDsl(dsl));
 		}
 
 		@Override
-		public void initialize(GenericApplicationContext context) {
-			this.context = context;
+		public void register(GenericApplicationContext context) {
 			this.dsl.accept(this);
-			for (ApplicationContextInitializer<GenericApplicationContext> initializer : this.initializers) {
-				initializer.initialize(context);
-			}
 		}
 
-		public static class ServerDsl extends AbstractDsl implements ApplicationContextInitializer<GenericApplicationContext> {
+		public static class ServerDsl extends AbstractDsl {
 
 			private final Consumer<ServerDsl> dsl;
-
-			private Consumer<RouterFunctions.Builder> routerDsl;
 
 			public ServerDsl(Consumer<ServerDsl> dsl) {
 				super();
@@ -116,23 +109,56 @@ abstract public class Jafu {
 			}
 
 			public void router(Consumer<RouterFunctions.Builder> routerDsl) {
-				this.routerDsl = routerDsl;
+				this.initializers.add(context -> {
+					RouterFunctions.Builder builder = RouterFunctions.route();
+					context.registerBean(RouterFunction.class, () -> {
+						routerDsl.accept(builder);
+						return builder.build();
+					});
+
+				});
 			}
 
 			@Override
-			public void initialize(GenericApplicationContext context) {
-				this.context = context;
+			public void register(GenericApplicationContext context) {
 				this.dsl.accept(this);
-				RouterFunctions.Builder builder = RouterFunctions.route();
-				context.registerBean(RouterFunction.class, () -> {
-					this.routerDsl.accept(builder);
-					return builder.build();
-				});
 			}
 		}
 	}
 
-	public abstract static class AbstractDsl {
+	public static class BeanDsl extends AbstractDsl {
+
+		private final Consumer<BeanDsl> dsl;
+
+		public BeanDsl(Consumer<BeanDsl> dsl) {
+			this.dsl = dsl;
+		}
+
+		public final <T> void registerBean(Class<T> beanClass) {
+			this.context.registerBean(beanClass, definition -> ((AbstractBeanDefinition)definition).setAutowireMode(AUTOWIRE_CONSTRUCTOR));
+		}
+
+		public final <T> void registerBean(String beanName, Class<T> beanClass) {
+			this.context.registerBean(beanName, beanClass, definition -> ((AbstractBeanDefinition)definition).setAutowireMode(AUTOWIRE_CONSTRUCTOR));
+		}
+
+		public final <T> void registerBean(Class<T> beanClass, Supplier<T> supplier) {
+			this.context.registerBean(beanClass, supplier);
+		}
+
+		public final <T> void registerBean(String beanName, Class<T> beanClass, Supplier<T> supplier) {
+			this.context.registerBean(beanName, beanClass, supplier);
+		}
+
+		@Override
+		public void register(GenericApplicationContext context) {
+			this.dsl.accept(this);
+		}
+	}
+
+	public abstract static class AbstractDsl implements ApplicationContextInitializer<GenericApplicationContext> {
+
+		protected final List<ApplicationContextInitializer<GenericApplicationContext>> initializers = new ArrayList<>();
 
 		protected GenericApplicationContext context;
 
@@ -140,8 +166,15 @@ abstract public class Jafu {
 			return this.context.getBean(beanClass);
 		}
 
-		public final <T> void registerBean(Class<T> beanClass) {
-			this.context.registerBean(beanClass, definition -> ((AbstractBeanDefinition)definition).setAutowireMode(AUTOWIRE_CONSTRUCTOR));
+		@Override
+		public void initialize(GenericApplicationContext context) {
+			this.context = context;
+			register(context);
+			for (ApplicationContextInitializer<GenericApplicationContext> initializer : this.initializers) {
+				initializer.initialize(context);
+			}
 		}
+
+		abstract void register(GenericApplicationContext context);
 	}
 }
