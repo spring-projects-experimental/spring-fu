@@ -27,6 +27,15 @@ Slightly related: https://github.com/spring-projects/spring-boot/issues/8115[spr
 To be created in Spring Boot issue tracker
 
 a|
+https://github.com/spring-projects/spring-fu/tree/master/jafu[Jafu configuration]
+a|
+Incubating in Spring Fu
+a|
+Slightly related: https://github.com/spring-projects/spring-boot/issues/8115[spring-boot#8115]
+To be created in Spring Boot issue tracker
+
+
+a|
 https://github.com/spring-projects/spring-fu/tree/master/fuconfigure[Functional configuration adapters]
 a|
 Manually created in Spring Fu
