@@ -135,11 +135,11 @@ abstract public class Jafu {
 		}
 
 		public final <T> void registerBean(Class<T> beanClass) {
-			this.context.registerBean(beanClass, definition -> ((AbstractBeanDefinition)definition).setAutowireMode(AUTOWIRE_CONSTRUCTOR));
+			this.context.registerBean(beanClass);
 		}
 
 		public final <T> void registerBean(String beanName, Class<T> beanClass) {
-			this.context.registerBean(beanName, beanClass, definition -> ((AbstractBeanDefinition)definition).setAutowireMode(AUTOWIRE_CONSTRUCTOR));
+			this.context.registerBean(beanName, beanClass);
 		}
 
 		public final <T> void registerBean(Class<T> beanClass, Supplier<T> supplier) {
