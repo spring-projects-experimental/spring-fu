@@ -116,6 +116,14 @@ Not started yet
 a|
 https://jira.spring.io/browse/SPR-17245[SPR-17245]
 
+a|
+https://github.com/spring-projects/spring-fu/issues/85[Automated (and machine readable) HTTP API documentation]
+a|
+Not started yet
+a|
+https://github.com/spring-projects/spring-restdocs/issues/213[spring-restdocs#213]
+
+
 |=====
 
 == Getting started
