@@ -134,19 +134,19 @@ abstract public class Jafu {
 			this.dsl = dsl;
 		}
 
-		public final <T> void registerBean(Class<T> beanClass) {
+		public final <T> void bean(Class<T> beanClass) {
 			this.context.registerBean(beanClass);
 		}
 
-		public final <T> void registerBean(String beanName, Class<T> beanClass) {
+		public final <T> void bean(String beanName, Class<T> beanClass) {
 			this.context.registerBean(beanName, beanClass);
 		}
 
-		public final <T> void registerBean(Class<T> beanClass, Supplier<T> supplier) {
+		public final <T> void bean(Class<T> beanClass, Supplier<T> supplier) {
 			this.context.registerBean(beanClass, supplier);
 		}
 
-		public final <T> void registerBean(String beanName, Class<T> beanClass, Supplier<T> supplier) {
+		public final <T> void bean(String beanName, Class<T> beanClass, Supplier<T> supplier) {
 			this.context.registerBean(beanName, beanClass, supplier);
 		}
 

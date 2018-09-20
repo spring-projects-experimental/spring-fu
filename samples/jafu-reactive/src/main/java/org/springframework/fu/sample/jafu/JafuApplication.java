@@ -9,8 +9,8 @@ public class JafuApplication {
 
 	public static SpringApplication app = application(app -> {
 		app.beans(beans -> {
-			beans.registerBean(SampleService.class);
-			beans.registerBean(SampleHandler.class);
+			beans.bean(SampleService.class);
+			beans.bean(SampleHandler.class);
 		});
 		app.server(server -> server.router(router -> {
 			SampleHandler sampleHandler = app.ref(SampleHandler.class);
