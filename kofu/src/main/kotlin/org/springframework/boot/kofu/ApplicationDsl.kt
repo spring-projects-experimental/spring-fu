@@ -161,6 +161,10 @@ open class ApplicationDsl internal constructor(private val startServer: Boolean,
  * @sample org.springframework.boot.kofu.samples.applicationDslOverview
  * @param startServer Define if Spring Boot should start a web server or not
  * @param dsl The `application { }` DSL
+ * @see ApplicationDsl.logging
+ * @see org.springframework.boot.kofu.web.server
+ * @see org.springframework.boot.kofu.web.client
+ * @see org.springframework.boot.kofu.mongo.mongodb
  */
 fun application(startServer: Boolean = true, dsl: ApplicationDsl.() -> Unit)
 		= ApplicationDsl(startServer, dsl)
