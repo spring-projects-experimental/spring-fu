@@ -16,17 +16,11 @@
 
 package org.springframework.boot.autoconfigure.mongo;
 
-import java.util.List;
-
 import com.mongodb.MongoClientSettings;
 import com.mongodb.reactivestreams.client.MongoClient;
 
-import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.beans.factory.config.DependencyDescriptor;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
-import org.springframework.core.MethodParameter;
-import org.springframework.core.env.Environment;
 
 /**
 * {@link ApplicationContextInitializer} adapter for {@link MongoReactiveAutoConfiguration}.
@@ -46,16 +40,7 @@ public class MongoReactiveInitializer implements ApplicationContextInitializer<G
 	public void initialize(GenericApplicationContext context) {
 		context.registerBean(MongoClientSettingsBuilderCustomizer.class, () -> new MongoReactiveAutoConfiguration.NettyDriverConfiguration().nettyDriverCustomizer(context.getDefaultListableBeanFactory().getBeanProvider(MongoClientSettings.class)));
 
-		context.registerBean(MongoClient.class, () -> {
-			try {
-				ObjectProvider<List<MongoClientSettingsBuilderCustomizer>> customizers = (ObjectProvider<List<MongoClientSettingsBuilderCustomizer>>)context.getDefaultListableBeanFactory().resolveDependency(new DependencyDescriptor(MethodParameter.forParameter(MongoReactiveAutoConfiguration.class.getDeclaredMethod("reactiveStreamsMongoClient", MongoProperties.class, Environment.class, ObjectProvider.class).getParameters()[2]), true), null);
-				return new MongoReactiveAutoConfiguration(context.getBeanProvider(MongoClientSettings.class)).reactiveStreamsMongoClient(this.properties, context.getEnvironment(), customizers);
-			}
-			catch (NoSuchMethodException e) {
-				e.printStackTrace();
-			}
-			return null;
-		}, (definition) -> {
+		context.registerBean(MongoClient.class, () -> new MongoReactiveAutoConfiguration(context.getBeanProvider(MongoClientSettings.class)).reactiveStreamsMongoClient(this.properties, context.getEnvironment(), context.getBeanProvider(MongoClientSettingsBuilderCustomizer.class)), (definition) -> {
 			if (embeddedServer) {
 				definition.setDependsOn("embeddedMongoServer");
 			}

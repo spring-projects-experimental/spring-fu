@@ -20,10 +20,6 @@ import static org.springframework.boot.autoconfigure.web.reactive.WebFluxAutoCon
 import static org.springframework.boot.autoconfigure.web.reactive.WebFluxAutoConfiguration.ResourceHandlerRegistrationCustomizer;
 import static org.springframework.boot.autoconfigure.web.reactive.WebFluxAutoConfiguration.WebFluxConfig;
 
-import java.util.List;
-
-import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.beans.factory.config.DependencyDescriptor;
 import org.springframework.boot.autoconfigure.web.ResourceProperties;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.boot.autoconfigure.web.reactive.error.ErrorWebFluxAutoConfiguration;
@@ -35,7 +31,6 @@ import org.springframework.boot.web.reactive.server.ConfigurableReactiveWebServe
 import org.springframework.boot.web.server.WebServerFactoryCustomizerBeanPostProcessor;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
-import org.springframework.core.MethodParameter;
 import org.springframework.core.ReactiveAdapterRegistry;
 import org.springframework.http.codec.ServerCodecConfigurer;
 import org.springframework.http.server.reactive.HttpHandler;
@@ -85,9 +80,7 @@ public class ReactiveWebServerInitializer implements ApplicationContextInitializ
 		context.registerBean(ConfigurableReactiveWebServerFactory.class, () -> serverFactory);
 		context.registerBean(ErrorAttributes.class, () -> new DefaultErrorAttributes(serverProperties.getError().isIncludeException()));
 		context.registerBean(ErrorWebExceptionHandler.class,  () -> {
-			// TODO Fix when SPR-17272 will be fixed and Boot updated as well
-			ObjectProvider<List<ViewResolver>> viewResolvers = (ObjectProvider<List<ViewResolver>>)context.getDefaultListableBeanFactory().resolveDependency(new DependencyDescriptor(MethodParameter.forParameter(ErrorWebFluxAutoConfiguration.class.getConstructors()[0].getParameters()[2]), true), null);
-			ErrorWebFluxAutoConfiguration errorConfiguration = new ErrorWebFluxAutoConfiguration(this.serverProperties, this.resourceProperties, viewResolvers, context.getBean(ServerCodecConfigurer.class), context);
+			ErrorWebFluxAutoConfiguration errorConfiguration = new ErrorWebFluxAutoConfiguration(this.serverProperties, this.resourceProperties, context.getBeanProvider(ViewResolver.class), context.getBean(ServerCodecConfigurer.class), context);
 			return errorConfiguration.errorWebExceptionHandler(context.getBean(ErrorAttributes.class));
 		});
 		context.registerBean(EnableWebFluxConfigurationWrapper.class, () -> new EnableWebFluxConfigurationWrapper(context, webFluxProperties));
@@ -111,14 +104,8 @@ public class ReactiveWebServerInitializer implements ApplicationContextInitializ
 		context.registerBean(HttpHandler.class, () -> WebHttpHandlerBuilder.applicationContext(context).build());
 		context.registerBean(WebHttpHandlerBuilder.WEB_HANDLER_BEAN_NAME, DispatcherHandler.class, () -> context.getBean(EnableWebFluxConfigurationWrapper.class).webHandler());
 
-		context.registerBean(WebFluxConfig.class, () -> {
-			// TODO Fix when SPR-17272 will be fixed and Boot updated as well
-			ObjectProvider<List<HandlerMethodArgumentResolver>> argmentResolvers = (ObjectProvider<List<HandlerMethodArgumentResolver>>)context.getDefaultListableBeanFactory().resolveDependency(new DependencyDescriptor(MethodParameter.forParameter(WebFluxConfig.class.getConstructors()[0].getParameters()[3]), true), null);
-			ObjectProvider<List<CodecCustomizer>> codecCustomizers = (ObjectProvider<List<CodecCustomizer>>)context.getDefaultListableBeanFactory().resolveDependency(new DependencyDescriptor(MethodParameter.forParameter(WebFluxConfig.class.getConstructors()[0].getParameters()[4]), true), null);
-			ObjectProvider<List<ViewResolver>> viewResolvers = (ObjectProvider<List<ViewResolver>>)context.getDefaultListableBeanFactory().resolveDependency(new DependencyDescriptor(MethodParameter.forParameter(WebFluxConfig.class.getConstructors()[0].getParameters()[6]), true), null);
-			return new WebFluxConfig(resourceProperties, webFluxProperties, context, argmentResolvers, codecCustomizers,
-				context.getBeanProvider(ResourceHandlerRegistrationCustomizer.class), viewResolvers);
-		});
+		context.registerBean(WebFluxConfig.class, () -> new WebFluxConfig(resourceProperties, webFluxProperties, context, context.getBeanProvider(HandlerMethodArgumentResolver.class), context.getBeanProvider(CodecCustomizer.class),
+			context.getBeanProvider(ResourceHandlerRegistrationCustomizer.class), context.getBeanProvider(ViewResolver.class)));
 
 
 	}
