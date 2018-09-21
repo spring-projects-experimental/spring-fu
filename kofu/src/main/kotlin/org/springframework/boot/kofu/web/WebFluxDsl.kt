@@ -228,24 +228,17 @@ fun ApplicationDsl.jetty(port: Int = 8080) = JettyReactiveWebServerFactory(port)
  * When a `codecs { }` block is declared, no one is configured by default.
  * [ApplicationDsl.startServer] needs to be set to `true` (it is by default).
  *
- * You can chose the underlying engine used:
- *  * Netty (the default)
- *  * Tomcat
- *  * Jetty
- *  * Undertow
+ * You can chose the underlying engine via the [serverFactory] parameter.
  *
  * Require `org.springframework.boot:spring-boot-starter-webflux` dependency.
  *
+ * @param serverFactory The underlying web server to use: [netty] (the default), [tomcat], [jetty] or [undertow]
  * @sample org.springframework.boot.kofu.samples.routerDsl
  * @see WebFluxServerDsl.router
  * @see WebFluxServerDsl.coRouter
  * @see WebFluxServerDsl.codecs
  * @see WebFluxServerDsl.cors
  * @see WebFluxServerDsl.mustache
- * @see org.springframework.boot.kofu.web.netty
- * @see org.springframework.boot.kofu.web.tomcat
- * @see org.springframework.boot.kofu.web.jetty
- * @see org.springframework.boot.kofu.web.undertow
  */
 fun ApplicationDsl.server(serverFactory: ConfigurableReactiveWebServerFactory = netty(), init: WebFluxServerDsl.() -> Unit =  {}) {
 	initializers.add(WebFluxServerDsl(init, serverFactory))
