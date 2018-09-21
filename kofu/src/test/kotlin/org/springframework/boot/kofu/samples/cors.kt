@@ -8,12 +8,11 @@ fun corsDsl() {
 	application {
 		server {
 			cors {
-				"/api" {
+				"/api/**" {
 					allowedOrigins("first.example.com", "second.example.com")
 					allowedMethods("GET", "PUT", "POST", "DELETE")
 				}
-				"/public"()
-				"/fullConfig" {
+				"/static/**" {
 					allowedOrigins("full.config.example.com")
 					allowedMethods("GET")
 					allowedHeaders("*")
@@ -21,6 +20,7 @@ fun corsDsl() {
 					allowCredentials = true
 					maxAge = 3600
 				}
+				"/public/**"() // Enable CORS with permit default values
 			}
 		}
 	}

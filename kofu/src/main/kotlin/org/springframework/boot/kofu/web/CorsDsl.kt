@@ -45,10 +45,11 @@ class CorsDsl(
 	/**
 	 * Define a CORS configuration mapped to this path via a [dedicated DSL][CorsConfigurationDsl].
 	 * @receiver the path to map the [CORS configuration][CorsConfigurationDsl]
+	 * @param dsl CORS configuration DSL for the specific path
 	 */
-	operator fun String.invoke(defaults: Boolean = this@CorsDsl.defaults, init: CorsConfigurationDsl.() -> Unit = {}) {
+	operator fun String.invoke(dsl: CorsConfigurationDsl.() -> Unit = {}) {
 		val corsConfigurationDsl = CorsConfigurationDsl(defaults)
-		corsConfigurationDsl.init()
+		corsConfigurationDsl.dsl()
 		configuration.registerCorsConfiguration(this, corsConfigurationDsl.corsConfiguration)
 	}
 }
@@ -59,9 +60,11 @@ class CorsDsl(
  * Exact path mapping URIs (such as `/admin`) are supported
  * as well as Ant-style path patterns.
  *
+ * @param defaults Apply permit default values when set to true (enabled by default)
+ * @param dsl Cors DSL
  * @sample org.springframework.boot.kofu.samples.corsDsl
  */
 fun WebFluxServerDsl.cors(defaults: Boolean = true,
-						  init: CorsDsl.() -> Unit = {}) {
-	initializers.add(CorsDsl(defaults, init))
+						  dsl: CorsDsl.() -> Unit = {}) {
+	initializers.add(CorsDsl(defaults, dsl))
 }
