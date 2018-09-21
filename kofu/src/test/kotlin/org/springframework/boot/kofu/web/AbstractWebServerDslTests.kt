@@ -93,7 +93,7 @@ abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
 		}
 	}
 
-	//@Test
+	@Test
 	fun `Declare 2 router blocks`() {
 		val webServerModule = getServerFactory()
 		val app = application {

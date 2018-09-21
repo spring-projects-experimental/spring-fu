@@ -16,6 +16,7 @@
 
 package org.springframework.boot.kofu.web
 
+import org.springframework.beans.factory.support.BeanDefinitionReaderUtils
 import org.springframework.boot.autoconfigure.web.ResourceProperties
 import org.springframework.boot.autoconfigure.web.ServerProperties
 import org.springframework.boot.autoconfigure.web.reactive.*
@@ -113,6 +114,7 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit,
 
 	private var codecsConfigured: Boolean = false
 
+
 	override fun register(context: GenericApplicationContext) {
 		init()
 		if (!codecsConfigured) {
@@ -141,7 +143,7 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit,
 	 * Define a request filter for this server
 	 */
 	fun filter(filter: WebFilter) {
-		initializers.add(ApplicationContextInitializer { it.registerBean { filter } })
+		initializers.add(ApplicationContextInitializer { it.registerBean(BeanDefinitionReaderUtils.uniqueBeanName(RouterFunctionDsl::class.java.name, context)) { filter } })
 	}
 
 	/**
@@ -149,7 +151,7 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit,
 	 * @sample org.springframework.boot.kofu.samples.routerDsl
 	 */
 	fun router(routes: (RouterFunctionDsl.() -> Unit)) {
-		initializers.add(ApplicationContextInitializer { it.registerBean { RouterFunctionDsl(routes).invoke() } })
+		initializers.add(ApplicationContextInitializer { it.registerBean(BeanDefinitionReaderUtils.uniqueBeanName(RouterFunctionDsl::class.java.name, context)) { RouterFunctionDsl(routes).invoke() } })
 	}
 
 	/**
@@ -157,7 +159,7 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit,
 	 * @sample org.springframework.boot.kofu.samples.includeRouter
 	 */
 	fun include(router: () -> RouterFunction<ServerResponse>) {
-		initializers.add(ApplicationContextInitializer { it.registerBean { router.invoke() } })
+		initializers.add(ApplicationContextInitializer { it.registerBean(BeanDefinitionReaderUtils.uniqueBeanName(RouterFunctionDsl::class.java.name, context)) { router.invoke() } })
 	}
 
 }
