@@ -7,27 +7,23 @@ import org.springframework.boot.kofu.web.jackson
 
 fun clientDsl() {
 	application {
-		client(name = "client1") {
+		client {
 			codecs {
 				string()
 				jackson()
 			}
 		}
-		client(name = "client2", baseUrl = "http://example.com")
 	}
 }
 
 fun clientCoroutines() {
 	application {
-		client(name = "client1") {
+		client {
 			coroutines()
 			codecs {
 				string()
 				jackson()
 			}
-		}
-		client(name = "client2", baseUrl = "http://example.com") {
-			coroutines()
 		}
 	}
 }

@@ -81,7 +81,7 @@ class JacksonDslTests {
 		}
 		with(app) {
 			run()
-			val client = context.getBean<WebClient>()
+			val client = context.getBean<WebClient.Builder>().build()
 			val exchange = client.get().uri("http://127.0.1:8080/user").exchange()
 			exchange.test()
 					.consumeNextWith {

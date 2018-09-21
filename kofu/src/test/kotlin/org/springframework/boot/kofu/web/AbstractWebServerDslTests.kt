@@ -70,38 +70,12 @@ abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
 					GET("/") { noContent().build() }
 				}
 			}
-			client()
+			client(baseUrl = "http://127.0.0.1:$port")
 		}
 		with(app) {
 			run()
-			val client = context.getBean<WebClient>()
-			client.get().uri("http://127.0.0.1:$port/").exchange().test()
-					.consumeNextWith { assertEquals(NO_CONTENT, it.statusCode()) }
-					.verifyComplete()
-			stop()
-		}
-	}
-
-	@Test
-	fun `Create 2 WebClient with different names and request an endpoint`() {
-		val webServerModule = getServerFactory()
-		val app = application {
-			server(webServerModule) {
-				router {
-					GET("/") { noContent().build() }
-				}
-			}
-			client(name = "client1")
-			client(name = "client2")
-		}
-		with(app) {
-			app.run()
-			val client1 = context.getBean<WebClient>("client1")
-			client1.get().uri("http://127.0.0.1:$port/").exchange().test()
-					.consumeNextWith { assertEquals(NO_CONTENT, it.statusCode()) }
-					.verifyComplete()
-			val client2 = context.getBean<WebClient>("client2")
-			client2.get().uri("http://127.0.0.1:$port/").exchange().test()
+			val client = context.getBean<WebClient.Builder>().build()
+			client.get().uri("/").exchange().test()
 					.consumeNextWith { assertEquals(NO_CONTENT, it.statusCode()) }
 					.verifyComplete()
 			stop()

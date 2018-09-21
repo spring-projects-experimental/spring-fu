@@ -29,32 +29,42 @@ import org.springframework.web.reactive.function.client.WebClient;
 /**
  * {@link ApplicationContextInitializer} adapter for {@link WebClientAutoConfiguration}.
  */
-public class ReactiveWebClientInitializer implements ApplicationContextInitializer<GenericApplicationContext> {
+public class ReactiveWebClientBuilderInitializer implements ApplicationContextInitializer<GenericApplicationContext> {
+
+	private final String baseUrl;
+
+	public ReactiveWebClientBuilderInitializer(String baseUrl) {
+		this.baseUrl = baseUrl;
+	}
 
 	@Override
 	public void initialize(GenericApplicationContext context) {
 		context.registerBean(WebClient.Builder.class, () -> new WebClientAutoConfiguration(context.getBeanProvider(WebClientCustomizer.class)).webClientBuilder());
-		context.registerBean(EmptyWebClientCodecCustomizer.class, () -> new EmptyWebClientCodecCustomizer(new ArrayList<>(context.getBeansOfType(CodecCustomizer.class).values())));
+		context.registerBean(DefaultWebClientCodecCustomizer.class, () -> new DefaultWebClientCodecCustomizer(this.baseUrl, new ArrayList<>(context.getBeansOfType(CodecCustomizer.class).values())));
 	}
 
 	/**
 	 * Variant of {@link WebClientCodecCustomizer} that configure empty default codecs by defaults
 	 */
-	static public class EmptyWebClientCodecCustomizer implements WebClientCustomizer {
+	static public class DefaultWebClientCodecCustomizer implements WebClientCustomizer {
 
 		private final List<CodecCustomizer> codecCustomizers;
 
-		public EmptyWebClientCodecCustomizer(List<CodecCustomizer> codecCustomizers) {
+		private final String baseUrl;
+
+		public DefaultWebClientCodecCustomizer(String baseUrl, List<CodecCustomizer> codecCustomizers) {
 			this.codecCustomizers = codecCustomizers;
+			this.baseUrl = baseUrl;
 		}
 
 		@Override
-		public void customize(WebClient.Builder webClientBuilder) {
-			webClientBuilder
-					.exchangeStrategies(ExchangeStrategies.empty()
-							.codecs((codecs) -> this.codecCustomizers
-									.forEach((customizer) -> customizer.customize(codecs)))
-							.build());
+		public void customize(WebClient.Builder builder) {
+			builder.exchangeStrategies(ExchangeStrategies.empty()
+							.codecs(codecs -> this.codecCustomizers
+									.forEach((customizer) -> customizer.customize(codecs))).build());
+			if (this.baseUrl != null) {
+				builder.baseUrl(this.baseUrl);
+			}
 		}
 	}
 }

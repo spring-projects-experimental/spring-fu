@@ -22,7 +22,7 @@ import org.springframework.context.support.registerBean
 import org.springframework.web.function.client.CoroutinesWebClient
 import org.springframework.web.function.server.CoroutinesRouterFunctionDsl
 
-class CoroutinesWebFluxClientDsl(private val clientModule: WebFluxClientDsl) : AbstractDsl() {
+class CoroutinesWebFluxClientDsl(private val clientModule: WebFluxClientBuilderDsl) : AbstractDsl() {
 	override fun register(context: GenericApplicationContext) {
 		context.registerBean {
 			if (clientModule.baseUrl != null) {
@@ -39,7 +39,7 @@ class CoroutinesWebFluxClientDsl(private val clientModule: WebFluxClientDsl) : A
  *
  * @sample org.springframework.boot.kofu.samples.clientCoroutines
  */
-fun WebFluxClientDsl.coroutines()  {
+fun WebFluxClientBuilderDsl.coroutines()  {
 	initializers.add(CoroutinesWebFluxClientDsl(this))
 }
 

@@ -16,11 +16,10 @@
 
 package org.springframework.boot.kofu.web
 
-import org.springframework.beans.factory.getBean
 import org.springframework.boot.autoconfigure.web.ResourceProperties
 import org.springframework.boot.autoconfigure.web.ServerProperties
 import org.springframework.boot.autoconfigure.web.reactive.*
-import org.springframework.boot.autoconfigure.web.reactive.function.client.ReactiveWebClientInitializer
+import org.springframework.boot.autoconfigure.web.reactive.function.client.ReactiveWebClientBuilderInitializer
 import org.springframework.boot.kofu.AbstractDsl
 import org.springframework.boot.kofu.ApplicationDsl
 import org.springframework.boot.web.embedded.jetty.JettyReactiveWebServerFactory
@@ -31,7 +30,6 @@ import org.springframework.boot.web.reactive.server.ConfigurableReactiveWebServe
 import org.springframework.context.ApplicationContextInitializer
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.registerBean
-import org.springframework.web.reactive.function.client.ExchangeStrategies
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.server.RouterFunction
 import org.springframework.web.reactive.function.server.RouterFunctionDsl
@@ -168,7 +166,7 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit,
  * Kofu DSL for WebFlux client configuration.
  * @author Sebastien Deleuze
  */
-class WebFluxClientDsl(private val init: WebFluxClientDsl.() -> Unit, val baseUrl: String?, private val name: String?) : AbstractDsl() {
+class WebFluxClientBuilderDsl(internal val baseUrl: String?, private val init: WebFluxClientBuilderDsl.() -> Unit) : AbstractDsl() {
 
 	private var codecsConfigured: Boolean = false
 
@@ -178,21 +176,7 @@ class WebFluxClientDsl(private val init: WebFluxClientDsl.() -> Unit, val baseUr
 			initializers.add(StringCodecInitializer(true))
 			initializers.add(ResourceCodecInitializer(true))
 		}
-		ReactiveWebClientInitializer().initialize(context)
-		if (name != null)
-			context.registerBean(name) { client() }
-		else
-			context.registerBean { client() }
-	}
-
-	private fun client() : WebClient {
-		val builder = context.getBean<WebClient.Builder>()
-		if (baseUrl != null) {
-			builder.baseUrl(baseUrl)
-		}
-		val exchangeStrategiesBuilder = ExchangeStrategies.builder()
-		builder.exchangeStrategies(exchangeStrategiesBuilder.build())
-		return builder.build()
+		ReactiveWebClientBuilderInitializer(baseUrl).initialize(context)
 	}
 
 	/**
@@ -245,18 +229,18 @@ fun ApplicationDsl.server(serverFactory: ConfigurableReactiveWebServerFactory = 
 }
 
 /**
- * Configure a WebFlux client via a [dedicated DSL][WebFluxClientDsl].
+ * Configure a [WebFlux client](https://docs.spring.io/spring/docs/current/spring-framework-reference/web-reactive.html#webflux-client) builder ([WebClient.builder]) via a [dedicated DSL][WebFluxClientBuilderDsl].
  *
- * This DSL configures [WebFlux client](https://docs.spring.io/spring/docs/current/spring-framework-reference/web-reactive.html#spring-webflux).
  * When no codec is configured, `String` and `Resource` ones are configured by default.
  * When a `codecs { }` block is declared, no one is configured by default.
- * 0..n clients are supported (you can specify the bean name to differentiate them.
  *
  * Require `org.springframework.boot:spring-boot-starter-webflux` dependency.
  *
+ * @param baseUrl The default base URL
+ * @param dsl The [WebFlux client](https://docs.spring.io/spring/docs/current/spring-framework-reference/web-reactive.html#webflux-client) builder ([WebClient.builder]) DSL
  * @sample org.springframework.boot.kofu.samples.clientDsl
- * @see WebFluxClientDsl.codecs
+ * @see WebFluxClientBuilderDsl.codecs
  */
-fun ApplicationDsl.client(baseUrl: String? = null, name: String? = null, init: WebFluxClientDsl.() -> Unit =  {}) {
-	initializers.add(WebFluxClientDsl(init, baseUrl, name))
+fun ApplicationDsl.client(baseUrl: String? = null, dsl: WebFluxClientBuilderDsl.() -> Unit =  {}) {
+	initializers.add(WebFluxClientBuilderDsl(baseUrl, dsl))
 }
