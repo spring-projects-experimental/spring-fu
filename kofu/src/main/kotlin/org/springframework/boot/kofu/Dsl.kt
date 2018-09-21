@@ -51,7 +51,7 @@ abstract class AbstractDsl : Dsl {
 
 	override lateinit var context: GenericApplicationContext
 
-	internal val initializers = mutableListOf<ApplicationContextInitializer<GenericApplicationContext>>()
+	internal val initializers = mutableSetOf<ApplicationContextInitializer<GenericApplicationContext>>()
 
 	override fun initialize(context: GenericApplicationContext) {
 		this.context = context

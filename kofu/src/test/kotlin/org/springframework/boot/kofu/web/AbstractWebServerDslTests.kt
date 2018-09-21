@@ -21,6 +21,10 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.getBean
 import org.springframework.boot.kofu.application
+import org.springframework.boot.kofu.mongo.embedded
+import org.springframework.boot.kofu.mongo.mongodb
+import org.springframework.boot.kofu.ref
+import org.springframework.boot.logging.LogLevel
 import org.springframework.boot.web.reactive.server.ConfigurableReactiveWebServerFactory
 import org.springframework.http.HttpStatus.NO_CONTENT
 import org.springframework.http.MediaType
@@ -135,4 +139,34 @@ abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
 		app.stop()
 		HttpResources.reset()
 	}
+
+	@Test
+	fun `Check that ConcurrentModificationException is not thrown`() {
+		val webServerModule = getServerFactory()
+		val app = application {
+			server(webServerModule) {
+				codecs {
+					string()
+					jackson()
+				}
+				logging {
+					level(LogLevel.DEBUG)
+				}
+				router {
+					GET("/") { noContent().build() }
+				}
+				mongodb {
+					embedded()
+				}
+			}
+		}
+		with(app) {
+			run()
+			val client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:$port").build()
+			client.get().uri("/").exchange().expectStatus().is2xxSuccessful
+			stop()
+		}
+		HttpResources.reset()
+	}
+
 }
