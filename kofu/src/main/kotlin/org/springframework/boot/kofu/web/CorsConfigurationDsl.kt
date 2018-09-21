@@ -21,23 +21,23 @@ import org.springframework.web.cors.CorsConfiguration
 /**
  * Kofu DSL for WebFlux CORS configuration.
  */
-class CorsConfigurationDsl(private val defaults: Boolean = true,
+class CorsConfigurationDsl(defaults: Boolean = true,
 						   internal val corsConfiguration: CorsConfiguration = CorsConfiguration()) {
 
 	init {
 		if (defaults) corsConfiguration.applyPermitDefaultValues()
 	}
 
-	fun allowedOrigins(vararg allowedOrigins: String) {
-		corsConfiguration.allowedOrigins = allowedOrigins.toList()
+	fun allowedOrigins(allowedOrigin: String, vararg additionalAllowedOrigins: String) {
+		corsConfiguration.allowedOrigins = mutableListOf(allowedOrigin).apply { addAll(additionalAllowedOrigins.toList()) }
 	}
 
-	fun allowedMethods(vararg allowedMethods: String) {
-		corsConfiguration.allowedMethods = allowedMethods.toList()
+	fun allowedMethods(allowedMethod: String, vararg additionalAllowedMethods: String) {
+		corsConfiguration.allowedMethods = mutableListOf(allowedMethod).apply { addAll(additionalAllowedMethods.toList()) }
 	}
 
-	fun allowedHeaders(vararg allowedHeaders: String) {
-		corsConfiguration.allowedHeaders = allowedHeaders.toList()
+	fun allowedHeaders(allowedHeader: String, vararg additionalAllowedHeaders: String) {
+		corsConfiguration.allowedHeaders = mutableListOf(allowedHeader).apply { addAll(additionalAllowedHeaders.toList()) }
 	}
 
 	fun exposedHeaders(vararg exposedHeaders: String) {
