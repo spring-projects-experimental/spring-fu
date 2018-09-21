@@ -143,6 +143,7 @@ open class ApplicationDsl internal constructor(private val startServer: Boolean,
 			application.setAdditionalProfiles(*profiles.split(",").map { it.trim() }.toTypedArray())
 		}
 		application.addInitializers(this)
+		System.setProperty("spring.backgroundpreinitializer.ignore", "true")
 		application.run(*args)
 	}
 
