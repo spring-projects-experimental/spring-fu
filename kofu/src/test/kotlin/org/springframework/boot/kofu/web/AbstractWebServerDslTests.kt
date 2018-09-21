@@ -23,8 +23,10 @@ import org.springframework.beans.factory.getBean
 import org.springframework.boot.kofu.application
 import org.springframework.boot.web.reactive.server.ConfigurableReactiveWebServerFactory
 import org.springframework.http.HttpStatus.NO_CONTENT
+import org.springframework.http.MediaType
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.web.reactive.function.client.WebClient
+import reactor.netty.http.HttpResources
 import reactor.test.test
 
 /**
@@ -43,6 +45,7 @@ abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
 			run()
 			stop()
 		}
+		HttpResources.reset()
 	}
 
 	@Test
@@ -51,14 +54,17 @@ abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
 		val app = application {
 			server(webServerModule) {
 				router {
-					GET("/") { noContent().build() }
+					GET("/foo") { noContent().build() }
 				}
 			}
 		}
-		app.run()
-		val client = WebTestClient.bindToServer().build()
-		client.get().uri("http://127.0.0.1:$port/").exchange().expectStatus().is2xxSuccessful
-		app.stop()
+		with(app) {
+			run()
+			val client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:$port").build()
+			client.get().uri("/foo"). accept(MediaType.TEXT_PLAIN).exchange().expectStatus().is2xxSuccessful
+			stop()
+		}
+		HttpResources.reset()
 	}
 
 	@Test
@@ -79,11 +85,12 @@ abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
 					.consumeNextWith { assertEquals(NO_CONTENT, it.statusCode()) }
 					.verifyComplete()
 			stop()
+			HttpResources.reset()
 		}
 	}
 
 	//@Test
-	open fun `Declare 2 router blocks`() {
+	fun `Declare 2 router blocks`() {
 		val webServerModule = getServerFactory()
 		val app = application {
 			server(webServerModule) {
@@ -97,15 +104,16 @@ abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
 		}
 		with(app) {
 			run()
-			val client = WebTestClient.bindToServer().build()
-			client.get().uri("http://127.0.0.1:$port/foo").exchange().expectStatus().isNoContent
-			client.get().uri("http://127.0.0.1:$port//bar").exchange().expectStatus().isOk
+			val client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:$port").build()
+			client.get().uri("/foo").exchange().expectStatus().isNoContent
+			client.get().uri("/bar").exchange().expectStatus().isOk
 			stop()
 		}
+		HttpResources.reset()
 	}
 
 	@Test
-	open fun `Declare 2 server blocks`() {
+	fun `Declare 2 server blocks`() {
 		val webServerModule1 = getServerFactory()
 		val webServerModule2 = getServerFactory()
 		val app = application {
@@ -125,5 +133,6 @@ abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
 			app.run()
 		}
 		app.stop()
+		HttpResources.reset()
 	}
 }
