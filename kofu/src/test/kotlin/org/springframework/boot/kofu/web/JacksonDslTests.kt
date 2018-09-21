@@ -29,6 +29,7 @@ import org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.test.web.reactive.server.expectBody
 import org.springframework.web.reactive.function.client.WebClient
+import reactor.netty.http.HttpResources
 import reactor.test.test
 
 /**
@@ -58,6 +59,7 @@ class JacksonDslTests {
 				.expectBody<User>()
 				.isEqualTo(User("Brian"))
 		app.stop()
+		HttpResources.reset()
 	}
 
 	@Test
@@ -91,8 +93,8 @@ class JacksonDslTests {
 					.verifyComplete()
 			val mappers = context.getBeanProvider<ObjectMapper>().toList()
 			assertEquals(1, mappers.size)
-
 			stop()
+			HttpResources.reset()
 		}
 	}
 

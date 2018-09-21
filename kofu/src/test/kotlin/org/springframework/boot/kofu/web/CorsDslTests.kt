@@ -19,6 +19,7 @@ package org.springframework.boot.kofu.web
 import org.junit.jupiter.api.Test
 import org.springframework.boot.kofu.application
 import org.springframework.test.web.reactive.server.WebTestClient
+import reactor.netty.http.HttpResources
 
 /**
  * @author Ireneusz Kozłowski
@@ -60,6 +61,7 @@ class CorsDslTests {
 					.expectStatus().is2xxSuccessful
 			stop()
 		}
+		HttpResources.reset()
 	}
 }
 

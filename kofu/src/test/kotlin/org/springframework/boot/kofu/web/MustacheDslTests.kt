@@ -20,6 +20,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.boot.kofu.application
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.test.web.reactive.server.expectBody
+import reactor.netty.http.HttpResources
 
 /**
  * @author Sebastien Deleuze
@@ -43,6 +44,7 @@ class MustacheDslTests {
 			.expectBody<String>()
 			.isEqualTo("Hello world!")
 		app.stop()
+		HttpResources.reset()
 	}
 
 }
