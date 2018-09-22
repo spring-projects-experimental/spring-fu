@@ -2,8 +2,6 @@ package org.springframework.boot.autoconfigure.web.reactive;
 
 import java.util.Arrays;
 
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.boot.autoconfigure.web.reactive.function.client.WebClientCodecCustomizer;
 import org.springframework.boot.web.codec.CodecCustomizer;
 import org.springframework.context.ApplicationContextInitializer;
@@ -29,14 +27,10 @@ public abstract class AbstractCodecInitializer implements ApplicationContextInit
 			})));
 		}
 		else {
-			context.registerBean(BeanPostProcessor.class, () -> new BeanPostProcessor() {
-
+			context.registerBean(CodecCustomizer.class, () -> new CodecCustomizer() {
 				@Override
-				public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
-					if (bean instanceof CodecConfigurer) {
-						register(context, (CodecConfigurer) bean);
-					}
-					return bean;
+				public void customize(CodecConfigurer configurer) {
+					register(context, configurer);
 				}
 			});
 		}

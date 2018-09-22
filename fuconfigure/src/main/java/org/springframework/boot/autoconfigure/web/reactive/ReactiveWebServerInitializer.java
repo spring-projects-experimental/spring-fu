@@ -87,11 +87,7 @@ public class ReactiveWebServerInitializer implements ApplicationContextInitializ
 		context.registerBean(WebHttpHandlerBuilder.LOCALE_CONTEXT_RESOLVER_BEAN_NAME, LocaleContextResolver.class, () -> context.getBean(EnableWebFluxConfigurationWrapper.class).localeContextResolver());
 		context.registerBean(WebExceptionHandler.class, () -> context.getBean(EnableWebFluxConfigurationWrapper.class).responseStatusExceptionHandler());
 		context.registerBean(RouterFunctionMapping.class, () -> context.getBean(EnableWebFluxConfigurationWrapper.class).routerFunctionMapping());
-		context.registerBean(WebHttpHandlerBuilder.SERVER_CODEC_CONFIGURER_BEAN_NAME, ServerCodecConfigurer.class, () -> {
-			ServerCodecConfigurer configurer = context.getBean(EnableWebFluxConfigurationWrapper.class).serverCodecConfigurer();
-			configurer.registerDefaults(false);
-			return configurer;
-		});
+		context.registerBean(WebHttpHandlerBuilder.SERVER_CODEC_CONFIGURER_BEAN_NAME, ServerCodecConfigurer.class, () -> context.getBean(EnableWebFluxConfigurationWrapper.class).serverCodecConfigurer());
 		context.registerBean(ReactiveAdapterRegistry.class, () -> context.getBean(EnableWebFluxConfigurationWrapper.class).webFluxAdapterRegistry());
 		context.registerBean(HandlerFunctionAdapter.class, () -> context.getBean(EnableWebFluxConfigurationWrapper.class).handlerFunctionAdapter());
 		context.registerBean(ResponseBodyResultHandler.class, () -> context.getBean(EnableWebFluxConfigurationWrapper.class).responseBodyResultHandler());
@@ -114,6 +110,15 @@ public class ReactiveWebServerInitializer implements ApplicationContextInitializ
 
 		public EnableWebFluxConfigurationWrapper(GenericApplicationContext context, WebFluxProperties webFluxProperties) {
 			super(webFluxProperties, context.getBeanProvider(WebFluxRegistrations.class));
+		}
+
+		@Override
+		public ServerCodecConfigurer serverCodecConfigurer() {
+			ServerCodecConfigurer configurer = ServerCodecConfigurer.create();
+			configurer.registerDefaults(false);
+			getApplicationContext().getBeanProvider(CodecCustomizer.class)
+					.forEach((customizer) -> customizer.customize(configurer));
+			return configurer;
 		}
 	}
 }

@@ -98,6 +98,25 @@ class JacksonDslTests {
 		}
 	}
 
+	@Test
+	fun `No Jackson codec on server when not declared`() {
+		val app = application {
+			server {
+				router {
+					GET("/user") {
+						ok().header(CONTENT_TYPE, APPLICATION_JSON_UTF8_VALUE).syncBody(User("Brian"))
+					}
+				}
+			}
+		}
+		app.run()
+		val client = WebTestClient.bindToServer().baseUrl("http://127.0.1:8080").build()
+		client.get().uri("/user").exchange()
+				.expectStatus().is5xxServerError
+		app.stop()
+		HttpResources.reset()
+	}
+
 	data class User(val name: String)
 
 }
