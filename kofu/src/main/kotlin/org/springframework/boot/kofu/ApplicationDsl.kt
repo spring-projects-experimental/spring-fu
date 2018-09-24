@@ -18,6 +18,7 @@ package org.springframework.boot.kofu
 
 import org.springframework.beans.BeanUtils
 import org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor
+import org.springframework.beans.factory.support.BeanDefinitionReaderUtils
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.WebApplicationType
 import org.springframework.boot.context.properties.FunctionalConfigurationPropertiesBinder
@@ -25,10 +26,13 @@ import org.springframework.boot.context.properties.bind.Bindable
 import org.springframework.boot.web.reactive.context.ReactiveWebServerApplicationContext
 import org.springframework.context.ApplicationContext
 import org.springframework.context.ApplicationEvent
+import org.springframework.context.FunctionalClassPathScanningCandidateComponentProvider
+import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider
 import org.springframework.context.support.BeanDefinitionDsl
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import org.springframework.context.support.registerBean
+import org.springframework.util.ClassUtils
 import java.lang.reflect.Constructor
 
 
@@ -73,6 +77,27 @@ open class ApplicationDsl internal constructor(private val startServer: Boolean,
 	 */
 	fun beans(dsl: BeanDefinitionDsl.() -> Unit) {
 		initializers.add(BeanDefinitionDsl(dsl))
+	}
+
+	/**
+	 * Scan beans from the provided base package.
+	 *
+	 * The preferred constructor (Kotlin primary constructor and standard public constructors)
+	 * are evaluated for autowiring before falling back to default instantiation.
+	 *
+	 * TODO Support generating component indexes
+	 * TODO Support exclusion
+	 *
+	 * @param basePackage The base package to scann
+	 */
+	fun beans(basePackage: String) {
+		val componentProvider = FunctionalClassPathScanningCandidateComponentProvider()
+		for(metadata in componentProvider.findCandidateComponents(basePackage)) {
+			val source = ClassUtils.resolveClassName(metadata.getClassName(), null)
+			val beanName = BeanDefinitionReaderUtils.uniqueBeanName(source.name, context)
+			context.registerBean(beanName, source)
+		}
+
 	}
 
 	/**

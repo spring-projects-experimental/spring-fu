@@ -20,6 +20,8 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.getBean
+import org.springframework.boot.kofu.beans.BeanWithDependency
+import org.springframework.boot.kofu.beans.SimpleBean
 import org.springframework.boot.web.reactive.context.ReactiveWebServerApplicationContext
 import org.springframework.context.support.ReloadableResourceBundleMessageSource
 
@@ -62,6 +64,19 @@ class ApplicationDslTests {
 		with(app) {
 			run()
 			assertEquals(context.getBean<City>().name, "San Francisco")
+			stop()
+		}
+	}
+
+	@Test
+	fun `Create an application with a bean scanning`() {
+		val app = application(false) {
+			beans("org.springframework.boot.kofu.beans")
+		}
+		with(app) {
+			run()
+			context.getBean<SimpleBean>()
+			context.getBean<BeanWithDependency>()
 			stop()
 		}
 	}
