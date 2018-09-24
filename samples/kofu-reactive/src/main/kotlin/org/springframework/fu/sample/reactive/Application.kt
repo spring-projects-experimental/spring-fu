@@ -23,7 +23,6 @@ import org.springframework.boot.kofu.mongo.mongodb
 import org.springframework.boot.kofu.ref
 import org.springframework.boot.kofu.web.jackson
 import org.springframework.boot.kofu.web.mustache
-import org.springframework.boot.kofu.web.netty
 import org.springframework.boot.kofu.web.server
 
 val app = application {
@@ -34,9 +33,9 @@ val app = application {
 	listener<ApplicationReadyEvent> {
 		ref<UserRepository>().init()
 	}
-	properties<SampleConfiguration>("sample")
-	val port = if (profiles.contains("test")) 8181 else 8080
-	server(netty(port)) {
+	properties<SampleProperties>("sample")
+	server {
+		port = if (profiles.contains("test")) 8181 else 8080
 		mustache()
 		codecs {
 			string()

@@ -77,8 +77,8 @@ private fun applicationDslOverview() {
 				bean<HtmlHandler>()
 				bean<ApiHandler>()
 			}
-			val port = if (profiles.contains("test")) 8181 else 8080
-			server(netty(port)) {
+			server {
+				port = if (profiles.contains("test")) 8181 else 8080
 				cors {
 					"example.com" { }
 				}

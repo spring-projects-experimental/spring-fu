@@ -23,7 +23,6 @@ import org.springframework.beans.factory.getBean
 import org.springframework.boot.kofu.application
 import org.springframework.boot.kofu.mongo.embedded
 import org.springframework.boot.kofu.mongo.mongodb
-import org.springframework.boot.kofu.ref
 import org.springframework.boot.logging.LogLevel
 import org.springframework.boot.web.reactive.server.ConfigurableReactiveWebServerFactory
 import org.springframework.http.HttpStatus.NO_CONTENT
@@ -43,7 +42,9 @@ abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
 	@Test
 	fun `Create an application with an empty server`() {
 		val app = application {
-			server(getServerFactory())
+			server {
+				factory = getServerFactory()
+			}
 		}
 		with(app){
 			run()
@@ -54,9 +55,9 @@ abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
 
 	@Test
 	fun `Create and request an endpoint`() {
-		val webServerModule = getServerFactory()
 		val app = application {
-			server(webServerModule) {
+			server {
+				factory = getServerFactory()
 				router {
 					GET("/foo") { noContent().build() }
 				}
@@ -73,9 +74,9 @@ abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
 
 	@Test
 	fun `Create a WebClient and request an endpoint`() {
-		val webServerModule = getServerFactory()
 		val app = application {
-			server(webServerModule) {
+			server {
+				factory = getServerFactory()
 				router {
 					GET("/") { noContent().build() }
 				}
@@ -95,9 +96,9 @@ abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
 
 	@Test
 	fun `Declare 2 router blocks`() {
-		val webServerModule = getServerFactory()
 		val app = application {
-			server(webServerModule) {
+			server {
+				factory = getServerFactory()
 				router {
 					GET("/foo") { noContent().build() }
 				}
@@ -118,15 +119,16 @@ abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
 
 	@Test
 	fun `Declare 2 server blocks`() {
-		val webServerModule1 = getServerFactory()
-		val webServerModule2 = getServerFactory()
 		val app = application {
-			server(webServerModule1) {
+			server {
+				factory = getServerFactory()
 				router {
 					GET("/foo") { noContent().build() }
 				}
 			}
-			server(webServerModule2) {
+			server {
+				factory = getServerFactory()
+				port = 8181
 				router {
 					GET("/bar") { ok().build() }
 				}
@@ -142,9 +144,9 @@ abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
 
 	@Test
 	fun `Check that ConcurrentModificationException is not thrown`() {
-		val webServerModule = getServerFactory()
 		val app = application {
-			server(webServerModule) {
+			server {
+				factory = getServerFactory()
 				codecs {
 					string()
 					jackson()

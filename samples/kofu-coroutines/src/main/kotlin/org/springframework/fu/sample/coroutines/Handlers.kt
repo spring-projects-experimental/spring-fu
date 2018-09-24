@@ -8,7 +8,7 @@ import org.springframework.web.function.server.coHandler
 @Suppress("UNUSED_PARAMETER")
 class UserHandler(
 		private val repository: UserRepository,
-		private val configuration: SampleConfiguration
+		private val configuration: SampleProperties
 ) {
 
 	suspend fun listApi(request: CoroutinesServerRequest) = coHandler {

@@ -103,8 +103,7 @@ class WebFluxServerCodecDsl(private val init: WebFluxServerCodecDsl.() -> Unit) 
  * Kofu DSL for WebFlux server configuration.
  * @author Sebastien Deleuze
  */
-open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit,
-							private val serverFactory: ConfigurableReactiveWebServerFactory): AbstractDsl() {
+open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit): AbstractDsl() {
 
 	private val serverProperties = ServerProperties()
 
@@ -114,9 +113,16 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit,
 
 	private var codecsConfigured: Boolean = false
 
+	var port: Int? = null
+
+	var factory: ConfigurableReactiveWebServerFactory = NettyReactiveWebServerFactory()
+
 
 	override fun register(context: GenericApplicationContext) {
 		init()
+		if (port != null) {
+			factory.setPort(port!!)
+		}
 		if (!codecsConfigured) {
 			initializers.add(StringCodecInitializer(false))
 			initializers.add(ResourceCodecInitializer(false))
@@ -124,7 +130,7 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit,
 		if (context.containsBeanDefinition("webHandler")) {
 			throw IllegalStateException("Only one server per application is supported")
 		}
-		initializers.add(ReactiveWebServerInitializer(serverProperties, resourceProperties, webFluxProperties, serverFactory))
+		initializers.add(ReactiveWebServerInitializer(serverProperties, resourceProperties, webFluxProperties, factory))
 	}
 
 	/**
@@ -226,8 +232,8 @@ fun ApplicationDsl.jetty(port: Int = 8080) = JettyReactiveWebServerFactory(port)
  * @see WebFluxServerDsl.cors
  * @see WebFluxServerDsl.mustache
  */
-fun ApplicationDsl.server(serverFactory: ConfigurableReactiveWebServerFactory = netty(), init: WebFluxServerDsl.() -> Unit =  {}) {
-	initializers.add(WebFluxServerDsl(init, serverFactory))
+fun ApplicationDsl.server(init: WebFluxServerDsl.() -> Unit =  {}) {
+	initializers.add(WebFluxServerDsl(init))
 }
 
 /**

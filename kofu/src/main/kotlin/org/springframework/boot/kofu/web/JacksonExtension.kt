@@ -36,6 +36,24 @@ class JacksonDsl(private val properties: JacksonProperties, private val isClient
 
 	override fun register(context: GenericApplicationContext) {
 		init()
+		if (dateFormat != null) {
+			properties.dateFormat = dateFormat
+		}
+		if (propertyNamingStrategy != null) {
+			properties.propertyNamingStrategy = propertyNamingStrategy!!.qualifiedName
+		}
+		if (defaultPropertyInclusion != null) {
+			properties.defaultPropertyInclusion = defaultPropertyInclusion
+		}
+		if (timeZone != null) {
+			properties.timeZone = timeZone
+		}
+		if (locale != null) {
+			properties.locale = locale
+		}
+		if (indentOutput != null) {
+			properties.serialization[SerializationFeature.INDENT_OUTPUT] = indentOutput
+		}
 		initializers.add(JacksonInitializer(properties))
 		initializers.add(JacksonJsonCodecInitializer(isClientCodec))
 	}
@@ -43,16 +61,33 @@ class JacksonDsl(private val properties: JacksonProperties, private val isClient
 	/**
 	 * Date format string or a fully-qualified date format class name. For instance, `yyyy-MM-dd HH:mm:ss`
 	 */
-	fun dateFormat(dateFormat: String) {
-		properties.dateFormat = dateFormat
-	}
+	var dateFormat: String? = null
 
 	/**
 	 * [PropertyNamingStrategy] constant or subclass
 	 */
-	fun propertyNamingStrategy(propertyNamingStrategy: KClass<PropertyNamingStrategy>) {
-		properties.propertyNamingStrategy = propertyNamingStrategy.qualifiedName
-	}
+	var propertyNamingStrategy: KClass<PropertyNamingStrategy>? = null
+
+	/**
+	 * Set the default property inclusion
+	 */
+	var defaultPropertyInclusion: JsonInclude.Include? = null
+
+	/**
+	 * Set the timezone
+	 */
+	var timeZone: TimeZone? = null
+
+	/**
+	 * Set the locale
+	 */
+	var locale: Locale? = null
+
+	/**
+	 * Shortcut for {@link SerializationFeature#INDENT_OUTPUT} feature.
+	 */
+	var indentOutput: Boolean? = null
+
 
 	/**
 	 * Set the visibility for the specified [PropertyAccessor]
@@ -116,29 +151,6 @@ class JacksonDsl(private val properties: JacksonProperties, private val isClient
 	fun disableGeneratorFeature(feature: JsonGenerator.Feature) {
 		properties.generator[feature] = false
 	}
-
-	/**
-	 * Set the default property inclusion
-	 */
-	fun defaultPropertyInclusion(defaultPropertyInclusion: JsonInclude.Include) {
-		properties.defaultPropertyInclusion = defaultPropertyInclusion
-	}
-
-	/**
-	 * Set the timezone
-	 */
-
-	fun timezone(timeZone: TimeZone) {
-		properties.timeZone = timeZone
-	}
-
-	/**
-	 * Set the locale
-	 */
-	fun locale(locale: Locale) {
-		properties.locale = locale
-	}
-
 
 }
 
