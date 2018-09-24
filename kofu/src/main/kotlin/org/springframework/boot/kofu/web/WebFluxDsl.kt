@@ -31,6 +31,7 @@ import org.springframework.boot.web.reactive.server.ConfigurableReactiveWebServe
 import org.springframework.context.ApplicationContextInitializer
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.registerBean
+import org.springframework.web.function.server.CoroutinesRouterFunctionDsl
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.server.RouterFunction
 import org.springframework.web.reactive.function.server.RouterFunctionDsl
@@ -153,7 +154,7 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit): Abst
 	}
 
 	/**
-	 * Configure codecs via a [dedicated DSL][RouterFunctionDsl].
+	 * Configure routes via a [dedicated DSL][RouterFunctionDsl].
 	 * @sample org.springframework.boot.kofu.samples.routerDsl
 	 */
 	fun router(routes: (RouterFunctionDsl.() -> Unit)) {
@@ -166,6 +167,14 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit): Abst
 	 */
 	fun include(router: () -> RouterFunction<ServerResponse>) {
 		initializers.add(ApplicationContextInitializer { it.registerBean(BeanDefinitionReaderUtils.uniqueBeanName(RouterFunctionDsl::class.java.name, context)) { router.invoke() } })
+	}
+
+	/**
+	 * Configure Coroutines routes via a [dedicated DSL][CoroutinesRouterFunctionDsl].
+	 * @sample org.springframework.boot.kofu.samples.coRouterDsl
+	 */
+	fun coRouter(routes: (CoroutinesRouterFunctionDsl.() -> Unit)) {
+		this.include { CoroutinesRouterFunctionDsl(routes).invoke() }
 	}
 
 }

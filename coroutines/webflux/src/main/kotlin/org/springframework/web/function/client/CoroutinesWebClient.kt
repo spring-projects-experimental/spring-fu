@@ -87,10 +87,7 @@ interface CoroutinesWebClient {
 		suspend fun <T> body(clazz: Class<T>): T?
 	}
 
-	companion object {
-		fun create(): CoroutinesWebClient = DefaultCoroutineWebClient(WebClient.create())
-		fun create(url: String): CoroutinesWebClient = DefaultCoroutineWebClient(WebClient.create(url))
-	}
+	fun WebClient.toCoroutines() = DefaultCoroutineWebClient(this)
 }
 
 suspend inline fun <reified T : Any> CoroutinesWebClient.CoroutineResponseSpec.body(): T? = body(T::class.java)
