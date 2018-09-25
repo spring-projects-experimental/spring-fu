@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
 	id("org.jetbrains.kotlin.jvm") version "1.3.0-rc-57"
-	id("org.springframework.boot") version "2.1.0.BUILD-SNAPSHOT" apply false
+	id("org.springframework.boot") version "2.1.0.M4" apply false
 	id("io.spring.dependency-management") version "1.0.6.RELEASE"
 	id("maven-publish")
 	id("org.jetbrains.dokka") version "0.9.17" apply false
@@ -56,7 +56,6 @@ allprojects {
 	repositories {
 		mavenCentral()
 		maven("https://repo.spring.io/milestone")
-		maven("https://repo.spring.io/snapshot")
 		maven("http://dl.bintray.com/kotlin/kotlin-eap")
 		maven("https://jcenter.bintray.com")
 	}

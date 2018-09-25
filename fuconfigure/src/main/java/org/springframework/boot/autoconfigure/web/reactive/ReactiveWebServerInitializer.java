@@ -17,7 +17,6 @@
 package org.springframework.boot.autoconfigure.web.reactive;
 
 import static org.springframework.boot.autoconfigure.web.reactive.WebFluxAutoConfiguration.EnableWebFluxConfiguration;
-import static org.springframework.boot.autoconfigure.web.reactive.WebFluxAutoConfiguration.ResourceHandlerRegistrationCustomizer;
 import static org.springframework.boot.autoconfigure.web.reactive.WebFluxAutoConfiguration.WebFluxConfig;
 
 import org.springframework.boot.autoconfigure.web.ResourceProperties;
