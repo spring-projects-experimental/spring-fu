@@ -1,29 +1,29 @@
 val reactiveWebapp by task<Zip> {
-	from("reactive") {
+	from("kofu-reactive") {
 		exclude("build", ".gradle", ".idea", "out", "*.iml")
 	}
-	into("reactive")
+	into("kofu-reactive")
 	setExecutablePermissions()
 }
 
 val coroutineWebapp by task<Zip> {
-	from("coroutines") {
+	from("kofu-coroutines") {
 		exclude("build", ".gradle", ".idea", "out", "*.iml")
 	}
-	into("coroutines")
+	into("kofu-coroutines")
 	setExecutablePermissions()
 }
 
 publishing {
 	publications {
-		create("reactive", MavenPublication::class.java) {
+		create("kofu-reactive", MavenPublication::class.java) {
 			groupId = "org.springframework.fu"
-			artifactId = "spring-fu-bootstrap-reactive"
+			artifactId = "bootstrap-kofu-reactive"
 			artifact(reactiveWebapp)
 		}
-		create("coroutines", MavenPublication::class.java) {
+		create("kofu-coroutines", MavenPublication::class.java) {
 			groupId = "org.springframework.fu"
-			artifactId = "spring-fu-bootstrap-coroutines"
+			artifactId = "bootstrap-kofu-coroutines"
 			artifact(coroutineWebapp)
 		}
 	}
