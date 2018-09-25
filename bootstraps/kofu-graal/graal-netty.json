@@ -1,6 +1,6 @@
 [
   {
-    "name": "org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor",
+    "name": "org.springframework.boot.kofu.ApplicationDsl$AutowiredConstructorBeanPostProcessor",
     "methods": [
       { "name": "<init>", "parameterTypes": [] }
     ]

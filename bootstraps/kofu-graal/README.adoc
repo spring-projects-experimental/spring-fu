@@ -1,0 +1,5 @@
+= Graal webapp bootstrap
+
+This is a minimal reactive webapp with Kofu configuration that compiles as a https://github.com/oracle/graal/tree/master/substratevm[Graal native image]. You can build it by running `build.sh` with Graal 1.0 RC5.
+
+Still WIP since not handler seems to be find at runtime.

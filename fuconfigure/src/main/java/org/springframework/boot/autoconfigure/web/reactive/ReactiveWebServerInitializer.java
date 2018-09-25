@@ -74,8 +74,7 @@ public class ReactiveWebServerInitializer implements ApplicationContextInitializ
 	public void initialize(GenericApplicationContext context) {
 		context.registerBean("webServerFactoryCustomizerBeanPostProcessor", WebServerFactoryCustomizerBeanPostProcessor.class, WebServerFactoryCustomizerBeanPostProcessor::new);
 
-		ReactiveWebServerFactoryAutoConfiguration configuration = new ReactiveWebServerFactoryAutoConfiguration();
-		context.registerBean(ReactiveWebServerFactoryCustomizer.class, () -> configuration.reactiveWebServerFactoryCustomizer(this.serverProperties));
+		context.registerBean(ReactiveWebServerFactoryCustomizer.class, () -> new ReactiveWebServerFactoryCustomizer(this.serverProperties));
 		context.registerBean(ConfigurableReactiveWebServerFactory.class, () -> serverFactory);
 		context.registerBean(ErrorAttributes.class, () -> new DefaultErrorAttributes(serverProperties.getError().isIncludeException()));
 		context.registerBean(ErrorWebExceptionHandler.class,  () -> {

@@ -1,6 +1,6 @@
 [
   {
-    "name": "org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor",
+    "name": "org.springframework.boot.kofu.ApplicationDsl$AutowiredConstructorBeanPostProcessor",
     "methods": [
       { "name": "<init>", "parameterTypes": [] }
     ]
@@ -19,6 +19,12 @@
   },
   {
     "name": "org.springframework.boot.web.reactive.context.ReactiveWebServerApplicationContext",
+    "methods": [
+      { "name": "<init>", "parameterTypes": [] }
+    ]
+  },
+  {
+    "name": "org.springframework.http.codec.support.DefaultServerCodecConfigurer",
     "methods": [
       { "name": "<init>", "parameterTypes": [] }
     ]
@@ -50,6 +56,13 @@
   },
   {
     "name": "[Lorg.eclipse.jetty.servlet.ServletMapping;",
+    "allPublicFields": true,
+    "allPublicMethods": true,
+    "allDeclaredMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "[Lorg.eclipse.jetty.servlet.FilterMapping;",
     "allPublicFields": true,
     "allPublicMethods": true,
     "allDeclaredMethods": true,

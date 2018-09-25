@@ -1,4 +1,4 @@
-package org.springframework.fu.sample.graal
+package com.example
 
 import org.springframework.boot.kofu.application
 import org.springframework.boot.kofu.web.server
@@ -9,7 +9,7 @@ val app = application {
 	server {
 		router {
 			GET("/") {
-				ok().syncBody("Hello world!")
+				ok().syncBody("Hello GraalVM native images!")
 			}
 			resources("/**", ClassPathResource("static/"))
 		}

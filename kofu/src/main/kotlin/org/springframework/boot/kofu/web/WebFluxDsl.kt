@@ -112,16 +112,18 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit): Abst
 
 	private var codecsConfigured: Boolean = false
 
-	var port: Int? = null
+	var port: Int = 8080
 
-	var factory: ConfigurableReactiveWebServerFactory = NettyReactiveWebServerFactory()
+	var factory: ConfigurableReactiveWebServerFactory? = null
 
 
 	override fun register(context: GenericApplicationContext) {
 		init()
-		if (port != null) {
-			factory.setPort(port!!)
+		if (factory == null) {
+			factory = NettyReactiveWebServerFactory()
 		}
+		factory!!.setPort(port)
+
 		if (!codecsConfigured) {
 			initializers.add(StringCodecInitializer(false))
 			initializers.add(ResourceCodecInitializer(false))
@@ -167,6 +169,26 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit): Abst
 		initializers.add(ApplicationContextInitializer { it.registerBean(BeanDefinitionReaderUtils.uniqueBeanName(CoroutinesRouterFunctionDsl::class.java.name, context)) { CoroutinesRouterFunctionDsl(routes).invoke() } })
 	}
 
+	/** Use Netty engine in WebFlux server **/
+	val netty: NettyReactiveWebServerFactory by lazy {
+		NettyReactiveWebServerFactory()
+	}
+
+	/** Use Tomcat engine in WebFlux server **/
+	val tomcat: TomcatReactiveWebServerFactory by lazy {
+		TomcatReactiveWebServerFactory()
+	}
+
+	/** Use Undertow engine in WebFlux server **/
+	val undertow: UndertowReactiveWebServerFactory by lazy {
+		UndertowReactiveWebServerFactory()
+	}
+
+	/** Use Jetty engine in WebFlux server **/
+	val jetty: JettyReactiveWebServerFactory by lazy {
+		JettyReactiveWebServerFactory()
+	}
+
 }
 
 /**
@@ -198,18 +220,6 @@ class WebFluxClientBuilderDsl(internal val baseUrl: String?, private val init: W
 		codecsConfigured = true
 	}
 }
-
-/** Use Netty engine in WebFlux server **/
-fun ApplicationDsl.netty(port: Int = 8080) = NettyReactiveWebServerFactory(port)
-
-/** Use Tomcat engine in WebFlux server **/
-fun ApplicationDsl.tomcat(port: Int = 8080) = TomcatReactiveWebServerFactory(port)
-
-/** Use Undertow engine in WebFlux server **/
-fun ApplicationDsl.undertow(port: Int = 8080) = UndertowReactiveWebServerFactory(port)
-
-/** Use Jetty engine in WebFlux server **/
-fun ApplicationDsl.jetty(port: Int = 8080) = JettyReactiveWebServerFactory(port)
 
 /**
  * Configure a WebFlux server via a via a [dedicated DSL][WebFluxServerDsl].

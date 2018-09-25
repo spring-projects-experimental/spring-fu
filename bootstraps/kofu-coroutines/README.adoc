@@ -1,4 +1,4 @@
-= Coroutine webapp bootstrap
+= Coroutines webapp bootstrap
 
 This is a Spring Fu bootstrap project for a roroutines webapp which provides a `http://localhost:8080/` endpoint that displays "Hello world!".
 
