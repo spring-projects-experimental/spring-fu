@@ -19,15 +19,13 @@ dependencies {
 	implementation("javax.servlet:javax.servlet-api")
 	implementation("org.aspectj:aspectjweaver")
 
-	// Not needed anymore with GraalVM 1.0.0.rc6+
-	implementation("com.jcraft:jzlib:1.1.3")
-
 	testImplementation("org.junit.jupiter:junit-jupiter-api")
 	testImplementation("org.springframework:spring-test")
 	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
 }
 
 repositories {
+	mavenLocal()
 	mavenCentral()
 	maven("https://repo.spring.io/milestone")
 	maven("https://repo.spring.io/snapshot")
@@ -48,5 +46,6 @@ tasks.withType<Test> {
 configurations.all {
 	exclude(module = "netty-transport-native-epoll")
 	exclude(module = "netty-transport-native-unix-common")
+	exclude(module = "netty-codec-http2")
 	exclude(module = "hibernate-validator")
 }

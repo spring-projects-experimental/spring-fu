@@ -35,6 +35,8 @@ import org.springframework.http.codec.ServerCodecConfigurer;
 import org.springframework.http.server.reactive.HttpHandler;
 import org.springframework.web.reactive.DispatcherHandler;
 import org.springframework.web.reactive.accept.RequestedContentTypeResolver;
+import org.springframework.web.reactive.function.server.RouterFunction;
+import org.springframework.web.reactive.function.server.ServerResponse;
 import org.springframework.web.reactive.function.server.support.HandlerFunctionAdapter;
 import org.springframework.web.reactive.function.server.support.RouterFunctionMapping;
 import org.springframework.web.reactive.function.server.support.ServerResponseResultHandler;
@@ -84,7 +86,17 @@ public class ReactiveWebServerInitializer implements ApplicationContextInitializ
 		context.registerBean(EnableWebFluxConfigurationWrapper.class, () -> new EnableWebFluxConfigurationWrapper(context, webFluxProperties));
 		context.registerBean(WebHttpHandlerBuilder.LOCALE_CONTEXT_RESOLVER_BEAN_NAME, LocaleContextResolver.class, () -> context.getBean(EnableWebFluxConfigurationWrapper.class).localeContextResolver());
 		context.registerBean(WebExceptionHandler.class, () -> context.getBean(EnableWebFluxConfigurationWrapper.class).responseStatusExceptionHandler());
-		context.registerBean(RouterFunctionMapping.class, () -> context.getBean(EnableWebFluxConfigurationWrapper.class).routerFunctionMapping());
+
+		// TODO See with Arjen if we can avoid the SortedRouterFunctionsContainer trick, seems to not be GraalVM friendly
+		context.registerBean(RouterFunctionMapping.class, () -> {
+			@SuppressWarnings("unchecked")
+			RouterFunction<ServerResponse> router = context.getBeansOfType(RouterFunction.class).values().stream().reduce(RouterFunction::andOther).orElse(null);
+			RouterFunctionMapping mapping = new RouterFunctionMapping(router);
+			mapping.setOrder(-1);
+			mapping.setMessageReaders(((ServerCodecConfigurer)context.getBean(WebHttpHandlerBuilder.SERVER_CODEC_CONFIGURER_BEAN_NAME)).getReaders());
+			return mapping;
+		});
+
 		context.registerBean(WebHttpHandlerBuilder.SERVER_CODEC_CONFIGURER_BEAN_NAME, ServerCodecConfigurer.class, () -> context.getBean(EnableWebFluxConfigurationWrapper.class).serverCodecConfigurer());
 		context.registerBean(ReactiveAdapterRegistry.class, () -> context.getBean(EnableWebFluxConfigurationWrapper.class).webFluxAdapterRegistry());
 		context.registerBean(HandlerFunctionAdapter.class, () -> context.getBean(EnableWebFluxConfigurationWrapper.class).handlerFunctionAdapter());
@@ -96,7 +108,7 @@ public class ReactiveWebServerInitializer implements ApplicationContextInitializ
 		context.registerBean(SimpleHandlerAdapter.class, () -> context.getBean(EnableWebFluxConfigurationWrapper.class).simpleHandlerAdapter());
 		context.registerBean(ViewResolutionResultHandler.class, () -> context.getBean(EnableWebFluxConfigurationWrapper.class).viewResolutionResultHandler());
 		context.registerBean(HttpHandler.class, () -> WebHttpHandlerBuilder.applicationContext(context).build());
-		context.registerBean(WebHttpHandlerBuilder.WEB_HANDLER_BEAN_NAME, DispatcherHandler.class, () -> context.getBean(EnableWebFluxConfigurationWrapper.class).webHandler());
+		context.registerBean(WebHttpHandlerBuilder.WEB_HANDLER_BEAN_NAME, DispatcherHandler.class, () -> new DispatcherHandler());
 
 		context.registerBean(WebFluxConfig.class, () -> new WebFluxConfig(resourceProperties, webFluxProperties, context, context.getBeanProvider(HandlerMethodArgumentResolver.class), context.getBeanProvider(CodecCustomizer.class),
 			context.getBeanProvider(ResourceHandlerRegistrationCustomizer.class), context.getBeanProvider(ViewResolver.class)));
@@ -113,10 +125,11 @@ public class ReactiveWebServerInitializer implements ApplicationContextInitializ
 		@Override
 		public ServerCodecConfigurer serverCodecConfigurer() {
 			ServerCodecConfigurer configurer = ServerCodecConfigurer.create();
-			configurer.registerDefaults(false);
+			configurer.registerDefaults(true);
 			getApplicationContext().getBeanProvider(CodecCustomizer.class)
 					.forEach((customizer) -> customizer.customize(configurer));
 			return configurer;
 		}
 	}
+
 }

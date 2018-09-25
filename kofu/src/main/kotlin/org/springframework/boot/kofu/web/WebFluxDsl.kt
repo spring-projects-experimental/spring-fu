@@ -112,17 +112,28 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit): Abst
 
 	private var codecsConfigured: Boolean = false
 
+	/**
+	 * Define the listening port of the server.
+	 */
 	var port: Int = 8080
 
-	var factory: ConfigurableReactiveWebServerFactory? = null
+	/**
+	 * Define the underlying engine used.
+	 *
+	 * @see netty
+	 * @see tomcat
+	 * @see jetty
+	 * @ßee undertow
+	 */
+	var engine: ConfigurableReactiveWebServerFactory? = null
 
 
 	override fun register(context: GenericApplicationContext) {
 		init()
-		if (factory == null) {
-			factory = NettyReactiveWebServerFactory()
+		if (engine == null) {
+			engine = netty()
 		}
-		factory!!.setPort(port)
+		engine!!.setPort(port)
 
 		if (!codecsConfigured) {
 			initializers.add(StringCodecInitializer(false))
@@ -131,7 +142,7 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit): Abst
 		if (context.containsBeanDefinition("webHandler")) {
 			throw IllegalStateException("Only one server per application is supported")
 		}
-		initializers.add(ReactiveWebServerInitializer(serverProperties, resourceProperties, webFluxProperties, factory))
+		initializers.add(ReactiveWebServerInitializer(serverProperties, resourceProperties, webFluxProperties, engine))
 	}
 
 	/**
@@ -169,26 +180,9 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit): Abst
 		initializers.add(ApplicationContextInitializer { it.registerBean(BeanDefinitionReaderUtils.uniqueBeanName(CoroutinesRouterFunctionDsl::class.java.name, context)) { CoroutinesRouterFunctionDsl(routes).invoke() } })
 	}
 
-	/** Use Netty engine in WebFlux server **/
-	val netty: NettyReactiveWebServerFactory by lazy {
-		NettyReactiveWebServerFactory()
+	companion object {
+		fun netty(): ConfigurableReactiveWebServerFactory = NettyReactiveWebServerFactory()
 	}
-
-	/** Use Tomcat engine in WebFlux server **/
-	val tomcat: TomcatReactiveWebServerFactory by lazy {
-		TomcatReactiveWebServerFactory()
-	}
-
-	/** Use Undertow engine in WebFlux server **/
-	val undertow: UndertowReactiveWebServerFactory by lazy {
-		UndertowReactiveWebServerFactory()
-	}
-
-	/** Use Jetty engine in WebFlux server **/
-	val jetty: JettyReactiveWebServerFactory by lazy {
-		JettyReactiveWebServerFactory()
-	}
-
 }
 
 /**

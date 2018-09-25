@@ -43,7 +43,7 @@ abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
 	fun `Create an application with an empty server`() {
 		val app = application {
 			server {
-				factory = getServerFactory()
+				engine = getServerFactory()
 			}
 		}
 		with(app){
@@ -57,7 +57,7 @@ abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
 	fun `Create and request an endpoint`() {
 		val app = application {
 			server {
-				factory = getServerFactory()
+				engine = getServerFactory()
 				router {
 					GET("/foo") { noContent().build() }
 				}
@@ -76,7 +76,7 @@ abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
 	fun `Create a WebClient and request an endpoint`() {
 		val app = application {
 			server {
-				factory = getServerFactory()
+				engine = getServerFactory()
 				router {
 					GET("/") { noContent().build() }
 				}
@@ -98,7 +98,7 @@ abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
 	fun `Declare 2 router blocks`() {
 		val app = application {
 			server {
-				factory = getServerFactory()
+				engine = getServerFactory()
 				router {
 					GET("/foo") { noContent().build() }
 				}
@@ -121,13 +121,13 @@ abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
 	fun `Declare 2 server blocks`() {
 		val app = application {
 			server {
-				factory = getServerFactory()
+				engine = getServerFactory()
 				router {
 					GET("/foo") { noContent().build() }
 				}
 			}
 			server {
-				factory = getServerFactory()
+				engine = getServerFactory()
 				port = 8181
 				router {
 					GET("/bar") { ok().build() }
@@ -146,7 +146,7 @@ abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
 	fun `Check that ConcurrentModificationException is not thrown`() {
 		val app = application {
 			server {
-				factory = getServerFactory()
+				engine = getServerFactory()
 				codecs {
 					string()
 					jackson()
