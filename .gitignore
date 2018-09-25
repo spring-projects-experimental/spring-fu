@@ -6,4 +6,4 @@ build/
 *.iml
 *.ipr
 out/
-samples/graal/org.springframework.fu.sample.graal.applicationkt
+bootstraps/kofu-graal/com.example.applicationkt
