@@ -25,6 +25,7 @@ import org.springframework.boot.context.properties.FunctionalConfigurationProper
 import org.springframework.boot.context.properties.bind.Bindable
 import org.springframework.boot.web.reactive.context.ReactiveWebServerApplicationContext
 import org.springframework.context.ApplicationContext
+import org.springframework.context.ApplicationContextInitializer
 import org.springframework.context.ApplicationEvent
 import org.springframework.context.FunctionalClassPathScanningCandidateComponentProvider
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider
@@ -33,6 +34,9 @@ import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import org.springframework.context.support.registerBean
 import org.springframework.util.ClassUtils
+import org.springframework.web.reactive.function.server.RouterFunction
+import org.springframework.web.reactive.function.server.RouterFunctionDsl
+import org.springframework.web.reactive.function.server.ServerResponse
 import java.lang.reflect.Constructor
 
 
@@ -77,6 +81,14 @@ open class ApplicationDsl internal constructor(private val startServer: Boolean,
 	 */
 	fun beans(dsl: BeanDefinitionDsl.() -> Unit) {
 		initializers.add(BeanDefinitionDsl(dsl))
+	}
+
+	/**
+	 * Import an external beans block for this application
+	 * @sample org.springframework.boot.kofu.samples.importBeans
+	 */
+	fun importBeans(beans: BeanDefinitionDsl) {
+		initializers.add(beans)
 	}
 
 	/**

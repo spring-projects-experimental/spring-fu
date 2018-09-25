@@ -29,6 +29,9 @@ val app = application {
 	beans {
 		bean<UserRepository>()
 		bean<UserHandler>()
+		bean {
+			routes(ref())
+		}
 	}
 	listener<ApplicationReadyEvent> {
 		ref<UserRepository>().init()
@@ -41,7 +44,6 @@ val app = application {
 			string()
 			jackson()
 		}
-		include { routes(ref()) }
 	}
 
 	mongodb {

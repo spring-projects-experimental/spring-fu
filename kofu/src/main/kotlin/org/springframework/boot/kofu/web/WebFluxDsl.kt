@@ -33,9 +33,7 @@ import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.registerBean
 import org.springframework.web.function.server.CoroutinesRouterFunctionDsl
 import org.springframework.web.reactive.function.client.WebClient
-import org.springframework.web.reactive.function.server.RouterFunction
 import org.springframework.web.reactive.function.server.RouterFunctionDsl
-import org.springframework.web.reactive.function.server.ServerResponse
 import org.springframework.web.server.WebFilter
 
 /**
@@ -162,19 +160,11 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit): Abst
 	}
 
 	/**
-	 * Include and define an external router block for this server
-	 * @sample org.springframework.boot.kofu.samples.includeRouter
-	 */
-	fun include(router: () -> RouterFunction<ServerResponse>) {
-		initializers.add(ApplicationContextInitializer { it.registerBean(BeanDefinitionReaderUtils.uniqueBeanName(RouterFunctionDsl::class.java.name, context)) { router.invoke() } })
-	}
-
-	/**
 	 * Configure Coroutines routes via a [dedicated DSL][CoroutinesRouterFunctionDsl].
 	 * @sample org.springframework.boot.kofu.samples.coRouterDsl
 	 */
 	fun coRouter(routes: (CoroutinesRouterFunctionDsl.() -> Unit)) {
-		this.include { CoroutinesRouterFunctionDsl(routes).invoke() }
+		initializers.add(ApplicationContextInitializer { it.registerBean(BeanDefinitionReaderUtils.uniqueBeanName(CoroutinesRouterFunctionDsl::class.java.name, context)) { CoroutinesRouterFunctionDsl(routes).invoke() } })
 	}
 
 }

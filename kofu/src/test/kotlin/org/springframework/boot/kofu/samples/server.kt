@@ -28,7 +28,7 @@ private fun routerDsl() {
 	}
 }
 
-private fun includeRouter() {
+private fun importRouter() {
 	fun routes(htmlHandler: HtmlHandler, apiHandler: ApiHandler) = router {
 		GET("/", htmlHandler::blog)
 		GET("/article/{id}", htmlHandler::article)
@@ -40,9 +40,12 @@ private fun includeRouter() {
 		}
 	}
 	application {
-		server {
-			include { routes(ref(), ref())}
+		beans {
+			bean {
+				routes(ref(), ref())
+			}
 		}
+		server()
 	}
 }
 

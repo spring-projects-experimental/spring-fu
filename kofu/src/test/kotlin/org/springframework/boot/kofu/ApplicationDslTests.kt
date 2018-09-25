@@ -24,6 +24,7 @@ import org.springframework.boot.kofu.beans.BeanWithDependency
 import org.springframework.boot.kofu.beans.SimpleBean
 import org.springframework.boot.web.reactive.context.ReactiveWebServerApplicationContext
 import org.springframework.context.support.ReloadableResourceBundleMessageSource
+import org.springframework.context.support.beans
 
 /**
  * @author Sebastien Deleuze
@@ -47,6 +48,22 @@ class ApplicationDslTests {
 			beans {
 				bean<Foo>()
 			}
+		}
+		with(app) {
+			run()
+			context.getBean<ReloadableResourceBundleMessageSource>()
+			context.getBean<Foo>()
+			stop()
+		}
+	}
+
+	@Test
+	fun `Create an application with a custom beans import`() {
+		val beans = beans {
+			bean<Foo>()
+		}
+		val app = application(false) {
+			importBeans(beans)
 		}
 		with(app) {
 			run()
