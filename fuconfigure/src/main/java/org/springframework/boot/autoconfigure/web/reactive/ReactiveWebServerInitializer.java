@@ -125,7 +125,7 @@ public class ReactiveWebServerInitializer implements ApplicationContextInitializ
 		@Override
 		public ServerCodecConfigurer serverCodecConfigurer() {
 			ServerCodecConfigurer configurer = ServerCodecConfigurer.create();
-			configurer.registerDefaults(true);
+			configurer.registerDefaults(false);
 			getApplicationContext().getBeanProvider(CodecCustomizer.class)
 					.forEach((customizer) -> customizer.customize(configurer));
 			return configurer;
