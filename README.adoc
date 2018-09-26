@@ -109,19 +109,19 @@ https://github.com/spring-projects/spring-restdocs/issues/213[spring-restdocs#21
 
  * Create a Spring 2.1.0.BUILD-SNAPSHOT project on https://start.spring.io/[start.spring.io],
  * Add the `org.springframework.fu:spring-boot-kofu:0.0.1.BUILD-SNAPSHOT` dependency
- * Use Kotlin `1.3-M2` available from `http://dl.bintray.com/kotlin/kotlin-eap` Maven repository.
+ * Use Kotlin `1.3.0-rc-57` available from `http://dl.bintray.com/kotlin/kotlin-eap` Maven repository.
  * Modify the generated `*Application.kt` file as following:
 
 ```kotlin
 package com.example
 
-import org.springframework.fu.kofu.application
+import org.springframework.boot.kofu.application
 
 val app = application {
 	// ...
 }
 
-fun main(args: Array<String>) = app.run()
+fun main(args: Array<String>) = app.run(args)
 ```
 
 === Via bootstraps
@@ -132,14 +132,14 @@ a bootstrap `.zip` archive, extract it and follow `README.adoc` instructions.
 
  * https://repo.spring.io/libs-snapshot-local/org/springframework/fu/bootstrap-reactive/0.0.1.BUILD-SNAPSHOT/bootstrap-reactive-0.0.1.BUILD-SNAPSHOT.zip[bootstrap-reactive.zip]
  * https://repo.spring.io/libs-snapshot-local/org/springframework/fu/bootstrap-coroutines/0.0.1.BUILD-SNAPSHOT/bootstrap-coroutines-0.0.1.BUILD-SNAPSHOT.zip[bootstrap-coroutines.zip]
+ * https://repo.spring.io/libs-snapshot-local/org/springframework/fu/bootstrap-graal/0.0.1.BUILD-SNAPSHOT/bootstrap-graal-0.0.1.BUILD-SNAPSHOT.zip[bootstrap-graal.zip]
 
 === Samples
 
-You can have a look to the sample applications:
+You can also have a look to the sample applications:
 
 * https://github.com/spring-projects/spring-fu/tree/master/samples/kofu-reactive[Reactive webapp]
 * https://github.com/spring-projects/spring-fu/tree/master/samples/kofu-coroutines[Coroutine webapp]
-* https://github.com/spring-projects/spring-fu/tree/master/samples/kofu-graal[Graal native image webapp]
 
 === Credits
 
