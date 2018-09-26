@@ -16,4 +16,4 @@ val app = application {
 	}
 }
 
-fun main(args: Array<String>) = app.run()
+fun main(args: Array<String>) = app.run(args)
