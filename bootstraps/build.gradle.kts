@@ -26,6 +26,11 @@ publishing {
 			artifactId = "bootstrap-kofu-coroutines"
 			artifact(coroutineWebapp)
 		}
+		create("kofu-graal", MavenPublication::class.java) {
+			groupId = "org.springframework.fu"
+			artifactId = "bootstrap-kofu-graal"
+			artifact(coroutineWebapp)
+		}
 	}
 }
 
