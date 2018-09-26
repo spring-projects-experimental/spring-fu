@@ -1,8 +1,9 @@
 = Reactive webapp bootstrap
 
-This is a Spring Fu bootstrap project for a reactive webapp which provides a `http://localhost:8080/` endpoint that displays "Hello world!".
 
-After extracting the `.zip`, rename the default `reactive-webapp` directory name to a customized one.
+This is a bootstrap project for a Spring Boot reactive web application with Kofu configuration which provides a `http://localhost:8080/` endpoint that displays "Hello world!".
+
+After extracting the `.zip`, rename the default `bootstrap-kofu-reactive` directory name to a customized one.
 
 === IDE
 
@@ -26,5 +27,5 @@ $ ./gradlew bootRun
 Or
 
 ```
-$ java -jar build/libs/spring-fu-bootstrap-reactive-0.0.1.BUILD-SNAPSHOT.jar
+$ java -jar build/libs/bootstrap-kofu-reactive.jar
 ```
