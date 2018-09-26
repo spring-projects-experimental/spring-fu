@@ -26,7 +26,7 @@ A typical Kofu configuration look like the example bellow, and a comprehensive d
 application {
 	logging { }
 	beans { }
-	server(netty(port)) {
+	server {
 		cors { }
 		router { }
 		codecs { }
