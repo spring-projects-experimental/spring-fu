@@ -11,7 +11,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
 	//implementation("org.springframework.boot:spring-boot-starter-jetty")
 
-	implementation("org.springframework.fu:spring-boot-kofu:0.0.1.BUILD-SNAPSHOT") {
+	implementation("org.springframework.fu:spring-boot-kofu:0.0.1") {
 		exclude(module = "kotlin-reflect")
 	}
 
@@ -25,10 +25,8 @@ dependencies {
 }
 
 repositories {
-	mavenLocal()
 	mavenCentral()
 	maven("https://repo.spring.io/milestone")
-	maven("https://repo.spring.io/snapshot")
 	maven("http://dl.bintray.com/kotlin/kotlin-eap")
 }
 

@@ -17,7 +17,7 @@ allprojects {
 		plugin("io.spring.dependency-management")
 	}
 
-	version = "0.0.1.BUILD-SNAPSHOT"
+	version = "0.0.1"
 	group = "org.springframework.fu"
 
 	publishing {
@@ -32,7 +32,7 @@ allprojects {
 					}
 					url = uri(
 							if (version.toString().endsWith(".BUILD-SNAPSHOT")) "https://repo.spring.io/libs-snapshot-local/"
-							else "https://repo.spring.io/libs-release-local/"
+							else "https://repo.spring.io/libs-milestone-local/"
 					)
 
 				} else {

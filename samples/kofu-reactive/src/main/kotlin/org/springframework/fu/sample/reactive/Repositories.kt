@@ -7,19 +7,19 @@ import org.springframework.core.io.ClassPathResource
 import org.springframework.data.mongodb.core.*
 
 class UserRepository(
-	private val template: ReactiveMongoTemplate,
-	private val objectMapper: ObjectMapper
+		private val mongo: ReactiveMongoOperations,
+		private val objectMapper: ObjectMapper
 ) {
 
-	fun count() = template.count<User>()
+	fun count() = mongo.count<User>()
 
-	fun findAll() = template.findAll<User>()
+	fun findAll() = mongo.findAll<User>()
 
-	fun findOne(id: String) = template.findById<User>(id)
+	fun findOne(id: String) = mongo.findById<User>(id)
 
-	fun deleteAll() = template.remove<User>()
+	fun deleteAll() = mongo.remove<User>()
 
-	fun save(user: User) = template.save(user)
+	fun save(user: User) = mongo.save(user)
 
 	fun init() {
 		val eventsResource = ClassPathResource("data/users.json")

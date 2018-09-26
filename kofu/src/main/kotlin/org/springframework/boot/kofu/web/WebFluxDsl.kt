@@ -23,10 +23,7 @@ import org.springframework.boot.autoconfigure.web.reactive.*
 import org.springframework.boot.autoconfigure.web.reactive.function.client.ReactiveWebClientBuilderInitializer
 import org.springframework.boot.kofu.AbstractDsl
 import org.springframework.boot.kofu.ApplicationDsl
-import org.springframework.boot.web.embedded.jetty.JettyReactiveWebServerFactory
 import org.springframework.boot.web.embedded.netty.NettyReactiveWebServerFactory
-import org.springframework.boot.web.embedded.tomcat.TomcatReactiveWebServerFactory
-import org.springframework.boot.web.embedded.undertow.UndertowReactiveWebServerFactory
 import org.springframework.boot.web.reactive.server.ConfigurableReactiveWebServerFactory
 import org.springframework.context.ApplicationContextInitializer
 import org.springframework.context.support.GenericApplicationContext

@@ -17,9 +17,12 @@ class IntegrationTests {
 
 	@Test
 	fun `Request HTML endpoint`() {
+		print(app.context.beanDefinitionNames)
+
 		client.get().uri("/").exchange()
 			.expectStatus().is2xxSuccessful
 			.expectHeader().contentType("text/html;charset=UTF-8")
+
 	}
 
 	@Test

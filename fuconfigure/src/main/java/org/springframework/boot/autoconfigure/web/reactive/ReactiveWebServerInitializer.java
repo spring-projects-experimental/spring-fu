@@ -19,6 +19,8 @@ package org.springframework.boot.autoconfigure.web.reactive;
 import static org.springframework.boot.autoconfigure.web.reactive.WebFluxAutoConfiguration.EnableWebFluxConfiguration;
 import static org.springframework.boot.autoconfigure.web.reactive.WebFluxAutoConfiguration.WebFluxConfig;
 
+import java.util.ArrayList;
+
 import org.springframework.boot.autoconfigure.web.ResourceProperties;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.boot.autoconfigure.web.reactive.error.ErrorWebFluxAutoConfiguration;
@@ -35,6 +37,7 @@ import org.springframework.http.codec.ServerCodecConfigurer;
 import org.springframework.http.server.reactive.HttpHandler;
 import org.springframework.web.reactive.DispatcherHandler;
 import org.springframework.web.reactive.accept.RequestedContentTypeResolver;
+import org.springframework.web.reactive.config.WebFluxConfigurer;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import org.springframework.web.reactive.function.server.support.HandlerFunctionAdapter;
@@ -120,6 +123,8 @@ public class ReactiveWebServerInitializer implements ApplicationContextInitializ
 
 		public EnableWebFluxConfigurationWrapper(GenericApplicationContext context, WebFluxProperties webFluxProperties) {
 			super(webFluxProperties, context.getBeanProvider(WebFluxRegistrations.class));
+			// TODO See with Brian if we can avoid autowiring in DelegatingWebFluxConfiguration
+			setConfigurers(new ArrayList<>(context.getBeansOfType(WebFluxConfigurer.class).values()));
 		}
 
 		@Override

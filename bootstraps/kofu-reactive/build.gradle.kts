@@ -8,7 +8,7 @@ plugins {
 }
 
 dependencies {
-	implementation("org.springframework.fu:spring-boot-kofu:0.0.1.BUILD-SNAPSHOT")
+	implementation("org.springframework.fu:spring-boot-kofu:0.0.1")
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test") {
@@ -21,7 +21,6 @@ dependencies {
 repositories {
 	mavenCentral()
 	maven("https://repo.spring.io/milestone")
-	maven("https://repo.spring.io/snapshot")
 	maven("http://dl.bintray.com/kotlin/kotlin-eap")
 }
 

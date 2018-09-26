@@ -16,8 +16,6 @@
 
 package org.springframework.boot.kofu
 
-import org.springframework.beans.BeanUtils
-import org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor
 import org.springframework.beans.factory.support.BeanDefinitionReaderUtils
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.WebApplicationType
@@ -25,20 +23,13 @@ import org.springframework.boot.context.properties.FunctionalConfigurationProper
 import org.springframework.boot.context.properties.bind.Bindable
 import org.springframework.boot.web.reactive.context.ReactiveWebServerApplicationContext
 import org.springframework.context.ApplicationContext
-import org.springframework.context.ApplicationContextInitializer
 import org.springframework.context.ApplicationEvent
 import org.springframework.context.FunctionalClassPathScanningCandidateComponentProvider
-import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider
 import org.springframework.context.support.BeanDefinitionDsl
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import org.springframework.context.support.registerBean
 import org.springframework.util.ClassUtils
-import org.springframework.web.reactive.function.server.RouterFunction
-import org.springframework.web.reactive.function.server.RouterFunctionDsl
-import org.springframework.web.reactive.function.server.ServerResponse
-import java.lang.reflect.Constructor
-
 
 /**
  * Kofu DSL for application configuration.
@@ -52,21 +43,12 @@ open class ApplicationDsl internal constructor(private val startServer: Boolean,
 
 	override fun register(context: GenericApplicationContext) {
 		init()
-		context.registerBean(AutowiredConstructorBeanPostProcessor::class.java)
+
 		context.registerBean("messageSource") {
 			ReloadableResourceBundleMessageSource().apply {
 				setBasename("messages")
 				setDefaultEncoding("UTF-8")
 			}
-		}
-	}
-
-	class AutowiredConstructorBeanPostProcessor: AutowiredAnnotationBeanPostProcessor() {
-
-		@Suppress("UNCHECKED_CAST")
-		override fun determineCandidateConstructors(beanClass: Class<*>, beanName: String): Array<Constructor<*>>? {
-			val primaryConstructor = BeanUtils.findPrimaryConstructor(beanClass)
-			return if (primaryConstructor != null) arrayOf(primaryConstructor) else null
 		}
 	}
 

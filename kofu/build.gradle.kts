@@ -46,10 +46,10 @@ tasks.withType<DokkaTask> {
 	samples = listOf("src/test/kotlin")
 	includes = listOf("README.md")
 	externalDocumentationLink(delegateClosureOf<DokkaConfiguration.ExternalDocumentationLink.Builder> {
-		url = URL("https://docs.spring.io/spring-framework/docs/5.1.0.BUILD-SNAPSHOT/javadoc-api/")
+		url = URL("https://docs.spring.io/spring-framework/docs/5.1.0.RELEASE/javadoc-api/")
 	})
 	externalDocumentationLink(delegateClosureOf<DokkaConfiguration.ExternalDocumentationLink.Builder> {
-		url = URL("https://docs.spring.io/spring-framework/docs/5.1.0.BUILD-SNAPSHOT/kdoc-api/spring-framework/")
+		url = URL("https://docs.spring.io/spring-framework/docs/5.1.0.RELEASE/kdoc-api/spring-framework/")
 	})
 }
 
