@@ -14,6 +14,14 @@ val coroutineWebapp by task<Zip> {
 	setExecutablePermissions()
 }
 
+val graalWebapp by task<Zip> {
+	from("kofu-graal") {
+		exclude("build", ".gradle", ".idea", "out", "*.iml", "com.example.applicationkt")
+	}
+	into("kofu-graal")
+	setExecutablePermissions()
+}
+
 publishing {
 	publications {
 		create("kofu-reactive", MavenPublication::class.java) {
@@ -29,7 +37,7 @@ publishing {
 		create("kofu-graal", MavenPublication::class.java) {
 			groupId = "org.springframework.fu"
 			artifactId = "bootstrap-kofu-graal"
-			artifact(coroutineWebapp)
+			artifact(graalWebapp)
 		}
 	}
 }
