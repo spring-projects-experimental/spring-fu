@@ -29,6 +29,7 @@ import org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.test.web.reactive.server.expectBody
 import org.springframework.web.reactive.function.client.WebClient
+import org.springframework.web.reactive.function.server.router
 import reactor.netty.http.HttpResources
 import reactor.test.test
 
@@ -39,16 +40,17 @@ class JacksonDslTests {
 
 	@Test
 	fun `Enable jackson module on server, create and request a JSON endpoint`() {
+		val router = router {
+			GET("/user") {
+				ok().header(CONTENT_TYPE, APPLICATION_JSON_UTF8_VALUE).syncBody(User("Brian"))
+			}
+		}
 		val app = application {
 			server {
 				codecs {
 					jackson()
 				}
-				router {
-					GET("/user") {
-						ok().header(CONTENT_TYPE, APPLICATION_JSON_UTF8_VALUE).syncBody(User("Brian"))
-					}
-				}
+				router(router)
 			}
 		}
 		app.run()
@@ -64,16 +66,17 @@ class JacksonDslTests {
 
 	@Test
 	fun `Enable jackson module on client and server, create and request a JSON endpoint`() {
+		val router = router {
+			GET("/user") {
+				ok().header(CONTENT_TYPE, APPLICATION_JSON_UTF8_VALUE).syncBody(User("Brian"))
+			}
+		}
 		val app = application {
 			server {
 				codecs {
 					jackson()
 				}
-				router {
-					GET("/user") {
-						ok().header(CONTENT_TYPE, APPLICATION_JSON_UTF8_VALUE).syncBody(User("Brian"))
-					}
-				}
+				router(router)
 			}
 			client {
 				codecs {
@@ -100,13 +103,14 @@ class JacksonDslTests {
 
 	@Test
 	fun `No Jackson codec on server when not declared`() {
+		val router = router {
+			GET("/user") {
+				ok().header(CONTENT_TYPE, APPLICATION_JSON_UTF8_VALUE).syncBody(User("Brian"))
+			}
+		}
 		val app = application {
 			server {
-				router {
-					GET("/user") {
-						ok().header(CONTENT_TYPE, APPLICATION_JSON_UTF8_VALUE).syncBody(User("Brian"))
-					}
-				}
+				router(router)
 			}
 		}
 		app.run()

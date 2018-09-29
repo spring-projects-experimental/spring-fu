@@ -19,6 +19,7 @@ package org.springframework.boot.kofu.web
 import org.junit.jupiter.api.Test
 import org.springframework.boot.kofu.application
 import org.springframework.test.web.reactive.server.WebTestClient
+import org.springframework.web.reactive.function.server.router
 import reactor.netty.http.HttpResources
 
 /**
@@ -28,8 +29,12 @@ class CorsDslTests {
 
 	@Test
 	fun `Enable cors module on server, create and request a JSON endpoint`() {
+		val router = router {
+			GET("/") { noContent().build() }
+		}
 		val app = application {
 			server {
+				router(router)
 				cors {
 					"/api" {
 						allowedOrigins("first.example.com", "second.example.com")
@@ -47,9 +52,6 @@ class CorsDslTests {
 						allowCredentials = true
 						maxAge = 3600
 					}
-				}
-				router {
-					GET("/") { noContent().build() }
 				}
 			}
 		}

@@ -27,8 +27,8 @@ application {
 	logging { }
 	beans { }
 	server {
+		router()
 		cors { }
-		router { }
 		codecs { }
 	}
 	client {

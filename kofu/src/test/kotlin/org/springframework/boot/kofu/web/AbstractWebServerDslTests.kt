@@ -29,6 +29,7 @@ import org.springframework.http.HttpStatus.NO_CONTENT
 import org.springframework.http.MediaType
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.web.reactive.function.client.WebClient
+import org.springframework.web.reactive.function.server.router
 import reactor.netty.http.HttpResources
 import reactor.test.test
 
@@ -55,12 +56,13 @@ abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
 
 	@Test
 	fun `Create and request an endpoint`() {
+		val router = router {
+			GET("/foo") { noContent().build() }
+		}
 		val app = application {
 			server {
 				engine = getServerFactory()
-				router {
-					GET("/foo") { noContent().build() }
-				}
+				router(router)
 			}
 		}
 		with(app) {
@@ -74,12 +76,13 @@ abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
 
 	@Test
 	fun `Create a WebClient and request an endpoint`() {
+		val router = router {
+			GET("/") { noContent().build() }
+		}
 		val app = application {
 			server {
 				engine = getServerFactory()
-				router {
-					GET("/") { noContent().build() }
-				}
+				router(router)
 			}
 			client(baseUrl = "http://127.0.0.1:$port")
 		}
@@ -96,15 +99,18 @@ abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
 
 	@Test
 	fun `Declare 2 router blocks`() {
+		val router1 = router {
+			GET("/foo") { noContent().build() }
+		}
+		val router2 = router {
+			GET("/bar") { ok().build() }
+		}
+
 		val app = application {
 			server {
 				engine = getServerFactory()
-				router {
-					GET("/foo") { noContent().build() }
-				}
-				router {
-					GET("/bar") { ok().build() }
-				}
+				router(router1)
+				router(router2)
 			}
 		}
 		with(app) {
@@ -122,16 +128,11 @@ abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
 		val app = application {
 			server {
 				engine = getServerFactory()
-				router {
-					GET("/foo") { noContent().build() }
-				}
+
 			}
 			server {
 				engine = getServerFactory()
 				port = 8181
-				router {
-					GET("/bar") { ok().build() }
-				}
 			}
 		}
 
@@ -144,6 +145,9 @@ abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
 
 	@Test
 	fun `Check that ConcurrentModificationException is not thrown`() {
+		val router = router {
+			GET("/") { noContent().build() }
+		}
 		val app = application {
 			server {
 				engine = getServerFactory()
@@ -154,9 +158,7 @@ abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
 				logging {
 					level(LogLevel.DEBUG)
 				}
-				router {
-					GET("/") { noContent().build() }
-				}
+				router(router)
 				mongodb {
 					embedded()
 				}

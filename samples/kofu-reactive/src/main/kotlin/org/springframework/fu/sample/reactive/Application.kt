@@ -16,6 +16,7 @@
 
 package org.springframework.fu.sample.reactive
 
+import org.springframework.beans.factory.getBean
 import org.springframework.boot.context.event.ApplicationReadyEvent
 import org.springframework.boot.kofu.application
 import org.springframework.boot.kofu.mongo.embedded
@@ -24,14 +25,13 @@ import org.springframework.boot.kofu.ref
 import org.springframework.boot.kofu.web.jackson
 import org.springframework.boot.kofu.web.mustache
 import org.springframework.boot.kofu.web.server
+import org.springframework.context.support.BeanDefinitionDsl
+import org.springframework.context.support.registerBean
 
 val app = application {
 	beans {
 		bean<UserRepository>()
 		bean<UserHandler>()
-		bean {
-			routes(ref())
-		}
 	}
 	listener<ApplicationReadyEvent> {
 		ref<UserRepository>().init()
@@ -44,6 +44,7 @@ val app = application {
 			string()
 			jackson()
 		}
+		router(::routes)
 	}
 
 	mongodb {

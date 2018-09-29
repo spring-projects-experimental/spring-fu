@@ -28,6 +28,7 @@ import org.springframework.web.function.server.CoroutinesServerRequest
 import org.springframework.web.function.server.coHandler
 import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse
+import org.springframework.web.reactive.function.server.router
 import reactor.core.publisher.Mono
 import reactor.core.publisher.toMono
 
@@ -49,6 +50,17 @@ private fun applicationDslOverview() {
 	// ============================================================================================
 	// Overview of a more complete web application
 	// ============================================================================================
+	fun routes(htmlHandler: HtmlHandler, apiHandler: ApiHandler) = router {
+		GET("/", htmlHandler::blog)
+		GET("/article/{id}", htmlHandler::article)
+		"/api".nest {
+			GET("/", apiHandler::list)
+			POST("/", apiHandler::create)
+			PUT("/{id}", apiHandler::update)
+			DELETE("/{id}", apiHandler::delete)
+		}
+	}
+
 	val app = application {
 		logging {
 			level(LogLevel.INFO)
@@ -87,18 +99,7 @@ private fun applicationDslOverview() {
 					string()
 					jackson()
 				}
-				router {
-					val htmlHandler = ref<HtmlHandler>()
-					val apiHandler = ref<ApiHandler>()
-					GET("/", htmlHandler::blog)
-					GET("/article/{id}", htmlHandler::article)
-					"/api".nest {
-						GET("/", apiHandler::list)
-						POST("/", apiHandler::create)
-						PUT("/{id}", apiHandler::update)
-						DELETE("/{id}", apiHandler::delete)
-					}
-				}
+				router(::routes)
 			}
 			client {
 				codecs {
@@ -109,6 +110,7 @@ private fun applicationDslOverview() {
 
 		}
 	}
+
 	fun main(args: Array<String>) = app.run(profiles = "data, web")
 }
 

@@ -15,9 +15,6 @@ val app = application {
 	beans {
 		bean<UserRepository>()
 		bean<UserHandler>()
-		bean {
-			routes(ref())
-		}
 	}
 	listener<ApplicationReadyEvent> {
 		runBlocking {
@@ -32,6 +29,7 @@ val app = application {
 			string()
 			jackson()
 		}
+		router(::routes)
 	}
 	mongodb {
 		coroutines()
