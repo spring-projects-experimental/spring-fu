@@ -1,6 +1,7 @@
 package org.springframework.boot.kofu.samples
 
 import org.springframework.boot.kofu.application
+import org.springframework.boot.kofu.web.WebFluxServerDsl
 import org.springframework.boot.kofu.web.server
 import org.springframework.context.support.beans
 import org.springframework.web.function.server.coRouter
@@ -19,6 +20,25 @@ private fun router() {
 	}
 	application {
 		server {
+			import(::routes)
+		}
+	}
+}
+
+private fun customEngine() {
+	fun routes(htmlHandler: HtmlHandler, apiHandler: ApiHandler) = router {
+		GET("/", htmlHandler::blog)
+		GET("/article/{id}", htmlHandler::article)
+		"/api".nest {
+			GET("/", apiHandler::list)
+			POST("/", apiHandler::create)
+			PUT("/{id}", apiHandler::update)
+			DELETE("/{id}", apiHandler::delete)
+		}
+	}
+	application {
+		server {
+			engine = jetty
 			import(::routes)
 		}
 	}

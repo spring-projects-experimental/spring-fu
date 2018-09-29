@@ -24,7 +24,10 @@ import org.springframework.boot.autoconfigure.web.reactive.*
 import org.springframework.boot.autoconfigure.web.reactive.function.client.ReactiveWebClientBuilderInitializer
 import org.springframework.boot.kofu.AbstractDsl
 import org.springframework.boot.kofu.ApplicationDsl
+import org.springframework.boot.web.embedded.jetty.JettyReactiveWebServerFactory
 import org.springframework.boot.web.embedded.netty.NettyReactiveWebServerFactory
+import org.springframework.boot.web.embedded.tomcat.TomcatReactiveWebServerFactory
+import org.springframework.boot.web.embedded.undertow.UndertowReactiveWebServerFactory
 import org.springframework.boot.web.reactive.server.ConfigurableReactiveWebServerFactory
 import org.springframework.context.ApplicationContextInitializer
 import org.springframework.context.support.GenericApplicationContext
@@ -122,7 +125,7 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit): Abst
 	 * @see netty
 	 * @see tomcat
 	 * @see jetty
-	 * @ßee undertow
+	 * @see undertow
 	 */
 	var engine: ConfigurableReactiveWebServerFactory? = null
 
@@ -130,7 +133,7 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit): Abst
 	override fun register(context: GenericApplicationContext) {
 		init()
 		if (engine == null) {
-			engine = netty()
+			engine = netty
 		}
 		engine!!.setPort(port)
 
@@ -204,9 +207,12 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit): Abst
 		})
 	}
 
-	companion object {
-		fun netty(): ConfigurableReactiveWebServerFactory = NettyReactiveWebServerFactory()
-	}
+
+	val netty: ConfigurableReactiveWebServerFactory by lazy { NettyReactiveWebServerFactory() }
+	val tomcat: ConfigurableReactiveWebServerFactory by lazy { TomcatReactiveWebServerFactory() }
+	val jetty: ConfigurableReactiveWebServerFactory by lazy { JettyReactiveWebServerFactory() }
+	val undertow: ConfigurableReactiveWebServerFactory by lazy { UndertowReactiveWebServerFactory() }
+
 }
 
 /**
@@ -233,8 +239,8 @@ class WebFluxClientBuilderDsl(internal val baseUrl: String?, private val init: W
 	 * @see WebFluxClientCodecDsl.string
 	 * @see WebFluxClientCodecDsl.protobuf
 	 */
-	fun codecs(init: WebFluxClientCodecDsl.() -> Unit =  {}) {
-		initializers.add(WebFluxClientCodecDsl(init))
+	fun codecs(dsl: WebFluxClientCodecDsl.() -> Unit =  {}) {
+		initializers.add(WebFluxClientCodecDsl(dsl))
 		codecsConfigured = true
 	}
 }
@@ -247,20 +253,18 @@ class WebFluxClientBuilderDsl(internal val baseUrl: String?, private val init: W
  * When a `codecs { }` block is declared, no one is configured by default.
  * [ApplicationDsl.startServer] needs to be set to `true` (it is by default).
  *
- * You can chose the underlying engine via the [serverFactory] parameter.
+ * You can chose the underlying engine via the [WebFluxServerDsl.engine] parameter.
  *
  * Require `org.springframework.boot:spring-boot-starter-webflux` dependency.
  *
- * @param serverFactory The underlying web server to use: [netty] (the default), [tomcat], [jetty] or [undertow]
- * @sample org.springframework.boot.kofu.samples.routerDsl
+ * @sample org.springframework.boot.kofu.samples.router
  * @see WebFluxServerDsl.import
- * @see WebFluxServerDsl.coRouter
  * @see WebFluxServerDsl.codecs
  * @see WebFluxServerDsl.cors
  * @see WebFluxServerDsl.mustache
  */
-fun ApplicationDsl.server(init: WebFluxServerDsl.() -> Unit =  {}) {
-	initializers.add(WebFluxServerDsl(init))
+fun ApplicationDsl.server(dsl: WebFluxServerDsl.() -> Unit =  {}) {
+	initializers.add(WebFluxServerDsl(dsl))
 }
 
 /**
