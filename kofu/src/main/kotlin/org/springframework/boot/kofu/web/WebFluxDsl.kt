@@ -17,7 +17,6 @@
 package org.springframework.boot.kofu.web
 
 import org.springframework.beans.factory.getBean
-import org.springframework.beans.factory.support.BeanDefinitionReaderUtils
 import org.springframework.beans.factory.support.BeanDefinitionReaderUtils.*
 import org.springframework.boot.autoconfigure.web.ResourceProperties
 import org.springframework.boot.autoconfigure.web.ServerProperties
@@ -28,10 +27,8 @@ import org.springframework.boot.kofu.ApplicationDsl
 import org.springframework.boot.web.embedded.netty.NettyReactiveWebServerFactory
 import org.springframework.boot.web.reactive.server.ConfigurableReactiveWebServerFactory
 import org.springframework.context.ApplicationContextInitializer
-import org.springframework.context.support.BeanDefinitionDsl
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.registerBean
-import org.springframework.web.function.server.CoroutinesRouterFunctionDsl
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.server.RouterFunction
 import org.springframework.web.reactive.function.server.RouterFunctionDsl
@@ -171,37 +168,37 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit): Abst
 	 * @sample org.springframework.boot.kofu.samples.router
 	 * * @sample org.springframework.boot.kofu.samples.coRouter
 	 */
-	fun router(router: RouterFunction<ServerResponse>) {
+	fun import(router: RouterFunction<ServerResponse>) {
 		initializers.add(ApplicationContextInitializer {
 			context.registerBean(uniqueBeanName(RouterFunctionDsl::class.java.name, context)) { router }
 		})
 	}
-	fun router(f: Function0<RouterFunction<ServerResponse>>) {
+	fun import(f: Function0<RouterFunction<ServerResponse>>) {
 		initializers.add(ApplicationContextInitializer {
 			context.registerBean(uniqueBeanName(RouterFunctionDsl::class.java.name, context)) { f.invoke() }
 		})
 	}
-	inline fun <reified A: Any> router(crossinline f: Function1<A, RouterFunction<ServerResponse>>) {
+	inline fun <reified A: Any> import(crossinline f: Function1<A, RouterFunction<ServerResponse>>) {
 		initializers.add(ApplicationContextInitializer {
 			context.registerBean(uniqueBeanName(RouterFunctionDsl::class.java.name, context)) { f.invoke(context.getBean()) }
 		})
 	}
-	inline fun <reified A: Any, reified B: Any> router(crossinline f: Function2<A, B, RouterFunction<ServerResponse>>) {
+	inline fun <reified A: Any, reified B: Any> import(crossinline f: Function2<A, B, RouterFunction<ServerResponse>>) {
 		initializers.add(ApplicationContextInitializer {
 			context.registerBean(uniqueBeanName(RouterFunctionDsl::class.java.name, context)) { f.invoke(context.getBean(), context.getBean()) }
 		})
 	}
-	inline fun <reified A: Any, reified B: Any, reified C: Any> router(crossinline f: Function3<A, B, C, RouterFunction<ServerResponse>>) {
+	inline fun <reified A: Any, reified B: Any, reified C: Any> import(crossinline f: Function3<A, B, C, RouterFunction<ServerResponse>>) {
 		initializers.add(ApplicationContextInitializer {
 			context.registerBean(uniqueBeanName(RouterFunctionDsl::class.java.name, context)) { f.invoke(context.getBean(), context.getBean(), context.getBean()) }
 		})
 	}
-	inline fun <reified A: Any, reified B: Any, reified C: Any, reified D: Any> router(crossinline f: Function4<A, B, C, D, RouterFunction<ServerResponse>>) {
+	inline fun <reified A: Any, reified B: Any, reified C: Any, reified D: Any> import(crossinline f: Function4<A, B, C, D, RouterFunction<ServerResponse>>) {
 		initializers.add(ApplicationContextInitializer {
 			context.registerBean(uniqueBeanName(RouterFunctionDsl::class.java.name, context)) { f.invoke(context.getBean(), context.getBean(), context.getBean(), context.getBean()) }
 		})
 	}
-	inline fun <reified A: Any, reified B: Any, reified C: Any, reified D: Any, reified E: Any> router(crossinline f: Function5<A, B, C, D, E, RouterFunction<ServerResponse>>) {
+	inline fun <reified A: Any, reified B: Any, reified C: Any, reified D: Any, reified E: Any> import(crossinline f: Function5<A, B, C, D, E, RouterFunction<ServerResponse>>) {
 		initializers.add(ApplicationContextInitializer {
 			context.registerBean(uniqueBeanName(RouterFunctionDsl::class.java.name, context)) { f.invoke(context.getBean(), context.getBean(), context.getBean(), context.getBean(), context.getBean()) }
 		})
@@ -256,7 +253,7 @@ class WebFluxClientBuilderDsl(internal val baseUrl: String?, private val init: W
  *
  * @param serverFactory The underlying web server to use: [netty] (the default), [tomcat], [jetty] or [undertow]
  * @sample org.springframework.boot.kofu.samples.routerDsl
- * @see WebFluxServerDsl.router
+ * @see WebFluxServerDsl.import
  * @see WebFluxServerDsl.coRouter
  * @see WebFluxServerDsl.codecs
  * @see WebFluxServerDsl.cors

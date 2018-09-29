@@ -102,7 +102,7 @@ private fun applicationDslOverview() {
 					string()
 					jackson()
 				}
-				router(::routes)
+				import(::routes)
 			}
 			client {
 				codecs {

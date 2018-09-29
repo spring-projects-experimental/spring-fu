@@ -44,7 +44,7 @@ val app = application {
 			string()
 			jackson()
 		}
-		router(::routes)
+		import(::routes)
 	}
 
 	mongodb {

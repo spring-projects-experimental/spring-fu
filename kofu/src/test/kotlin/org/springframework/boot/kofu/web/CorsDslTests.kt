@@ -34,7 +34,7 @@ class CorsDslTests {
 		}
 		val app = application {
 			server {
-				router(router)
+				import(router)
 				cors {
 					"/api" {
 						allowedOrigins("first.example.com", "second.example.com")

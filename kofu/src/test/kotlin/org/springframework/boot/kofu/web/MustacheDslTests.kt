@@ -36,7 +36,7 @@ class MustacheDslTests {
 		val app = application {
 			server {
 				mustache()
-				router(router)
+				import(router)
 			}
 		}
 		app.run()

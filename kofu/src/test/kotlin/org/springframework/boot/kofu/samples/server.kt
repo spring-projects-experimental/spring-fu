@@ -19,7 +19,7 @@ private fun router() {
 	}
 	application {
 		server {
-			router(::routes)
+			import(::routes)
 		}
 	}
 }
@@ -42,7 +42,7 @@ private fun coRouter() {
 	application {
 		import(beans)
 		server {
-			router(::routes)
+			import(::routes)
 		}
 	}
 }
