@@ -24,6 +24,7 @@ import org.springframework.boot.kofu.ref
 import org.springframework.boot.kofu.web.*
 import org.springframework.boot.logging.LogLevel
 import org.springframework.context.event.ContextStartedEvent
+import org.springframework.context.support.beans
 import org.springframework.web.function.server.CoroutinesServerRequest
 import org.springframework.web.function.server.coHandler
 import org.springframework.web.reactive.function.server.ServerRequest
@@ -36,10 +37,11 @@ private fun applicationDslWithCustomBeanApplication() {
 	// ============================================================================================
 	// This standalone application registers a custom bean `Foo` and a `City` properties properties
 	// ============================================================================================
+	val beans = beans {
+		bean<Foo>()
+	}
 	val app = application(startServer = false) {
-		beans {
-			bean<Foo>()
-		}
+		import(beans)
 		properties<City>("city")
 	}
 
@@ -61,17 +63,18 @@ private fun applicationDslOverview() {
 		}
 	}
 
+	val beans = beans {
+		bean<UserRepository>()
+		bean<ArticleRepository>()
+		bean<HtmlHandler>()
+		bean<ApiHandler>()
+	}
 	val app = application {
 		logging {
 			level(LogLevel.INFO)
 			level("org.springframework", LogLevel.DEBUG)
 		}
-		beans {
-			bean<UserRepository>()
-			bean<ArticleRepository>()
-			bean<HtmlHandler>()
-			bean<ApiHandler>()
-		}
+		import(beans)
 		properties<City>("city")
 		profile("data") {
 			beans {

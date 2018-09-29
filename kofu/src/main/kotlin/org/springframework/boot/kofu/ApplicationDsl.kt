@@ -59,17 +59,9 @@ open class ApplicationDsl internal constructor(private val startServer: Boolean,
 	 * it is recommended to use constructor injection with `val` read-only
 	 * (and non-nullable when possible) private [properties](https://kotlinlang.org/docs/reference/properties.html).
 	 *
-	 * @sample org.springframework.boot.kofu.samples.beansDsl
+	 * @sample org.springframework.boot.kofu.samples.beans
 	 */
-	fun beans(dsl: BeanDefinitionDsl.() -> Unit) {
-		initializers.add(BeanDefinitionDsl(dsl))
-	}
-
-	/**
-	 * Import an external beans block for this application
-	 * @sample org.springframework.boot.kofu.samples.importBeans
-	 */
-	fun importBeans(beans: BeanDefinitionDsl) {
+	fun import(beans: BeanDefinitionDsl) {
 		initializers.add(beans)
 	}
 
@@ -84,10 +76,10 @@ open class ApplicationDsl internal constructor(private val startServer: Boolean,
 	 *
 	 * @param basePackage The base package to scann
 	 */
-	fun beans(basePackage: String) {
+	fun scanBeans(basePackage: String) {
 		val componentProvider = FunctionalClassPathScanningCandidateComponentProvider()
 		for(metadata in componentProvider.findCandidateComponents(basePackage)) {
-			val source = ClassUtils.resolveClassName(metadata.getClassName(), null)
+			val source = ClassUtils.resolveClassName(metadata.className, null)
 			val beanName = BeanDefinitionReaderUtils.uniqueBeanName(source.name, context)
 			context.registerBean(beanName, source)
 		}

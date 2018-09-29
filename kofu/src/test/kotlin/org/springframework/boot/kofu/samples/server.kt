@@ -1,8 +1,8 @@
 package org.springframework.boot.kofu.samples
 
 import org.springframework.boot.kofu.application
-import org.springframework.boot.kofu.ref
 import org.springframework.boot.kofu.web.server
+import org.springframework.context.support.beans
 import org.springframework.web.function.server.coRouter
 import org.springframework.web.reactive.function.server.router
 
@@ -35,11 +35,12 @@ private fun coRouter() {
 			DELETE("/{id}", apiHandler::delete)
 		}
 	}
+	val beans = beans {
+		bean<HtmlCoroutinesHandler>()
+		bean<ApiCoroutinesHandler>()
+	}
 	application {
-		beans {
-			bean<HtmlCoroutinesHandler>()
-			bean<ApiCoroutinesHandler>()
-		}
+		import(beans)
 		server {
 			router(::routes)
 		}

@@ -10,12 +10,14 @@ import org.springframework.boot.kofu.ref
 import org.springframework.boot.kofu.web.jackson
 import org.springframework.boot.kofu.web.mustache
 import org.springframework.boot.kofu.web.server
+import org.springframework.context.support.beans
 
+val beans = beans {
+	bean<UserRepository>()
+	bean<UserHandler>()
+}
 val app = application {
-	beans {
-		bean<UserRepository>()
-		bean<UserHandler>()
-	}
+	import(beans)
 	listener<ApplicationReadyEvent> {
 		runBlocking {
 			ref<UserRepository>().init()

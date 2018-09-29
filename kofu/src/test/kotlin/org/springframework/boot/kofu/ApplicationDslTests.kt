@@ -44,10 +44,11 @@ class ApplicationDslTests {
 
 	@Test
 	fun `Create an application with a custom bean`() {
+		val beans = beans {
+			bean<Foo>()
+		}
 		val app = application(false) {
-			beans {
-				bean<Foo>()
-			}
+			import(beans)
 		}
 		with(app) {
 			run()
@@ -63,7 +64,7 @@ class ApplicationDslTests {
 			bean<Foo>()
 		}
 		val app = application(false) {
-			importBeans(beans)
+			import(beans)
 		}
 		with(app) {
 			run()
@@ -88,7 +89,7 @@ class ApplicationDslTests {
 	@Test
 	fun `Create an application with a bean scanning`() {
 		val app = application(false) {
-			beans("org.springframework.boot.kofu.beans")
+			scanBeans("org.springframework.boot.kofu.beans")
 		}
 		with(app) {
 			run()

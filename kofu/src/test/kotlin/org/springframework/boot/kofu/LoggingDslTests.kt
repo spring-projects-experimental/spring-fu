@@ -63,6 +63,6 @@ internal class LoggingDslTests {
 		}.run()
 
 		val loggingSystem = LoggingSystem.get(LoggingDslTests::class.java.classLoader)
-		assertEquals(LogLevel.DEBUG, loggingSystem.getLoggerConfiguration("org.springframework.beans.factory.support.DefaultListableBeanFactory").effectiveLevel)
+		assertEquals(LogLevel.DEBUG, loggingSystem.getLoggerConfiguration("org.springframework.scanBeans.factory.support.DefaultListableBeanFactory").effectiveLevel)
 	}
 }
