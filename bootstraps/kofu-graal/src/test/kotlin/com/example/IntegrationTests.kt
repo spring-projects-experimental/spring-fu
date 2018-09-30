@@ -17,10 +17,17 @@ class IntegrationTests {
 	}
 
 	@Test
-	fun `Request root endpoint`() {
+	fun `Request string endpoint`() {
 		client.get().uri("/").exchange()
 				.expectStatus().is2xxSuccessful
 				.expectBody<String>().isEqualTo("Hello GraalVM native images!")
+	}
+
+	@Test
+	fun `Request json endpoint`() {
+		client.get().uri("/api").exchange()
+				.expectStatus().is2xxSuccessful
+				.expectBody<String>().isEqualTo("{\"message\":\"Hello GraalVM native images!\"}")
 	}
 
 	@AfterAll
