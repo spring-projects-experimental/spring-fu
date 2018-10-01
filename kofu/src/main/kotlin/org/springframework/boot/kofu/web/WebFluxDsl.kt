@@ -68,6 +68,15 @@ abstract class WebFluxCodecDsl : AbstractDsl() {
 	 * Enable [org.springframework.http.codec.FormHttpMessageWriter] and [org.springframework.http.codec.FormHttpMessageReader]
 	 */
 	abstract fun form()
+
+	/**
+	 * Enable [org.springframework.http.codec.multipart.MultipartHttpMessageWriter] and
+	 * [org.springframework.http.codec.multipart.MultipartHttpMessageReader]
+	 *
+	 * This codec requires Synchronoss NIO Multipart library via  the `org.synchronoss.cloud:nio-multipart-parser`
+	 * dependency.
+	 */
+	abstract fun multipart()
 }
 
 class WebFluxClientCodecDsl(private val init: WebFluxClientCodecDsl.() -> Unit) : WebFluxCodecDsl() {
@@ -91,6 +100,10 @@ class WebFluxClientCodecDsl(private val init: WebFluxClientCodecDsl.() -> Unit) 
 	override fun form() {
 		initializers.add(FormCodecInitializer(true))
 	}
+
+	override fun multipart() {
+		initializers.add(MultipartCodecInitializer(true))
+	}
 }
 
 class WebFluxServerCodecDsl(private val init: WebFluxServerCodecDsl.() -> Unit) : WebFluxCodecDsl() {
@@ -113,6 +126,10 @@ class WebFluxServerCodecDsl(private val init: WebFluxServerCodecDsl.() -> Unit) 
 
 	override fun form() {
 		initializers.add(FormCodecInitializer(false))
+	}
+
+	override fun multipart() {
+		initializers.add(MultipartCodecInitializer(false))
 	}
 }
 
@@ -169,6 +186,7 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit): Abst
 	 * @see WebFluxCodecDsl.string
 	 * @see WebFluxCodecDsl.protobuf
 	 * @see WebFluxCodecDsl.form
+	 * @see WebFluxCodecDsl.multipart
 	 * @see WebFluxServerCodecDsl.jackson
 	 */
 	fun codecs(init: WebFluxServerCodecDsl.() -> Unit =  {}) {
@@ -278,6 +296,7 @@ class WebFluxClientBuilderDsl(private val init: WebFluxClientBuilderDsl.() -> Un
 	 * @see WebFluxCodecDsl.string
 	 * @see WebFluxCodecDsl.protobuf
 	 * @see WebFluxCodecDsl.form
+	 * @see WebFluxCodecDsl.multipart
 	 * @see WebFluxClientCodecDsl.jackson
 	 */
 	fun codecs(dsl: WebFluxClientCodecDsl.() -> Unit =  {}) {
