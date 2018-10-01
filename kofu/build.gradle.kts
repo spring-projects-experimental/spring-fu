@@ -61,6 +61,9 @@ publishing {
 			val sourcesJar by tasks.creating(Jar::class) {
 				classifier = "sources"
 				from(sourceSets["main"].allSource)
+				from(sourceSets["test"].allSource.apply {
+					include("org/springframework/boot/kofu/samples/**")
+				})
 			}
 			artifact(sourcesJar)
 			val dokkaJar by tasks.creating(Jar::class) {
