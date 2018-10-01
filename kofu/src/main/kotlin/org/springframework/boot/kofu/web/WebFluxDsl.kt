@@ -58,6 +58,9 @@ abstract class WebFluxCodecDsl : AbstractDsl() {
 
 	/**
 	 * Enable [org.springframework.http.codec.protobuf.ProtobufEncoder] and [org.springframework.http.codec.protobuf.ProtobufDecoder]
+	 *
+	 * This codec requires Protobuf 3 or higher with the official `com.google.protobuf:protobuf-java` dependency, and
+	 * supports `application/x-protobuf` and `application/octet-stream`.
 	 */
 	abstract fun protobuf()
 
@@ -162,10 +165,11 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit): Abst
 
 	/**
 	 * Configure codecs via a [dedicated DSL][WebFluxServerCodecDsl].
-	 * @see org.springframework.boot.kofu.web.jackson
-	 * @see WebFluxServerCodecDsl.resource
-	 * @see WebFluxServerCodecDsl.string
-	 * @see WebFluxServerCodecDsl.protobuf
+	 * @see WebFluxCodecDsl.resource
+	 * @see WebFluxCodecDsl.string
+	 * @see WebFluxCodecDsl.protobuf
+	 * @see WebFluxCodecDsl.form
+	 * @see WebFluxServerCodecDsl.jackson
 	 */
 	fun codecs(init: WebFluxServerCodecDsl.() -> Unit =  {}) {
 		initializers.add(WebFluxServerCodecDsl(init))
@@ -220,10 +224,28 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit): Abst
 		})
 	}
 
-
+	/**
+	 * Netty engine.
+	 * @see engine
+	 */
 	val netty: ConfigurableReactiveWebServerFactory by lazy { NettyReactiveWebServerFactory() }
+
+	/**
+	 * Tomcat engine.
+	 * @see engine
+	 */
 	val tomcat: ConfigurableReactiveWebServerFactory by lazy { TomcatReactiveWebServerFactory() }
+
+	/**
+	 * Jetty engine.
+	 * @see engine
+	 */
 	val jetty: ConfigurableReactiveWebServerFactory by lazy { JettyReactiveWebServerFactory() }
+
+	/**
+	 * Undertow engine.
+	 * @see engine
+	 */
 	val undertow: ConfigurableReactiveWebServerFactory by lazy { UndertowReactiveWebServerFactory() }
 
 }
@@ -252,10 +274,11 @@ class WebFluxClientBuilderDsl(private val init: WebFluxClientBuilderDsl.() -> Un
 
 	/**
 	 * Configure codecs via a [dedicated DSL][WebFluxClientCodecDsl].
-	 * @see org.springframework.boot.kofu.web.jackson
-	 * @see WebFluxClientCodecDsl.resource
-	 * @see WebFluxClientCodecDsl.string
-	 * @see WebFluxClientCodecDsl.protobuf
+	 * @see WebFluxCodecDsl.resource
+	 * @see WebFluxCodecDsl.string
+	 * @see WebFluxCodecDsl.protobuf
+	 * @see WebFluxCodecDsl.form
+	 * @see WebFluxClientCodecDsl.jackson
 	 */
 	fun codecs(dsl: WebFluxClientCodecDsl.() -> Unit =  {}) {
 		initializers.add(WebFluxClientCodecDsl(dsl))
@@ -293,7 +316,6 @@ fun ApplicationDsl.server(dsl: WebFluxServerDsl.() -> Unit =  {}) {
  *
  * Require `org.springframework.boot:spring-boot-starter-webflux` dependency.
  *
- * @param baseUrl The default base URL
  * @param dsl The [WebFlux client](https://docs.spring.io/spring/docs/current/spring-framework-reference/web-reactive.html#webflux-client) builder ([WebClient.builder]) DSL
  * @sample org.springframework.boot.kofu.samples.clientDsl
  * @see WebFluxClientBuilderDsl.codecs

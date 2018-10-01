@@ -25,8 +25,8 @@ import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource
 /**
  * Kofu DSL for WebFlux CORS configuration.
  *
- * @author Ireneusz Kozłowski
  * @author Sebastien Deleuze
+ * @author Ireneusz Kozłowski
  */
 class CorsDsl(
 	private val defaults: Boolean = true,

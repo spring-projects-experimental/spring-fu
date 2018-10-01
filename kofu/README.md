@@ -23,9 +23,13 @@ A typical Kofu configuration look like the example bellow, and a comprehensive d
 [cors][org.springframework.boot.kofu.web.cors].
 
 ```kotlin
-application {
+val beans = beans {
+	// ...
+}
+
+val app = application {
+	import(beans)
 	logging { }
-	beans { }
 	server {
 		router()
 		cors { }
