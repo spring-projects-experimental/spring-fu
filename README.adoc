@@ -130,9 +130,9 @@ Bootstraps are zip archives containing minimal project templates designed to all
 quickly and easily Spring Fu applications using a Gradle DSL build. To start a new project, download
 a bootstrap `.zip` archive, extract it and follow `README.adoc` instructions.
 
- * https://repo.spring.io/milestone/org/springframework/fu/bootstrap-kofu-reactive/0.0.2.BUILD-SNAPSHOT/bootstrap-kofu-reactive-0.0.2.BUILD-SNAPSHOT.zip[bootstrap-kofu-reactive.zip]
- * https://repo.spring.io/milestone/org/springframework/fu/bootstrap-kofu-coroutines/0.0.2.BUILD-SNAPSHOT/bootstrap-kofu-coroutines-0.0.2.BUILD-SNAPSHOT.zip[bootstrap-kofu-coroutines.zip]
- * https://repo.spring.io/milestone/org/springframework/fu/bootstrap-kofu-graal/0.0.2.BUILD-SNAPSHOT/bootstrap-kofu-graal-0.0.2.BUILD-SNAPSHOT.zip[bootstrap-kofu-graal.zip]
+ * https://repo.spring.io/snapshot/org/springframework/fu/bootstrap-kofu-reactive/0.0.2.BUILD-SNAPSHOT/bootstrap-kofu-reactive-0.0.2.BUILD-SNAPSHOT.zip[bootstrap-kofu-reactive.zip]
+ * https://repo.spring.io/snapshot/org/springframework/fu/bootstrap-kofu-coroutines/0.0.2.BUILD-SNAPSHOT/bootstrap-kofu-coroutines-0.0.2.BUILD-SNAPSHOT.zip[bootstrap-kofu-coroutines.zip]
+ * https://repo.spring.io/snapshot/org/springframework/fu/bootstrap-kofu-graal/0.0.2.BUILD-SNAPSHOT/bootstrap-kofu-graal-0.0.2.BUILD-SNAPSHOT.zip[bootstrap-kofu-graal.zip]
 
 === Samples
 
