@@ -7,6 +7,10 @@ image_resource:
     repository: java
     tag: 8-jdk
 
+params:
+  ARTIFACTORY_USERNAME:
+  ARTIFACTORY_PASSWORD:
+
 inputs:
   - name: spring-fu
 
