@@ -3,7 +3,6 @@ package org.springframework.fu.sample.coroutines
 import kotlinx.coroutines.runBlocking
 import org.springframework.boot.context.event.ApplicationReadyEvent
 import org.springframework.boot.kofu.application
-import org.springframework.boot.kofu.mongo.coroutines
 import org.springframework.boot.kofu.mongo.embedded
 import org.springframework.boot.kofu.mongo.mongodb
 import org.springframework.boot.kofu.ref
@@ -34,8 +33,10 @@ val app = application {
 		import(::routes)
 	}
 	mongodb {
-		coroutines()
-		embedded()
+		coroutines = true
+		embedded {
+			version = "3.2.2"
+		}
 	}
 }
 

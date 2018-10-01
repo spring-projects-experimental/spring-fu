@@ -4,9 +4,9 @@ import org.springframework.boot.kofu.application
 import org.springframework.boot.logging.LogLevel
 
 private fun loggingDsl() {
-	application {
+	application(false) {
 		logging {
-			level(LogLevel.INFO)
+			level = LogLevel.INFO
 			level("org.springframework", LogLevel.DEBUG)
 			level<ApiHandler>(LogLevel.WARN)
 		}

@@ -36,21 +36,27 @@ class LoggingDsl(init: LoggingDsl.() -> Unit) {
 	}
 
 	/**
-	 * Default ROOT Log level
+	 * Set the default ROOT log level
 	 */
-	fun level(level: LogLevel) {
-		loggingSystem.setLogLevel("ROOT", level)
-	}
+	var level: LogLevel? = null
+		set(value) {
+			loggingSystem.setLogLevel("ROOT", value)
+		}
 
 	/**
-	 * Custom package Log level
+	 * Customize the log level for a given package
+	 * @param packageName the package for which the log level should be customized
+	 * @param level the log level to use
 	 */
 	fun level(packageName: String, level: LogLevel) {
 		loggingSystem.setLogLevel(packageName, level)
 	}
 
 	/**
-	 * Custom Class Log level
+	 * Customize the log level for a given class
+	 * @param T the class for which the log level should be customized
+	 * @param level the log level to use
+	 *
 	 */
 	@JvmName("levelReified")
 	inline fun <reified T> level(level: LogLevel) {

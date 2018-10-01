@@ -32,7 +32,9 @@ import org.springframework.context.support.GenericApplicationContext
 import java.util.*
 import kotlin.reflect.KClass
 
-class JacksonDsl(private val properties: JacksonProperties, private val isClientCodec: Boolean, private val init: JacksonDsl.() -> Unit): AbstractDsl() {
+class JacksonDsl(private val isClientCodec: Boolean, private val init: JacksonDsl.() -> Unit): AbstractDsl() {
+
+	private val properties = JacksonProperties()
 
 	override fun register(context: GenericApplicationContext) {
 		init()
@@ -164,8 +166,7 @@ class JacksonDsl(private val properties: JacksonProperties, private val isClient
  * @sample org.springframework.boot.kofu.samples.jacksonDsl
  */
 fun WebFluxClientCodecDsl.jackson(dsl: JacksonDsl.() -> Unit = {}) {
-	val properties = JacksonProperties()
-	initializers.add(JacksonDsl(properties, true, dsl))
+	initializers.add(JacksonDsl(true, dsl))
 }
 
 /**
@@ -178,6 +179,5 @@ fun WebFluxClientCodecDsl.jackson(dsl: JacksonDsl.() -> Unit = {}) {
  * @sample org.springframework.boot.kofu.samples.jacksonDsl
  */
 fun WebFluxServerCodecDsl.jackson(dsl: JacksonDsl.() -> Unit = {}) {
-	val properties = JacksonProperties()
-	initializers.add(JacksonDsl(properties, false, dsl))
+	initializers.add(JacksonDsl(false, dsl))
 }

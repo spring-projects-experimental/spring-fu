@@ -29,28 +29,30 @@ class CorsConfigurationDsl(defaults: Boolean = true,
 	}
 
 	/**
-	 * Set the origins to allow, e.g. `http://domain1.com`. The special value `*` allows all domains.
+	 * Set the origins to allow, separated by commas, e.g. `http://domain1.com, http://domain2.com`. The special value `*` allows all domains.
 	 * By default, all origins are allowed.
 	 */
-	fun allowedOrigins(allowedOrigin: String, vararg additionalAllowedOrigins: String) {
-		corsConfiguration.allowedOrigins = mutableListOf(allowedOrigin).apply { addAll(additionalAllowedOrigins.toList()) }
-	}
+	var allowedOrigins: String = "*"
+		set(value) {
+			corsConfiguration.allowedOrigins = value.split(",").map { it.trim() }
+		}
 
 	/**
-	 * Set the HTTP methods to allow, e.g. `GET`, `POST`, `PUT`. The special value `*` allows all methods.
+	 * Set the HTTP methods to allow,  separated by commas, e.g. `GET, POST, PUT`. The special value `*` allows all methods.
 	 * If not set, only `GET` and `HEAD` are allowed. By default, allow "simple" methods `GET`, `HEAD` and `POST`.
 	 *
 	 * Note: CORS checks use values from `Forwarded` ([RFC 7239](http://tools.ietf.org/html/rfc7239),
 	 * `X-Forwarded-Host`, `X-Forwarded-Port`, and `X-Forwarded-Proto` headers if present, in order
 	 * to reflect the client-originated address.
 	 */
-	fun allowedMethods(allowedMethod: String, vararg additionalAllowedMethods: String) {
-		corsConfiguration.allowedMethods = mutableListOf(allowedMethod).apply { addAll(additionalAllowedMethods.toList()) }
-	}
+	var allowedMethods: String = "GET, HEAD, POST"
+		set(value) {
+			corsConfiguration.allowedMethods = value.split(",").map { it.trim() }
+		}
 
 	/**
 	 * Set the list of headers that a pre-flight request can list as allowed
-	 * for use during an actual request.
+	 * for use during an actual request, separated by commas.
 	 *
 	 * The special value `*` allows actual requests to send any header.
 	 *
@@ -59,30 +61,32 @@ class CorsConfigurationDsl(defaults: Boolean = true,
 	 *
 	 * By default all headers are allowed.
 	 */
-	fun allowedHeaders(allowedHeader: String, vararg additionalAllowedHeaders: String) {
-		corsConfiguration.allowedHeaders = mutableListOf(allowedHeader).apply { addAll(additionalAllowedHeaders.toList()) }
-	}
+	var allowedHeaders: String = "*"
+		set(value) {
+			corsConfiguration.allowedHeaders = value.split(",").map { it.trim() }
+		}
 
 	/**
 	 * Set the list of response headers other than simple headers (i.e.
 	 * `Cache-Control`, `Content-Language`, `Content-Type`,
 	 * `Expires`, `Last-Modified`, or `Pragma`) that an actual response
-	 * might have and can be exposed.
+	 * might have and can be exposed, separated by commas.
 	 *
 	 * Note that `*` is not a valid exposed header value.
 	 *
 	 * By default this is not set.
 	 */
-	fun exposedHeaders(vararg exposedHeaders: String) {
-		corsConfiguration.exposedHeaders = exposedHeaders.toList()
-	}
+	var exposedHeaders: String? = null
+		set(value) {
+			corsConfiguration.exposedHeaders = (value ?: "").split(",").map { it.trim() }
+		}
 
 	/**
 	 * Whether user credentials are supported.
 	 *
 	 * By default, user credentials are not supported.
 	 */
-	var allowCredentials: Boolean? = null
+	var allowCredentials: Boolean = false
 		set(allowCredentials) {
 			corsConfiguration.allowCredentials = allowCredentials
 		}
@@ -93,7 +97,7 @@ class CorsConfigurationDsl(defaults: Boolean = true,
 	 *
 	 * By default, this is set to 1800 seconds (30 minutes).
 	 */
-	var maxAge: Long? = null
+	var maxAge: Long = 1800
 		set(maxAge) {
 			corsConfiguration.maxAge = maxAge
 		}

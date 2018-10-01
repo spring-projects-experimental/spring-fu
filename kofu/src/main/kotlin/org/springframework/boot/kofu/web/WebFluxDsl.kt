@@ -219,9 +219,14 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit): Abst
  * Kofu DSL for WebFlux client configuration.
  * @author Sebastien Deleuze
  */
-class WebFluxClientBuilderDsl(internal val baseUrl: String?, private val init: WebFluxClientBuilderDsl.() -> Unit) : AbstractDsl() {
+class WebFluxClientBuilderDsl(private val init: WebFluxClientBuilderDsl.() -> Unit) : AbstractDsl() {
 
 	private var codecsConfigured: Boolean = false
+
+	/**
+	 * Configure a base URL for requests performed through the client.
+	 */
+	var baseUrl: String? = null
 
 	override fun register(context: GenericApplicationContext) {
 		init()
@@ -280,6 +285,6 @@ fun ApplicationDsl.server(dsl: WebFluxServerDsl.() -> Unit =  {}) {
  * @sample org.springframework.boot.kofu.samples.clientDsl
  * @see WebFluxClientBuilderDsl.codecs
  */
-fun ApplicationDsl.client(baseUrl: String? = null, dsl: WebFluxClientBuilderDsl.() -> Unit =  {}) {
-	initializers.add(WebFluxClientBuilderDsl(baseUrl, dsl))
+fun ApplicationDsl.client(dsl: WebFluxClientBuilderDsl.() -> Unit =  {}) {
+	initializers.add(WebFluxClientBuilderDsl(dsl))
 }

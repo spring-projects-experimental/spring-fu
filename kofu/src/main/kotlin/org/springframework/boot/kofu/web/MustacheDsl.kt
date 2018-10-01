@@ -19,21 +19,38 @@ package org.springframework.boot.kofu.web
 import org.springframework.boot.autoconfigure.mustache.MustacheInitializer
 import org.springframework.boot.autoconfigure.mustache.MustacheProperties
 import org.springframework.boot.autoconfigure.mustache.MustacheReactiveWebInitializer
+import org.springframework.boot.kofu.AbstractDsl
+import org.springframework.context.support.GenericApplicationContext
+
+open class MustacheDsl(private val init: MustacheDsl.() -> Unit): AbstractDsl() {
+
+	private val properties = MustacheProperties()
+
+	var prefix: String = "classpath:/templates/"
+		set(value) {
+			properties.prefix = value
+		}
+
+	var suffix: String = ".mustache"
+		set(value) {
+			properties.suffix = value
+		}
+
+	override fun register(context: GenericApplicationContext) {
+		init()
+		initializers.add(MustacheInitializer(properties))
+		initializers.add(MustacheReactiveWebInitializer(properties))
+	}
+}
 
 /**
  * Configure a [Mustache](https://github.com/samskivert/jmustache) view resolver.
  *
  * Require `org.springframework.boot:spring-boot-starter-mustache` dependency.
  *
- * @sample org.springframework.boot.kofu.samples.mustache
+ * @sample org.springframework.boot.kofu.samples.mustacheDsl
  * @author Sebastien Deleuze
  */
-fun WebFluxServerDsl.mustache(
-	prefix: String = "classpath:/templates/", suffix: String = ".mustache") {
-
-	val properties = MustacheProperties()
-	properties.prefix = prefix
-	properties.suffix = suffix
-	initializers.add(MustacheInitializer(properties))
-	initializers.add(MustacheReactiveWebInitializer(properties))
+fun WebFluxServerDsl.mustache(dsl: MustacheDsl.() -> Unit = {}) {
+	initializers.add(MustacheDsl(dsl))
 }

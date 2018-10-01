@@ -37,7 +37,8 @@ class EmbeddedMongoModuleTest {
 		}
 		val app = application(false) {
 			import(beans)
-			mongodb("mongodb://localhost:$port/test") {
+			mongodb {
+				uri = "mongodb://localhost:$port/test"
 				embedded()
 			}
 		}

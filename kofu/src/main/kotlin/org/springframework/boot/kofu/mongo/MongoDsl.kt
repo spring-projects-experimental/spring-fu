@@ -20,6 +20,7 @@ import org.springframework.boot.autoconfigure.data.mongo.MongoDataInitializer
 import org.springframework.boot.autoconfigure.data.mongo.MongoReactiveDataInitializer
 import org.springframework.boot.autoconfigure.mongo.MongoProperties
 import org.springframework.boot.autoconfigure.mongo.MongoReactiveInitializer
+import org.springframework.boot.autoconfigure.mongo.coroutines.CoroutinesMongoInitializer
 import org.springframework.boot.kofu.AbstractDsl
 import org.springframework.boot.kofu.ApplicationDsl
 import org.springframework.context.support.GenericApplicationContext
@@ -29,11 +30,12 @@ import org.springframework.context.support.GenericApplicationContext
  * @author Sebastien Deleuze
  */
 open class MongoDsl(
-	internal val properties: MongoProperties,
 	private val init: MongoDsl.() -> Unit
 ) : AbstractDsl() {
 
 	override lateinit var context: GenericApplicationContext
+
+	internal val properties = MongoProperties()
 
 	internal var embedded = false
 
@@ -44,6 +46,15 @@ open class MongoDsl(
 		MongoReactiveInitializer(properties, embedded).initialize(context)
 	}
 
+	var coroutines: Boolean = false
+		set(value) {
+			if (value) initializers.add(CoroutinesMongoInitializer())
+		}
+
+	var uri: String? = "mongodb://localhost/test"
+		set(value) {
+			properties.uri = value
+		}
 }
 
 /**
@@ -53,10 +64,6 @@ open class MongoDsl(
  *
  * @sample org.springframework.boot.kofu.samples.mongo
  */
-fun ApplicationDsl.mongodb(
-		uri: String = "mongodb://localhost/test",
-		init: MongoDsl.() -> Unit = {}) {
-	val properties = MongoProperties()
-	properties.uri = uri
-	initializers.add(MongoDsl(properties, init))
+fun ApplicationDsl.mongodb(dsl: MongoDsl.() -> Unit = {}) {
+	initializers.add(MongoDsl(dsl))
 }

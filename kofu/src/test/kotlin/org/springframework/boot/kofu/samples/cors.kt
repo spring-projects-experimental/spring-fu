@@ -9,14 +9,14 @@ fun corsDsl() {
 		server {
 			cors {
 				"/api/**" {
-					allowedOrigins("first.example.com", "second.example.com")
-					allowedMethods("GET", "PUT", "POST", "DELETE")
+					allowedOrigins = "first.example.com, second.example.com"
+					allowedMethods = "GET, PUT, POST, DELETE"
 				}
 				"/static/**" {
-					allowedOrigins("full.config.example.com")
-					allowedMethods("GET")
-					allowedHeaders("*")
-					exposedHeaders("Content-Location")
+					allowedOrigins = "full.config.example.com"
+					allowedMethods = "GET"
+					allowedHeaders = "*"
+					exposedHeaders = "Content-Location"
 					allowCredentials = true
 					maxAge = 3600
 				}

@@ -40,7 +40,7 @@ private fun applicationDslWithCustomBeanApplication() {
 	val beans = beans {
 		bean<Foo>()
 	}
-	val app = application(startServer = false) {
+	val app = application {
 		import(beans)
 		properties<City>("city")
 	}
@@ -63,35 +63,32 @@ private fun applicationDslOverview() {
 		}
 	}
 
-	val beans = beans {
+	val dataBeans = beans {
 		bean<UserRepository>()
 		bean<ArticleRepository>()
+	}
+	val webBeans = beans {
 		bean<HtmlHandler>()
 		bean<ApiHandler>()
 	}
 	val app = application {
 		logging {
-			level(LogLevel.INFO)
+			level = LogLevel.INFO
 			level("org.springframework", LogLevel.DEBUG)
 		}
-		import(beans)
 		properties<City>("city")
 		profile("data") {
-			beans {
-				bean<UserRepository>()
-				bean<ArticleRepository>()
+			import(dataBeans)
+			mongodb {
+				uri = "mongodb://myserver.com/foo"
 			}
-			mongodb(uri = "mongodb://myserver.com/foo")
 			listener<ContextStartedEvent> {
 				ref<UserRepository>().init()
 				ref<ArticleRepository>().init()
 			}
 		}
 		profile("web") {
-			beans {
-				bean<HtmlHandler>()
-				bean<ApiHandler>()
-			}
+			import(webBeans)
 			server {
 				port = if (profiles.contains("test")) 8181 else 8080
 				cors {

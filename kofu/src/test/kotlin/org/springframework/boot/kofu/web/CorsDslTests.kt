@@ -37,18 +37,18 @@ class CorsDslTests {
 				import(router)
 				cors {
 					"/api" {
-						allowedOrigins("first.example.com", "second.example.com")
-						allowedMethods("GET", "PUT", "POST", "DELETE")
+						allowedOrigins = "first.example.com, second.example.com"
+						allowedMethods = "GET, PUT, POST, DELETE"
 					}
 					"/public" {
-						allowedOrigins("**")
-						allowedMethods("GET")
+						allowedOrigins = "**"
+						allowedMethods = "GET"
 					}
 					"fullConfig" {
-						allowedOrigins("full.config.example.com")
-						allowedMethods("GET")
-						allowedHeaders("*")
-						exposedHeaders("Content-Location")
+						allowedOrigins = "full.config.example.com"
+						allowedMethods = "GET"
+						allowedHeaders = "*"
+						exposedHeaders = "Content-Location"
 						allowCredentials = true
 						maxAge = 3600
 					}

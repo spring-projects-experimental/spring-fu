@@ -94,6 +94,7 @@ class B
 class C
 class D
 class E
+@Suppress("UNUSED_PARAMETER")
 class Foo(a: A? = null, b: B? = null, c: C? = null, d: D? = null, e: E? = null)
 
 fun fun0() = Foo()

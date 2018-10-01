@@ -33,7 +33,7 @@ internal class LoggingDslTests {
 	fun `Change default ROOT Log level`() {
 		application(false) {
 			logging {
-				level(LogLevel.DEBUG)
+				level = LogLevel.DEBUG
 			}
 		}.run()
 

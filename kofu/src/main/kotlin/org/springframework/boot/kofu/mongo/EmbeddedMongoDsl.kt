@@ -25,7 +25,7 @@ import org.springframework.context.support.GenericApplicationContext
 /**
  * Kofu DSL for embedded MongoDB configuration.
  */
-class EmbeddedMongoDsl(private val mongoProperties: MongoProperties) : AbstractDsl() {
+class EmbeddedMongoDsl(private val mongoProperties: MongoProperties, private val init: EmbeddedMongoDsl.() -> Unit) : AbstractDsl() {
 
 	private val embeddedMongoProperties = EmbeddedMongoProperties()
 
@@ -33,9 +33,13 @@ class EmbeddedMongoDsl(private val mongoProperties: MongoProperties) : AbstractD
 		EmbeddedMongoInitializer(mongoProperties, embeddedMongoProperties).initialize(context)
 	}
 
-	fun version(version: String) {
-		embeddedMongoProperties.version = version
-	}
+	/**
+	 * Version of Mongo to use
+	 */
+	var version: String? = null
+		set(value) {
+			embeddedMongoProperties.version = value
+		}
 }
 
 /**
@@ -45,7 +49,7 @@ class EmbeddedMongoDsl(private val mongoProperties: MongoProperties) : AbstractD
  *
  * @sample org.springframework.boot.kofu.samples.mongoEmbedded
  */
-fun MongoDsl.embedded() {
+fun MongoDsl.embedded(dsl: EmbeddedMongoDsl.() -> Unit = {}) {
 	embedded = true
-	initializers.add(EmbeddedMongoDsl(properties))
+	initializers.add(EmbeddedMongoDsl(properties, dsl))
 }

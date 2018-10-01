@@ -84,7 +84,9 @@ abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
 				engine = getServerFactory()
 				import(router)
 			}
-			client(baseUrl = "http://127.0.0.1:$port")
+			client {
+				baseUrl = "http://127.0.0.1:$port"
+			}
 		}
 		with(app) {
 			run()
@@ -156,7 +158,7 @@ abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
 					jackson()
 				}
 				logging {
-					level(LogLevel.DEBUG)
+					level = LogLevel.DEBUG
 				}
 				import(router)
 				mongodb {
