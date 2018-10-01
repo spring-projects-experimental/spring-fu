@@ -166,7 +166,7 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit): Abst
 	override fun register(context: GenericApplicationContext) {
 		init()
 		if (engine == null) {
-			engine = netty
+			engine = netty()
 		}
 		engine!!.setPort(port)
 
@@ -244,27 +244,56 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit): Abst
 
 	/**
 	 * Netty engine.
+	 * TODO Use lazy val when supported by GraalVM
 	 * @see engine
 	 */
-	val netty: ConfigurableReactiveWebServerFactory by lazy { NettyReactiveWebServerFactory() }
+	fun netty() = NettyDelegate().invoke()
 
 	/**
 	 * Tomcat engine.
+	 * TODO Use lazy val when supported by GraalVM
 	 * @see engine
 	 */
-	val tomcat: ConfigurableReactiveWebServerFactory by lazy { TomcatReactiveWebServerFactory() }
+	fun tomcat() =  TomcatDelegate().invoke()
 
 	/**
 	 * Jetty engine.
+	 * TODO Use lazy val when supported by GraalVM
 	 * @see engine
 	 */
-	val jetty: ConfigurableReactiveWebServerFactory by lazy { JettyReactiveWebServerFactory() }
+	fun jetty() = JettyDelegate().invoke()
 
 	/**
 	 * Undertow engine.
+	 * TODO Use lazy val when supported by GraalVM
 	 * @see engine
 	 */
-	val undertow: ConfigurableReactiveWebServerFactory by lazy { UndertowReactiveWebServerFactory() }
+	fun undertow() = UndertowDelegate().invoke()
+
+
+	private class NettyDelegate: () -> ConfigurableReactiveWebServerFactory {
+		override fun invoke(): ConfigurableReactiveWebServerFactory {
+			return NettyReactiveWebServerFactory()
+		}
+	}
+
+	private class TomcatDelegate: () -> ConfigurableReactiveWebServerFactory {
+		override fun invoke(): ConfigurableReactiveWebServerFactory {
+			return TomcatReactiveWebServerFactory()
+		}
+	}
+
+	private class JettyDelegate: () -> ConfigurableReactiveWebServerFactory {
+		override fun invoke(): ConfigurableReactiveWebServerFactory {
+			return JettyReactiveWebServerFactory()
+		}
+	}
+
+	private class UndertowDelegate: () -> ConfigurableReactiveWebServerFactory {
+		override fun invoke(): ConfigurableReactiveWebServerFactory {
+			return UndertowReactiveWebServerFactory()
+		}
+	}
 
 }
 
@@ -342,3 +371,4 @@ fun ApplicationDsl.server(dsl: WebFluxServerDsl.() -> Unit =  {}) {
 fun ApplicationDsl.client(dsl: WebFluxClientBuilderDsl.() -> Unit =  {}) {
 	initializers.add(WebFluxClientBuilderDsl(dsl))
 }
+

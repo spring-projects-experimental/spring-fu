@@ -1,7 +1,6 @@
 package org.springframework.boot.kofu.samples
 
 import org.springframework.boot.kofu.application
-import org.springframework.boot.kofu.web.WebFluxServerDsl
 import org.springframework.boot.kofu.web.server
 import org.springframework.context.support.beans
 import org.springframework.web.function.server.coRouter
@@ -38,7 +37,7 @@ private fun customEngine() {
 	}
 	application {
 		server {
-			engine = jetty
+			engine = jetty()
 			import(::routes)
 		}
 	}
