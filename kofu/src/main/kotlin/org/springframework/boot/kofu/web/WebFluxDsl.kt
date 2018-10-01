@@ -60,6 +60,11 @@ abstract class WebFluxCodecDsl : AbstractDsl() {
 	 * Enable [org.springframework.http.codec.protobuf.ProtobufEncoder] and [org.springframework.http.codec.protobuf.ProtobufDecoder]
 	 */
 	abstract fun protobuf()
+
+	/**
+	 * Enable [org.springframework.http.codec.FormHttpMessageWriter] and [org.springframework.http.codec.FormHttpMessageWriter]
+	 */
+	abstract fun form()
 }
 
 class WebFluxClientCodecDsl(private val init: WebFluxClientCodecDsl.() -> Unit) : WebFluxCodecDsl() {
@@ -79,6 +84,10 @@ class WebFluxClientCodecDsl(private val init: WebFluxClientCodecDsl.() -> Unit) 
 	override fun protobuf() {
 		initializers.add(ProtobufCodecInitializer(true))
 	}
+
+	override fun form() {
+		initializers.add(FormCodecInitializer(true))
+	}
 }
 
 class WebFluxServerCodecDsl(private val init: WebFluxServerCodecDsl.() -> Unit) : WebFluxCodecDsl() {
@@ -97,6 +106,10 @@ class WebFluxServerCodecDsl(private val init: WebFluxServerCodecDsl.() -> Unit) 
 
 	override fun protobuf() {
 		initializers.add(ProtobufCodecInitializer(false))
+	}
+
+	override fun form() {
+		initializers.add(FormCodecInitializer(false))
 	}
 }
 
