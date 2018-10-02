@@ -1,17 +1,10 @@
 package org.springframework.boot.jafu;
 
-import static org.springframework.beans.factory.config.AutowireCapableBeanFactory.AUTOWIRE_CONSTRUCTOR;
-
-import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.BeanCreationException;
-import org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor;
-import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.web.ResourceProperties;
@@ -45,7 +38,6 @@ abstract public class Jafu {
 		app.setWebApplicationType(WebApplicationType.REACTIVE);
 		app.setApplicationContextClass(ReactiveWebServerApplicationContext.class);
 		app.addInitializers((GenericApplicationContext context) -> {
-			context.registerBean(AutowiredConstructorBeanPostProcessor.class);
 			context.registerBean("messageSource", MessageSource.class, () -> {
 				ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
 				messageSource.setBasename("messages");
@@ -55,19 +47,6 @@ abstract public class Jafu {
 		});
 		app.addInitializers(new ApplicationDsl(dsl));
 		return app;
-	}
-
-	public static class AutowiredConstructorBeanPostProcessor extends AutowiredAnnotationBeanPostProcessor {
-		@Override
-		public Constructor<?>[] determineCandidateConstructors(Class<?> beanClass, String beanName) throws BeanCreationException {
-			Constructor<?> primaryConstructor = BeanUtils.findPrimaryConstructor(beanClass);
-			if (primaryConstructor != null) {
-				return new Constructor<?>[] { primaryConstructor };
-			}
-			else {
-				return null;
-			}
-		}
 	}
 
 	public static class ApplicationDsl extends AbstractDsl {
