@@ -27,11 +27,11 @@ interface CoroutinesServerHttpResponse : CoroutinesHttpOutputMessage {
 
 	companion object {
 		operator fun invoke(response: ServerHttpResponse): CoroutinesServerHttpResponse =
-				DefaultCoroutineServerHttpResponse(response)
+				DefaultCoroutinesServerHttpResponse(response)
 	}
 }
 
-open class DefaultCoroutineServerHttpResponse(val response: ServerHttpResponse) : CoroutinesServerHttpResponse {
+open class DefaultCoroutinesServerHttpResponse(val response: ServerHttpResponse) : CoroutinesServerHttpResponse {
 	override var statusCode: HttpStatus
 		get() = response.statusCode!!
 		set(value) {

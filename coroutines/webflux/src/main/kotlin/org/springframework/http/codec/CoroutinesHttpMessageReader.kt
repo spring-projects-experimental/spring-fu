@@ -21,7 +21,7 @@ import org.springframework.core.ResolvableType
 import org.springframework.http.CoroutinesHttpInputMessage
 import org.springframework.http.MediaType
 import org.springframework.http.server.CoroutinesServerHttpResponse
-import org.springframework.http.server.coroutine.CoroutinesServerHttpRequest
+import org.springframework.http.server.coroutines.CoroutinesServerHttpRequest
 
 interface CoroutinesHttpMessageReader<out T> {
 

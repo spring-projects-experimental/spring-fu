@@ -24,9 +24,9 @@ import reactor.core.publisher.Mono
 interface CoroutinesWebFilter : WebFilter {
 
 	@Suppress("UNCHECKED_CAST")
-	override fun filter(exchange: ServerWebExchange, chain: WebFilterChain): Mono<Void> = GlobalScope.mono(Dispatchers.Unconfined, {
+	override fun filter(exchange: ServerWebExchange, chain: WebFilterChain): Mono<Void> = GlobalScope.mono(Dispatchers.Unconfined) {
 		filter(CoroutinesServerWebExchange(exchange), CoroutinesWebFilterChain(chain))
-	}) as Mono<Void>
+	} as Mono<Void>
 
 	suspend fun filter(exchange: CoroutinesServerWebExchange, chain: CoroutinesWebFilterChain)
 }

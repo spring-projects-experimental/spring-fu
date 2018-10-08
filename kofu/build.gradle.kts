@@ -1,16 +1,17 @@
 import org.jetbrains.dokka.DokkaConfiguration
 import org.jetbrains.dokka.gradle.DokkaTask
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.net.URL
 
 plugins {
+	id("org.jetbrains.kotlin.jvm")
+	id("io.spring.dependency-management")
 	id("org.jetbrains.dokka")
 }
 
 dependencies {
 	api("org.springframework.boot:spring-boot")
-
-	implementation(project(":fuconfigure"))
-	implementation("org.springframework.boot:spring-boot-autoconfigure")
+	implementation(project(":autoconfigure-adapter"))
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 
@@ -20,7 +21,7 @@ dependencies {
 	compileOnly("org.mongodb:mongodb-driver-reactivestreams")
 	compileOnly("com.fasterxml.jackson.core:jackson-databind")
 	compileOnly("com.samskivert:jmustache")
-	compileOnly(project(":coroutines:mongodb"))
+	compileOnly(project(":coroutines:data-mongodb"))
 	compileOnly(project(":coroutines:webflux"))
 
 	testImplementation("org.junit.jupiter:junit-jupiter-api")
@@ -36,8 +37,19 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")
 	testImplementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	testRuntimeOnly("de.flapdoodle.embed:de.flapdoodle.embed.mongo")
-	testImplementation(project(":coroutines:mongodb"))
+	testImplementation(project(":coroutines:data-mongodb"))
 	testImplementation(project(":coroutines:webflux"))
+}
+
+tasks.withType<KotlinCompile> {
+	kotlinOptions {
+		jvmTarget = "1.8"
+		freeCompilerArgs = listOf("-Xjsr305=strict", "-Xjvm-default=enable")
+	}
+}
+
+tasks.withType<Test> {
+	useJUnitPlatform()
 }
 
 tasks.withType<DokkaTask> {
@@ -57,7 +69,7 @@ publishing {
 	publications {
 		create(project.name, MavenPublication::class.java) {
 			from(components["java"])
-			artifactId = "spring-boot-kofu"
+			artifactId = "spring-fu-kofu"
 			val sourcesJar by tasks.creating(Jar::class) {
 				classifier = "sources"
 				from(sourceSets["main"].allSource)
@@ -73,5 +85,24 @@ publishing {
 			}
 			artifact(dokkaJar)
 		}
+	}
+}
+
+repositories {
+	mavenCentral()
+	maven("https://repo.spring.io/milestone")
+	maven("http://dl.bintray.com/kotlin/kotlin-eap")
+	maven("https://jcenter.bintray.com")
+}
+
+dependencyManagement {
+	val bootVersion: String by project
+	val coroutinesVersion: String by project
+	imports {
+		mavenBom("org.springframework.boot:spring-boot-dependencies:$bootVersion")
+	}
+	dependencies {
+		dependency("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
+		dependency("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:$coroutinesVersion")
 	}
 }

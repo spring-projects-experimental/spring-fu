@@ -6,4 +6,4 @@ build/
 *.iml
 *.ipr
 out/
-bootstraps/kofu-graal/com.example.applicationkt
+samples/kofu-reactive-graal/com.sample.applicationkt

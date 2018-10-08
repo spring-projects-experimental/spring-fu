@@ -15,7 +15,7 @@ publishing {
 	publications {
 		create(project.name, MavenPublication::class.java) {
 			from(components["java"])
-			artifactId = "spring-webflux-coroutines"
+			artifactId = "spring-fu-webflux-coroutines"
 			val sourcesJar by tasks.creating(Jar::class) {
 				classifier = "sources"
 				from(sourceSets["main"].allSource)

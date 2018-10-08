@@ -19,11 +19,11 @@ package org.springframework.web.function.server
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.reactive.awaitFirstOrDefault
 import kotlinx.coroutines.reactive.openSubscription
-import org.springframework.http.server.coroutine.CoroutinesServerHttpRequest
+import org.springframework.http.server.coroutines.CoroutinesServerHttpRequest
 import org.springframework.web.function.CoroutinesBodyExtractor
 import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.server.CoroutinesWebSession
-import org.springframework.web.server.session.asCoroutineWebSession
+import org.springframework.web.server.session.asCoroutinesWebSession
 import java.net.URI
 
 interface CoroutinesServerRequest {
@@ -71,7 +71,7 @@ class DefaultCoroutineServerRequest(private val req: ServerRequest) : Coroutines
 	override fun pathVariable(name: String): String? = req.pathVariable(name)
 
 	override suspend fun session(): CoroutinesWebSession? =
-		req.session().awaitFirstOrDefault(null)?.asCoroutineWebSession()
+		req.session().awaitFirstOrDefault(null)?.asCoroutinesWebSession()
 
 	override fun uri(): URI = req.uri()
 

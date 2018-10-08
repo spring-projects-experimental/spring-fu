@@ -17,7 +17,7 @@
 package org.springframework.web.server
 
 import org.springframework.http.server.CoroutinesServerHttpResponse
-import org.springframework.http.server.coroutine.CoroutinesServerHttpRequest
+import org.springframework.http.server.coroutines.CoroutinesServerHttpRequest
 
 interface CoroutinesServerWebExchange {
 

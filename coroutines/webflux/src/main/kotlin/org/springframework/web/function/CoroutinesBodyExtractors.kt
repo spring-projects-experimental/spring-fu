@@ -21,7 +21,7 @@ import org.springframework.core.ResolvableType.forClassWithGenerics
 import org.springframework.http.MediaType
 import org.springframework.http.codec.CoroutinesHttpMessageReader
 import org.springframework.http.codec.multipart.Part
-import org.springframework.http.server.coroutine.CoroutinesServerHttpRequest
+import org.springframework.http.server.coroutines.CoroutinesServerHttpRequest
 import org.springframework.util.MultiValueMap
 
 private val FORM_MAP_TYPE = forClassWithGenerics(MultiValueMap::class.java, String::class.java, String::class.java)

@@ -31,4 +31,4 @@ class DefaultCoroutinesWebSession(val session: WebSession) : CoroutinesWebSessio
 	}
 }
 
-internal fun WebSession.asCoroutineWebSession() = DefaultCoroutinesWebSession(this)
+internal fun WebSession.asCoroutinesWebSession() = DefaultCoroutinesWebSession(this)
