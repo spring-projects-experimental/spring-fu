@@ -79,7 +79,7 @@ open class ApplicationDsl internal constructor(private val startServer: Boolean,
  * Define an [application Kofu configuration][ApplicationDsl] that allows to configure a Spring Boot
  * application using Kofu DSL and functional bean registration.
  *
- * Require `org.springframework.fu:spring-boot-kofu` dependency.
+ * Require `org.springframework.fu:spring-fu-kofu` dependency.
  *
  * @sample org.springframework.fu.kofu.samples.applicationDslWithCustomBeanApplication
  * @sample org.springframework.fu.kofu.samples.applicationDslOverview
