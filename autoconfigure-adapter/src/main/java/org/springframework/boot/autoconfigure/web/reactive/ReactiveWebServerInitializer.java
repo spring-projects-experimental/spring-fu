@@ -38,8 +38,6 @@ import org.springframework.http.server.reactive.HttpHandler;
 import org.springframework.web.reactive.DispatcherHandler;
 import org.springframework.web.reactive.accept.RequestedContentTypeResolver;
 import org.springframework.web.reactive.config.WebFluxConfigurer;
-import org.springframework.web.reactive.function.server.RouterFunction;
-import org.springframework.web.reactive.function.server.ServerResponse;
 import org.springframework.web.reactive.function.server.support.HandlerFunctionAdapter;
 import org.springframework.web.reactive.function.server.support.RouterFunctionMapping;
 import org.springframework.web.reactive.function.server.support.ServerResponseResultHandler;
@@ -90,16 +88,7 @@ public class ReactiveWebServerInitializer implements ApplicationContextInitializ
 		context.registerBean(WebHttpHandlerBuilder.LOCALE_CONTEXT_RESOLVER_BEAN_NAME, LocaleContextResolver.class, () -> context.getBean(EnableWebFluxConfigurationWrapper.class).localeContextResolver());
 		context.registerBean(WebExceptionHandler.class, () -> context.getBean(EnableWebFluxConfigurationWrapper.class).responseStatusExceptionHandler());
 
-		// TODO See with Arjen if we can avoid the SortedRouterFunctionsContainer trick, seems to not be GraalVM friendly
-		context.registerBean(RouterFunctionMapping.class, () -> {
-			@SuppressWarnings("unchecked")
-			RouterFunction<ServerResponse> router = context.getBeansOfType(RouterFunction.class).values().stream().reduce(RouterFunction::andOther).orElse(null);
-			RouterFunctionMapping mapping = new RouterFunctionMapping(router);
-			mapping.setOrder(-1);
-			mapping.setMessageReaders(((ServerCodecConfigurer)context.getBean(WebHttpHandlerBuilder.SERVER_CODEC_CONFIGURER_BEAN_NAME)).getReaders());
-			return mapping;
-		});
-
+		context.registerBean(RouterFunctionMapping.class, () -> context.getBean(EnableWebFluxConfigurationWrapper.class).routerFunctionMapping());
 		context.registerBean(WebHttpHandlerBuilder.SERVER_CODEC_CONFIGURER_BEAN_NAME, ServerCodecConfigurer.class, () -> context.getBean(EnableWebFluxConfigurationWrapper.class).serverCodecConfigurer());
 		context.registerBean(ReactiveAdapterRegistry.class, () -> context.getBean(EnableWebFluxConfigurationWrapper.class).webFluxAdapterRegistry());
 		context.registerBean(HandlerFunctionAdapter.class, () -> context.getBean(EnableWebFluxConfigurationWrapper.class).handlerFunctionAdapter());
@@ -123,7 +112,6 @@ public class ReactiveWebServerInitializer implements ApplicationContextInitializ
 
 		public EnableWebFluxConfigurationWrapper(GenericApplicationContext context, WebFluxProperties webFluxProperties) {
 			super(webFluxProperties, context.getBeanProvider(WebFluxRegistrations.class));
-			// TODO See with Brian if we can avoid autowiring in DelegatingWebFluxConfiguration
 			setConfigurers(new ArrayList<>(context.getBeansOfType(WebFluxConfigurer.class).values()));
 		}
 
