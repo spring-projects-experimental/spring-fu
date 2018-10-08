@@ -1,8 +1,9 @@
-= Coroutines webapp bootstrap
+= Kofu Coroutines minimal webapp sample
 
-This is a bootstrap project for a Spring Boot web application with Kofu configuration and coroutines which provides a `http://localhost:8080/` endpoint that displays "Hello world!".
+This is a sample project for a Spring Boot web application with Kofu configuration and coroutines which provides a
+`http://localhost:8080/` endpoint that displays "Hello world!".
 
-After extracting the `.zip`, rename the default `bootstrap-kofu-coroutines` directory name to a customized one.
+After extracting the `.zip`, rename the default `kofu-coroutines-minimal` directory name to a customized one.
 
 === IDE
 
@@ -26,5 +27,5 @@ $ ./gradlew bootRun
 Or
 
 ```
-$ java -jar build/libs/bootstrap-kofu-coroutines.jar
+$ java -jar build/libs/kofu-coroutines-minimal.jar
 ```

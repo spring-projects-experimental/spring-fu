@@ -1,9 +1,9 @@
-= Reactive webapp bootstrap
+= Kofu Reactive minimal webapp sample
 
+This is a sample project for a Spring Boot Reactive web application with Kofu configuration which provides a
+`http://localhost:8080/` endpoint that displays "Hello world!".
 
-This is a bootstrap project for a Spring Boot reactive web application with Kofu configuration which provides a `http://localhost:8080/` endpoint that displays "Hello world!".
-
-After extracting the `.zip`, rename the default `bootstrap-kofu-reactive` directory name to a customized one.
+After extracting the `.zip`, rename the default `kofu-reactive-minimal` directory name to a customized one.
 
 === IDE
 
@@ -27,5 +27,5 @@ $ ./gradlew bootRun
 Or
 
 ```
-$ java -jar build/libs/bootstrap-kofu-reactive.jar
+$ java -jar build/libs/kofu-reactive-minimal.jar
 ```
