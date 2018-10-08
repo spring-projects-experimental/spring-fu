@@ -17,7 +17,6 @@ dependencies {
 
 	// Workaround for https://github.com/oracle/graal/issues/655
 	implementation("javax.servlet:javax.servlet-api")
-	implementation("org.aspectj:aspectjweaver")
 
 	testImplementation("org.junit.jupiter:junit-jupiter-api")
 	testImplementation("org.springframework:spring-test")
