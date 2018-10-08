@@ -1,6 +1,5 @@
 import org.jetbrains.dokka.DokkaConfiguration
 import org.jetbrains.dokka.gradle.DokkaTask
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.net.URL
 
 plugins {
@@ -41,17 +40,6 @@ dependencies {
 	testImplementation(project(":coroutines:webflux"))
 }
 
-tasks.withType<KotlinCompile> {
-	kotlinOptions {
-		jvmTarget = "1.8"
-		freeCompilerArgs = listOf("-Xjsr305=strict", "-Xjvm-default=enable")
-	}
-}
-
-tasks.withType<Test> {
-	useJUnitPlatform()
-}
-
 tasks.withType<DokkaTask> {
 	//reportUndocumented = false
 	outputFormat = "html"
@@ -88,21 +76,3 @@ publishing {
 	}
 }
 
-repositories {
-	mavenCentral()
-	maven("https://repo.spring.io/milestone")
-	maven("http://dl.bintray.com/kotlin/kotlin-eap")
-	maven("https://jcenter.bintray.com")
-}
-
-dependencyManagement {
-	val bootVersion: String by project
-	val coroutinesVersion: String by project
-	imports {
-		mavenBom("org.springframework.boot:spring-boot-dependencies:$bootVersion")
-	}
-	dependencies {
-		dependency("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
-		dependency("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:$coroutinesVersion")
-	}
-}

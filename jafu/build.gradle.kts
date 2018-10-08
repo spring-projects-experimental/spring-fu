@@ -5,22 +5,8 @@ plugins {
 
 dependencies {
 	api("org.springframework.boot:spring-boot")
-
 	implementation(project(":autoconfigure-adapter"))
-
 	compileOnly("org.springframework:spring-webflux")
-}
-
-dependencyManagement {
-	val bootVersion: String by project
-	imports {
-		mavenBom("org.springframework.boot:spring-boot-dependencies:$bootVersion")
-	}
-}
-
-repositories {
-	mavenCentral()
-	maven("https://repo.spring.io/milestone")
 }
 
 publishing {

@@ -1,18 +1,33 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
 	id("org.jetbrains.kotlin.jvm") version "1.3.0-rc-116" apply false
 	id("org.springframework.boot") version "2.1.0.M4" apply false
-	id("io.spring.dependency-management") version "1.0.6.RELEASE" apply false
 	id("org.jetbrains.dokka") version "0.9.17" apply false
+	id("io.spring.dependency-management") version "1.0.6.RELEASE"
 	id("maven-publish")
 }
 
 allprojects {
 	apply {
 		plugin("maven-publish")
+		plugin("io.spring.dependency-management")
 	}
 
 	version = "0.0.3.BUILD-SNAPSHOT"
 	group = "org.springframework.fu"
+
+	dependencyManagement {
+		val bootVersion: String by project
+		val coroutinesVersion: String by project
+		imports {
+			mavenBom("org.springframework.boot:spring-boot-dependencies:$bootVersion")
+		}
+		dependencies {
+			dependency("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
+			dependency("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:$coroutinesVersion")
+		}
+	}
 
 	publishing {
 		repositories {
@@ -34,6 +49,24 @@ allprojects {
 				}
 			}
 		}
+	}
+
+	tasks.withType<Test> {
+		useJUnitPlatform()
+	}
+
+	tasks.withType<KotlinCompile> {
+		kotlinOptions {
+			jvmTarget = "1.8"
+			freeCompilerArgs = listOf("-Xjsr305=strict", "-Xjvm-default=enable")
+		}
+	}
+
+	repositories {
+		mavenCentral()
+		maven("https://repo.spring.io/milestone")
+		maven("http://dl.bintray.com/kotlin/kotlin-eap")
+		maven("https://jcenter.bintray.com")
 	}
 
 }
