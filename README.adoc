@@ -28,7 +28,7 @@ Slightly related: https://github.com/spring-projects/spring-boot/issues/8115[spr
 To be created in Spring Boot issue tracker
 
 a|
-https://github.com/spring-projects/spring-fu/tree/master/autoconfigure-adapter[Spring Boot functional configuration]
+More efficient Spring Boot startup via https://github.com/spring-projects/spring-fu/tree/master/autoconfigure-adapter[functional bean registration]
 a|
 Manually created in Spring Fu
 
