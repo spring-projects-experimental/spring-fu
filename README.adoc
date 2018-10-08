@@ -126,7 +126,7 @@ fun main() = app.run()
 
 === Samples
 
-You can also have a look to the [sample applications](https://github.com/spring-projects/spring-fu/tree/master/samples/).
+You can also have a look to the https://github.com/spring-projects/spring-fu/tree/master/samples/[sample applications].
 
 === Credits
 
