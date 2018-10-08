@@ -17,6 +17,7 @@
 package org.springframework.fu.kofu.web
 
 import org.springframework.beans.factory.getBean
+import org.springframework.beans.factory.support.BeanDefinitionReaderUtils
 import org.springframework.beans.factory.support.BeanDefinitionReaderUtils.uniqueBeanName
 import org.springframework.boot.autoconfigure.web.ResourceProperties
 import org.springframework.boot.autoconfigure.web.ServerProperties
@@ -31,7 +32,8 @@ import org.springframework.context.ApplicationContextInitializer
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.registerBean
 import org.springframework.fu.kofu.AbstractDsl
-import org.springframework.fu.kofu.ApplicationDsl
+import org.springframework.fu.kofu.ConfigurationDsl
+import org.springframework.web.function.server.CoroutinesRouterFunctionDsl
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.server.RouterFunction
 import org.springframework.web.reactive.function.server.RouterFunctionDsl
@@ -204,7 +206,23 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit): Abst
 	/**
 	 * Configure routes via a [dedicated DSL][RouterFunctionDsl].
 	 * @sample org.springframework.fu.kofu.samples.router
+	 */
+	fun router(routes: (RouterFunctionDsl.() -> Unit)) {
+		initializers.add(ApplicationContextInitializer { it.registerBean(BeanDefinitionReaderUtils.uniqueBeanName(RouterFunctionDsl::class.java.name, context)) { RouterFunctionDsl(routes).invoke() } })
+	}
+
+	/**
+	 * Configure Coroutines routes via a [dedicated DSL][CoroutinesRouterFunctionDsl].
 	 * @sample org.springframework.fu.kofu.samples.coRouter
+	 */
+	fun coRouter(routes: (CoroutinesRouterFunctionDsl.() -> Unit)) {
+		initializers.add(ApplicationContextInitializer { it.registerBean(BeanDefinitionReaderUtils.uniqueBeanName(CoroutinesRouterFunctionDsl::class.java.name, context)) { CoroutinesRouterFunctionDsl(routes).invoke() } })
+	}
+
+	/**
+	 * Import routes written using a [dedicated DSL][RouterFunctionDsl].
+	 * @sample org.springframework.fu.kofu.samples.importRouter
+	 * @sample org.springframework.fu.kofu.samples.importCoRouter
 	 */
 	fun import(router: RouterFunction<ServerResponse>) {
 		initializers.add(ApplicationContextInitializer {
@@ -352,7 +370,7 @@ class WebFluxClientBuilderDsl(private val init: WebFluxClientBuilderDsl.() -> Un
  * @see WebFluxServerDsl.cors
  * @see WebFluxServerDsl.mustache
  */
-fun ApplicationDsl.server(dsl: WebFluxServerDsl.() -> Unit =  {}) {
+fun ConfigurationDsl.server(dsl: WebFluxServerDsl.() -> Unit =  {}) {
 	initializers.add(WebFluxServerDsl(dsl))
 }
 
@@ -368,7 +386,7 @@ fun ApplicationDsl.server(dsl: WebFluxServerDsl.() -> Unit =  {}) {
  * @sample org.springframework.fu.kofu.samples.clientDsl
  * @see WebFluxClientBuilderDsl.codecs
  */
-fun ApplicationDsl.client(dsl: WebFluxClientBuilderDsl.() -> Unit =  {}) {
+fun ConfigurationDsl.client(dsl: WebFluxClientBuilderDsl.() -> Unit =  {}) {
 	initializers.add(WebFluxClientBuilderDsl(dsl))
 }
 

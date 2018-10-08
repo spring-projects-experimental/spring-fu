@@ -22,6 +22,7 @@ import org.springframework.boot.logging.LogLevel
 import org.springframework.context.event.ContextStartedEvent
 import org.springframework.context.support.beans
 import org.springframework.fu.kofu.application
+import org.springframework.fu.kofu.configuration
 import org.springframework.fu.kofu.mongo.mongodb
 import org.springframework.fu.kofu.ref
 import org.springframework.fu.kofu.web.*
@@ -37,11 +38,10 @@ private fun applicationDslWithCustomBeanApplication() {
 	// ============================================================================================
 	// This standalone application registers a custom bean `Foo` and a `City` properties properties
 	// ============================================================================================
-	val beans = beans {
-		bean<Foo>()
-	}
 	val app = application {
-		import(beans)
+		beans {
+			bean<Foo>()
+		}
 		properties<City>("city")
 	}
 
@@ -63,52 +63,53 @@ private fun applicationDslOverview() {
 		}
 	}
 
-	val dataBeans = beans {
-		bean<UserRepository>()
-		bean<ArticleRepository>()
+	val dataConfiguration = configuration {
+		beans {
+			bean<UserRepository>()
+			bean<ArticleRepository>()
+		}
+		mongodb {
+			uri = "mongodb://myserver.com/foo"
+		}
+		listener<ContextStartedEvent> {
+			ref<UserRepository>().init()
+			ref<ArticleRepository>().init()
+		}
 	}
-	val webBeans = beans {
-		bean<HtmlHandler>()
-		bean<ApiHandler>()
+
+	val webConfiguration = configuration {
+		beans {
+			bean<HtmlHandler>()
+			bean<ApiHandler>()
+		}
+		server {
+			port = if (profiles.contains("test")) 8181 else 8080
+			cors {
+				"example.com" { }
+			}
+			mustache()
+			codecs {
+				string()
+				jackson()
+			}
+			import(::routes)
+		}
+		client {
+			codecs {
+				string()
+				jackson()
+			}
+		}
 	}
+
 	val app = application {
 		logging {
 			level = LogLevel.INFO
 			level("org.springframework", LogLevel.DEBUG)
 		}
 		properties<City>("city")
-		profile("data") {
-			import(dataBeans)
-			mongodb {
-				uri = "mongodb://myserver.com/foo"
-			}
-			listener<ContextStartedEvent> {
-				ref<UserRepository>().init()
-				ref<ArticleRepository>().init()
-			}
-		}
-		profile("web") {
-			import(webBeans)
-			server {
-				port = if (profiles.contains("test")) 8181 else 8080
-				cors {
-					"example.com" { }
-				}
-				mustache()
-				codecs {
-					string()
-					jackson()
-				}
-				import(::routes)
-			}
-			client {
-				codecs {
-					string()
-					jackson()
-				}
-			}
-
-		}
+		import(dataConfiguration)
+		import(webConfiguration)
 	}
 
 	fun main(args: Array<String>) = app.run(profiles = "data, web")

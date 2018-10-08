@@ -23,7 +23,7 @@ import org.springframework.boot.autoconfigure.mongo.MongoReactiveInitializer
 import org.springframework.boot.autoconfigure.mongo.coroutines.CoroutinesMongoInitializer
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.fu.kofu.AbstractDsl
-import org.springframework.fu.kofu.ApplicationDsl
+import org.springframework.fu.kofu.ConfigurationDsl
 
 /**
  * Kofu DSL for MongoDB configuration.
@@ -64,6 +64,6 @@ open class MongoDsl(
  *
  * @sample org.springframework.fu.kofu.samples.mongo
  */
-fun ApplicationDsl.mongodb(dsl: MongoDsl.() -> Unit = {}) {
+fun ConfigurationDsl.mongodb(dsl: MongoDsl.() -> Unit = {}) {
 	initializers.add(MongoDsl(dsl))
 }

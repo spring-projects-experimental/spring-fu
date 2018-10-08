@@ -44,11 +44,10 @@ class ApplicationDslTests {
 
 	@Test
 	fun `Create an application with a custom bean`() {
-		val beans = beans {
-			bean<Foo>()
-		}
 		val app = application(false) {
-			import(beans)
+			beans {
+				bean<Foo>()
+			}
 		}
 		with(app) {
 			run()
@@ -60,11 +59,10 @@ class ApplicationDslTests {
 
 	@Test
 	fun `Create an application with a custom beans import`() {
-		val beans = beans {
-			bean<Foo>()
-		}
 		val app = application(false) {
-			import(beans)
+			beans {
+				bean<Foo>()
+			}
 		}
 		with(app) {
 			run()

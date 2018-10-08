@@ -23,26 +23,27 @@ A typical Kofu configuration look like the example bellow, and a comprehensive d
 [cors][org.springframework.fu.kofu.web.cors].
 
 ```kotlin
-val beans = beans {
-	// ...
+val dataconfig = configuration {
+	beans { }
+	mongodb { }
 }
 
-val app = application {
-	import(beans)
-	logging { }
+val webConfig = configuration {
+	beans { }
 	server {
-		router()
+		router { }
 		cors { }
 		codecs { }
 	}
 	client {
 		codecs { }
 	}
-	mongo { }
-	// TODO sql { }
-	// TODO security { }
-	// TODO cloud { }
 }
+
+val app = application {
+	logging { }
+	import(dataConfig)
+    import(webConfig)}
 ```
 
 The dependency to use is `org.springframework.fu:spring-fu-kofu`.
