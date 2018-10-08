@@ -4,7 +4,7 @@ image::https://ci.spring.io/api/v1/teams/spring-fu/pipelines/spring-fu/badge["Bu
 
 Spring Fu is an incubator for new Spring features about Kotlin and functional bean registration.
 Its main feature is an alternative way of configuring Spring Boot applications with Kotlin DSL and lambdas instead of annotations:
-http://repo.spring.io/snapshot/org/springframework/fu/spring-boot-kofu/0.0.3.BUILD-SNAPSHOT/spring-boot-kofu-0.0.3.BUILD-SNAPSHOT-javadoc.jar!/kofu/org.springframework.boot.kofu/application.html[Kofu (for **Ko**tlin and **fu**nctional) configuration].
+http://repo.spring.io/snapshot/org/springframework/fu/spring-boot-kofu/0.0.3.BUILD-SNAPSHOT/spring-boot-kofu-0.0.3.BUILD-SNAPSHOT-javadoc.jar!/kofu/org.springframework.fu.kofu/application.html[Kofu (for **Ko**tlin and **fu**nctional) configuration].
 Other features like https://github.com/spring-projects/spring-fu/tree/master/coroutines[Coroutines] or GraalVM support are also included.
 
 A Java variant called Jafu (for **Ja**va and **fu**nctional) is https://github.com/spring-projects/spring-fu/blob/master/samples/jafu-reactive-minimal/src/main/java/com/sample/JafuApplication.java[also available] (just a POC for now).
@@ -19,7 +19,7 @@ Spring projects like Framework, Boot and Data. The table bellow summarize the st
 a|**Feature** |**Status** |**Related issue**
 
 a|
-http://repo.spring.io/snapshot/org/springframework/fu/spring-boot-kofu/0.0.3.BUILD-SNAPSHOT/spring-boot-kofu-0.0.3.BUILD-SNAPSHOT-javadoc.jar!/kofu/org.springframework.boot.kofu/application.html[Kofu] and
+http://repo.spring.io/snapshot/org/springframework/fu/spring-boot-kofu/0.0.3.BUILD-SNAPSHOT/spring-boot-kofu-0.0.3.BUILD-SNAPSHOT-javadoc.jar!/kofu/org.springframework.fu.kofu/application.html[Kofu] and
 https://github.com/spring-projects/spring-fu/tree/master/jafu[Jafu] configuration DSL
 a|
 Incubating in Spring Fu
@@ -115,7 +115,7 @@ https://github.com/spring-projects/spring-restdocs/issues/213[spring-restdocs#21
 ```kotlin
 package com.example
 
-import org.springframework.boot.kofu.application
+import org.springframework.fu.kofu.application
 
 val app = application {
 	// ...

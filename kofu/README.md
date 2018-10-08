@@ -17,10 +17,10 @@ via lambdas instead of annotations. It has following characteristics:
 A typical Kofu configuration look like the example bellow, and a comprehensive documentation is available for each DSL: [application][application],
 [logging][ApplicationDsl.logging],
 [beans](https://docs.spring.io/spring-framework/docs/current/kdoc-api/spring-framework/org.springframework.context.support/beans.html),
-[server][org.springframework.boot.kofu.web.server],
-[client][org.springframework.boot.kofu.web.client],
+[server][org.springframework.fu.kofu.web.server],
+[client][org.springframework.fu.kofu.web.client],
 [router](https://docs.spring.io/spring-framework/docs/current/kdoc-api/spring-framework/org.springframework.web.reactive.function.server/router.html),
-[cors][org.springframework.boot.kofu.web.cors].
+[cors][org.springframework.fu.kofu.web.cors].
 
 ```kotlin
 val beans = beans {

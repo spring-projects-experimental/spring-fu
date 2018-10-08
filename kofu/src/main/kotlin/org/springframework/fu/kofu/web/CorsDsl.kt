@@ -62,7 +62,7 @@ class CorsDsl(
  *
  * @param defaults Apply permit default values when set to true (enabled by default)
  * @param dsl Cors DSL
- * @sample org.springframework.boot.kofu.samples.corsDsl
+ * @sample org.springframework.fu.kofu.samples.corsDsl
  */
 fun WebFluxServerDsl.cors(defaults: Boolean = true,
 						  dsl: CorsDsl.() -> Unit = {}) {

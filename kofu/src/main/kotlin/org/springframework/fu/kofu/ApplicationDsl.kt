@@ -59,7 +59,7 @@ open class ApplicationDsl internal constructor(private val startServer: Boolean,
 	 * it is recommended to use constructor injection with `val` read-only
 	 * (and non-nullable when possible) private [properties](https://kotlinlang.org/docs/reference/properties.html).
 	 *
-	 * @sample org.springframework.boot.kofu.samples.beans
+	 * @sample org.springframework.fu.kofu.samples.beans
 	 */
 	fun import(beans: BeanDefinitionDsl) {
 		initializers.add(beans)
@@ -92,8 +92,8 @@ open class ApplicationDsl internal constructor(private val startServer: Boolean,
 	 * [Spring Boot configuration properties mechanism](https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html#boot-features-external-config-typesafe-configuration-properties),
 	 * without the need to use `@ConfigurationProperties` annotation.
 	 *
-	 * @sample org.springframework.boot.kofu.samples.properties
-	 * @sample org.springframework.boot.kofu.samples.SampleProperties
+	 * @sample org.springframework.fu.kofu.samples.properties
+	 * @sample org.springframework.fu.kofu.samples.SampleProperties
 	 */
 	inline fun <reified T : Any> properties(prefix: String = "") {
 		context.registerBean("${T::class.java.simpleName.toLowerCase()}ConfigurationProperties") {
@@ -103,7 +103,7 @@ open class ApplicationDsl internal constructor(private val startServer: Boolean,
 
 	/**
 	 * Configure global, package or class logging via a [dedicated DSL][LoggingDsl].
-	 * @sample org.springframework.boot.kofu.samples.loggingDsl
+	 * @sample org.springframework.fu.kofu.samples.loggingDsl
 	 */
 	fun logging(dsl: LoggingDsl.() -> Unit) {
 		LoggingDsl(dsl)
@@ -112,7 +112,7 @@ open class ApplicationDsl internal constructor(private val startServer: Boolean,
 	/**
 	 * Declare application event Listeners in order to run tasks when `ApplicationContextEvent`
 	 * like `ApplicationReadyEvent` are emitted.
-	 * @sample org.springframework.boot.kofu.samples.listener
+	 * @sample org.springframework.fu.kofu.samples.listener
 	 */
 	inline fun <reified E : ApplicationEvent>listener(crossinline listener: (E) -> Unit) {
 		context.addApplicationListener {
@@ -169,14 +169,14 @@ open class ApplicationDsl internal constructor(private val startServer: Boolean,
  *
  * Require `org.springframework.fu:spring-boot-kofu` dependency.
  *
- * @sample org.springframework.boot.kofu.samples.applicationDslWithCustomBeanApplication
- * @sample org.springframework.boot.kofu.samples.applicationDslOverview
+ * @sample org.springframework.fu.kofu.samples.applicationDslWithCustomBeanApplication
+ * @sample org.springframework.fu.kofu.samples.applicationDslOverview
  * @param startServer Define if Spring Boot should start a web server or not
  * @param dsl The `application { }` DSL
  * @see ApplicationDsl.logging
- * @see org.springframework.boot.kofu.web.server
- * @see org.springframework.boot.kofu.web.client
- * @see org.springframework.boot.kofu.mongo.mongodb
+ * @see org.springframework.fu.kofu.web.server
+ * @see org.springframework.fu.kofu.web.client
+ * @see org.springframework.fu.kofu.mongo.mongodb
  */
 fun application(startServer: Boolean = true, dsl: ApplicationDsl.() -> Unit)
 		= ApplicationDsl(startServer, dsl)

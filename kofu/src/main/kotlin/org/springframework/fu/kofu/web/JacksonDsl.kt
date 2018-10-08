@@ -163,7 +163,7 @@ class JacksonDsl(private val isClientCodec: Boolean, private val init: JacksonDs
  * Require `org.springframework.boot:spring-boot-starter-json` dependency
  * (included by default in `spring-boot-starter-webflux`).
 
- * @sample org.springframework.boot.kofu.samples.jacksonDsl
+ * @sample org.springframework.fu.kofu.samples.jacksonDsl
  */
 fun WebFluxClientCodecDsl.jackson(dsl: JacksonDsl.() -> Unit = {}) {
 	initializers.add(JacksonDsl(true, dsl))
@@ -176,7 +176,7 @@ fun WebFluxClientCodecDsl.jackson(dsl: JacksonDsl.() -> Unit = {}) {
  * Require `org.springframework.boot:spring-boot-starter-json` dependency
  * (included by default in `spring-boot-starter-webflux`).
 
- * @sample org.springframework.boot.kofu.samples.jacksonDsl
+ * @sample org.springframework.fu.kofu.samples.jacksonDsl
  */
 fun WebFluxServerCodecDsl.jackson(dsl: JacksonDsl.() -> Unit = {}) {
 	initializers.add(JacksonDsl(false, dsl))

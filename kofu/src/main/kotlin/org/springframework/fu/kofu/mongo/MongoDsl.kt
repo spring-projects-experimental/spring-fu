@@ -62,7 +62,7 @@ open class MongoDsl(
  *
  * Require `org.springframework.boot:spring-boot-starter-data-mongodb-reactive` dependency.
  *
- * @sample org.springframework.boot.kofu.samples.mongo
+ * @sample org.springframework.fu.kofu.samples.mongo
  */
 fun ApplicationDsl.mongodb(dsl: MongoDsl.() -> Unit = {}) {
 	initializers.add(MongoDsl(dsl))

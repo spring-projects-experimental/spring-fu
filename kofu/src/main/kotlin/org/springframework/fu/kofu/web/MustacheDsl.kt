@@ -48,7 +48,7 @@ open class MustacheDsl(private val init: MustacheDsl.() -> Unit): AbstractDsl() 
  *
  * Require `org.springframework.boot:spring-boot-starter-mustache` dependency.
  *
- * @sample org.springframework.boot.kofu.samples.mustacheDsl
+ * @sample org.springframework.fu.kofu.samples.mustacheDsl
  * @author Sebastien Deleuze
  */
 fun WebFluxServerDsl.mustache(dsl: MustacheDsl.() -> Unit = {}) {

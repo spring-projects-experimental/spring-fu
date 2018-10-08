@@ -203,8 +203,8 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit): Abst
 
 	/**
 	 * Configure routes via a [dedicated DSL][RouterFunctionDsl].
-	 * @sample org.springframework.boot.kofu.samples.router
-	 * * @sample org.springframework.boot.kofu.samples.coRouter
+	 * @sample org.springframework.fu.kofu.samples.router
+	 * @sample org.springframework.fu.kofu.samples.coRouter
 	 */
 	fun import(router: RouterFunction<ServerResponse>) {
 		initializers.add(ApplicationContextInitializer {
@@ -346,7 +346,7 @@ class WebFluxClientBuilderDsl(private val init: WebFluxClientBuilderDsl.() -> Un
  *
  * Require `org.springframework.boot:spring-boot-starter-webflux` dependency.
  *
- * @sample org.springframework.boot.kofu.samples.router
+ * @sample org.springframework.fu.kofu.samples.router
  * @see WebFluxServerDsl.import
  * @see WebFluxServerDsl.codecs
  * @see WebFluxServerDsl.cors
@@ -365,7 +365,7 @@ fun ApplicationDsl.server(dsl: WebFluxServerDsl.() -> Unit =  {}) {
  * Require `org.springframework.boot:spring-boot-starter-webflux` dependency.
  *
  * @param dsl The [WebFlux client](https://docs.spring.io/spring/docs/current/spring-framework-reference/web-reactive.html#webflux-client) builder ([WebClient.builder]) DSL
- * @sample org.springframework.boot.kofu.samples.clientDsl
+ * @sample org.springframework.fu.kofu.samples.clientDsl
  * @see WebFluxClientBuilderDsl.codecs
  */
 fun ApplicationDsl.client(dsl: WebFluxClientBuilderDsl.() -> Unit =  {}) {

@@ -47,7 +47,7 @@ class EmbeddedMongoDsl(private val mongoProperties: MongoProperties, private val
  *
  * Require `de.flapdoodle.embed:de.flapdoodle.embed.mongo` dependency.
  *
- * @sample org.springframework.boot.kofu.samples.mongoEmbedded
+ * @sample org.springframework.fu.kofu.samples.mongoEmbedded
  */
 fun MongoDsl.embedded(dsl: EmbeddedMongoDsl.() -> Unit = {}) {
 	embedded = true
