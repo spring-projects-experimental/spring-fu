@@ -2,3 +2,4 @@
 
 Jafu (for **Ja**va and **fu**nctional) is an experimental Java variant of Kofu DSL. See https://github.com/spring-projects/spring-fu/blob/master/samples/jafu-reactive/src/main/java/org/springframework/fu/sample/jafu/JafuApplication.java[this sample].
 
+The dependency to use is `org.springframework.fu:spring-fu-jafu`.

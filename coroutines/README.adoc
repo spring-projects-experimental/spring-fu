@@ -2,5 +2,5 @@
 
 2 incubating Coroutines support modules are provided:
 
- * `org.springframework.fu:spring-webflux-coroutines`
- * `org.springframework.fu:spring-data-mongodb-coroutines`
+ * `org.springframework.fu:spring-fu-webflux-coroutines`
+ * `org.springframework.fu:spring-fu-data-mongodb-coroutines`

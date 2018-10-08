@@ -7,4 +7,4 @@ way. For now, it mostly targets the Reactive stack and conditions are not manage
 Ideally in the future, such library should be generated during Spring Boot build based
 on `spring-boot-autoconfigure` classes.
 
-The dependency to use is `org.springframework.fu:spring-boot-fuconfigure`.
+The dependency to use is `org.springframework.fu:spring-fu-autoconfigure-adapter`.

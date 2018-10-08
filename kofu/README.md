@@ -45,5 +45,5 @@ val app = application {
 }
 ```
 
-The dependency to use is `org.springframework.fu:spring-boot-kofu`.
+The dependency to use is `org.springframework.fu:spring-fu-kofu`.
 
