@@ -69,55 +69,6 @@ allprojects {
 		maven("http://dl.bintray.com/kotlin/kotlin-eap")
 		maven("https://jcenter.bintray.com")
 	}
-
-}
-
-val jafuReactiveMinimalSample by task<Zip> {
-	from("samples/jafu-reactive-minimal") {
-		exclude("build", ".gradle", ".idea", "out", "*.iml")
-	}
-	into("jafu-reactive-minimal")
-	setExecutablePermissions()
-}
-
-val kofuCoroutinesMinimalSample by task<Zip> {
-	from("samples/kofu-coroutines-minimal") {
-		exclude("build", ".gradle", ".idea", "out", "*.iml")
-	}
-	into("kofu-coroutines-minimal")
-	setExecutablePermissions()
-}
-
-val kofuCoroutinesMongodbSample by task<Zip> {
-	from("samples/kofu-coroutines-mongodb") {
-		exclude("build", ".gradle", ".idea", "out", "*.iml")
-	}
-	into("kofu-coroutines-mongodb")
-	setExecutablePermissions()
-}
-
-val kofuReactiveGraalSample by task<Zip> {
-	from("samples/kofu-reactive-graal") {
-		exclude("build", ".gradle", ".idea", "out", "*.iml", "com.sample.applicationkt")
-	}
-	into("kofu-reactive-graal")
-	setExecutablePermissions()
-}
-
-val kofuReactiveMinimalSample by task<Zip> {
-	from("samples/kofu-reactive-minimal") {
-		exclude("build", ".gradle", ".idea", "out", "*.iml")
-	}
-	into("kofu-reactive-minimal")
-	setExecutablePermissions()
-}
-
-val kofuReactiveMongodbSample by task<Zip> {
-	from("samples/kofu-reactive-mongodb") {
-		exclude("build", ".gradle", ".idea", "out", "*.iml")
-	}
-	into("kofu-reactive-mongodb")
-	setExecutablePermissions()
 }
 
 publishing {
@@ -125,36 +76,78 @@ publishing {
 		create("jafu-reactive-minimal", MavenPublication::class.java) {
 			groupId = "org.springframework.fu"
 			artifactId = "spring-fu-samples-jafu-reactive-minimal"
+			val jafuReactiveMinimalSample by task<Zip> {
+				from("samples/jafu-reactive-minimal") {
+					exclude("build", ".gradle", ".idea", "out", "*.iml")
+				}
+				into("jafu-reactive-minimal")
+				setExecutablePermissions()
+			}
 			artifact(jafuReactiveMinimalSample)
 		}
 
 		create("kofu-coroutines-minimal", MavenPublication::class.java) {
 			groupId = "org.springframework.fu"
 			artifactId = "spring-fu-samples-kofu-coroutines-minimal"
+			val kofuCoroutinesMinimalSample by task<Zip> {
+				from("samples/kofu-coroutines-minimal") {
+					exclude("build", ".gradle", ".idea", "out", "*.iml")
+				}
+				into("kofu-coroutines-minimal")
+				setExecutablePermissions()
+			}
 			artifact(kofuCoroutinesMinimalSample)
 		}
 
 		create("kofu-coroutines-mongodb", MavenPublication::class.java) {
 			groupId = "org.springframework.fu"
 			artifactId = "spring-fu-samples-kofu-coroutines-mongodb"
+			val kofuCoroutinesMongodbSample by task<Zip> {
+				from("samples/kofu-coroutines-mongodb") {
+					exclude("build", ".gradle", ".idea", "out", "*.iml")
+				}
+				into("kofu-coroutines-mongodb")
+				setExecutablePermissions()
+			}
 			artifact(kofuCoroutinesMongodbSample)
 		}
 
 		create("kofu-reactive-graal", MavenPublication::class.java) {
 			groupId = "org.springframework.fu"
 			artifactId = "spring-fu-samples-kofu-reactive-graal"
+			val kofuReactiveGraalSample by task<Zip> {
+				from("samples/kofu-reactive-graal") {
+					exclude("build", ".gradle", ".idea", "out", "*.iml", "com.sample.applicationkt")
+				}
+				into("kofu-reactive-graal")
+				setExecutablePermissions()
+			}
 			artifact(kofuReactiveGraalSample)
 		}
 
 		create("kofu-reactive-minimal", MavenPublication::class.java) {
 			groupId = "org.springframework.fu"
 			artifactId = "spring-fu-samples-kofu-reactive-minimal"
+			val kofuReactiveMinimalSample by task<Zip> {
+				from("samples/kofu-reactive-minimal") {
+					exclude("build", ".gradle", ".idea", "out", "*.iml")
+				}
+				into("kofu-reactive-minimal")
+				setExecutablePermissions()
+			}
 			artifact(kofuReactiveMinimalSample)
 		}
 
 		create("kofu-reactive-mongodb", MavenPublication::class.java) {
 			groupId = "org.springframework.fu"
 			artifactId = "spring-fu-samples-kofu-reactive-mongodb"
+			val kofuReactiveMongodbSample by task<Zip> {
+				from("samples/kofu-reactive-mongodb") {
+					exclude("build", ".gradle", ".idea", "out", "*.iml")
+				}
+				into("kofu-reactive-mongodb")
+				setExecutablePermissions()
+			}
 			artifact(kofuReactiveMongodbSample)
 		}
 	}
