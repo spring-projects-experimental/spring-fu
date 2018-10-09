@@ -30,7 +30,6 @@ import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.test.web.reactive.server.expectBody
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.server.router
-import reactor.netty.http.HttpResources
 import reactor.test.test
 
 /**
@@ -61,7 +60,6 @@ class JacksonDslTests {
 				.expectBody<User>()
 				.isEqualTo(User("Brian"))
 		app.stop()
-		HttpResources.reset()
 	}
 
 	@Test
@@ -97,7 +95,6 @@ class JacksonDslTests {
 			val mappers = context.getBeanProvider<ObjectMapper>().toList()
 			assertEquals(1, mappers.size)
 			stop()
-			HttpResources.reset()
 		}
 	}
 
@@ -118,7 +115,6 @@ class JacksonDslTests {
 		client.get().uri("/user").exchange()
 				.expectStatus().is5xxServerError
 		app.stop()
-		HttpResources.reset()
 	}
 
 	data class User(val name: String)

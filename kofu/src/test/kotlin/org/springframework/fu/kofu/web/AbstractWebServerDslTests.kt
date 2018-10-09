@@ -51,7 +51,6 @@ abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
 			run()
 			stop()
 		}
-		HttpResources.reset()
 	}
 
 	@Test
@@ -71,7 +70,6 @@ abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
 			client.get().uri("/foo"). accept(MediaType.TEXT_PLAIN).exchange().expectStatus().is2xxSuccessful
 			stop()
 		}
-		HttpResources.reset()
 	}
 
 	@Test
@@ -95,7 +93,6 @@ abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
 					.consumeNextWith { assertEquals(NO_CONTENT, it.statusCode()) }
 					.verifyComplete()
 			stop()
-			HttpResources.reset()
 		}
 	}
 
@@ -122,7 +119,6 @@ abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
 			client.get().uri("/bar").exchange().expectStatus().isOk
 			stop()
 		}
-		HttpResources.reset()
 	}
 
 	@Test
@@ -142,7 +138,6 @@ abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
 			app.run()
 		}
 		app.stop()
-		HttpResources.reset()
 	}
 
 	@Test
@@ -172,7 +167,6 @@ abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
 			client.get().uri("/").exchange().expectStatus().is2xxSuccessful
 			stop()
 		}
-		HttpResources.reset()
 	}
 
 }

@@ -46,7 +46,6 @@ class MustacheDslTests {
 			.expectBody<String>()
 			.isEqualTo("Hello world!")
 		app.stop()
-		HttpResources.reset()
 	}
 
 }

@@ -63,7 +63,6 @@ class CorsDslTests {
 					.expectStatus().is2xxSuccessful
 			stop()
 		}
-		HttpResources.reset()
 	}
 }
 
