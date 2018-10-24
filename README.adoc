@@ -107,8 +107,9 @@ https://github.com/spring-projects/spring-restdocs/issues/213[spring-restdocs#21
 
 === Via start.spring.io
 
- * Create a Spring `2.1.0.RC1` project on https://start.spring.io/[start.spring.io],
+ * Create a Spring `2.1.0.RC1` project on https://start.spring.io/#!language=kotlin[start.spring.io]
  * Add the `org.springframework.fu:spring-fu-kofu:0.0.3.BUILD-SNAPSHOT` dependency
+ * Add the _Reactive Web_ `org.springframework.boot:spring-boot-starter-webflux` dependency 
  * Use Kotlin `1.3.0-rc-190` available from `http://dl.bintray.com/kotlin/kotlin-eap` Maven repository.
  * Modify the generated `*Application.kt` file as following:
 
@@ -118,7 +119,12 @@ package com.example
 import org.springframework.fu.kofu.application
 
 val app = application {
-	// ...
+	// your application here
+	server {
+		router {
+			GET("/") { ok().syncBody("Hello world!") }
+		}	
+	}
 }
 
 fun main() = app.run()
