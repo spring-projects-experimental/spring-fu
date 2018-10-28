@@ -46,5 +46,9 @@
     "methods": [
       { "name": "<init>", "parameterTypes": [] }
     ]
+  },
+  {
+    "name": "com.sample.Foo",
+    "allPublicMethods": true
   }
 ]
