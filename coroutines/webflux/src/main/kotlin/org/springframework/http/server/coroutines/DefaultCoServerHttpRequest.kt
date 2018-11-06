@@ -24,7 +24,7 @@ import org.springframework.http.HttpMethod
 import org.springframework.http.server.reactive.ServerHttpRequest
 import java.net.URI
 
-class DefaultCoroutinesServerHttpRequest(val request: ServerHttpRequest) : CoroutinesServerHttpRequest {
+class DefaultCoServerHttpRequest(val request: ServerHttpRequest) : CoServerHttpRequest {
 
 	override val body: ReceiveChannel<DataBuffer>
 		get() = request.body.openSubscription()
@@ -35,8 +35,8 @@ class DefaultCoroutinesServerHttpRequest(val request: ServerHttpRequest) : Corou
 
 	override fun getURI(): URI = request.uri
 
-	override fun mutate(): CoroutinesServerHttpRequest.Builder =
-			DefaultCoroutinesServerHttpRequestBuilder(request.mutate())
+	override fun mutate(): CoServerHttpRequest.Builder =
+			DefaultCoServerHttpRequestBuilder(request.mutate())
 
 	override fun extractServerHttpRequest(): ServerHttpRequest = request
 

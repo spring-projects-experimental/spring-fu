@@ -20,13 +20,12 @@ package org.springframework.fu.kofu.samples
 
 import org.springframework.boot.logging.LogLevel
 import org.springframework.context.event.ContextStartedEvent
-import org.springframework.context.support.beans
 import org.springframework.fu.kofu.application
 import org.springframework.fu.kofu.configuration
 import org.springframework.fu.kofu.mongo.mongodb
 import org.springframework.fu.kofu.ref
 import org.springframework.fu.kofu.web.*
-import org.springframework.web.function.server.CoroutinesServerRequest
+import org.springframework.web.function.server.CoServerRequest
 import org.springframework.web.function.server.coHandler
 import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse
@@ -145,25 +144,25 @@ interface ApiHandler {
 
 class HtmlCoroutinesHandler(private val userRepository: UserRepository,
 				  private val articleRepository: ArticleRepository) {
-	suspend fun blog(request: CoroutinesServerRequest) = coHandler {
+	suspend fun blog(request: CoServerRequest) = coHandler {
 		ok().build()
 	}
-	suspend fun article(request: CoroutinesServerRequest) = coHandler {
+	suspend fun article(request: CoServerRequest) = coHandler {
 		ok().build()
 	}
 }
 
 class ApiCoroutinesHandler {
-	suspend fun list(request: CoroutinesServerRequest) = coHandler {
+	suspend fun list(request: CoServerRequest) = coHandler {
 		ok().build()
 	}
-	suspend fun create(request: CoroutinesServerRequest) = coHandler {
+	suspend fun create(request: CoServerRequest) = coHandler {
 		ok().build()
 	}
-	suspend fun update(request: CoroutinesServerRequest) = coHandler {
+	suspend fun update(request: CoServerRequest) = coHandler {
 		ok().build()
 	}
-	suspend fun delete(request: CoroutinesServerRequest) = coHandler {
+	suspend fun delete(request: CoServerRequest) = coHandler {
 		ok().build()
 	}
 }

@@ -19,17 +19,17 @@ package org.springframework.web.function.server
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.reactive.awaitFirstOrDefault
 import kotlinx.coroutines.reactive.openSubscription
-import org.springframework.http.server.coroutines.CoroutinesServerHttpRequest
-import org.springframework.web.function.CoroutinesBodyExtractor
+import org.springframework.http.server.coroutines.CoServerHttpRequest
+import org.springframework.web.function.CoBodyExtractor
 import org.springframework.web.reactive.function.server.ServerRequest
-import org.springframework.web.server.CoroutinesWebSession
-import org.springframework.web.server.session.asCoroutinesWebSession
+import org.springframework.web.server.CoWebSession
+import org.springframework.web.server.session.asCoroutines
 import java.net.URI
 
-interface CoroutinesServerRequest {
-	fun <T> body(extractor: CoroutinesBodyExtractor<T, CoroutinesServerHttpRequest>): T
+interface CoServerRequest {
+	fun <T> body(extractor: CoBodyExtractor<T, CoServerHttpRequest>): T
 
-	fun <T> body(extractor: CoroutinesBodyExtractor<T, CoroutinesServerHttpRequest>, hints: Map<String, Any>): T
+	fun <T> body(extractor: CoBodyExtractor<T, CoServerHttpRequest>, hints: Map<String, Any>): T
 
 	suspend fun <T> body(elementClass: Class<out T>): T?
 
@@ -39,23 +39,23 @@ interface CoroutinesServerRequest {
 
 	fun pathVariable(name: String): String?
 
-	suspend fun session(): CoroutinesWebSession?
+	suspend fun session(): CoWebSession?
 
 	fun uri(): URI
 
 	fun extractServerRequest(): ServerRequest
 
 	companion object {
-		operator fun invoke(req: ServerRequest) = DefaultCoroutineServerRequest(req)
+		operator fun invoke(req: ServerRequest) = DefaultCoServerRequest(req)
 	}
 }
 
-class DefaultCoroutineServerRequest(private val req: ServerRequest) : CoroutinesServerRequest {
-	override fun <T> body(extractor: CoroutinesBodyExtractor<T, CoroutinesServerHttpRequest>): T =
+class DefaultCoServerRequest(private val req: ServerRequest) : CoServerRequest {
+	override fun <T> body(extractor: CoBodyExtractor<T, CoServerHttpRequest>): T =
 		req.body(extractor.asBodyExtractor())
 
 	override fun <T> body(
-			extractor: CoroutinesBodyExtractor<T, CoroutinesServerHttpRequest>,
+			extractor: CoBodyExtractor<T, CoServerHttpRequest>,
 			hints: Map<String, Any>
 	): T =
 		req.body(extractor.asBodyExtractor(), hints)
@@ -70,14 +70,14 @@ class DefaultCoroutineServerRequest(private val req: ServerRequest) : Coroutines
 
 	override fun pathVariable(name: String): String? = req.pathVariable(name)
 
-	override suspend fun session(): CoroutinesWebSession? =
-		req.session().awaitFirstOrDefault(null)?.asCoroutinesWebSession()
+	override suspend fun session(): CoWebSession? =
+		req.session().awaitFirstOrDefault(null)?.asCoroutines()
 
 	override fun uri(): URI = req.uri()
 
 	override fun extractServerRequest(): ServerRequest = req
 }
 
-suspend inline fun <reified T : Any> CoroutinesServerRequest.body(): T? = body(T::class.java)
+suspend inline fun <reified T : Any> CoServerRequest.body(): T? = body(T::class.java)
 
 

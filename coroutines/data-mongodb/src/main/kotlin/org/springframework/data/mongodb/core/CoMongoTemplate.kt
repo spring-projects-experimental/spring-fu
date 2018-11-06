@@ -26,20 +26,20 @@ import org.springframework.data.geo.GeoResult
 import org.springframework.data.mongodb.core.aggregation.Aggregation
 import org.springframework.data.mongodb.core.aggregation.TypedAggregation
 import org.springframework.data.mongodb.core.convert.MongoConverter
-import org.springframework.data.mongodb.core.index.CoroutinesIndexOperations
-import org.springframework.data.mongodb.core.index.DefaultCoroutinesIndexOperations
+import org.springframework.data.mongodb.core.index.CoIndexOperations
+import org.springframework.data.mongodb.core.index.DefaultCoIndexOperations
 import org.springframework.data.mongodb.core.query.NearQuery
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.data.mongodb.core.query.Update
 
-open class CoroutinesMongoTemplate(
+open class CoMongoTemplate(
 	override val reactiveMongoOperations: ReactiveMongoOperations
-) : CoroutinesMongoOperations {
-	override fun indexOps(collectionName: String): CoroutinesIndexOperations =
-			DefaultCoroutinesIndexOperations(reactiveMongoOperations.indexOps(collectionName))
+) : CoMongoOperations {
+	override fun indexOps(collectionName: String): CoIndexOperations =
+			DefaultCoIndexOperations(reactiveMongoOperations.indexOps(collectionName))
 
-	override fun indexOps(entityClass: Class<*>): CoroutinesIndexOperations =
-			DefaultCoroutinesIndexOperations(reactiveMongoOperations.indexOps(entityClass))
+	override fun indexOps(entityClass: Class<*>): CoIndexOperations =
+			DefaultCoIndexOperations(reactiveMongoOperations.indexOps(entityClass))
 
 	override suspend fun executeCommand(jsonCommand: String): Document? =
 		reactiveMongoOperations.executeCommand(jsonCommand).awaitFirstOrDefault(null)
@@ -50,13 +50,13 @@ open class CoroutinesMongoTemplate(
 	override suspend fun executeCommand(command: Document, readPreference: ReadPreference): Document? =
 		reactiveMongoOperations.executeCommand(command, readPreference).awaitFirstOrDefault(null)
 
-	override suspend fun <T> execute(action: CoroutinesDatabaseCallback<T>): List<T> =
+	override suspend fun <T> execute(action: CoDatabaseCallback<T>): List<T> =
 		reactiveMongoOperations.execute(action.reactiveDatabaseCallback).collectList().awaitSingle()
 
-	override suspend fun <T> execute(entityClass: Class<*>, action: CoroutinesCollectionCallback<T>): List<T> =
+	override suspend fun <T> execute(entityClass: Class<*>, action: CoCollectionCallback<T>): List<T> =
 		reactiveMongoOperations.execute(entityClass, action.reactiveCollectionCallback).collectList().awaitSingle()
 
-	override suspend fun <T> execute(collectionName: String, action: CoroutinesCollectionCallback<T>): List<T> =
+	override suspend fun <T> execute(collectionName: String, action: CoCollectionCallback<T>): List<T> =
 		reactiveMongoOperations.execute(collectionName, action.reactiveCollectionCallback).collectList().awaitSingle()
 
 	override suspend fun <T> createCollection(entityClass: Class<T>): CoroutinesMongoCollection<Document> =

@@ -17,10 +17,10 @@
 package org.springframework.web.server.session
 
 import kotlinx.coroutines.reactive.awaitFirstOrDefault
-import org.springframework.web.server.CoroutinesWebSession
+import org.springframework.web.server.CoWebSession
 import org.springframework.web.server.WebSession
 
-class DefaultCoroutinesWebSession(val session: WebSession) : CoroutinesWebSession {
+class DefaultCoWebSession(val session: WebSession) : CoWebSession {
 	override val attributes: MutableMap<String, Any?>
 		get() = session.attributes
 
@@ -31,4 +31,4 @@ class DefaultCoroutinesWebSession(val session: WebSession) : CoroutinesWebSessio
 	}
 }
 
-internal fun WebSession.asCoroutinesWebSession() = DefaultCoroutinesWebSession(this)
+internal fun WebSession.asCoroutines() = DefaultCoWebSession(this)

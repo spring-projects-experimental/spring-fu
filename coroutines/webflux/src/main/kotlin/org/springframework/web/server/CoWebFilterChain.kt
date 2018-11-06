@@ -16,29 +16,18 @@
 
 package org.springframework.web.server
 
-import org.springframework.http.server.CoroutinesServerHttpResponse
-import org.springframework.http.server.coroutines.CoroutinesServerHttpRequest
+import kotlinx.coroutines.reactive.awaitFirstOrDefault
 
-interface CoroutinesServerWebExchange {
-
-	val request: CoroutinesServerHttpRequest
-
-	val response: CoroutinesServerHttpResponse
-
-	suspend fun getSession(): CoroutinesWebSession?
-
-	fun mutate(): Builder
-
-	fun extractServerWebExchange(): ServerWebExchange
+interface CoWebFilterChain {
+	suspend fun filter(exchange: CoServerWebExchange): Unit
 
 	companion object {
-		operator fun invoke(exchange: ServerWebExchange): CoroutinesServerWebExchange =
-			DefaultCoroutinesServerWebExchange(exchange)
+		operator fun invoke(chain: WebFilterChain): CoWebFilterChain = DefaultCoWebFilterChain(chain)
 	}
+}
 
-	interface Builder {
-		fun request(request: CoroutinesServerHttpRequest): Builder
-
-		fun build(): CoroutinesServerWebExchange
+class DefaultCoWebFilterChain(val chain: WebFilterChain) : CoWebFilterChain {
+	override suspend fun filter(exchange: CoServerWebExchange) {
+		chain.filter(exchange.extractServerWebExchange()).awaitFirstOrDefault(null)
 	}
 }

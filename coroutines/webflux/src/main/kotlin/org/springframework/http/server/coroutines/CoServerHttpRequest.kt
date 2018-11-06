@@ -16,19 +16,19 @@
 
 package org.springframework.http.server.coroutines
 
-import org.springframework.http.CoroutinesHttpInputMessage
+import org.springframework.http.CoHttpInputMessage
 import org.springframework.http.HttpRequest
 import org.springframework.http.server.reactive.ServerHttpRequest
 
-interface CoroutinesServerHttpRequest : CoroutinesHttpInputMessage, HttpRequest {
+interface CoServerHttpRequest : CoHttpInputMessage, HttpRequest {
 
 	fun mutate(): Builder
 
 	fun extractServerHttpRequest(): ServerHttpRequest
 
 	companion object {
-		operator fun invoke(request: ServerHttpRequest): CoroutinesServerHttpRequest =
-				DefaultCoroutinesServerHttpRequest(request)
+		operator fun invoke(request: ServerHttpRequest): CoServerHttpRequest =
+				DefaultCoServerHttpRequest(request)
 	}
 
 	interface Builder {
@@ -36,20 +36,20 @@ interface CoroutinesServerHttpRequest : CoroutinesHttpInputMessage, HttpRequest 
 
 		fun path(path: String): Builder
 
-		fun build(): CoroutinesServerHttpRequest
+		fun build(): CoServerHttpRequest
 	}
 }
 
-class DefaultCoroutinesServerHttpRequestBuilder(val builder: ServerHttpRequest.Builder) :
-		CoroutinesServerHttpRequest.Builder {
+class DefaultCoServerHttpRequestBuilder(val builder: ServerHttpRequest.Builder) :
+		CoServerHttpRequest.Builder {
 
-	override fun header(key: String, value: String): CoroutinesServerHttpRequest.Builder = apply {
+	override fun header(key: String, value: String): CoServerHttpRequest.Builder = apply {
 		builder.header(key, value)
 	}
 
-	override fun path(path: String): CoroutinesServerHttpRequest.Builder = apply {
+	override fun path(path: String): CoServerHttpRequest.Builder = apply {
 		builder.path(path)
 	}
 
-	override fun build(): CoroutinesServerHttpRequest = CoroutinesServerHttpRequest(builder.build())
+	override fun build(): CoServerHttpRequest = CoServerHttpRequest(builder.build())
 }

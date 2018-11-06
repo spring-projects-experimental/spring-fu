@@ -20,13 +20,13 @@ import com.mongodb.reactivestreams.client.MongoDatabase
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.reactive.openSubscription
 
-interface CoroutinesDatabaseCallback<T> {
+interface CoDatabaseCallback<T> {
     val reactiveDatabaseCallback: ReactiveDatabaseCallback<T>
 
     fun doInDB(db: MongoDatabase): ReceiveChannel<T>
 
     companion object {
-        operator fun <T> invoke(callback: ReactiveDatabaseCallback<T>): CoroutinesDatabaseCallback<T> = object: CoroutinesDatabaseCallback<T> {
+        operator fun <T> invoke(callback: ReactiveDatabaseCallback<T>): CoDatabaseCallback<T> = object: CoDatabaseCallback<T> {
             override val reactiveDatabaseCallback: ReactiveDatabaseCallback<T>
                 get() = callback
 

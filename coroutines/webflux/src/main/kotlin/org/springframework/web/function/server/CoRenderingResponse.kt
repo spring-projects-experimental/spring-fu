@@ -18,17 +18,17 @@ package org.springframework.web.function.server
 
 import org.springframework.web.reactive.function.server.RenderingResponse
 
-interface CoroutinesRenderingResponse : CoroutineServerResponse {
+interface CoRenderingResponse : CoServerResponse {
 	companion object {
-		fun from(other: CoroutinesRenderingResponse): Builder =
-			DefaultCoroutineRenderingResponseBuilder(RenderingResponse.from(other.extractServerResponse() as RenderingResponse))
+		fun from(other: CoRenderingResponse): Builder =
+			DefaultCoRenderingResponseBuilder(RenderingResponse.from(other.extractServerResponse() as RenderingResponse))
 
-		operator fun invoke(resp: RenderingResponse): CoroutinesRenderingResponse =
-			DefaultCoroutineRenderingResponse(resp)
+		operator fun invoke(resp: RenderingResponse): CoRenderingResponse =
+			DefaultCoRenderingResponse(resp)
 	}
 
 	interface Builder {
-		suspend fun build(): CoroutinesRenderingResponse
+		suspend fun build(): CoRenderingResponse
 
 		fun modelAttributes(attributes: Map<String, *>): Builder
 	}

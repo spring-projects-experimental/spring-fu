@@ -18,10 +18,10 @@ package org.springframework.web.function.client
 
 import org.springframework.web.reactive.function.client.ClientResponse
 
-interface CoroutinesClientResponse {
+interface CoClientResponse {
 //    fun <T> body(extractor: BodyExtractor<T, in ClientHttpResponse>): T
 }
 
-internal class DefaultCoroutinesClientResponse(
+internal class DefaultCoClientResponse(
 	private val clientResponse: ClientResponse
-) : CoroutinesClientResponse
+) : CoClientResponse

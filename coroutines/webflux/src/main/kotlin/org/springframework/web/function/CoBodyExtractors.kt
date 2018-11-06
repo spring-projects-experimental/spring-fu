@@ -19,9 +19,9 @@ package org.springframework.web.function
 import org.springframework.core.ResolvableType.forClass
 import org.springframework.core.ResolvableType.forClassWithGenerics
 import org.springframework.http.MediaType
-import org.springframework.http.codec.CoroutinesHttpMessageReader
+import org.springframework.http.codec.CoHttpMessageReader
 import org.springframework.http.codec.multipart.Part
-import org.springframework.http.server.coroutines.CoroutinesServerHttpRequest
+import org.springframework.http.server.coroutines.CoServerHttpRequest
 import org.springframework.util.MultiValueMap
 
 private val FORM_MAP_TYPE = forClassWithGenerics(MultiValueMap::class.java, String::class.java, String::class.java)
@@ -33,11 +33,11 @@ private val MULTIPART_MAP_TYPE = forClassWithGenerics(
 private val PART_TYPE = forClass(Part::class.java)
 
 
-fun toFormData(): CoroutinesBodyExtractor<MultiValueMap<String, String>?, CoroutinesServerHttpRequest> =
-	object : CoroutinesBodyExtractor<MultiValueMap<String, String>?, CoroutinesServerHttpRequest> {
+fun toFormData(): CoBodyExtractor<MultiValueMap<String, String>?, CoServerHttpRequest> =
+	object : CoBodyExtractor<MultiValueMap<String, String>?, CoServerHttpRequest> {
 		override suspend fun extract(
-				inputMessage: CoroutinesServerHttpRequest,
-				context: CoroutinesBodyExtractor.Context
+				inputMessage: CoServerHttpRequest,
+				context: CoBodyExtractor.Context
 		): MultiValueMap<String, String>? {
 			val messageReader = messageReader<MultiValueMap<String, String>>(
 				FORM_MAP_TYPE,
@@ -62,12 +62,12 @@ fun toFormData(): CoroutinesBodyExtractor<MultiValueMap<String, String>?, Corout
 @Suppress("UNCHECKED_CAST")
 private fun <T> messageReader(
 	elementType: org.springframework.core.ResolvableType,
-	mediaType: MediaType, context: CoroutinesBodyExtractor.Context
-): CoroutinesHttpMessageReader<T> =
+	mediaType: MediaType, context: CoBodyExtractor.Context
+): CoHttpMessageReader<T> =
 	context.messageReaders().invoke()
 		.filter { messageReader -> messageReader.canRead(elementType, mediaType) }
 		.firstOrNull()
-		?.let { it as CoroutinesHttpMessageReader<T> }
+		?.let { it as CoHttpMessageReader<T> }
 			?: throw
 			IllegalStateException(
 				"""Could not find HttpMessageReader that supports "$mediaType" and "$elementType""""

@@ -16,18 +16,11 @@
 
 package org.springframework.web.server
 
-import kotlinx.coroutines.reactive.awaitFirstOrDefault
+interface CoWebSession {
 
-interface CoroutinesWebFilterChain {
-	suspend fun filter(exchange: CoroutinesServerWebExchange): Unit
+	val attributes: MutableMap<String, Any?>
 
-	companion object {
-		operator fun invoke(chain: WebFilterChain): CoroutinesWebFilterChain = DefaultCoroutinesWebFilterChain(chain)
-	}
-}
+	fun <T> getAttribute(name: String): T?
 
-class DefaultCoroutinesWebFilterChain(val chain: WebFilterChain) : CoroutinesWebFilterChain {
-	override suspend fun filter(exchange: CoroutinesServerWebExchange) {
-		chain.filter(exchange.extractServerWebExchange()).awaitFirstOrDefault(null)
-	}
+	suspend fun save()
 }

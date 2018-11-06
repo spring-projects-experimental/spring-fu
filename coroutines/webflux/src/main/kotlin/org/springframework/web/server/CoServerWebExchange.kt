@@ -16,17 +16,29 @@
 
 package org.springframework.web.server
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.reactor.mono
-import reactor.core.publisher.Mono
+import org.springframework.http.server.CoServerHttpResponse
+import org.springframework.http.server.coroutines.CoServerHttpRequest
 
-interface CoroutinesWebFilter : WebFilter {
+interface CoServerWebExchange {
 
-	@Suppress("UNCHECKED_CAST")
-	override fun filter(exchange: ServerWebExchange, chain: WebFilterChain): Mono<Void> = GlobalScope.mono(Dispatchers.Unconfined) {
-		filter(CoroutinesServerWebExchange(exchange), CoroutinesWebFilterChain(chain))
-	} as Mono<Void>
+	val request: CoServerHttpRequest
 
-	suspend fun filter(exchange: CoroutinesServerWebExchange, chain: CoroutinesWebFilterChain)
+	val response: CoServerHttpResponse
+
+	suspend fun getSession(): CoWebSession?
+
+	fun mutate(): Builder
+
+	fun extractServerWebExchange(): ServerWebExchange
+
+	companion object {
+		operator fun invoke(exchange: ServerWebExchange): CoServerWebExchange =
+			DefaultCoServerWebExchange(exchange)
+	}
+
+	interface Builder {
+		fun request(request: CoServerHttpRequest): Builder
+
+		fun build(): CoServerWebExchange
+	}
 }

@@ -28,23 +28,23 @@ import org.springframework.data.mongodb.core.aggregation.AggregationOptions
 import org.springframework.data.mongodb.core.aggregation.TypedAggregation
 import org.springframework.data.mongodb.core.convert.MappingMongoConverter
 import org.springframework.data.mongodb.core.convert.MongoConverter
-import org.springframework.data.mongodb.core.index.CoroutinesIndexOperations
+import org.springframework.data.mongodb.core.index.CoIndexOperations
 import org.springframework.data.mongodb.core.query.*
 
-interface CoroutinesMongoOperations {
+interface CoMongoOperations {
     /**
      * Returns the coroutines operations that can be performed on indexes
      *
      * @return index operations on the named collection
      */
-    fun indexOps(collectionName: String): CoroutinesIndexOperations
+    fun indexOps(collectionName: String): CoIndexOperations
 
     /**
      * Returns the coroutines operations that can be performed on indexes
      *
      * @return index operations on the named collection associated with the given entity class
      */
-    fun indexOps(entityClass: Class<*>): CoroutinesIndexOperations
+    fun indexOps(entityClass: Class<*>): CoIndexOperations
 
     /**
      * Execute the a MongoDB command expressed as a JSON string. This will call the method JSON.parse that is part of the
@@ -76,7 +76,7 @@ interface CoroutinesMongoOperations {
     suspend fun executeCommand(command: Document, readPreference: ReadPreference): Document?
 
     /**
-     * Executes a [CoroutinesDatabaseCallback] translating any exceptions as necessary.
+     * Executes a [CoDatabaseCallback] translating any exceptions as necessary.
      *
      *
      * Allows for returning a result object, that is a domain object or a collection of domain objects.
@@ -85,10 +85,10 @@ interface CoroutinesMongoOperations {
      * @param action callback object that specifies the MongoDB actions to perform on the passed in DB instance.
      * @return a result object returned by the action
     </T> */
-    suspend fun <T> execute(action: CoroutinesDatabaseCallback<T>): List<T>
+    suspend fun <T> execute(action: CoDatabaseCallback<T>): List<T>
 
     /**
-     * Executes the given [CoroutinesCollectionCallback] on the entity collection of the specified class.
+     * Executes the given [CoCollectionCallback] on the entity collection of the specified class.
      *
      *
      * Allows for returning a result object, that is a domain object or a collection of domain objects.
@@ -98,10 +98,10 @@ interface CoroutinesMongoOperations {
      * @param action callback object that specifies the MongoDB action
      * @return a result object returned by the action or <tt>null</tt>
     </T> */
-    suspend fun <T> execute(entityClass: Class<*>, action: CoroutinesCollectionCallback<T>): List<T>
+    suspend fun <T> execute(entityClass: Class<*>, action: CoCollectionCallback<T>): List<T>
 
     /**
-     * Executes the given [CoroutinesCollectionCallback] on the collection of the given name.
+     * Executes the given [CoCollectionCallback] on the collection of the given name.
      *
      *
      * Allows for returning a result object, that is a domain object or a collection of domain objects.
@@ -111,7 +111,7 @@ interface CoroutinesMongoOperations {
      * @param action callback object that specifies the MongoDB action the callback action.
      * @return a result object returned by the action or <tt>null</tt>
     </T> */
-    suspend fun <T> execute(collectionName: String, action: CoroutinesCollectionCallback<T>): List<T>
+    suspend fun <T> execute(collectionName: String, action: CoCollectionCallback<T>): List<T>
 
     /**
      * Create an uncapped collection with a name based on the provided entity class.

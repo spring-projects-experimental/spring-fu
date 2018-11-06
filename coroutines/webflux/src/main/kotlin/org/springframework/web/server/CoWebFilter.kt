@@ -16,11 +16,17 @@
 
 package org.springframework.web.server
 
-interface CoroutinesWebSession {
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.reactor.mono
+import reactor.core.publisher.Mono
 
-	val attributes: MutableMap<String, Any?>
+interface CoWebFilter : WebFilter {
 
-	fun <T> getAttribute(name: String): T?
+	@Suppress("UNCHECKED_CAST")
+	override fun filter(exchange: ServerWebExchange, chain: WebFilterChain): Mono<Void> = GlobalScope.mono(Dispatchers.Unconfined) {
+		filter(CoServerWebExchange(exchange), CoWebFilterChain(chain))
+	} as Mono<Void>
 
-	suspend fun save()
+	suspend fun filter(exchange: CoServerWebExchange, chain: CoWebFilterChain)
 }

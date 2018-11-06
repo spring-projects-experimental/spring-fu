@@ -26,7 +26,7 @@ import java.net.URI
 import java.nio.charset.Charset
 import java.time.ZonedDateTime
 
-interface CoroutinesWebClient {
+interface CoWebClient {
 	fun get(): RequestHeadersUriSpec<*>
 
 	fun head(): RequestHeadersUriSpec<*>
@@ -80,109 +80,109 @@ interface CoroutinesWebClient {
 
 		suspend fun retrieve(): CoroutineResponseSpec
 
-		suspend fun exchange(): CoroutinesClientResponse?
+		suspend fun exchange(): CoClientResponse?
 	}
 
 	interface CoroutineResponseSpec {
 		suspend fun <T> body(clazz: Class<T>): T?
 	}
 
-	fun WebClient.toCoroutines() = DefaultCoroutineWebClient(this)
+	fun WebClient.asCoroutines() = DefaultCoWebClient(this)
 }
 
-suspend inline fun <reified T : Any> CoroutinesWebClient.CoroutineResponseSpec.body(): T? = body(T::class.java)
+suspend inline fun <reified T : Any> CoWebClient.CoroutineResponseSpec.body(): T? = body(T::class.java)
 
-open class DefaultCoroutineWebClient(private val client: WebClient) : CoroutinesWebClient {
+open class DefaultCoWebClient(private val client: WebClient) : CoWebClient {
 
-	override fun get(): CoroutinesWebClient.RequestHeadersUriSpec<*> = request { client.get() }
+	override fun get(): CoWebClient.RequestHeadersUriSpec<*> = request { client.get() }
 
-	override fun head(): CoroutinesWebClient.RequestHeadersUriSpec<*> = request { client.head() }
+	override fun head(): CoWebClient.RequestHeadersUriSpec<*> = request { client.head() }
 
-	override fun post(): CoroutinesWebClient.RequestBodyUriSpec = request { client.post() }
+	override fun post(): CoWebClient.RequestBodyUriSpec = request { client.post() }
 
-	override fun put(): CoroutinesWebClient.RequestBodyUriSpec = request { client.put() }
+	override fun put(): CoWebClient.RequestBodyUriSpec = request { client.put() }
 
-	override fun patch(): CoroutinesWebClient.RequestBodyUriSpec = request { client.patch() }
+	override fun patch(): CoWebClient.RequestBodyUriSpec = request { client.patch() }
 
-	override fun delete(): CoroutinesWebClient.RequestHeadersUriSpec<*> = request { client.delete() }
+	override fun delete(): CoWebClient.RequestHeadersUriSpec<*> = request { client.delete() }
 
-	override fun options(): CoroutinesWebClient.RequestHeadersUriSpec<*> = request { client.options() }
+	override fun options(): CoWebClient.RequestHeadersUriSpec<*> = request { client.options() }
 
-	override fun method(method: HttpMethod): CoroutinesWebClient.RequestBodyUriSpec = request { client.method(method) }
+	override fun method(method: HttpMethod): CoWebClient.RequestBodyUriSpec = request { client.method(method) }
 
-	private fun request(f: () -> WebClient.RequestHeadersUriSpec<*>): CoroutinesWebClient.RequestBodyUriSpec =
+	private fun request(f: () -> WebClient.RequestHeadersUriSpec<*>): CoWebClient.RequestBodyUriSpec =
 		DefaultRequestBodyUriSpec(f.invoke() as WebClient.RequestBodyUriSpec)
 }
 
-private fun WebClient.ResponseSpec.asCoroutineResponseSpec(): CoroutinesWebClient.CoroutineResponseSpec =
-		DefaultCoroutineResponseSpec(this)
+private fun WebClient.ResponseSpec.asCoroutines(): CoWebClient.CoroutineResponseSpec =
+		DefaultCoResponseSpec(this)
 
-open class DefaultCoroutineResponseSpec(
+open class DefaultCoResponseSpec(
 	private val spec: WebClient.ResponseSpec
-): CoroutinesWebClient.CoroutineResponseSpec {
+): CoWebClient.CoroutineResponseSpec {
 	override suspend fun <T> body(clazz: Class<T>): T? =
 			spec.bodyToMono(clazz).awaitFirstOrDefault(null)
 }
 
 open class DefaultRequestBodyUriSpec(
 	private val spec: WebClient.RequestBodyUriSpec
-): CoroutinesWebClient.RequestBodyUriSpec {
-	override fun uri(uri: String, vararg uriVariables: Any): CoroutinesWebClient.RequestBodySpec = apply {
+): CoWebClient.RequestBodyUriSpec {
+	override fun uri(uri: String, vararg uriVariables: Any): CoWebClient.RequestBodySpec = apply {
 		spec.uri(uri, *uriVariables)
 	}
 
-	override fun uri(uri: String, uriVariables: Map<String, *>): CoroutinesWebClient.RequestBodySpec = apply {
+	override fun uri(uri: String, uriVariables: Map<String, *>): CoWebClient.RequestBodySpec = apply {
 		spec.uri(uri, uriVariables)
 	}
 
-	override fun uri(uri: URI): CoroutinesWebClient.RequestBodySpec = apply {
+	override fun uri(uri: URI): CoWebClient.RequestBodySpec = apply {
 		spec.uri(uri)
 	}
 
-	override fun accept(vararg acceptableMediaTypes: MediaType): CoroutinesWebClient.RequestBodySpec = apply {
+	override fun accept(vararg acceptableMediaTypes: MediaType): CoWebClient.RequestBodySpec = apply {
 		spec.accept(*acceptableMediaTypes)
 	}
 
-	override fun acceptCharset(vararg acceptableCharsets: Charset): CoroutinesWebClient.RequestBodySpec = apply {
+	override fun acceptCharset(vararg acceptableCharsets: Charset): CoWebClient.RequestBodySpec = apply {
 		spec.acceptCharset(*acceptableCharsets)
 	}
 
-	override fun cookie(name: String, value: String): CoroutinesWebClient.RequestBodySpec = apply {
+	override fun cookie(name: String, value: String): CoWebClient.RequestBodySpec = apply {
 		spec.cookie(name, value)
 	}
 
-	override fun cookies(cookiesConsumer: (MultiValueMap<String, String>) -> Unit): CoroutinesWebClient.RequestBodySpec = apply {
+	override fun cookies(cookiesConsumer: (MultiValueMap<String, String>) -> Unit): CoWebClient.RequestBodySpec = apply {
 		spec.cookies(cookiesConsumer)
 	}
 
-	override fun ifModifiedSince(ifModifiedSince: ZonedDateTime): CoroutinesWebClient.RequestBodySpec = apply {
+	override fun ifModifiedSince(ifModifiedSince: ZonedDateTime): CoWebClient.RequestBodySpec = apply {
 		spec.ifModifiedSince(ifModifiedSince)
 	}
 
-	override fun ifNoneMatch(vararg ifNoneMatches: String): CoroutinesWebClient.RequestBodySpec = apply {
+	override fun ifNoneMatch(vararg ifNoneMatches: String): CoWebClient.RequestBodySpec = apply {
 		spec.ifNoneMatch(*ifNoneMatches)
 	}
 
-	override fun header(headerName: String, vararg headerValues: String): CoroutinesWebClient.RequestBodySpec = apply {
+	override fun header(headerName: String, vararg headerValues: String): CoWebClient.RequestBodySpec = apply {
 		spec.header(headerName, *headerValues)
 	}
 
-	override fun headers(headersConsumer: (HttpHeaders) -> Unit): CoroutinesWebClient.RequestBodySpec = apply {
+	override fun headers(headersConsumer: (HttpHeaders) -> Unit): CoWebClient.RequestBodySpec = apply {
 		spec.headers(headersConsumer)
 	}
 
-	override fun attribute(name: String, value: Any): CoroutinesWebClient.RequestBodySpec = apply {
+	override fun attribute(name: String, value: Any): CoWebClient.RequestBodySpec = apply {
 		spec.attribute(name, value)
 	}
 
-	override fun attributes(attributesConsumer: (Map<String, Any>) -> Unit): CoroutinesWebClient.RequestBodySpec = apply {
+	override fun attributes(attributesConsumer: (Map<String, Any>) -> Unit): CoWebClient.RequestBodySpec = apply {
 		spec.attributes(attributesConsumer)
 	}
 
-	override suspend fun exchange(): CoroutinesClientResponse? = spec.exchange().awaitFirstOrDefault(null)?.let {
-		DefaultCoroutinesClientResponse(it)
+	override suspend fun exchange(): CoClientResponse? = spec.exchange().awaitFirstOrDefault(null)?.let {
+		DefaultCoClientResponse(it)
 	}
 
-	override suspend fun retrieve(): CoroutinesWebClient.CoroutineResponseSpec =
-		spec.retrieve().asCoroutineResponseSpec()
+	override suspend fun retrieve(): CoWebClient.CoroutineResponseSpec =
+		spec.retrieve().asCoroutines()
 }

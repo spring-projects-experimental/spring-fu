@@ -18,26 +18,26 @@ package org.springframework.http.codec
 
 import kotlinx.coroutines.channels.ReceiveChannel
 import org.springframework.core.ResolvableType
-import org.springframework.http.CoroutinesHttpInputMessage
+import org.springframework.http.CoHttpInputMessage
 import org.springframework.http.MediaType
-import org.springframework.http.server.CoroutinesServerHttpResponse
-import org.springframework.http.server.coroutines.CoroutinesServerHttpRequest
+import org.springframework.http.server.CoServerHttpResponse
+import org.springframework.http.server.coroutines.CoServerHttpRequest
 
-interface CoroutinesHttpMessageReader<out T> {
+interface CoHttpMessageReader<out T> {
 
 	fun canRead(elementType: ResolvableType, mediaType: MediaType): Boolean
 
 	fun read(
 			elementType: ResolvableType,
-			message: CoroutinesHttpInputMessage,
+			message: CoHttpInputMessage,
 			hints: Map<String, Any>
 	): ReceiveChannel<T>
 
-	suspend fun readSingle(elementType: ResolvableType, message: CoroutinesHttpInputMessage, hints: Map<String, Any>): T?
+	suspend fun readSingle(elementType: ResolvableType, message: CoHttpInputMessage, hints: Map<String, Any>): T?
 
 	suspend fun readSingle(
-			actualType: ResolvableType, elementType: ResolvableType, request: CoroutinesServerHttpRequest,
-			response: CoroutinesServerHttpResponse?, hints: Map<String, Any>
+			actualType: ResolvableType, elementType: ResolvableType, request: CoServerHttpRequest,
+			response: CoServerHttpResponse?, hints: Map<String, Any>
 	): T? =
 		readSingle(elementType, request, hints)
 }

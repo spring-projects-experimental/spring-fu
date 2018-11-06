@@ -16,22 +16,22 @@
 
 package org.springframework.web.function
 
-import org.springframework.http.CoroutinesHttpInputMessage
+import org.springframework.http.CoHttpInputMessage
 import org.springframework.http.ReactiveHttpInputMessage
-import org.springframework.http.codec.CoroutinesHttpMessageReader
-import org.springframework.http.server.CoroutinesServerHttpResponse
+import org.springframework.http.codec.CoHttpMessageReader
+import org.springframework.http.server.CoServerHttpResponse
 import org.springframework.web.reactive.function.BodyExtractor
 
-interface CoroutinesBodyExtractor<T, in M : CoroutinesHttpInputMessage> {
+interface CoBodyExtractor<T, in M : CoHttpInputMessage> {
 
 	suspend fun extract(inputMessage: M, context: Context): T
 
 	fun <N : ReactiveHttpInputMessage> asBodyExtractor(): BodyExtractor<T, N> = TODO()
 
 	interface Context {
-		fun messageReaders(): (() -> Sequence<CoroutinesHttpMessageReader<*>>)
+		fun messageReaders(): (() -> Sequence<CoHttpMessageReader<*>>)
 
-		fun serverResponse(): CoroutinesServerHttpResponse?
+		fun serverResponse(): CoServerHttpResponse?
 
 		fun hints(): Map<String, Any>
 	}

@@ -16,8 +16,8 @@
 
 package org.springframework.data.mongodb.core.index
 
-open class DefaultCoroutinesIndexOperations(
+open class DefaultCoIndexOperations(
 	private val reactiveIndexOperations: ReactiveIndexOperations
-) : CoroutinesIndexOperations {
+) : CoIndexOperations {
 	override fun blocking(): IndexOperations = IndexOperationsAdapter.blocking(reactiveIndexOperations)
 }

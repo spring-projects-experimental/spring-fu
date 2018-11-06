@@ -16,22 +16,22 @@
 
 package org.springframework.http.server
 
-import org.springframework.http.CoroutinesHttpOutputMessage
+import org.springframework.http.CoHttpOutputMessage
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.server.reactive.ServerHttpResponse
 
-interface CoroutinesServerHttpResponse : CoroutinesHttpOutputMessage {
+interface CoServerHttpResponse : CoHttpOutputMessage {
 
 	var statusCode: HttpStatus
 
 	companion object {
-		operator fun invoke(response: ServerHttpResponse): CoroutinesServerHttpResponse =
-				DefaultCoroutinesServerHttpResponse(response)
+		operator fun invoke(response: ServerHttpResponse): CoServerHttpResponse =
+				DefaultCoServerHttpResponse(response)
 	}
 }
 
-open class DefaultCoroutinesServerHttpResponse(val response: ServerHttpResponse) : CoroutinesServerHttpResponse {
+open class DefaultCoServerHttpResponse(val response: ServerHttpResponse) : CoServerHttpResponse {
 	override var statusCode: HttpStatus
 		get() = response.statusCode!!
 		set(value) {

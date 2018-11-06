@@ -16,9 +16,4 @@
 
 package org.springframework.http
 
-import kotlinx.coroutines.channels.ReceiveChannel
-import org.springframework.core.io.buffer.DataBuffer
-
-interface CoroutinesHttpInputMessage : HttpMessage {
-	val body: ReceiveChannel<DataBuffer>
-}
+interface CoHttpOutputMessage : HttpMessage
