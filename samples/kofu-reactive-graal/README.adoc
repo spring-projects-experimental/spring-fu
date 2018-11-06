@@ -1,8 +1,8 @@
-= Kofu Coroutines Graal webapp sample
+= Kofu Reactive Graal webapp sample
 
 This is a minimal reactive Spring Boot web application with Kofu configuration that compiles as a
 https://github.com/oracle/graal/tree/master/substratevm[Graal native image].
-You can build it by running `build.sh` with GraalVM 1.0 RC7+.
+You can build it by running `build.sh` with GraalVM 1.0 RC7.
 
 After extracting the `.zip`, rename the default `kofu-reactive-graal` directory name to a customized one.
 
