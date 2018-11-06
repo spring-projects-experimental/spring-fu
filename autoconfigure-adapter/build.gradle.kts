@@ -13,8 +13,15 @@ dependencies {
 	compileOnly("org.mongodb:mongodb-driver-reactivestreams")
 	compileOnly("com.fasterxml.jackson.core:jackson-databind")
 	compileOnly("com.samskivert:jmustache")
+
 	compileOnly(project(":coroutines:data-mongodb"))
+	compileOnly(project(":coroutines:data-r2dbc"))
 	compileOnly(project(":coroutines:webflux"))
+}
+
+repositories {
+	maven("https://repo.spring.io/snapshot")
+	maven("https://repo.spring.io/milestone")
 }
 
 publishing {

@@ -6,5 +6,6 @@ include(
 		"jafu",
 		"coroutines",
 		"coroutines:data-mongodb",
+		"coroutines:data-r2dbc",
 		"coroutines:webflux"
 )
