@@ -11,15 +11,12 @@ val router = router {
 		ok().syncBody("Hello GraalVM native images!")
 	}
 	GET("/api") {
-		ok().syncBody(Foo("Hello GraalVM native images!").toMap())
+		ok().syncBody(Foo("Hello GraalVM native images!"))
 	}
 	resources("/**", ClassPathResource("static/"))
 }
 
-data class Foo(val message: String) {
-
-	fun toMap() = mapOf("message" to message)
-}
+data class Foo(val message: String)
 
 val app = application {
 	server {
