@@ -4,9 +4,10 @@ import org.springframework.fu.kofu.application
 import org.springframework.fu.kofu.web.jackson
 import org.springframework.fu.kofu.web.server
 import org.springframework.core.io.ClassPathResource
-import org.springframework.web.reactive.function.server.router
+import org.springframework.fu.kofu.r2dbc.r2dbc
+import org.springframework.web.function.server.coRouter
 
-val router = router {
+val router = coRouter {
 	GET("/") {
 		ok().syncBody("Hello GraalVM native images!")
 	}
@@ -26,6 +27,7 @@ val app = application {
 			jackson()
 		}
 	}
+	r2dbc()
 }
 
 fun main() = app.run()

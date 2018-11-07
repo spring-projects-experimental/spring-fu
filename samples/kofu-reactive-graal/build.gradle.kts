@@ -17,6 +17,8 @@ dependencies {
 
 	// Workaround for https://github.com/oracle/graal/issues/655
 	implementation("javax.servlet:javax.servlet-api")
+	implementation("org.springframework.fu:spring-fu-webflux-coroutines:0.0.3.BUILD-SNAPSHOT")
+	implementation("org.springframework.fu:spring-fu-data-r2dbc-coroutines:0.0.3.BUILD-SNAPSHOT")
 
 	testImplementation("org.junit.jupiter:junit-jupiter-api")
 	testImplementation("org.springframework:spring-test")
