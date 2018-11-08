@@ -4,6 +4,12 @@ import java.util.function.Consumer;
 
 import org.springframework.context.support.GenericApplicationContext;
 
+/**
+ * Jafu DSL for application configuration.
+ *
+ * @author Sebastien Deleuze
+ * @see Jafu#application
+ */
 public class ApplicationDsl extends ConfigurationDsl {
 
 	private final Consumer<ApplicationDsl> dsl;

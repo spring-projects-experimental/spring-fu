@@ -10,6 +10,11 @@ import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.registerBean
 import org.springframework.util.ClassUtils
 
+/**
+ * Kofu DSL for modular configuration that can be imported in the application.
+ *
+ * @author Sebastien Deleuze
+ */
 open class ConfigurationDsl(internal val initConfiguration: ConfigurationDsl.() -> Unit = {}): AbstractDsl() {
 
 	/**

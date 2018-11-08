@@ -25,5 +25,5 @@ public abstract class AbstractDsl implements ApplicationContextInitializer<Gener
 		}
 	}
 
-	abstract void register(GenericApplicationContext context);
+	abstract public void register(GenericApplicationContext context);
 }

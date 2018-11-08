@@ -1,11 +1,17 @@
-package org.springframework.fu.jafu;
+package org.springframework.fu.jafu.web;
 
 import java.util.function.Consumer;
 
 import org.springframework.context.support.GenericApplicationContext;
+import org.springframework.fu.jafu.AbstractDsl;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.RouterFunctions;
 
+/**
+ * Jafu DSL for server configuration.
+ *
+ * @author Sebastien Deleuze
+ */
 public class ServerDsl extends AbstractDsl {
 
 	private final Consumer<ServerDsl> dsl;
@@ -30,4 +36,6 @@ public class ServerDsl extends AbstractDsl {
 	public void register(GenericApplicationContext context) {
 		this.dsl.accept(this);
 	}
+
+
 }

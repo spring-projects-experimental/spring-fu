@@ -5,6 +5,11 @@ import java.util.function.Supplier;
 
 import org.springframework.context.support.GenericApplicationContext;
 
+/**
+ * Jafu DSL for beans configuration.
+ *
+ * @author Sebastien Deleuze
+ */
 public class BeanDsl extends AbstractDsl {
 
 	private final Consumer<BeanDsl> dsl;

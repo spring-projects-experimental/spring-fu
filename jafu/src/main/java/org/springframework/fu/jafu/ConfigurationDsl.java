@@ -13,7 +13,14 @@ import org.springframework.boot.context.properties.bind.Bindable;
 import org.springframework.boot.web.embedded.netty.NettyReactiveWebServerFactory;
 import org.springframework.boot.web.reactive.server.ConfigurableReactiveWebServerFactory;
 import org.springframework.context.support.GenericApplicationContext;
+import org.springframework.fu.jafu.web.ServerDsl;
 
+/**
+ * Jafu DSL for modular configuration that can be imported in the application.
+ *
+ * @see ApplicationDsl#importConfiguration(Consumer)
+ * @author Sebastien Deleuze
+ */
 public class ConfigurationDsl extends AbstractDsl {
 
 	private final Consumer<ConfigurationDsl> dsl;
