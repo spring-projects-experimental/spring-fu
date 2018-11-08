@@ -6,7 +6,7 @@ import org.springframework.core.io.ClassPathResource
 import org.springframework.data.mongodb.core.*
 
 class UserRepository(
-		private val mongo: CoroutinesMongoTemplate,
+		private val mongo: CoMongoTemplate,
 		private val objectMapper: ObjectMapper
 ) {
 
