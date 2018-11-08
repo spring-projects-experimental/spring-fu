@@ -58,11 +58,14 @@ class ApplicationDslTests {
 	}
 
 	@Test
-	fun `Create an application with a custom beans import`() {
-		val app = application(false) {
+	fun `Create an application with a configuration import`() {
+		val beanConfig = configuration {
 			beans {
 				bean<Foo>()
 			}
+		}
+		val app = application(false) {
+			import(beanConfig)
 		}
 		with(app) {
 			run()
@@ -73,7 +76,7 @@ class ApplicationDslTests {
 	}
 
 	@Test
-	fun `Application configuration`() {
+	fun `Application properties`() {
 		val app = application(false) {
 			properties<City>("city")
 		}
@@ -106,8 +109,5 @@ class ApplicationDslTests {
 		lateinit var country: String
 	}
 
-	data class TestConfiguration(
-		val name: String
-	)
 }
 

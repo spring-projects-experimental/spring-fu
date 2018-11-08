@@ -7,6 +7,20 @@ dependencies {
 	api("org.springframework.boot:spring-boot")
 	implementation(project(":autoconfigure-adapter"))
 	compileOnly("org.springframework:spring-webflux")
+
+	testImplementation("org.junit.jupiter:junit-jupiter-api")
+	testImplementation("org.springframework:spring-test")
+	testImplementation("io.projectreactor:reactor-test")
+	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+	testImplementation("org.springframework.boot:spring-boot-starter-webflux")
+	testImplementation("org.springframework.boot:spring-boot-starter-tomcat")
+	testImplementation("org.springframework.boot:spring-boot-starter-undertow")
+	testImplementation("org.springframework.boot:spring-boot-starter-jetty")
+	testImplementation("org.springframework.boot:spring-boot-starter-mustache")
+	testImplementation("org.springframework.boot:spring-boot-starter-json")
+	testImplementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")
+	testImplementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+	testRuntimeOnly("de.flapdoodle.embed:de.flapdoodle.embed.mongo")
 }
 
 publishing {
