@@ -34,6 +34,10 @@ public class ConfigurationDsl extends AbstractDsl {
 		this.initializers.add(new ServerDsl(dsl));
 	}
 
+	public void logging(Consumer<LoggingDsl> dsl) {
+		new LoggingDsl(dsl);
+	}
+
 	public <T> void properties(Class<T> clazz) {
 		properties(clazz, "");
 	}
