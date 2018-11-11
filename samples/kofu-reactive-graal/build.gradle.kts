@@ -8,15 +8,8 @@ plugins {
 }
 
 dependencies {
-	implementation("org.springframework.fu:spring-fu-kofu:0.0.3.BUILD-SNAPSHOT") {
-		exclude(module = "kotlin-reflect")
-	}
-
+	implementation("org.springframework.fu:spring-fu-kofu:0.0.3.BUILD-SNAPSHOT")
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
-	//implementation("org.springframework.boot:spring-boot-starter-jetty")
-
-	// Workaround for https://github.com/oracle/graal/issues/655
-	implementation("javax.servlet:javax.servlet-api")
 
 	testImplementation("org.junit.jupiter:junit-jupiter-api")
 	testImplementation("org.springframework:spring-test")
