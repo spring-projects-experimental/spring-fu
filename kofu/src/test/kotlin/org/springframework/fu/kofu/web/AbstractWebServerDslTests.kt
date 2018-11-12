@@ -47,9 +47,8 @@ abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
 				engine = getServerFactory()
 			}
 		}
-		with(app){
-			run()
-			stop()
+		with(app.run()){
+			close()
 		}
 	}
 
@@ -64,11 +63,10 @@ abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
 				import(router)
 			}
 		}
-		with(app) {
-			run()
+		with(app.run()) {
 			val client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:$port").build()
 			client.get().uri("/foo"). accept(MediaType.TEXT_PLAIN).exchange().expectStatus().is2xxSuccessful
-			stop()
+			close()
 		}
 	}
 
@@ -86,13 +84,12 @@ abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
 				baseUrl = "http://127.0.0.1:$port"
 			}
 		}
-		with(app) {
-			run()
-			val client = context.getBean<WebClient.Builder>().build()
+		with(app.run()) {
+			val client = getBean<WebClient.Builder>().build()
 			client.get().uri("/").exchange().test()
 					.consumeNextWith { assertEquals(NO_CONTENT, it.statusCode()) }
 					.verifyComplete()
-			stop()
+			close()
 		}
 	}
 
@@ -112,12 +109,11 @@ abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
 				import(router2)
 			}
 		}
-		with(app) {
-			run()
+		with(app.run()) {
 			val client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:$port").build()
 			client.get().uri("/foo").exchange().expectStatus().isNoContent
 			client.get().uri("/bar").exchange().expectStatus().isOk
-			stop()
+			close()
 		}
 	}
 
@@ -137,7 +133,6 @@ abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
 		assertThrows<IllegalStateException> {
 			app.run()
 		}
-		app.stop()
 	}
 
 	@Test
@@ -161,11 +156,10 @@ abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
 				}
 			}
 		}
-		with(app) {
-			run()
+		with(app.run()) {
 			val client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:$port").build()
 			client.get().uri("/").exchange().expectStatus().is2xxSuccessful
-			stop()
+			close()
 		}
 	}
 

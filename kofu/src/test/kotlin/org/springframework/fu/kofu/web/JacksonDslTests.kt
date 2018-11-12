@@ -52,14 +52,14 @@ class JacksonDslTests {
 				import(router)
 			}
 		}
-		app.run()
+		val context = app.run()
 		val client = WebTestClient.bindToServer().baseUrl("http://127.0.1:8080").build()
 		client.get().uri("/user").exchange()
 				.expectStatus().is2xxSuccessful
 				.expectHeader().contentType(APPLICATION_JSON_UTF8_VALUE)
 				.expectBody<User>()
 				.isEqualTo(User("Brian"))
-		app.stop()
+		context.close()
 	}
 
 	@Test
@@ -82,9 +82,8 @@ class JacksonDslTests {
 				}
 			}
 		}
-		with(app) {
-			run()
-			val client = context.getBean<WebClient.Builder>().build()
+		with(app.run()) {
+			val client = getBean<WebClient.Builder>().build()
 			val exchange = client.get().uri("http://127.0.1:8080/user").exchange()
 			exchange.test()
 					.consumeNextWith {
@@ -92,9 +91,9 @@ class JacksonDslTests {
 						assertEquals(APPLICATION_JSON_UTF8, it.headers().contentType().get())
 					}
 					.verifyComplete()
-			val mappers = context.getBeanProvider<ObjectMapper>().toList()
+			val mappers = getBeanProvider<ObjectMapper>().toList()
 			assertEquals(1, mappers.size)
-			stop()
+			close()
 		}
 	}
 
@@ -110,11 +109,11 @@ class JacksonDslTests {
 				import(router)
 			}
 		}
-		app.run()
+		val context = app.run()
 		val client = WebTestClient.bindToServer().baseUrl("http://127.0.1:8080").build()
 		client.get().uri("/user").exchange()
 				.expectStatus().is5xxServerError
-		app.stop()
+		context.close()
 	}
 
 	data class User(val name: String)

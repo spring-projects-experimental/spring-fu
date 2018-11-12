@@ -1,7 +1,6 @@
 package org.springframework.fu.kofu.samples
 
 import org.springframework.fu.kofu.application
-import org.springframework.fu.kofu.ref
 import org.springframework.fu.kofu.web.server
 import org.springframework.web.function.server.coRouter
 import org.springframework.web.reactive.function.server.router

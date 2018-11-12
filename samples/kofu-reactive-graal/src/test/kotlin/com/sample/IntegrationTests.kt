@@ -4,6 +4,7 @@ import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import com.sample.app
+import org.springframework.context.ConfigurableApplicationContext
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.test.web.reactive.server.expectBody
 
@@ -11,9 +12,11 @@ class IntegrationTests {
 
 	private val client = WebTestClient.bindToServer().baseUrl("http://localhost:8080").build()
 
+	private lateinit var context: ConfigurableApplicationContext
+
 	@BeforeAll
 	fun beforeAll() {
-		app.run(profiles = "test")
+		context = app.run(profiles = "test")
 	}
 
 	@Test
@@ -32,6 +35,6 @@ class IntegrationTests {
 
 	@AfterAll
 	fun afterAll() {
-		app.stop()
+		context.close()
 	}
 }

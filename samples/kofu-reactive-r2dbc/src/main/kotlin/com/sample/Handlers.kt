@@ -8,7 +8,7 @@ import org.springframework.web.reactive.function.server.body
 @Suppress("UNUSED_PARAMETER")
 class UserHandler(
 		private val repository: UserRepository,
-		private val configuration: SampleProperties
+		private val properties: SampleProperties
 ) {
 
 	fun listApi(request: ServerRequest) = ServerResponse
@@ -23,6 +23,6 @@ class UserHandler(
 
 	fun conf(request: ServerRequest) = ServerResponse
 			.ok()
-			.syncBody(configuration.message)
+			.syncBody(properties.message)
 
 }

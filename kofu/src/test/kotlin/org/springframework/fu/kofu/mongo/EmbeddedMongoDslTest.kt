@@ -40,14 +40,11 @@ class EmbeddedMongoModuleTest {
 				embedded()
 			}
 		}
-		with(app){
-			run()
-
-			val repository = context.getBean<TestRepository>()
+		with(app.run()){
+			val repository = getBean<TestRepository>()
 			repository.save(TestUser("1", "foo")).block(Duration.ofSeconds(3))
 			assertEquals("foo", repository.findById("1").block(Duration.ofSeconds(3))?.name)
-
-			stop()
+			close()
 		}
 	}
 }

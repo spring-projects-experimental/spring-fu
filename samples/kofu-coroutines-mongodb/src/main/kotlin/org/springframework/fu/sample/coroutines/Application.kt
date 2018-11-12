@@ -8,4 +8,6 @@ val app = application {
 	properties<SampleProperties>("sample")
 }
 
-fun main() = app.run()
+fun main() {
+	app.run()
+}

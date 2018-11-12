@@ -39,13 +39,13 @@ class MustacheDslTests {
 				import(router)
 			}
 		}
-		app.run()
+		val context = app.run()
 		val client = WebTestClient.bindToServer().baseUrl("http://0.0.0.0:8080").build()
 		client.get().uri("/view").exchange()
 			.expectStatus().is2xxSuccessful
 			.expectBody<String>()
 			.isEqualTo("Hello world!")
-		app.stop()
+		context.close()
 	}
 
 }

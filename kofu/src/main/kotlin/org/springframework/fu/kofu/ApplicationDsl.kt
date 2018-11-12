@@ -20,6 +20,7 @@ import org.springframework.boot.SpringApplication
 import org.springframework.boot.WebApplicationType
 import org.springframework.boot.web.reactive.context.ReactiveWebServerApplicationContext
 import org.springframework.context.ApplicationContext
+import org.springframework.context.ConfigurableApplicationContext
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import org.springframework.context.support.registerBean
@@ -46,10 +47,12 @@ open class ApplicationDsl internal constructor(private val startServer: Boolean,
 	}
 
 	/**
-	 * @param args the application arguments (usually passed from a Java main method)
+	 * Run the current application
 	 * @param profiles [ApplicationContext] profiles separated by commas.
+	 * @param args the application arguments (usually passed from a Java main method)
+	 * @return The application context of the application
 	 */
-	fun run(args: Array<String> = emptyArray(), profiles: String = "") {
+	fun run(args: Array<String> = emptyArray(), profiles: String = ""): ConfigurableApplicationContext {
 		val application = object: SpringApplication(Application::class.java) {
 			override fun load(context: ApplicationContext?, sources: Array<out Any>?) {
 				// We don't want the annotation bean definition reader
@@ -67,12 +70,9 @@ open class ApplicationDsl internal constructor(private val startServer: Boolean,
 		}
 		application.addInitializers(this)
 		System.setProperty("spring.backgroundpreinitializer.ignore", "true")
-		application.run(*args)
+		return application.run(*args)
 	}
 
-	fun stop() {
-		context.close()
-	}
 }
 
 /**

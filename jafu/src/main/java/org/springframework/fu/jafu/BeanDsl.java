@@ -18,20 +18,24 @@ public class BeanDsl extends AbstractDsl {
 		this.dsl = dsl;
 	}
 
-	public final <T> void bean(Class<T> beanClass) {
+	public final <T> BeanDsl bean(Class<T> beanClass) {
 		this.context.registerBean(beanClass);
+		return this;
 	}
 
-	public final <T> void bean(String beanName, Class<T> beanClass) {
+	public final <T> BeanDsl bean(String beanName, Class<T> beanClass) {
 		this.context.registerBean(beanName, beanClass);
+		return this;
 	}
 
-	public final <T> void bean(Class<T> beanClass, Supplier<T> supplier) {
+	public final <T> BeanDsl bean(Class<T> beanClass, Supplier<T> supplier) {
 		this.context.registerBean(beanClass, supplier);
+		return this;
 	}
 
-	public final <T> void bean(String beanName, Class<T> beanClass, Supplier<T> supplier) {
+	public final <T> BeanDsl bean(String beanName, Class<T> beanClass, Supplier<T> supplier) {
 		this.context.registerBean(beanName, beanClass, supplier);
+		return this;
 	}
 
 	@Override

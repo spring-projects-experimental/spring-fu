@@ -2,7 +2,7 @@ package org.springframework.fu.jafu;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.springframework.fu.jafu.Jafu.*;
+import static org.springframework.fu.jafu.ApplicationDsl.*;
 
 import java.util.function.Consumer;
 
@@ -17,7 +17,7 @@ public class ApplicationDslTests {
 
 	@Test
 	void createAnEmptyApplication() {
-		SpringApplication app = application(false, it -> {});
+		ApplicationDsl app = application(false, it -> {});
 		ConfigurableApplicationContext context = app.run();
 		assertFalse(context instanceof ReactiveWebServerApplicationContext);
 		context.getBean(ReloadableResourceBundleMessageSource.class);
@@ -26,7 +26,7 @@ public class ApplicationDslTests {
 
 	@Test
 	void createAnApplicationWithACustomBean() {
-		SpringApplication app = application(false, a -> a.beans(b -> b.bean(Foo.class)));
+		ApplicationDsl app = application(false, a -> a.beans(b -> b.bean(Foo.class)));
 		ConfigurableApplicationContext context = app.run();
 		context.getBean(ReloadableResourceBundleMessageSource.class);
 		context.getBean(Foo.class);
@@ -36,7 +36,7 @@ public class ApplicationDslTests {
 	@Test
 	void createAnApplicationWithAConfigurationImport() {
 		Consumer<ConfigurationDsl> beansConfig = c -> c.beans(b -> b.bean(Foo.class));
-		SpringApplication app = application(false, a -> a.importConfiguration(beansConfig));
+		ApplicationDsl app = application(false, a -> a.importConfiguration(beansConfig));
 		ConfigurableApplicationContext context = app.run();
 		context.getBean(ReloadableResourceBundleMessageSource.class);
 		context.getBean(Foo.class);
@@ -45,7 +45,7 @@ public class ApplicationDslTests {
 
 	@Test
 	void applicationProperties() {
-		SpringApplication app = application(false, a -> a.properties(City.class, "city"));
+		ApplicationDsl app = application(false, a -> a.properties(City.class, "city"));
 		ConfigurableApplicationContext context = app.run();
 		assertEquals(context.getBean(City.class).name, "San Francisco");
 		context.close();

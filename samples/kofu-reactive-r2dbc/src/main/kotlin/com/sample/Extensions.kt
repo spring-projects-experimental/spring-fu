@@ -7,6 +7,9 @@ import kotlin.reflect.KClass
 // TODO Contribute to in https://github.com/spring-projects/spring-data-r2dbc/
 fun <R : Any> DatabaseClient.GenericSelectSpec.asType(resultType: KClass<R>): DatabaseClient.TypedSelectSpec<R> = `as`(resultType.java)
 
+// TODO Contribute to in https://github.com/spring-projects/spring-data-r2dbc/
+fun <R : Any> DatabaseClient.GenericExecuteSpec.asType(resultType: KClass<R>): DatabaseClient.TypedExecuteSpec<R> = `as`(resultType.java)
+
 // TODO Contribute to https://github.com/spring-projects/spring-data-r2dbc/
 fun <T : Any> DatabaseClient.InsertIntoSpec.into(table: KClass<T>) : DatabaseClient.TypedInsertSpec<T> = into(table.java)
 

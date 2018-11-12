@@ -25,8 +25,6 @@ open class R2dbcDsl(private val init: R2dbcDsl.() -> Unit) : AbstractDsl() {
 
     var password: String = ""
 
-    override lateinit var context: GenericApplicationContext
-
     override fun register(context: GenericApplicationContext) {
         init()
 

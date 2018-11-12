@@ -23,7 +23,6 @@ import org.springframework.context.event.ContextStartedEvent
 import org.springframework.fu.kofu.application
 import org.springframework.fu.kofu.configuration
 import org.springframework.fu.kofu.mongo.mongodb
-import org.springframework.fu.kofu.ref
 import org.springframework.fu.kofu.web.*
 import org.springframework.web.function.server.CoServerRequest
 import org.springframework.web.function.server.coHandler

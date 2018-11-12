@@ -34,11 +34,10 @@ class ApplicationDslTests {
 	@Test
 	fun `Create an empty application`() {
 		val app = application(false) { }
-		with(app) {
-			run()
-			assertFalse(context is ReactiveWebServerApplicationContext)
-			context.getBean<ReloadableResourceBundleMessageSource>()
-			stop()
+		with(app.run()) {
+			assertFalse(this is ReactiveWebServerApplicationContext)
+			getBean<ReloadableResourceBundleMessageSource>()
+			close()
 		}
 	}
 
@@ -49,11 +48,10 @@ class ApplicationDslTests {
 				bean<Foo>()
 			}
 		}
-		with(app) {
-			run()
-			context.getBean<ReloadableResourceBundleMessageSource>()
-			context.getBean<Foo>()
-			stop()
+		with(app.run()) {
+			getBean<ReloadableResourceBundleMessageSource>()
+			getBean<Foo>()
+			close()
 		}
 	}
 
@@ -67,11 +65,10 @@ class ApplicationDslTests {
 		val app = application(false) {
 			import(beanConfig)
 		}
-		with(app) {
-			run()
-			context.getBean<ReloadableResourceBundleMessageSource>()
-			context.getBean<Foo>()
-			stop()
+		with(app.run()) {
+			getBean<ReloadableResourceBundleMessageSource>()
+			getBean<Foo>()
+			close()
 		}
 	}
 
@@ -80,10 +77,9 @@ class ApplicationDslTests {
 		val app = application(false) {
 			properties<City>("city")
 		}
-		with(app) {
-			run()
-			assertEquals(context.getBean<City>().name, "San Francisco")
-			stop()
+		with(app.run()) {
+			assertEquals(getBean<City>().name, "San Francisco")
+			close()
 		}
 	}
 
@@ -92,11 +88,10 @@ class ApplicationDslTests {
 		val app = application(false) {
 			scanBeans("org.springframework.fu.kofu.beans")
 		}
-		with(app) {
-			run()
-			context.getBean<SimpleBean>()
-			context.getBean<BeanWithDependency>()
-			stop()
+		with(app.run()) {
+			getBean<SimpleBean>()
+			getBean<BeanWithDependency>()
+			close()
 		}
 	}
 

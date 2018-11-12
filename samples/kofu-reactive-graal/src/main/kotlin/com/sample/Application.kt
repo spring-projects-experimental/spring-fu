@@ -28,4 +28,6 @@ val app = application {
 	}
 }
 
-fun main() = app.run()
+fun main() {
+	app.run()
+}

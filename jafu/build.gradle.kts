@@ -7,6 +7,7 @@ dependencies {
 	api("org.springframework.boot:spring-boot")
 	implementation(project(":autoconfigure-adapter"))
 	compileOnly("org.springframework:spring-webflux")
+	compileOnly("com.fasterxml.jackson.core:jackson-databind")
 
 	testImplementation("org.junit.jupiter:junit-jupiter-api")
 	testImplementation("org.springframework:spring-test")

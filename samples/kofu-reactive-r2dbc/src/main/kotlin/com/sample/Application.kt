@@ -24,4 +24,6 @@ val app = application {
 	import(webConfig)
 }
 
-fun main() = app.run()
+fun main() {
+	app.run()
+}

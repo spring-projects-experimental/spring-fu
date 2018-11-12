@@ -21,8 +21,9 @@ public class LoggingDsl {
 	/**
 	 * Set the default ROOT log level
 	 */
-	public void level(LogLevel level) {
+	public LoggingDsl level(LogLevel level) {
 		loggingSystem.setLogLevel("ROOT", level);
+		return this;
 	}
 
 	/**
@@ -30,8 +31,9 @@ public class LoggingDsl {
 	 * @param packageName the package for which the log level should be customized
 	 * @param level the log level to use
 	 */
-	public void level(String packageName, LogLevel level) {
+	public LoggingDsl level(String packageName, LogLevel level) {
 		loggingSystem.setLogLevel(packageName, level);
+		return this;
 	}
 
 	/**
@@ -40,7 +42,8 @@ public class LoggingDsl {
 	 * @param level the log level to use
 	 *
 	 */
-	public <T> void level(Class<T> clazz, LogLevel level) {
+	public <T> LoggingDsl level(Class<T> clazz, LogLevel level) {
 		loggingSystem.setLogLevel(clazz.getName(), level);
+		return this;
 	}
 }

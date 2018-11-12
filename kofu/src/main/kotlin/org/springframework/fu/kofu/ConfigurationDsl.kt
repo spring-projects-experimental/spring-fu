@@ -83,7 +83,7 @@ open class ConfigurationDsl(internal val initConfiguration: ConfigurationDsl.() 
 	}
 
 	/**
-	 * Declare application event Listeners in order to run tasks when `ApplicationContextEvent`
+	 * Declare application event Listeners in order to run tasks when `ApplicationEvent`
 	 * like `ApplicationReadyEvent` are emitted.
 	 * @sample org.springframework.fu.kofu.samples.listener
 	 */

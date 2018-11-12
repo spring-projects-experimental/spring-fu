@@ -33,8 +33,6 @@ open class MongoDsl(
 	private val init: MongoDsl.() -> Unit
 ) : AbstractDsl() {
 
-	override lateinit var context: GenericApplicationContext
-
 	internal val properties = MongoProperties()
 
 	internal var embedded = false

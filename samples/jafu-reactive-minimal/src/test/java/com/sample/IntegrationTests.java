@@ -15,7 +15,7 @@ public class IntegrationTests {
 
 	@BeforeAll
 	public void beforeAll() {
-		context = JafuApplication.app.run();
+		context = Application.app.run();
 	}
 
 	@Test

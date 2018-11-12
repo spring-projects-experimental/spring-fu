@@ -1,10 +1,12 @@
 package org.springframework.fu.jafu;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
+import org.springframework.core.env.Environment;
 
 public abstract class AbstractDsl implements ApplicationContextInitializer<GenericApplicationContext> {
 
@@ -23,6 +25,14 @@ public abstract class AbstractDsl implements ApplicationContextInitializer<Gener
 		for (ApplicationContextInitializer<GenericApplicationContext> initializer : this.initializers) {
 			initializer.initialize(context);
 		}
+	}
+
+	public Environment env() {
+		return context.getEnvironment();
+	}
+
+	public List<String> profiles() {
+		return Arrays.asList(context.getEnvironment().getActiveProfiles());
 	}
 
 	abstract public void register(GenericApplicationContext context);
