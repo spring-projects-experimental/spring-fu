@@ -7,3 +7,4 @@ build/
 *.ipr
 out/
 samples/kofu-reactive-graal/com.sample.applicationkt
+samples/jafu-reactive-graal/com.sample.applicationkt

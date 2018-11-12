@@ -10,11 +10,11 @@ public abstract class Application {
 	public static ApplicationDsl app = application(app ->
 		app.importConfiguration(Configurations.dataConfig)
 		   .importConfiguration(Configurations.webConfig)
-		   .properties(SampleProperties.class, "sample")
 		   .listener(ApplicationReadyEvent.class, e -> app.ref(UserRepository.class).init())
 	);
 
 	public static void main (String[] args) {
+		System.setProperty("org.springframework.boot.logging.LoggingSystem", "org.springframework.boot.logging.java.JavaLoggingSystem");
 		app.run(args);
 	}
 }

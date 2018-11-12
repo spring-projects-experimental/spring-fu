@@ -40,4 +40,13 @@ public class User {
 	public void setLastname(String lastname) {
 		this.lastname = lastname;
 	}
+
+	@Override
+	public String toString() {
+		return "User{" +
+				"login='" + login + '\'' +
+				", firstname='" + firstname + '\'' +
+				", lastname='" + lastname + '\'' +
+				'}';
+	}
 }

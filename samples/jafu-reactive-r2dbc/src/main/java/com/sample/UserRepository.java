@@ -1,25 +1,16 @@
 package com.sample;
 
-import java.io.IOException;
-import java.util.List;
-
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.r2dbc.function.DatabaseClient;
 
 public class UserRepository {
 
 	private final DatabaseClient client;
 
-	private final ObjectMapper objectMapper;
-
-	public UserRepository(DatabaseClient client, ObjectMapper objectMapper) {
+	public UserRepository(DatabaseClient client) {
 		this.client = client;
-		this.objectMapper = objectMapper;
 	}
 
 	public Mono<Integer> count() {
@@ -44,14 +35,10 @@ public class UserRepository {
 	}
 
 	public void init() {
-			client.execute().sql("CREATE TABLE IF NOT EXISTS users (login varchar PRIMARY KEY, firstname varchar, lastname varchar);").fetch().one().block();
-			deleteAll().block();
-			ClassPathResource eventsResource = new ClassPathResource("data/users.json");
-			try {
-				List<User> users = this.objectMapper.readValue(eventsResource.getInputStream(), new TypeReference<List<User>>() {});
-				for (User user : users) {
-					save(user).subscribe();
-				}
-			} catch(IOException ex) { }
+		client.execute().sql("CREATE TABLE IF NOT EXISTS users (login varchar PRIMARY KEY, firstname varchar, lastname varchar);").fetch().one().block();
+		deleteAll().block();
+		save(new User("smaldini", "Stéphane","Maldini")).block();
+		save(new User("sdeleuze", "Sébastien","Deleuze")).block();
+		save(new User("bclozel", "Brian","Clozel")).block();
 	}
 }

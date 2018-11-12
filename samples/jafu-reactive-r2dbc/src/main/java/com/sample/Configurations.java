@@ -20,11 +20,8 @@ public abstract class Configurations {
 					}
 					server.router(router -> {
 						UserHandler userHandler = conf.ref(UserHandler.class);
-						router
-								.GET("/", userHandler::listView)
-								.GET("/api/user", userHandler::listApi)
-								.GET("/conf", userHandler::conf);
-					}).codecs(codecs -> codecs.string().jackson()).mustache();
+						router.GET("/", userHandler::listApi);
+					}).codecs(codecs -> codecs.string().jackson());
 				});
 	};
 }

@@ -20,25 +20,12 @@ public class IntegrationTests {
 	}
 
 	@Test
-	void requestHTMLEndpoint() {
-		client.get().uri("/").exchange()
-				.expectStatus().is2xxSuccessful()
-				.expectHeader().contentType("text/html;charset=UTF-8");
-	}
-
-	@Test
 	void requestHttpApiEndpoint() {
-		client.get().uri("/api/user").exchange()
+		client.get().uri("/").exchange()
 				.expectStatus().is2xxSuccessful()
 				.expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
 	}
 
-	@Test
-	void requestConfEndpoint() {
-		client.get().uri("/conf").exchange()
-				.expectStatus().is2xxSuccessful()
-				.expectHeader().contentType("text/plain;charset=UTF-8");
-	}
 
 	@AfterAll
 	void afterAll() {
