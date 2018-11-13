@@ -1,7 +1,7 @@
 dependencies {
 	api("org.springframework.data:spring-data-r2dbc:1.0.0.BUILD-SNAPSHOT")
-	api("io.r2dbc:r2dbc-spi:1.0.0.M5")
-	api("io.r2dbc:r2dbc-postgresql:1.0.0.M5")
+	api("io.r2dbc:r2dbc-spi:1.0.0.BUILD-SNAPSHOT")
+	api("io.r2dbc:r2dbc-postgresql:1.0.0.BUILD-SNAPSHOT")
 	api("org.jetbrains.kotlinx:kotlinx-coroutines-core")
 	api("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
 }

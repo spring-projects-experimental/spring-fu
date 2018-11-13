@@ -1,16 +1,8 @@
 package com.sample
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.readValue
-
-import org.springframework.core.io.ClassPathResource
 import org.springframework.data.r2dbc.function.CoDatabaseClient
-import org.springframework.data.r2dbc.function.DatabaseClient
 
-class UserRepository(
-		private val client: CoDatabaseClient,
-		private val objectMapper: ObjectMapper
-) {
+class UserRepository(private val client: CoDatabaseClient) {
 
 	suspend fun count() = client.execute().sql("SELECT COUNT(*) FROM users").fetch().one()
 
@@ -26,11 +18,8 @@ class UserRepository(
 	suspend fun init() {
 		client.execute().sql("CREATE TABLE IF NOT EXISTS users (login varchar PRIMARY KEY, firstname varchar, lastname varchar);").fetch().one()
 		deleteAll()
-		val eventsResource = ClassPathResource("data/users.json")
-		val users: List<User> = objectMapper.readValue(eventsResource.inputStream)
-		users.forEach {
-			save(it)
-		}
+		save(User("smaldini", "Stéphane", "Maldini"))
+		save(User("sdeleuze", "Sébastien", "Deleuze"))
+		save(User("bclozel", "Brian", "Clozel"))
 	}
-
 }

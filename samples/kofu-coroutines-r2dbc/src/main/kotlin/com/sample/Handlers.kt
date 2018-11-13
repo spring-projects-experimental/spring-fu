@@ -1,7 +1,7 @@
 package com.sample
 
 import org.springframework.http.MediaType
-import org.springframework.web.function.server.CoroutinesServerRequest
+import org.springframework.web.function.server.CoServerRequest
 import org.springframework.web.function.server.coHandler
 import org.springframework.web.function.server.body
 
@@ -11,17 +11,16 @@ class UserHandler(
 		private val configuration: SampleProperties
 ) {
 
-	suspend fun listApi(request: CoroutinesServerRequest) = coHandler {
+	suspend fun listApi(request: CoServerRequest) = coHandler {
 		ok().contentType(MediaType.APPLICATION_JSON_UTF8)
 				.body(repository.findAll())
 	}
 
-	suspend fun listView(request: CoroutinesServerRequest) = coHandler {
+	suspend fun listView(request: CoServerRequest) = coHandler {
 		ok().render("users", mapOf("users" to repository.findAll()))
 	}
 
-
-	suspend fun conf(request: CoroutinesServerRequest) = coHandler {
+	suspend fun conf(request: CoServerRequest) = coHandler {
 		ok().syncBody(configuration.message)
 	}
 
