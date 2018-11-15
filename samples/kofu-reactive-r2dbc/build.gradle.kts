@@ -15,8 +15,8 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-mustache")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.springframework.data:spring-data-r2dbc:1.0.0.BUILD-SNAPSHOT")
-	implementation("io.r2dbc:r2dbc-spi:1.0.0.M5")
-	implementation("io.r2dbc:r2dbc-postgresql:1.0.0.M5")
+	implementation("io.r2dbc:r2dbc-spi:1.0.0.BUILD-SNAPSHOT")
+	implementation("io.r2dbc:r2dbc-postgresql:1.0.0.BUILD-SNAPSHOT")
 
 	testImplementation("org.junit.jupiter:junit-jupiter-api")
 	testImplementation("org.springframework:spring-test")
