@@ -84,9 +84,11 @@ class ApplicationDslTests {
 	}
 
 	@Test
-	fun `Create an application with a bean scanning`() {
+	fun `Create an application with bean scanning`() {
 		val app = application(false) {
-			scanBeans("org.springframework.fu.kofu.beans")
+			beans {
+				scan("org.springframework.fu.kofu.beans")
+			}
 		}
 		with(app.run()) {
 			getBean<SimpleBean>()

@@ -41,14 +41,13 @@ open class ConfigurationDsl(internal val initConfiguration: ConfigurationDsl.() 
 	 *
 	 * @param basePackage The base package to scann
 	 */
-	fun scanBeans(basePackage: String) {
+	fun BeanDefinitionDsl.scan(basePackage: String) {
 		val componentProvider = FunctionalClassPathScanningCandidateComponentProvider()
 		for(metadata in componentProvider.findCandidateComponents(basePackage)) {
 			val source = ClassUtils.resolveClassName(metadata.className, null)
 			val beanName = BeanDefinitionReaderUtils.uniqueBeanName(source.name, context)
 			context.registerBean(beanName, source)
 		}
-
 	}
 
 	/**
