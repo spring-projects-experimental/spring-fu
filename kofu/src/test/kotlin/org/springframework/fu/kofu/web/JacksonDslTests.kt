@@ -84,8 +84,8 @@ class JacksonDslTests {
 		}
 		with(app.run()) {
 			val client = getBean<WebClient.Builder>().build()
-			val exchange = client.get().uri("http://127.0.1:8080/user").exchange()
-			exchange.test()
+			val response = client.get().uri("http://127.0.1:8080/user").exchange()
+			response.test()
 					.consumeNextWith {
 						assertEquals(HttpStatus.OK, it.statusCode())
 						assertEquals(APPLICATION_JSON_UTF8, it.headers().contentType().get())

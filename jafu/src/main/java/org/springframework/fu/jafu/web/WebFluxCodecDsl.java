@@ -1,5 +1,7 @@
 package org.springframework.fu.jafu.web;
 
+import java.util.function.Consumer;
+
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.fu.jafu.AbstractDsl;
 
@@ -39,5 +41,19 @@ abstract class WebFluxCodecDsl extends AbstractDsl {
 	 * This codec requires Synchronoss NIO Multipart library via  the {@code org.synchronoss.cloud:nio-multipart-parser} dependency.
 	 */
 	abstract WebFluxCodecDsl multipart();
+
+	/**
+	 * @see #jackson(Consumer)
+	 */
+	abstract WebFluxCodecDsl jackson();
+
+	/**
+	 * Register an `ObjectMapper` bean and configure a [Jackson](https://github.com/FasterXML/jackson)
+	 * JSON codec on WebFlux client via a [dedicated DSL][JacksonDsl].
+	 *
+	 * Require `org.springframework.boot:spring-boot-starter-json` dependency
+	 * (included by default in `spring-boot-starter-webflux`).
+	 */
+	abstract WebFluxCodecDsl jackson(Consumer<JacksonDsl> dsl);
 
 }

@@ -221,20 +221,12 @@ public class WebFluxServerDsl extends AbstractDsl {
 			return this;
 		}
 
-		/**
-		 * @see #jackson(Consumer)
-		 */
+		@Override
 		public WebFluxServerCodecDsl jackson() {
 			return jackson(dsl -> {});
 		}
 
-		/**
-		 * Register an `ObjectMapper` bean and configure a [Jackson](https://github.com/FasterXML/jackson)
-		 * JSON codec on WebFlux client via a [dedicated DSL][JacksonDsl].
-		 *
-		 * Require `org.springframework.boot:spring-boot-starter-json` dependency
-		 * (included by default in `spring-boot-starter-webflux`).
-		 */
+		@Override
 		public WebFluxServerCodecDsl jackson(Consumer<JacksonDsl> dsl) {
 			addInitializer(new JacksonDsl(false, dsl));
 			return this;

@@ -99,6 +99,17 @@ public class WebFluxClientDsl extends AbstractDsl {
 			addInitializer(new MultipartCodecInitializer(true));
 			return this;
 		}
+
+		@Override
+		public WebFluxCodecDsl jackson() {
+			return jackson(dsl -> {});
+		}
+
+		@Override
+		public WebFluxCodecDsl jackson(Consumer<JacksonDsl> dsl) {
+			addInitializer(new JacksonDsl(true, dsl));
+			return this;
+		}
 	}
 
 }
