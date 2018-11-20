@@ -32,11 +32,6 @@ public class ApplicationDsl extends ConfigurationDsl {
 		this.startServer = startServer;
 	}
 
-	public ApplicationDsl importConfiguration(Consumer<ConfigurationDsl> dsl) {
-		this.initializers.add(new ConfigurationDsl(dsl));
-		return this;
-	}
-
 	/**
 	 * Run the current application
 	 * @return The application context of the application

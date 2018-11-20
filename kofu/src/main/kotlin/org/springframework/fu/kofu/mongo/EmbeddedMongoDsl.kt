@@ -30,6 +30,7 @@ class EmbeddedMongoDsl(private val mongoProperties: MongoProperties, private val
 	private val embeddedMongoProperties = EmbeddedMongoProperties()
 
 	override fun register(context: GenericApplicationContext) {
+        init()
 		EmbeddedMongoInitializer(mongoProperties, embeddedMongoProperties).initialize(context)
 	}
 

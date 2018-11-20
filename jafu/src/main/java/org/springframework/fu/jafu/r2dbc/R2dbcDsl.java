@@ -64,6 +64,6 @@ public class R2dbcDsl extends AbstractDsl {
 		if (properties.getPassword() == null) {
 			properties.setPassword("");
 		}
-		this.initializers.add(new DatabaseClientInitializer(properties));
+		new DatabaseClientInitializer(properties).initialize(context);
 	}
 }

@@ -10,7 +10,7 @@ import org.springframework.core.env.Environment;
 
 public abstract class AbstractDsl implements ApplicationContextInitializer<GenericApplicationContext> {
 
-	protected final List<ApplicationContextInitializer<GenericApplicationContext>> initializers = new ArrayList<>();
+	private final List<ApplicationContextInitializer<GenericApplicationContext>> initializers = new ArrayList<>();
 
 	protected GenericApplicationContext context;
 
@@ -22,9 +22,11 @@ public abstract class AbstractDsl implements ApplicationContextInitializer<Gener
 	public void initialize(GenericApplicationContext context) {
 		this.context = context;
 		register(context);
-		for (ApplicationContextInitializer<GenericApplicationContext> initializer : this.initializers) {
-			initializer.initialize(context);
-		}
+		this.initializers.forEach(initializer -> initializer.initialize(context));
+	}
+
+	protected void addInitializer(ApplicationContextInitializer<GenericApplicationContext> initializer) {
+		initializers.add(initializer);
 	}
 
 	public Environment env() {

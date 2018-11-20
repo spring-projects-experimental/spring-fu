@@ -38,8 +38,8 @@ public class JacksonDsl extends AbstractDsl {
 	public void register(GenericApplicationContext context) {
 		this.dsl.accept(this);
 
-		this.initializers.add(new JacksonInitializer(properties));
-		this.initializers.add(new JacksonJsonCodecInitializer(isClientCodec));
+		new JacksonInitializer(properties).initialize(context);
+		new JacksonJsonCodecInitializer(isClientCodec).initialize(context);
 	}
 
 	/**

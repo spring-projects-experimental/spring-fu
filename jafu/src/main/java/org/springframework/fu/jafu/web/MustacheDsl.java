@@ -31,7 +31,7 @@ public class MustacheDsl extends AbstractDsl {
 	@Override
 	public void register(GenericApplicationContext context) {
 		this.dsl.accept(this);
-		initializers.add(new MustacheInitializer(properties));
-		initializers.add(new MustacheReactiveWebInitializer(properties));
+		new MustacheInitializer(properties).initialize(context);
+		new MustacheReactiveWebInitializer(properties).initialize(context);
 	}
 }

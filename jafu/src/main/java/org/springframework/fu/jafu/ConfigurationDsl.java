@@ -8,7 +8,9 @@ import org.springframework.boot.context.properties.bind.Bindable;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.support.GenericApplicationContext;
+import org.springframework.fu.jafu.mongo.MongoDsl;
 import org.springframework.fu.jafu.r2dbc.R2dbcDsl;
+import org.springframework.fu.jafu.web.WebFluxClientDsl;
 import org.springframework.fu.jafu.web.WebFluxServerDsl;
 
 /**
@@ -26,8 +28,18 @@ public class ConfigurationDsl extends AbstractDsl {
 		this.dsl = dsl;
 	}
 
+	public ConfigurationDsl importConfiguration(Consumer<ConfigurationDsl> dsl) {
+		addInitializer(new ConfigurationDsl(dsl));
+		return this;
+	}
+
 	public ConfigurationDsl server(Consumer<WebFluxServerDsl> dsl) {
-		this.initializers.add(new WebFluxServerDsl(dsl));
+		addInitializer(new WebFluxServerDsl(dsl));
+		return this;
+	}
+
+	public ConfigurationDsl client(Consumer<WebFluxClientDsl> dsl) {
+		addInitializer(new WebFluxClientDsl(dsl));
 		return this;
 	}
 
@@ -47,7 +59,7 @@ public class ConfigurationDsl extends AbstractDsl {
 	}
 
 	public ConfigurationDsl beans(Consumer<BeanDsl> dsl) {
-		this.initializers.add(new BeanDsl(dsl));
+		addInitializer(new BeanDsl(dsl));
 		return this;
 	}
 
@@ -65,13 +77,23 @@ public class ConfigurationDsl extends AbstractDsl {
 		return this;
 	}
 
+	public ConfigurationDsl mongodb() {
+		addInitializer(new MongoDsl(dsl -> {}));
+		return this;
+	}
+
+	public ConfigurationDsl mongodb(Consumer<MongoDsl> dsl) {
+		addInitializer(new MongoDsl(dsl));
+		return this;
+	}
+
 	public ConfigurationDsl r2dbc() {
-		this.initializers.add(new R2dbcDsl(r2dbcDsl -> {}));
+		addInitializer(new R2dbcDsl(dsl -> {}));
 		return this;
 	}
 
 	public ConfigurationDsl r2dbc(Consumer<R2dbcDsl> dsl) {
-		this.initializers.add(new R2dbcDsl(dsl));
+		addInitializer(new R2dbcDsl(dsl));
 		return this;
 	}
 
