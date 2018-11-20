@@ -165,7 +165,7 @@ class JacksonDsl(private val isClientCodec: Boolean, private val init: JacksonDs
 
  * @sample org.springframework.fu.kofu.samples.jacksonDsl
  */
-fun WebFluxClientCodecDsl.jackson(dsl: JacksonDsl.() -> Unit = {}) {
+fun WebFluxClientDsl.WebFluxClientCodecDsl.jackson(dsl: JacksonDsl.() -> Unit = {}) {
 	addInitializer(JacksonDsl(true, dsl))
 }
 
@@ -178,6 +178,6 @@ fun WebFluxClientCodecDsl.jackson(dsl: JacksonDsl.() -> Unit = {}) {
 
  * @sample org.springframework.fu.kofu.samples.jacksonDsl
  */
-fun WebFluxServerCodecDsl.jackson(dsl: JacksonDsl.() -> Unit = {}) {
+fun WebFluxServerDsl.WebFluxServerCodecDsl.jackson(dsl: JacksonDsl.() -> Unit = {}) {
 	addInitializer(JacksonDsl(false, dsl))
 }
