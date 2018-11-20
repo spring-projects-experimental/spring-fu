@@ -66,5 +66,5 @@ class CorsDsl(
  */
 fun WebFluxServerDsl.cors(defaults: Boolean = true,
 						  dsl: CorsDsl.() -> Unit = {}) {
-	initializers.add(CorsDsl(defaults, dsl))
+	addInitializer(CorsDsl(defaults, dsl))
 }

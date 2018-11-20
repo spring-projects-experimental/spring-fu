@@ -27,7 +27,7 @@ open class ConfigurationDsl(internal val initConfiguration: ConfigurationDsl.() 
 	 * @sample org.springframework.fu.kofu.samples.beansDsl
 	 */
 	fun beans(dsl: BeanDefinitionDsl.() -> Unit) {
-		initializers.add(BeanDefinitionDsl(dsl))
+		addInitializer(BeanDefinitionDsl(dsl))
 	}
 
 	/**
@@ -51,11 +51,11 @@ open class ConfigurationDsl(internal val initConfiguration: ConfigurationDsl.() 
 	}
 
 	/**
-	 * Import a configuration declared via a []dedicated DSL][ConfigurationDsl].
+	 * Import a DSL.
 	 * @see configuration
 	 */
-	fun import(dsl: ConfigurationDsl) {
-		initializers.add(dsl)
+	fun import(dsl: AbstractDsl) {
+		addInitializer(dsl)
 	}
 
 	/**

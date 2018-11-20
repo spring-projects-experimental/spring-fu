@@ -36,9 +36,9 @@ open class R2dbcDsl(private val init: R2dbcDsl.() -> Unit) : AbstractDsl() {
         properties.password = password
 
         if (coroutines)
-            initializers.add(CoDatabaseClientInitializer(properties))
+            CoDatabaseClientInitializer(properties).initialize(context)
         else
-            initializers.add(DatabaseClientInitializer(properties))
+            DatabaseClientInitializer(properties).initialize(context)
     }
 }
 
@@ -50,5 +50,5 @@ open class R2dbcDsl(private val init: R2dbcDsl.() -> Unit) : AbstractDsl() {
  * @sample org.springframework.fu.kofu.samples.r2dbcCoroutines
  */
 fun ConfigurationDsl.r2dbc(dsl: R2dbcDsl.() -> Unit = {}) {
-    initializers.add(R2dbcDsl(dsl))
+    addInitializer(R2dbcDsl(dsl))
 }

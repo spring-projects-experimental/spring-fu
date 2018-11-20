@@ -46,7 +46,7 @@ open class MongoDsl(
 
 	var coroutines: Boolean = false
 		set(value) {
-			if (value) initializers.add(CoroutinesMongoInitializer())
+			if (value) CoroutinesMongoInitializer().initialize(context)
 		}
 
 	var uri: String? = "mongodb://localhost/test"
@@ -63,5 +63,5 @@ open class MongoDsl(
  * @sample org.springframework.fu.kofu.samples.mongo
  */
 fun ConfigurationDsl.mongodb(dsl: MongoDsl.() -> Unit = {}) {
-	initializers.add(MongoDsl(dsl))
+	addInitializer(MongoDsl(dsl))
 }

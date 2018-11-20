@@ -29,8 +29,7 @@ abstract class AbstractDsl : ApplicationContextInitializer<GenericApplicationCon
 	@PublishedApi
 	internal lateinit var context: GenericApplicationContext
 
-	@PublishedApi
-	internal val initializers = mutableSetOf<ApplicationContextInitializer<GenericApplicationContext>>()
+	private val initializers = mutableSetOf<ApplicationContextInitializer<GenericApplicationContext>>()
 
 	val env: Environment
 		get() = context.environment
@@ -41,10 +40,12 @@ abstract class AbstractDsl : ApplicationContextInitializer<GenericApplicationCon
 	override fun initialize(context: GenericApplicationContext) {
 		this.context = context
 		register(context)
-		for (child in initializers) {
-			child.initialize(context)
-		}
+        initializers.forEach { it.initialize(context) }
 	}
+
+    fun addInitializer(initializer: ApplicationContextInitializer<GenericApplicationContext>) {
+        initializers.add(initializer)
+    }
 	/**
 	 * Get a reference to the bean by type or type + name with the syntax
 	 * `ref<Foo>()` or `ref<Foo>("foo")`. When leveraging Kotlin type inference

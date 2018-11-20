@@ -51,5 +51,5 @@ class EmbeddedMongoDsl(private val mongoProperties: MongoProperties, private val
  */
 fun MongoDsl.embedded(dsl: EmbeddedMongoDsl.() -> Unit = {}) {
 	embedded = true
-	initializers.add(EmbeddedMongoDsl(properties, dsl))
+	addInitializer(EmbeddedMongoDsl(properties, dsl))
 }

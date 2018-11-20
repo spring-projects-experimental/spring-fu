@@ -56,8 +56,8 @@ class JacksonDsl(private val isClientCodec: Boolean, private val init: JacksonDs
 		if (indentOutput != null) {
 			properties.serialization[SerializationFeature.INDENT_OUTPUT] = indentOutput
 		}
-		initializers.add(JacksonInitializer(properties))
-		initializers.add(JacksonJsonCodecInitializer(isClientCodec))
+		JacksonInitializer(properties).initialize(context)
+		JacksonJsonCodecInitializer(isClientCodec).initialize(context)
 	}
 
 	/**
@@ -166,7 +166,7 @@ class JacksonDsl(private val isClientCodec: Boolean, private val init: JacksonDs
  * @sample org.springframework.fu.kofu.samples.jacksonDsl
  */
 fun WebFluxClientCodecDsl.jackson(dsl: JacksonDsl.() -> Unit = {}) {
-	initializers.add(JacksonDsl(true, dsl))
+	addInitializer(JacksonDsl(true, dsl))
 }
 
 /**
@@ -179,5 +179,5 @@ fun WebFluxClientCodecDsl.jackson(dsl: JacksonDsl.() -> Unit = {}) {
  * @sample org.springframework.fu.kofu.samples.jacksonDsl
  */
 fun WebFluxServerCodecDsl.jackson(dsl: JacksonDsl.() -> Unit = {}) {
-	initializers.add(JacksonDsl(false, dsl))
+	addInitializer(JacksonDsl(false, dsl))
 }

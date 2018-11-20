@@ -38,8 +38,8 @@ open class MustacheDsl(private val init: MustacheDsl.() -> Unit): AbstractDsl() 
 
 	override fun register(context: GenericApplicationContext) {
 		init()
-		initializers.add(MustacheInitializer(properties))
-		initializers.add(MustacheReactiveWebInitializer(properties))
+		MustacheInitializer(properties).initialize(context)
+		MustacheReactiveWebInitializer(properties).initialize(context)
 	}
 }
 
@@ -52,5 +52,5 @@ open class MustacheDsl(private val init: MustacheDsl.() -> Unit): AbstractDsl() 
  * @author Sebastien Deleuze
  */
 fun WebFluxServerDsl.mustache(dsl: MustacheDsl.() -> Unit = {}) {
-	initializers.add(MustacheDsl(dsl))
+	addInitializer(MustacheDsl(dsl))
 }
