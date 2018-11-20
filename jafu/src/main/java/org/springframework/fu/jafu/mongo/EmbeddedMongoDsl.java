@@ -2,6 +2,8 @@ package org.springframework.fu.jafu.mongo;
 
 import java.util.function.Consumer;
 
+import de.flapdoodle.embed.mongo.distribution.IFeatureAwareVersion;
+
 import org.springframework.boot.autoconfigure.mongo.MongoProperties;
 import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoInitializer;
 import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoProperties;
@@ -26,8 +28,8 @@ public class EmbeddedMongoDsl extends AbstractDsl {
 	/**
 	 * Version of Mongo to use
 	 */
-	public EmbeddedMongoDsl version(String version) {
-		this.embeddedMongoProperties.setVersion(version);
+	public EmbeddedMongoDsl version(IFeatureAwareVersion version) {
+		this.embeddedMongoProperties.setVersion(version.asInDownloadPath());
 		return this;
 	}
 

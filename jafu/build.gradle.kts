@@ -8,6 +8,7 @@ dependencies {
 	implementation(project(":autoconfigure-adapter"))
 	compileOnly("org.springframework:spring-webflux")
 	compileOnly("com.fasterxml.jackson.core:jackson-databind")
+	compileOnly("de.flapdoodle.embed:de.flapdoodle.embed.mongo")
 
 	testImplementation("org.junit.jupiter:junit-jupiter-api")
 	testImplementation("org.springframework:spring-test")

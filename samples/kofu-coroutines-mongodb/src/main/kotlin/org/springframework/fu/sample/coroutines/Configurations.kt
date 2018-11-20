@@ -1,5 +1,6 @@
 package org.springframework.fu.sample.coroutines
 
+import de.flapdoodle.embed.mongo.distribution.Version
 import kotlinx.coroutines.runBlocking
 import org.springframework.boot.context.event.ApplicationReadyEvent
 import org.springframework.fu.kofu.configuration
@@ -21,7 +22,7 @@ val dataConfig = configuration {
 	mongodb {
 		coroutines = true
 		embedded {
-			version = "3.2.2"
+			version = Version.Main.PRODUCTION
 		}
 	}
 }

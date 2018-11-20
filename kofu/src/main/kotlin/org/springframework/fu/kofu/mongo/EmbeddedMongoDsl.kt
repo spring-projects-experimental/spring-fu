@@ -16,6 +16,8 @@
 
 package org.springframework.fu.kofu.mongo
 
+import de.flapdoodle.embed.mongo.distribution.IFeatureAwareVersion
+import de.flapdoodle.embed.mongo.distribution.Version
 import org.springframework.boot.autoconfigure.mongo.MongoProperties
 import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoInitializer
 import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoProperties
@@ -37,9 +39,9 @@ class EmbeddedMongoDsl(private val mongoProperties: MongoProperties, private val
 	/**
 	 * Version of Mongo to use
 	 */
-	var version: String? = null
+	var version: IFeatureAwareVersion = Version.Main.PRODUCTION
 		set(value) {
-			embeddedMongoProperties.version = value
+			embeddedMongoProperties.version = value.asInDownloadPath()
 		}
 }
 
