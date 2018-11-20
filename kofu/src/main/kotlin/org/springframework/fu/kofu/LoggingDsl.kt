@@ -25,7 +25,7 @@ import org.springframework.boot.logging.LoggingSystem
  * @author Thomas Girard
  * @author Sebastien Deleuze
  */
-@DslMarker
+@KofuMarker
 class LoggingDsl(init: LoggingDsl.() -> Unit) {
 
 	@PublishedApi

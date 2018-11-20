@@ -21,9 +21,9 @@ import org.springframework.context.support.GenericApplicationContext
 import org.springframework.core.env.Environment
 
 @DslMarker
-internal annotation class DslMarker
+internal annotation class KofuMarker
 
-@DslMarker
+@KofuMarker
 abstract class AbstractDsl : ApplicationContextInitializer<GenericApplicationContext> {
 
 	@PublishedApi

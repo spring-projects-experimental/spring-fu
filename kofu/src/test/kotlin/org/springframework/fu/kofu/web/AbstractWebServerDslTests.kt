@@ -147,13 +147,13 @@ abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
 					string()
 					jackson()
 				}
-				logging {
-					level = LogLevel.DEBUG
-				}
 				import(router)
-				mongodb {
-					embedded()
-				}
+			}
+			logging {
+				level = LogLevel.DEBUG
+			}
+			mongodb {
+				embedded()
 			}
 		}
 		with(app.run()) {
