@@ -334,7 +334,7 @@ class WebFluxClientBuilderDsl(private val init: WebFluxClientBuilderDsl.() -> Un
 			initializers.add(StringCodecInitializer(true))
 			initializers.add(ResourceCodecInitializer(true))
 		}
-		ReactiveWebClientBuilderInitializer(baseUrl).initialize(context)
+		initializers.add(ReactiveWebClientBuilderInitializer(baseUrl))
 	}
 
 	/**
