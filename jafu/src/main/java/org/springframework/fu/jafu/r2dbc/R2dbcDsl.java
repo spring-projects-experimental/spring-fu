@@ -42,7 +42,7 @@ public class R2dbcDsl extends AbstractDsl {
 	}
 
 	public R2dbcDsl password(String password) {
-		password(password);
+		properties.setPassword(password);
 		return this;
 	}
 
