@@ -2,110 +2,27 @@
 
 image::https://ci.spring.io/api/v1/teams/spring-fu/pipelines/spring-fu/badge["Build Status", link="https://ci.spring.io/teams/spring-fu/pipelines/spring-fu"]
 
-Spring Fu is an incubator for new Spring features about Kotlin and functional bean registration.
-Its main feature is an alternative way of configuring Spring Boot applications with Kotlin DSL and lambdas instead of annotations:
-http://repo.spring.io/snapshot/org/springframework/fu/spring-fu-kofu/0.0.3.BUILD-SNAPSHOT/spring-fu-kofu-0.0.3.BUILD-SNAPSHOT-javadoc.jar!/kofu/org.springframework.fu.kofu/application.html[Kofu (for **Ko**tlin and **fu**nctional) configuration].
-Other features like https://github.com/spring-projects/spring-fu/tree/master/coroutines[Coroutines] or GraalVM support are also included.
+Spring Fu is an incubator for new Spring features related to functional configuration and runtime efficiency.
 
-A Java variant called Jafu (for **Ja**va and **fu**nctional) is https://github.com/spring-projects/spring-fu/blob/master/samples/jafu-reactive-minimal/src/main/java/com/sample/JafuApplication.java[also available] (just a POC for now).
+Instead of using JavaConfig and auto-configuration, it provides an explicit way of configuring Spring Boot applications
+with a http://repo.spring.io/snapshot/org/springframework/fu/spring-fu-kofu/0.0.3.BUILD-SNAPSHOT/spring-fu-kofu-0.0.3.BUILD-SNAPSHOT-javadoc.jar!/kofu/org.springframework.fu.kofu/application.html[Kotlin DSL (Kofu)]
+or a https://github.com/spring-projects/spring-fu/tree/master/jafu[Java DSL (Jafu)] and lambdas
+using functional bean definitions for both Spring Boot infrastructure and application code.
+
+The project also incubates various other features like
+https://github.com/spring-projects/spring-fu/tree/master/coroutines[Coroutines] or GraalVM support.
+You can see https://github.com/spring-projects/spring-fu/blob/master/ROADMAP.adoc[the roadmap] for more details.
 
 It is not intended to be used in production, but rather to incubate and get feedback and contributions
 from the community in order to reach a point where its features can be integrated as part of existing
 Spring projects like Framework, Boot and Data. The table bellow summarize the status of current features.
 
-== Status
-
-|=====
-a|**Feature** |**Status** |**Related issue**
-
-a|
-http://repo.spring.io/snapshot/org/springframework/fu/spring-fu-kofu/0.0.3.BUILD-SNAPSHOT/spring-fu-kofu-0.0.3.BUILD-SNAPSHOT-javadoc.jar!/kofu/org.springframework.fu.kofu/application.html[Kofu] and
-https://github.com/spring-projects/spring-fu/tree/master/jafu[Jafu] configuration DSL
-a|
-Incubating in Spring Fu
-a|
-Slightly related: https://github.com/spring-projects/spring-boot/issues/8115[spring-boot#8115]
-To be created in Spring Boot issue tracker
-
-a|
-More efficient Spring Boot startup via https://github.com/spring-projects/spring-fu/tree/master/autoconfigure-adapter[functional bean registration]
-a|
-Manually created in Spring Fu
-
-Experimented by https://github.com/dsyer[Dave Syer] in https://github.com/dsyer/spring-init-experiment[spring-init-experiment] and https://github.com/dsyer/spring-boot-micro-apps[spring-boot-micro-apps]
-
-*Could* be generated during Spring Boot build in the future
-a|
-To be created in Spring Boot issue tracker
-
-a|
-https://github.com/spring-projects/spring-fu/tree/master/coroutines[Coroutines support]
-a|
-Incubating in Spring Fu
-a|
-https://jira.spring.io/browse/SPR-15413[SPR-15413]
-https://github.com/Kotlin/kotlinx.coroutines/issues/254[kotlinx.coroutines#254]
-https://github.com/Kotlin/kotlinx.coroutines/issues/284[kotlinx.coroutines#284]
-To be created in Spring Data issue tracker for MongoDB and SQL support
-
-a|
-Data classes support for configuration properties
-a|
-Expected in Spring Boot 2.2 (to be confirmed)
-a|
-https://github.com/spring-projects/spring-boot/issues/8762[spring-boot#8762]
-
-a|
-https://github.com/spring-projects/spring-fu/tree/master/samples/kofu-graal[GraalVM native images support]
-a|
-Initial support done in Spring Framework 5.1
-
-Work in progress on GraalVM side
-a|
-https://jira.spring.io/browse/SPR-16991[SPR-16991]
-
-https://github.com/spring-projects/spring-boot/issues?utf8=%E2%9C%93&q=is%3Aissue+label%3A%22theme%3A+graal%22+[spring-boot graal theme]
-
-a|
-Better Kotlin documentation
-a|
-Not started yet
-a|
-https://jira.spring.io/browse/SPR-17245[SPR-17245]
-
-a|
-https://github.com/spring-projects/spring-fu/issues/14[Gradle Kotlin DSL]
-a|
-Pull-request to be contributed
-a|
-https://github.com/spring-io/initializr/issues/334[initializr#334]
-
-a|
-https://github.com/spring-projects/spring-fu/issues/69[Lite Kotlin reflection support]
-a|
-Incubating in Spring Fu
-a|
-https://jira.spring.io/browse/SPR-17008[SPR-17008]
-
-a|
-https://github.com/spring-projects/spring-fu/issues/34[Spring classpath filtering via Gradle plugin]
-a|
-Not started yet
-a|
-
-a|
-https://github.com/spring-projects/spring-fu/issues/85[Automated (and machine readable) HTTP API documentation]
-a|
-Not started yet
-a|
-https://github.com/spring-projects/spring-restdocs/issues/213[spring-restdocs#213]
-
-
-|=====
 
 == Getting started
 
 === Via start.spring.io
+
+==== Kofu
 
  * Create a Spring `2.1.x.RELEASE` project on https://start.spring.io/#!language=kotlin[start.spring.io],
  * Add the `org.springframework.fu:spring-fu-kofu:0.0.3.BUILD-SNAPSHOT` dependency
@@ -123,11 +40,40 @@ val app = application {
 	server {
 		router {
 			GET("/") { ok().syncBody("Hello world!") }
-		}	
+		}
 	}
 }
 fun main() {
 	app.run()
+}
+```
+
+==== Jafu
+
+ * Create a Spring `2.1.x.RELEASE` project on https://start.spring.io/#!language=kotlin[start.spring.io],
+ * Add the `org.springframework.fu:spring-fu-jafu:0.0.3.BUILD-SNAPSHOT` dependency
+ * Add the _Reactive Web_ `org.springframework.boot:spring-boot-starter-webflux` dependency
+ * Modify the generated `*Application.java` file as following:
+
+```java
+package com.example;
+
+import static org.springframework.fu.jafu.ApplicationDsl.*;
+import static org.springframework.web.reactive.function.server.ServerResponse.*;
+
+import org.springframework.fu.jafu.ApplicationDsl;
+
+public class Application {
+
+	public static ApplicationDsl app = application(app ->
+		app.server(server -> server.router(r ->
+			r.GET("/", request -> ok().syncBody("Hello world!"))
+		))
+	);
+
+	public static void main (String[] args) {
+		app.run(args);
+	}
 }
 ```
 
