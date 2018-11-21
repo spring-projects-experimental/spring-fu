@@ -62,15 +62,15 @@ class CoDatabaseClientBuilder: CoDatabaseClient.Builder {
 
                 override suspend fun exchange(): CoSqlResult<Map<String, Any>> = spec.exchange().map { SqlResultAdapter(it) }.awaitFirst()
 
-                override fun bind(index: Int, value: Any?): CoDatabaseClient.CoGenericExecuteSpec = GenericExecuteSpecAdapter(spec.bind(index, value))
+                override fun bind(index: Int, value: Any): CoDatabaseClient.CoGenericExecuteSpec = GenericExecuteSpecAdapter(spec.bind(index, value))
 
-                override fun bind(name: String?, value: Any?): CoDatabaseClient.CoGenericExecuteSpec = GenericExecuteSpecAdapter(spec.bind(name, value))
+                override fun bind(name: String, value: Any): CoDatabaseClient.CoGenericExecuteSpec = GenericExecuteSpecAdapter(spec.bind(name, value))
 
-                override fun bind(bean: Any?): CoDatabaseClient.CoGenericExecuteSpec = GenericExecuteSpecAdapter(spec.bind(bean))
+                override fun bind(bean: Any): CoDatabaseClient.CoGenericExecuteSpec = GenericExecuteSpecAdapter(spec.bind(bean))
 
-                override fun bindNull(index: Int, type: Class<*>?): CoDatabaseClient.CoGenericExecuteSpec = GenericExecuteSpecAdapter(spec.bindNull(index, type))
+                override fun bindNull(index: Int, type: Class<*>): CoDatabaseClient.CoGenericExecuteSpec = GenericExecuteSpecAdapter(spec.bindNull(index, type))
 
-                override fun bindNull(name: String?, type: Class<*>?): CoDatabaseClient.CoGenericExecuteSpec = GenericExecuteSpecAdapter(spec.bindNull(name, type))
+                override fun bindNull(name: String, type: Class<*>): CoDatabaseClient.CoGenericExecuteSpec = GenericExecuteSpecAdapter(spec.bindNull(name, type))
             }
         }
 
@@ -103,20 +103,22 @@ class CoDatabaseClientBuilder: CoDatabaseClient.Builder {
             override suspend fun exchange(): CoSqlResult<T> =
                     spec.exchange().map { SqlResultAdapter(it) }.awaitFirst()
 
-            override fun bind(index: Int, value: Any?): CoDatabaseClient.CoTypedExecuteSpec<T>
+            override fun bind(index: Int, value: Any): CoDatabaseClient.CoTypedExecuteSpec<T>
                     = TypedExecuteSpecAdapter(spec.bind(index, value))
 
-            override fun bind(name: String?, value: Any?): CoDatabaseClient.CoTypedExecuteSpec<T>
+            override fun bind(name: String, value: Any): CoDatabaseClient.CoTypedExecuteSpec<T>
                     = TypedExecuteSpecAdapter(spec.bind(name, value))
 
-            override fun bind(bean: Any?): CoDatabaseClient.CoTypedExecuteSpec<T>
+            override fun bind(bean: Any): CoDatabaseClient.CoTypedExecuteSpec<T>
                     = TypedExecuteSpecAdapter(spec.bind(bean))
 
-            override fun bindNull(index: Int, type: Class<*>?): CoDatabaseClient.CoTypedExecuteSpec<T>
+            override fun bindNull(index: Int, type: Class<*>): CoDatabaseClient.CoTypedExecuteSpec<T>
                     = TypedExecuteSpecAdapter(spec.bindNull(index, type))
 
-            override fun bindNull(name: String?, type: Class<*>?): CoDatabaseClient.CoTypedExecuteSpec<T>
+            override fun bindNull(name: String, type: Class<*>): CoDatabaseClient.CoTypedExecuteSpec<T>
                     = TypedExecuteSpecAdapter(spec.bindNull(name, type))
+
+
         }
 
         private class SelectFromSpecAdapter(private val spec: DatabaseClient.SelectFromSpec): CoDatabaseClient.CoSelectFromSpec {
