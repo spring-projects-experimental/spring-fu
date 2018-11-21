@@ -69,82 +69,83 @@ allprojects {
 
 publishing {
 	publications {
-		create("jafu-reactive-minimal", MavenPublication::class.java) {
+		create<MavenPublication>("jafu-reactive-minimal") {
 			groupId = "org.springframework.fu"
 			artifactId = "spring-fu-samples-jafu-reactive-minimal"
-			val jafuReactiveMinimalSample by task<Zip> {
+			artifact(task<Zip>("jafuReactiveMinimalSampleZip") {
 				from("samples/jafu-reactive-minimal") {
 					exclude("build", ".gradle", ".idea", "out", "*.iml")
 				}
+				destinationDir = file("$buildDir/dist")
 				into("jafu-reactive-minimal")
 				setExecutablePermissions()
-			}
-			artifact(jafuReactiveMinimalSample)
+
+			})
 		}
 
-		create("kofu-coroutines-minimal", MavenPublication::class.java) {
+		create<MavenPublication>("kofu-coroutines-minimal") {
 			groupId = "org.springframework.fu"
 			artifactId = "spring-fu-samples-kofu-coroutines-minimal"
-			val kofuCoroutinesMinimalSample by task<Zip> {
+			artifact(task<Zip>("kofuCoroutinesMinimalSampleZip") {
 				from("samples/kofu-coroutines-minimal") {
 					exclude("build", ".gradle", ".idea", "out", "*.iml")
 				}
+				destinationDir = file("$buildDir/dist")
 				into("kofu-coroutines-minimal")
 				setExecutablePermissions()
-			}
-			artifact(kofuCoroutinesMinimalSample)
+			})
 		}
 
-		create("kofu-coroutines-mongodb", MavenPublication::class.java) {
+		create<MavenPublication>("kofu-coroutines-mongodb") {
 			groupId = "org.springframework.fu"
 			artifactId = "spring-fu-samples-kofu-coroutines-mongodb"
-			val kofuCoroutinesMongodbSample by task<Zip> {
+			artifact(task<Zip>("kofuCoroutinesMongodbSample") {
 				from("samples/kofu-coroutines-mongodb") {
 					exclude("build", ".gradle", ".idea", "out", "*.iml")
 				}
+				destinationDir = file("$buildDir/dist")
 				into("kofu-coroutines-mongodb")
 				setExecutablePermissions()
-			}
-			artifact(kofuCoroutinesMongodbSample)
+			})
 		}
 
-		create("kofu-reactive-graal", MavenPublication::class.java) {
+		create<MavenPublication>("kofu-reactive-graal") {
 			groupId = "org.springframework.fu"
 			artifactId = "spring-fu-samples-kofu-reactive-graal"
-			val kofuReactiveGraalSample by task<Zip> {
+			artifact(task<Zip>("kofuReactiveGraalSampleZip") {
 				from("samples/kofu-reactive-graal") {
 					exclude("build", ".gradle", ".idea", "out", "*.iml", "com.sample.applicationkt")
 				}
+				destinationDir = file("$buildDir/dist")
 				into("kofu-reactive-graal")
 				setExecutablePermissions()
-			}
-			artifact(kofuReactiveGraalSample)
+			})
 		}
 
-		create("kofu-reactive-minimal", MavenPublication::class.java) {
+		create<MavenPublication>("kofu-reactive-minimal") {
 			groupId = "org.springframework.fu"
 			artifactId = "spring-fu-samples-kofu-reactive-minimal"
-			val kofuReactiveMinimalSample by task<Zip> {
+			artifact(task<Zip>("kofuReactiveMinimalSampleZip") {
 				from("samples/kofu-reactive-minimal") {
 					exclude("build", ".gradle", ".idea", "out", "*.iml")
 				}
+				destinationDir = file("$buildDir/dist")
 				into("kofu-reactive-minimal")
 				setExecutablePermissions()
-			}
-			artifact(kofuReactiveMinimalSample)
+			})
 		}
 
-		create("kofu-reactive-mongodb", MavenPublication::class.java) {
+		create<MavenPublication>("kofu-reactive-mongodb") {
 			groupId = "org.springframework.fu"
 			artifactId = "spring-fu-samples-kofu-reactive-mongodb"
-			val kofuReactiveMongodbSample by task<Zip> {
+			artifact(task<Zip>("kofuReactiveMongodbSampleZip") {
 				from("samples/kofu-reactive-mongodb") {
 					exclude("build", ".gradle", ".idea", "out", "*.iml")
 				}
+				destinationDir = file("$buildDir/dist")
 				into("kofu-reactive-mongodb")
 				setExecutablePermissions()
-			}
-			artifact(kofuReactiveMongodbSample)
+			})
 		}
 	}
 }
@@ -153,5 +154,3 @@ fun CopySpec.setExecutablePermissions() {
 	filesMatching("gradlew") { mode = 0b111101101 }
 	filesMatching("gradlew.bat") { mode = 0b110100100 }
 }
-
-inline fun <reified T : Task> task(noinline configuration: T.() -> Unit) = tasks.creating(T::class, configuration)

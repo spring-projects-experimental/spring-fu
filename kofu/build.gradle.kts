@@ -10,8 +10,9 @@ plugins {
 
 dependencies {
 	api("org.springframework.boot:spring-boot")
+	api("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+
 	implementation(project(":autoconfigure-adapter"))
-	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 
 	compileOnly("org.springframework:spring-webflux")
