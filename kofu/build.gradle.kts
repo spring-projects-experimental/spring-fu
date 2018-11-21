@@ -6,6 +6,7 @@ plugins {
 	id("org.jetbrains.kotlin.jvm")
 	id("io.spring.dependency-management")
 	id("org.jetbrains.dokka")
+	id("java-library")
 }
 
 dependencies {
