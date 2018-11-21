@@ -46,7 +46,7 @@ publishing {
 			val javadocJar by tasks.creating(Jar::class) {
 				dependsOn("javadoc")
 				classifier = "javadoc"
-				from(buildDir.resolve("dokka"))
+				from(buildDir.resolve("docs/javadoc"))
 			}
 			artifact(javadocJar)
 		}
