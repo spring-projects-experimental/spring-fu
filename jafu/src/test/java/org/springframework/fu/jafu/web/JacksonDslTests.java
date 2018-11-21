@@ -29,15 +29,15 @@ public class JacksonDslTests {
 
 	@Test
 	void enableJacksonModuleOnServerCreateAndRequestAJSONEndpoint() {
-		RouterFunction<ServerResponse> router = RouterFunctions
+		var router = RouterFunctions
 				.route()
 				.GET("/user", request -> ServerResponse.ok().header(CONTENT_TYPE, APPLICATION_JSON_UTF8_VALUE).syncBody(new User("Brian")))
 				.build();
 
-		ApplicationDsl app = application(a -> a.server(s -> s.codecs(c -> c.jackson()).importRouter(router)));
+		var app = application(a -> a.server(s -> s.codecs(c -> c.jackson()).importRouter(router)));
 
-		ConfigurableApplicationContext context = app.run();
-		WebTestClient client = WebTestClient.bindToServer().baseUrl("http://127.0.1:8080").build();
+		var context = app.run();
+		var client = WebTestClient.bindToServer().baseUrl("http://127.0.1:8080").build();
 		client.get().uri("/user").exchange()
 				.expectStatus().is2xxSuccessful()
 				.expectHeader().contentType(APPLICATION_JSON_UTF8_VALUE)
@@ -48,15 +48,15 @@ public class JacksonDslTests {
 
 	@Test
 	void enableJacksonModuleOnClientAndServerCreateAndRequestAJSONEndpoint() {
-		RouterFunction<ServerResponse> router = RouterFunctions
+		var router = RouterFunctions
 				.route()
 				.GET("/user", request -> ServerResponse.ok().header(CONTENT_TYPE, APPLICATION_JSON_UTF8_VALUE).syncBody(new User("Brian")))
 				.build();
 
-		ApplicationDsl app = application(a -> a.server(s -> s.codecs(c -> c.jackson()).importRouter(router)).client(c -> c.codecs(codecs -> codecs.jackson())));
-		ConfigurableApplicationContext context = app.run();
-		WebClient client = context.getBean(WebClient.Builder.class).build();
-		Mono<ClientResponse> response = client.get().uri("http://127.0.1:8080/user").exchange();
+		var app = application(a -> a.server(s -> s.codecs(c -> c.jackson()).importRouter(router)).client(c -> c.codecs(codecs -> codecs.jackson())));
+		var context = app.run();
+		var client = context.getBean(WebClient.Builder.class).build();
+		var response = client.get().uri("http://127.0.1:8080/user").exchange();
 
 		StepVerifier.create(response)
 					.consumeNextWith(it -> {
@@ -64,22 +64,22 @@ public class JacksonDslTests {
 						assertEquals(APPLICATION_JSON_UTF8, it.headers().contentType().get());
 					})
 					.verifyComplete();
-		List<ObjectMapper> mappers = context.getBeanProvider(ObjectMapper.class).stream().collect(Collectors.toList());
+		var mappers = context.getBeanProvider(ObjectMapper.class).stream().collect(Collectors.toList());
 		assertEquals(1, mappers.size());
 		context.close();
 	}
 
 	@Test
 	void noJacksonCodecOnServerWhenNotDeclared() {
-		RouterFunction<ServerResponse> router = RouterFunctions
+		var router = RouterFunctions
 				.route()
 				.GET("/user", request -> ServerResponse.ok().header(CONTENT_TYPE, APPLICATION_JSON_UTF8_VALUE).syncBody(new User("Brian")))
 				.build();
 
 
-		ApplicationDsl app = application(a -> a.server(s -> s.importRouter(router)));
-		ConfigurableApplicationContext context = app.run();
-		WebTestClient client = WebTestClient.bindToServer().baseUrl("http://127.0.1:8080").build();
+		var app = application(a -> a.server(s -> s.importRouter(router)));
+		var context = app.run();
+		var client = WebTestClient.bindToServer().baseUrl("http://127.0.1:8080").build();
 		client.get().uri("/user").exchange().expectStatus().is5xxServerError();
 		context.close();
 	}
@@ -107,7 +107,7 @@ public class JacksonDslTests {
 		public boolean equals(Object o) {
 			if (this == o) return true;
 			if (o == null || getClass() != o.getClass()) return false;
-			User user = (User) o;
+			var user = (User) o;
 			return Objects.equals(name, user.name);
 		}
 

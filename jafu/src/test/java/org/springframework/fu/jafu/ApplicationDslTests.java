@@ -2,25 +2,23 @@ package org.springframework.fu.jafu;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.springframework.fu.jafu.ApplicationDsl.*;
+import static org.springframework.fu.jafu.ApplicationDsl.application;
 
 import java.util.function.Consumer;
 
 import org.junit.jupiter.api.Test;
 
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.web.reactive.context.ReactiveWebServerApplicationContext;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.fu.jafu.beans.BeanWithDependency;
 import org.springframework.fu.jafu.beans.SimpleBean;
 
-public class ApplicationDslTests {
+class ApplicationDslTests {
 
 	@Test
 	void createAnEmptyApplication() {
-		ApplicationDsl app = application(false, it -> {});
-		ConfigurableApplicationContext context = app.run();
+		var app = application(false, it -> {});
+		var context = app.run();
 		assertFalse(context instanceof ReactiveWebServerApplicationContext);
 		context.getBean(ReloadableResourceBundleMessageSource.class);
 		context.close();
@@ -28,8 +26,8 @@ public class ApplicationDslTests {
 
 	@Test
 	void createAnApplicationWithACustomBean() {
-		ApplicationDsl app = application(false, a -> a.beans(b -> b.bean(Foo.class)));
-		ConfigurableApplicationContext context = app.run();
+		var app = application(false, a -> a.beans(b -> b.bean(Foo.class)));
+		var context = app.run();
 		context.getBean(ReloadableResourceBundleMessageSource.class);
 		context.getBean(Foo.class);
 		context.close();
@@ -38,8 +36,8 @@ public class ApplicationDslTests {
 	@Test
 	void createAnApplicationWithAConfigurationImport() {
 		Consumer<ConfigurationDsl> beansConfig = c -> c.beans(b -> b.bean(Foo.class));
-		ApplicationDsl app = application(false, a -> a.importConfiguration(beansConfig));
-		ConfigurableApplicationContext context = app.run();
+		var app = application(false, a -> a.importConfiguration(beansConfig));
+		var context = app.run();
 		context.getBean(ReloadableResourceBundleMessageSource.class);
 		context.getBean(Foo.class);
 		context.close();
@@ -47,16 +45,16 @@ public class ApplicationDslTests {
 
 	@Test
 	void applicationProperties() {
-		ApplicationDsl app = application(false, a -> a.properties(City.class, "city"));
-		ConfigurableApplicationContext context = app.run();
+		var app = application(false, a -> a.properties(City.class, "city"));
+		var context = app.run();
 		assertEquals(context.getBean(City.class).name, "San Francisco");
 		context.close();
 	}
 
 	@Test
 	void createAnApplicationWithBeanScanning() {
-		ApplicationDsl app = application(false, a -> a.beans(beans -> beans.scan("org.springframework.fu.jafu.beans")));
-		ConfigurableApplicationContext context = app.run();
+		var app = application(false, a -> a.beans(beans -> beans.scan("org.springframework.fu.jafu.beans")));
+		var context = app.run();
 		context.getBean(SimpleBean.class);
 		context.getBean(BeanWithDependency.class);
 		context.close();

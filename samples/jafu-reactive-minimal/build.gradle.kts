@@ -4,6 +4,11 @@ plugins {
 	id("java")
 }
 
+java {
+	sourceCompatibility = JavaVersion.VERSION_11
+	targetCompatibility = JavaVersion.VERSION_11
+}
+
 dependencies {
 	implementation("org.springframework.fu:spring-fu-jafu:0.0.3.BUILD-SNAPSHOT")
 

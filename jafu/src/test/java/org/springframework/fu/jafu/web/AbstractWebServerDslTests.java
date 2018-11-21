@@ -17,13 +17,16 @@
 package org.springframework.fu.jafu.web;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.fu.jafu.ApplicationDsl.*;
+import static org.springframework.fu.jafu.ApplicationDsl.application;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
-import static org.springframework.web.reactive.function.server.ServerResponse.*;
+import static org.springframework.web.reactive.function.server.ServerResponse.noContent;
+import static org.springframework.web.reactive.function.server.ServerResponse.ok;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import reactor.test.StepVerifier;
+
 import org.springframework.boot.logging.LogLevel;
 import org.springframework.boot.web.reactive.server.ConfigurableReactiveWebServerFactory;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -33,7 +36,6 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerResponse;
-import reactor.test.StepVerifier;
 
 /**
  * @author Sebastien Deleuze
@@ -47,29 +49,29 @@ abstract class AbstractWebServerDslTests {
 
 	@Test
 	void createAnApplicationWithAnEmptyServer() {
-		ApplicationDsl app = application(a -> a.server(s -> s.engine(getServerFactory())));
-		ConfigurableApplicationContext context = app.run();
+		var app = application(a -> a.server(s -> s.engine(getServerFactory())));
+		var context = app.run();
 		context.close();
 	}
 
 	@Test
 	void createAndRequestAnEndpoint() {
-		RouterFunction<ServerResponse> router = route().GET("/foo", request -> noContent().build()).build();
-		ApplicationDsl app = application(a -> a.server(s -> s.engine(getServerFactory()).importRouter(router)));
+		var router = route().GET("/foo", request -> noContent().build()).build();
+		var app = application(a -> a.server(s -> s.engine(getServerFactory()).importRouter(router)));
 
-		ConfigurableApplicationContext context = app.run();
-		WebTestClient client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:" + port).build();
+		var context = app.run();
+		var client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:" + port).build();
 		client.get().uri("/foo"). accept(MediaType.TEXT_PLAIN).exchange().expectStatus().is2xxSuccessful();
 		context.close();
 	}
 
 	@Test
 	void createAWebClientAndRequestAnEndpoint() {
-		RouterFunction<ServerResponse> router = route().GET("/", request -> noContent().build()).build();
-		ApplicationDsl app = application(a -> a.server(s -> s.engine(getServerFactory()).importRouter(router)).client(c -> c.baseUrl("http://127.0.0.1:" + port)));
+		var router = route().GET("/", request -> noContent().build()).build();
+		var app = application(a -> a.server(s -> s.engine(getServerFactory()).importRouter(router)).client(c -> c.baseUrl("http://127.0.0.1:" + port)));
 
-		ConfigurableApplicationContext context = app.run();
-		WebClient client = context.getBean(WebClient.Builder.class).build();
+		var context = app.run();
+		var client = context.getBean(WebClient.Builder.class).build();
 		StepVerifier.create(client.get().uri("/").exchange())
 					.consumeNextWith(consumer -> assertEquals(NO_CONTENT, consumer.statusCode()))
 					.verifyComplete();
@@ -78,14 +80,14 @@ abstract class AbstractWebServerDslTests {
 
 	@Test
 	void declare2RouterBlocks() {
-		RouterFunction<ServerResponse> router1 = route().GET("/foo", request -> noContent().build()).build();
-		RouterFunction<ServerResponse> router2 = route().GET("/bar", request -> ok().build()).build();
+		var router1 = route().GET("/foo", request -> noContent().build()).build();
+		var router2 = route().GET("/bar", request -> ok().build()).build();
 
-		ApplicationDsl app = application(a -> a.server(s -> s.engine(getServerFactory())
+		var app = application(a -> a.server(s -> s.engine(getServerFactory())
 				.importRouter(router1)
 				.importRouter(router2)));
-		ConfigurableApplicationContext context = app.run();
-		WebTestClient client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:" + port).build();
+		var context = app.run();
+		var client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:" + port).build();
 		client.get().uri("/foo").exchange().expectStatus().isNoContent();
 		client.get().uri("/bar").exchange().expectStatus().isOk();
 		context.close();
@@ -93,7 +95,7 @@ abstract class AbstractWebServerDslTests {
 
 	@Test
 	void declare2ServerBlocks() {
-		ApplicationDsl app = application(a -> a
+		var app = application(a -> a
 				.server(s -> s.engine(getServerFactory()))
 				.server(s -> s.engine(getServerFactory()).port(8181)));
 		Assertions.assertThrows(IllegalStateException.class, app::run);
@@ -101,15 +103,15 @@ abstract class AbstractWebServerDslTests {
 
 	@Test
 	void checkThatConcurrentModificationExceptionIsNotThrown() {
-		RouterFunction<ServerResponse> router = route().GET("/", request -> noContent().build()).build();
+		var router = route().GET("/", request -> noContent().build()).build();
 
-		ApplicationDsl app = application(a -> a.server(s -> s.engine(getServerFactory())
+		var app = application(a -> a.server(s -> s.engine(getServerFactory())
 				.codecs(c -> c.string().jackson())
 				.importRouter(router))
 			.logging(l -> l.level(LogLevel.DEBUG))
 			.mongodb(m -> m.embedded()));
-		ConfigurableApplicationContext context = app.run();
-		WebTestClient client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:" + port).build();
+		var context = app.run();
+		var client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:" + port).build();
 		client.get().uri("/").exchange().expectStatus().is2xxSuccessful();
 		context.close();
 	}

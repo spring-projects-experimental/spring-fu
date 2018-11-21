@@ -1,5 +1,7 @@
 package com.sample;
 
+import static org.springframework.web.reactive.function.server.ServerResponse.*;
+
 import reactor.core.publisher.Mono;
 
 import org.springframework.web.reactive.function.server.ServerRequest;
@@ -14,6 +16,6 @@ public class SampleHandler {
 	}
 
 	public Mono<ServerResponse> hello(ServerRequest request) {
-		return ServerResponse.ok().syncBody(this.sampleService.generateMessage());
+		return ok().syncBody(sampleService.generateMessage());
 	}
 }
