@@ -1,5 +1,6 @@
 .gradle
 build/
+target/
 !gradle/wrapper/gradle-wrapper.jar
 .idea
 *.iws
