@@ -19,6 +19,7 @@ package org.springframework.data.mongodb.core
 import com.mongodb.ReadPreference
 import com.mongodb.client.result.DeleteResult
 import com.mongodb.client.result.UpdateResult
+import kotlinx.coroutines.ObsoleteCoroutinesApi
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.reactive.*
 import org.bson.Document
@@ -327,9 +328,13 @@ open class CoMongoTemplate(
 	override val converter: MongoConverter
 		get() = reactiveMongoOperations.converter
 
+
+	@UseExperimental(ObsoleteCoroutinesApi::class)
 	override fun <T> tail(query: Query, entityClass: Class<T>): ReceiveChannel<T> =
 		reactiveMongoOperations.tail(query, entityClass).openSubscription()
 
+
+	@UseExperimental(ObsoleteCoroutinesApi::class)
 	override fun <T> tail(query: Query, entityClass: Class<T>, collectionName: String): ReceiveChannel<T> =
 		reactiveMongoOperations.tail(query, entityClass, collectionName).openSubscription()
 }

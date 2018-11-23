@@ -19,7 +19,7 @@ package org.springframework.web.server
 import kotlinx.coroutines.reactive.awaitFirstOrDefault
 import org.springframework.http.server.CoServerHttpResponse
 import org.springframework.http.server.coroutines.CoServerHttpRequest
-import org.springframework.web.server.session.asCoroutines
+import org.springframework.web.server.session.asCoroutine
 
 class DefaultCoServerWebExchange(private val exchange: ServerWebExchange) : CoServerWebExchange {
 	override val request: CoServerHttpRequest
@@ -28,7 +28,7 @@ class DefaultCoServerWebExchange(private val exchange: ServerWebExchange) : CoSe
 		get() = CoServerHttpResponse(exchange.response)
 
 	override suspend fun getSession(): CoWebSession? =
-		exchange.session.awaitFirstOrDefault(null)?.asCoroutines()
+		exchange.session.awaitFirstOrDefault(null)?.asCoroutine()
 
 	override fun mutate(): CoServerWebExchange.Builder =
 		DefaultCoServerWebExchangeBuilder(exchange.mutate())

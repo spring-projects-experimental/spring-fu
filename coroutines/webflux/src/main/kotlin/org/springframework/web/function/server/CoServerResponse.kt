@@ -17,6 +17,8 @@
 package org.springframework.web.function.server
 
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.ObsoleteCoroutinesApi
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.reactive.asPublisher
 import kotlinx.coroutines.reactive.awaitFirst
@@ -35,37 +37,37 @@ import java.time.ZonedDateTime
 class CoHandlerFunction {
 
 	fun from(other: CoServerResponse) =
-		ServerResponse.from(other.extractServerResponse()).asCoroutineBodyBuilder()
+		ServerResponse.from(other.extractServerResponse()).asCoroutine()
 
 	fun created(location: URI) =
-		ServerResponse.created(location).asCoroutineBodyBuilder()
+		ServerResponse.created(location).asCoroutine()
 
-	fun ok() = ServerResponse.ok().asCoroutineBodyBuilder()
+	fun ok() = ServerResponse.ok().asCoroutine()
 
 	fun noContent(): CoHeadersBuilder =
-		ServerResponse.noContent().asCoroutineHeadersBuilder()
+		ServerResponse.noContent().asCoroutine()
 
-	fun accepted() = ServerResponse.accepted().asCoroutineBodyBuilder()
+	fun accepted() = ServerResponse.accepted().asCoroutine()
 
 	fun permanentRedirect(location: URI): CoBodyBuilder =
-		ServerResponse.permanentRedirect(location).asCoroutineBodyBuilder()
+		ServerResponse.permanentRedirect(location).asCoroutine()
 
 	fun temporaryRedirect(location: URI): CoBodyBuilder =
-		ServerResponse.temporaryRedirect(location).asCoroutineBodyBuilder()
+		ServerResponse.temporaryRedirect(location).asCoroutine()
 
 	fun seeOther(location: URI): CoBodyBuilder =
-		ServerResponse.seeOther(location).asCoroutineBodyBuilder()
+		ServerResponse.seeOther(location).asCoroutine()
 
-	fun badRequest() = ServerResponse.badRequest().asCoroutineBodyBuilder()
+	fun badRequest() = ServerResponse.badRequest().asCoroutine()
 
 	fun notFound(): CoHeadersBuilder =
-		ServerResponse.notFound().asCoroutineHeadersBuilder()
+		ServerResponse.notFound().asCoroutine()
 
-	fun unprocessableEntity() = ServerResponse.unprocessableEntity().asCoroutineBodyBuilder()
+	fun unprocessableEntity() = ServerResponse.unprocessableEntity().asCoroutine()
 
-	fun status(status: HttpStatus): CoBodyBuilder = ServerResponse.status(status).asCoroutineBodyBuilder()
+	fun status(status: HttpStatus): CoBodyBuilder = ServerResponse.status(status).asCoroutine()
 
-	fun status(status: Int) = ServerResponse.status(status).asCoroutineBodyBuilder()
+	fun status(status: Int) = ServerResponse.status(status).asCoroutine()
 
 }
 
@@ -191,31 +193,32 @@ internal open class DefaultCoHeadersBuilder(private val builder: ServerResponse.
 
 internal open class DefaultCoBodyBuilder(private val bodyBuilder: ServerResponse.BodyBuilder) :
 	DefaultCoHeadersBuilder(bodyBuilder), CoBodyBuilder {
-	override suspend fun build(): CoServerResponse = bodyBuilder.build().asCoroutines()
+	override suspend fun build(): CoServerResponse = bodyBuilder.build().asCoroutine()
 
 	override suspend fun body(inserter: CoBodyInserter<*, in CoServerHttpResponse>): CoServerResponse =
-		bodyBuilder.body(inserter.asBodyInserter()).asCoroutines()
+		bodyBuilder.body(inserter.asBodyInserter()).asCoroutine()
 
 	override suspend fun <T> body(value: T?, elementClass: Class<T>): CoServerResponse =
-		bodyBuilder.body(Mono.justOrEmpty(value), elementClass).asCoroutines()
+		bodyBuilder.body(Mono.justOrEmpty(value), elementClass).asCoroutine()
 
+	@UseExperimental(ExperimentalCoroutinesApi::class, ObsoleteCoroutinesApi::class)
 	override suspend fun <T> body(channel: ReceiveChannel<T>, elementClass: Class<T>): CoServerResponse =
-		bodyBuilder.body(channel.asPublisher(Dispatchers.Unconfined), elementClass).asCoroutines()
+		bodyBuilder.body(channel.asPublisher(Dispatchers.Unconfined), elementClass).asCoroutine()
 
 	override fun contentType(contentType: MediaType): CoBodyBuilder = apply {
 		bodyBuilder.contentType(contentType)
 	}
 
 	override suspend fun render(name: String, vararg modelAttributes: Any): CoServerResponse =
-		bodyBuilder.render(name, modelAttributes).awaitFirst().asCoroutines()
+		bodyBuilder.render(name, modelAttributes).awaitFirst().asCoroutine()
 
 	override suspend fun render(name: String, model: Map<String, *>): CoServerResponse =
-		bodyBuilder.render(name, model).awaitFirst().asCoroutines()
+		bodyBuilder.render(name, model).awaitFirst().asCoroutine()
 
 	override suspend fun syncBody(body: Any): CoServerResponse =
-		bodyBuilder.syncBody(body).asCoroutines()
+		bodyBuilder.syncBody(body).asCoroutine()
 
-	suspend fun Mono<ServerResponse>.asCoroutines(): CoServerResponse =
+	suspend fun Mono<ServerResponse>.asCoroutine(): CoServerResponse =
 		awaitFirst().let { CoServerResponse(it) }
 }
 
@@ -236,9 +239,9 @@ class DefaultCoRenderingResponseBuilder(private val builder: RenderingResponse.B
 private fun CoBodyInserter<*, in CoServerHttpResponse>.asBodyInserter(): BodyInserter<Any, ServerHttpResponse> =
 	TODO()
 
-internal fun ServerResponse.BodyBuilder.asCoroutineBodyBuilder(): CoBodyBuilder = CoBodyBuilder(this)
+internal fun ServerResponse.BodyBuilder.asCoroutine(): CoBodyBuilder = CoBodyBuilder(this)
 
-internal fun ServerResponse.HeadersBuilder<*>.asCoroutineHeadersBuilder(): CoHeadersBuilder =
+internal fun ServerResponse.HeadersBuilder<*>.asCoroutine(): CoHeadersBuilder =
 	CoHeadersBuilder(this)
 
 suspend inline fun <reified T : Any> CoBodyBuilder.body(channel: ReceiveChannel<T>): CoServerResponse =
@@ -247,7 +250,7 @@ suspend inline fun <reified T : Any> CoBodyBuilder.body(channel: ReceiveChannel<
 suspend inline fun <reified T : Any> CoBodyBuilder.body(value: T?): CoServerResponse =
 	body(value, T::class.java)
 
-fun ServerResponse.asCoroutines(): CoServerResponse =
+fun ServerResponse.asCoroutine(): CoServerResponse =
 	when (this) {
 		is RenderingResponse -> CoRenderingResponse(this)
 		else -> CoServerResponse(this)

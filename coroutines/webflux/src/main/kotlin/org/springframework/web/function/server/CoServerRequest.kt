@@ -16,6 +16,7 @@
 
 package org.springframework.web.function.server
 
+import kotlinx.coroutines.ObsoleteCoroutinesApi
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.reactive.awaitFirstOrDefault
 import kotlinx.coroutines.reactive.openSubscription
@@ -23,7 +24,7 @@ import org.springframework.http.server.coroutines.CoServerHttpRequest
 import org.springframework.web.function.CoBodyExtractor
 import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.server.CoWebSession
-import org.springframework.web.server.session.asCoroutines
+import org.springframework.web.server.session.asCoroutine
 import java.net.URI
 
 interface CoServerRequest {
@@ -63,6 +64,7 @@ class DefaultCoServerRequest(private val req: ServerRequest) : CoServerRequest {
 	override suspend fun <T> body(elementClass: Class<out T>): T? =
 		req.bodyToMono(elementClass).awaitFirstOrDefault(null)
 
+	@UseExperimental(ObsoleteCoroutinesApi::class)
 	override fun <T> bodyToReceiveChannel(elementClass: Class<out T>): ReceiveChannel<T> =
 		req.bodyToFlux(elementClass).openSubscription()
 
@@ -71,7 +73,7 @@ class DefaultCoServerRequest(private val req: ServerRequest) : CoServerRequest {
 	override fun pathVariable(name: String): String? = req.pathVariable(name)
 
 	override suspend fun session(): CoWebSession? =
-		req.session().awaitFirstOrDefault(null)?.asCoroutines()
+		req.session().awaitFirstOrDefault(null)?.asCoroutine()
 
 	override fun uri(): URI = req.uri()
 

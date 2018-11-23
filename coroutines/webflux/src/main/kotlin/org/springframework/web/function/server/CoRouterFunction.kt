@@ -17,6 +17,7 @@
 package org.springframework.web.function.server
 
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.reactor.mono
 import org.springframework.core.io.Resource
@@ -385,11 +386,12 @@ open class CoRouterFunctionDsl(private val init: (CoRouterFunctionDsl.() -> Unit
 	 * [Resource] for the given request, it will be it will be exposed using a
 	 * [HandlerFunction] that handles GET, HEAD, and OPTIONS requests.
 	 */
+	@UseExperimental(ExperimentalCoroutinesApi::class)
 	fun resources(lookupFunction: suspend (CoServerRequest) -> Resource) {
 		routes += RouterFunctions.resources {
-			GlobalScope.mono(Dispatchers.Unconfined, {
+			GlobalScope.mono(Dispatchers.Unconfined) {
 				lookupFunction.invoke(CoServerRequest.invoke(it))
-			})
+			}
 		}
 	}
 
@@ -398,44 +400,45 @@ open class CoRouterFunctionDsl(private val init: (CoRouterFunctionDsl.() -> Unit
 		return routes.reduce(RouterFunction<ServerResponse>::and)
 	}
 
+	@UseExperimental(ExperimentalCoroutinesApi::class)
 	private fun asHandlerFunction(init: suspend (CoServerRequest) -> CoServerResponse) = HandlerFunction {
-		GlobalScope.mono(Dispatchers.Unconfined, {
+		GlobalScope.mono(Dispatchers.Unconfined) {
 			init(CoServerRequest.invoke(it)).extractServerResponse()
-		})
+		}
 	}
 
 	fun from(other: CoServerResponse) =
-			ServerResponse.from(other.extractServerResponse()).asCoroutineBodyBuilder()
+			ServerResponse.from(other.extractServerResponse()).asCoroutine()
 
 	fun created(location: URI) =
-			ServerResponse.created(location).asCoroutineBodyBuilder()
+			ServerResponse.created(location).asCoroutine()
 
-	fun ok() = ServerResponse.ok().asCoroutineBodyBuilder()
+	fun ok() = ServerResponse.ok().asCoroutine()
 
 	fun noContent(): CoHeadersBuilder =
-			ServerResponse.noContent().asCoroutineHeadersBuilder()
+			ServerResponse.noContent().asCoroutine()
 
-	fun accepted() = ServerResponse.accepted().asCoroutineBodyBuilder()
+	fun accepted() = ServerResponse.accepted().asCoroutine()
 
 	fun permanentRedirect(location: URI): CoBodyBuilder =
-			ServerResponse.permanentRedirect(location).asCoroutineBodyBuilder()
+			ServerResponse.permanentRedirect(location).asCoroutine()
 
 	fun temporaryRedirect(location: URI): CoBodyBuilder =
-			ServerResponse.temporaryRedirect(location).asCoroutineBodyBuilder()
+			ServerResponse.temporaryRedirect(location).asCoroutine()
 
 	fun seeOther(location: URI): CoBodyBuilder =
-			ServerResponse.seeOther(location).asCoroutineBodyBuilder()
+			ServerResponse.seeOther(location).asCoroutine()
 
-	fun badRequest() = ServerResponse.badRequest().asCoroutineBodyBuilder()
+	fun badRequest() = ServerResponse.badRequest().asCoroutine()
 
 	fun notFound(): CoHeadersBuilder =
-			ServerResponse.notFound().asCoroutineHeadersBuilder()
+			ServerResponse.notFound().asCoroutine()
 
-	fun unprocessableEntity() = ServerResponse.unprocessableEntity().asCoroutineBodyBuilder()
+	fun unprocessableEntity() = ServerResponse.unprocessableEntity().asCoroutine()
 
-	fun status(status: HttpStatus): CoBodyBuilder = ServerResponse.status(status).asCoroutineBodyBuilder()
+	fun status(status: HttpStatus): CoBodyBuilder = ServerResponse.status(status).asCoroutine()
 
-	fun status(status: Int) = ServerResponse.status(status).asCoroutineBodyBuilder()
+	fun status(status: Int) = ServerResponse.status(status).asCoroutine()
 
 }
 

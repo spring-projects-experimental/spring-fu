@@ -16,6 +16,7 @@
 
 package org.springframework.http.server.coroutines
 
+import kotlinx.coroutines.ObsoleteCoroutinesApi
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.reactive.openSubscription
 import org.springframework.core.io.buffer.DataBuffer
@@ -26,6 +27,7 @@ import java.net.URI
 
 class DefaultCoServerHttpRequest(val request: ServerHttpRequest) : CoServerHttpRequest {
 
+	@UseExperimental(ObsoleteCoroutinesApi::class)
 	override val body: ReceiveChannel<DataBuffer>
 		get() = request.body.openSubscription()
 

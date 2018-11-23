@@ -78,19 +78,19 @@ interface CoWebClient {
 
 		fun attributes(attributesConsumer: (Map<String, Any>) -> Unit): T
 
-		suspend fun retrieve(): CoroutineResponseSpec
+		suspend fun retrieve(): CoResponseSpec
 
 		suspend fun exchange(): CoClientResponse?
 	}
 
-	interface CoroutineResponseSpec {
+	interface CoResponseSpec {
 		suspend fun <T> body(clazz: Class<T>): T?
 	}
 
-	fun WebClient.asCoroutines() = DefaultCoWebClient(this)
+	fun WebClient.asCoroutine() = DefaultCoWebClient(this)
 }
 
-suspend inline fun <reified T : Any> CoWebClient.CoroutineResponseSpec.body(): T? = body(T::class.java)
+suspend inline fun <reified T : Any> CoWebClient.CoResponseSpec.body(): T? = body(T::class.java)
 
 open class DefaultCoWebClient(private val client: WebClient) : CoWebClient {
 
@@ -114,12 +114,12 @@ open class DefaultCoWebClient(private val client: WebClient) : CoWebClient {
 		DefaultRequestBodyUriSpec(f.invoke() as WebClient.RequestBodyUriSpec)
 }
 
-private fun WebClient.ResponseSpec.asCoroutines(): CoWebClient.CoroutineResponseSpec =
+private fun WebClient.ResponseSpec.asCoroutine(): CoWebClient.CoResponseSpec =
 		DefaultCoResponseSpec(this)
 
 open class DefaultCoResponseSpec(
 	private val spec: WebClient.ResponseSpec
-): CoWebClient.CoroutineResponseSpec {
+): CoWebClient.CoResponseSpec {
 	override suspend fun <T> body(clazz: Class<T>): T? =
 			spec.bodyToMono(clazz).awaitFirstOrDefault(null)
 }
@@ -183,6 +183,6 @@ open class DefaultRequestBodyUriSpec(
 		DefaultCoClientResponse(it)
 	}
 
-	override suspend fun retrieve(): CoWebClient.CoroutineResponseSpec =
-		spec.retrieve().asCoroutines()
+	override suspend fun retrieve(): CoWebClient.CoResponseSpec =
+		spec.retrieve().asCoroutine()
 }

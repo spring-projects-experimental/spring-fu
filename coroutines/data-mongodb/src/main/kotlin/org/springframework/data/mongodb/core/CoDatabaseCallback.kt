@@ -17,6 +17,7 @@
 package org.springframework.data.mongodb.core
 
 import com.mongodb.reactivestreams.client.MongoDatabase
+import kotlinx.coroutines.ObsoleteCoroutinesApi
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.reactive.openSubscription
 
@@ -26,6 +27,8 @@ interface CoDatabaseCallback<T> {
     fun doInDB(db: MongoDatabase): ReceiveChannel<T>
 
     companion object {
+
+        @UseExperimental(ObsoleteCoroutinesApi::class)
         operator fun <T> invoke(callback: ReactiveDatabaseCallback<T>): CoDatabaseCallback<T> = object: CoDatabaseCallback<T> {
             override val reactiveDatabaseCallback: ReactiveDatabaseCallback<T>
                 get() = callback

@@ -31,4 +31,4 @@ class DefaultCoWebSession(val session: WebSession) : CoWebSession {
 	}
 }
 
-internal fun WebSession.asCoroutines() = DefaultCoWebSession(this)
+internal fun WebSession.asCoroutine() = DefaultCoWebSession(this)

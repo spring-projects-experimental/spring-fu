@@ -17,12 +17,14 @@
 package org.springframework.web.server
 
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.reactor.mono
 import reactor.core.publisher.Mono
 
 interface CoWebFilter : WebFilter {
 
+	@UseExperimental(ExperimentalCoroutinesApi::class)
 	@Suppress("UNCHECKED_CAST")
 	override fun filter(exchange: ServerWebExchange, chain: WebFilterChain): Mono<Void> = GlobalScope.mono(Dispatchers.Unconfined) {
 		filter(CoServerWebExchange(exchange), CoWebFilterChain(chain))
