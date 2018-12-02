@@ -37,7 +37,7 @@ public class JacksonDslTests {
 		var app = application(a -> a.server(s -> s.codecs(c -> c.jackson()).importRouter(router)));
 
 		var context = app.run();
-		var client = WebTestClient.bindToServer().baseUrl("http://127.0.1:8080").build();
+		var client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:8080").build();
 		client.get().uri("/user").exchange()
 				.expectStatus().is2xxSuccessful()
 				.expectHeader().contentType(APPLICATION_JSON_UTF8_VALUE)
@@ -56,7 +56,7 @@ public class JacksonDslTests {
 		var app = application(a -> a.server(s -> s.codecs(c -> c.jackson()).importRouter(router)).client(c -> c.codecs(codecs -> codecs.jackson())));
 		var context = app.run();
 		var client = context.getBean(WebClient.Builder.class).build();
-		var response = client.get().uri("http://127.0.1:8080/user").exchange();
+		var response = client.get().uri("http://127.0.0.1:8080/user").exchange();
 
 		StepVerifier.create(response)
 					.consumeNextWith(it -> {
@@ -79,7 +79,7 @@ public class JacksonDslTests {
 
 		var app = application(a -> a.server(s -> s.importRouter(router)));
 		var context = app.run();
-		var client = WebTestClient.bindToServer().baseUrl("http://127.0.1:8080").build();
+		var client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:8080").build();
 		client.get().uri("/user").exchange().expectStatus().is5xxServerError();
 		context.close();
 	}
