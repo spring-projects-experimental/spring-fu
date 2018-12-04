@@ -29,13 +29,10 @@ import reactor.test.StepVerifier;
 
 import org.springframework.boot.logging.LogLevel;
 import org.springframework.boot.web.reactive.server.ConfigurableReactiveWebServerFactory;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.fu.jafu.ApplicationDsl;
+import org.springframework.fu.jafu.mongo.MongoDsl;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.reactive.function.server.RouterFunction;
-import org.springframework.web.reactive.function.server.ServerResponse;
 
 /**
  * @author Sebastien Deleuze
@@ -49,7 +46,7 @@ abstract class AbstractWebServerDslTests {
 
 	@Test
 	void createAnApplicationWithAnEmptyServer() {
-		var app = application(a -> a.server(s -> s.engine(getServerFactory())));
+		var app = application(a -> a.enable(WebFluxServerDsl.class, s -> s.engine(getServerFactory())));
 		var context = app.run();
 		context.close();
 	}
@@ -57,7 +54,7 @@ abstract class AbstractWebServerDslTests {
 	@Test
 	void createAndRequestAnEndpoint() {
 		var router = route().GET("/foo", request -> noContent().build()).build();
-		var app = application(a -> a.server(s -> s.engine(getServerFactory()).importRouter(router)));
+		var app = application(a -> a.enable(WebFluxServerDsl.class, s -> s.engine(getServerFactory()).importRouter(router)));
 
 		var context = app.run();
 		var client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:" + port).build();
@@ -68,7 +65,9 @@ abstract class AbstractWebServerDslTests {
 	@Test
 	void createAWebClientAndRequestAnEndpoint() {
 		var router = route().GET("/", request -> noContent().build()).build();
-		var app = application(a -> a.server(s -> s.engine(getServerFactory()).importRouter(router)).client(c -> c.baseUrl("http://127.0.0.1:" + port)));
+		var app = application(a ->
+				a.enable(WebFluxServerDsl.class, s -> s.engine(getServerFactory()).importRouter(router))
+				.enable(WebFluxClientDsl.class, c -> c.baseUrl("http://127.0.0.1:" + port)));
 
 		var context = app.run();
 		var client = context.getBean(WebClient.Builder.class).build();
@@ -83,7 +82,7 @@ abstract class AbstractWebServerDslTests {
 		var router1 = route().GET("/foo", request -> noContent().build()).build();
 		var router2 = route().GET("/bar", request -> ok().build()).build();
 
-		var app = application(a -> a.server(s -> s.engine(getServerFactory())
+		var app = application(a -> a.enable(WebFluxServerDsl.class, s -> s.engine(getServerFactory())
 				.importRouter(router1)
 				.importRouter(router2)));
 		var context = app.run();
@@ -96,8 +95,8 @@ abstract class AbstractWebServerDslTests {
 	@Test
 	void declare2ServerBlocks() {
 		var app = application(a -> a
-				.server(s -> s.engine(getServerFactory()))
-				.server(s -> s.engine(getServerFactory()).port(8181)));
+				.enable(WebFluxServerDsl.class, s -> s.engine(getServerFactory()))
+				.enable(WebFluxServerDsl.class, s -> s.engine(getServerFactory()).port(8181)));
 		Assertions.assertThrows(IllegalStateException.class, app::run);
 	}
 
@@ -105,11 +104,11 @@ abstract class AbstractWebServerDslTests {
 	void checkThatConcurrentModificationExceptionIsNotThrown() {
 		var router = route().GET("/", request -> noContent().build()).build();
 
-		var app = application(a -> a.server(s -> s.engine(getServerFactory())
+		var app = application(a -> a.enable(WebFluxServerDsl.class, s -> s.engine(getServerFactory())
 				.codecs(c -> c.string().jackson())
 				.importRouter(router))
 			.logging(l -> l.level(LogLevel.DEBUG))
-			.mongodb(m -> m.embedded()));
+			.enable(MongoDsl.class));
 		var context = app.run();
 		var client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:" + port).build();
 		client.get().uri("/").exchange().expectStatus().is2xxSuccessful();

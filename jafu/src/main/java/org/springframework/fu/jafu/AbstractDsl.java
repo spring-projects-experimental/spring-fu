@@ -1,8 +1,10 @@
 package org.springframework.fu.jafu;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Consumer;
 
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
@@ -35,6 +37,20 @@ public abstract class AbstractDsl implements ApplicationContextInitializer<Gener
 
 	public List<String> profiles() {
 		return Arrays.asList(context.getEnvironment().getActiveProfiles());
+	}
+
+	public <T extends AbstractDsl> AbstractDsl enable(Class<T> clazz) {
+		return enable(clazz, t -> {});
+	}
+
+	public <T extends AbstractDsl> AbstractDsl enable(Class<T> clazz, Consumer<T> dsl) {
+		try {
+			addInitializer(clazz.getDeclaredConstructor(Consumer.class).newInstance(dsl));
+		}
+		catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+			e.printStackTrace();
+		}
+		return this;
 	}
 
 	abstract public void register(GenericApplicationContext context);

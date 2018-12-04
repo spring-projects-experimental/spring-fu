@@ -8,10 +8,7 @@ import org.springframework.boot.context.properties.bind.Bindable;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.support.GenericApplicationContext;
-import org.springframework.fu.jafu.mongo.MongoDsl;
-import org.springframework.fu.jafu.r2dbc.R2dbcDsl;
-import org.springframework.fu.jafu.web.WebFluxClientDsl;
-import org.springframework.fu.jafu.web.WebFluxServerDsl;
+
 
 /**
  * Jafu DSL for modular configuration that can be imported in the application.
@@ -30,16 +27,6 @@ public class ConfigurationDsl extends AbstractDsl {
 
 	public ConfigurationDsl importConfiguration(Consumer<ConfigurationDsl> dsl) {
 		addInitializer(new ConfigurationDsl(dsl));
-		return this;
-	}
-
-	public ConfigurationDsl server(Consumer<WebFluxServerDsl> dsl) {
-		addInitializer(new WebFluxServerDsl(dsl));
-		return this;
-	}
-
-	public ConfigurationDsl client(Consumer<WebFluxClientDsl> dsl) {
-		addInitializer(new WebFluxClientDsl(dsl));
 		return this;
 	}
 
@@ -63,6 +50,16 @@ public class ConfigurationDsl extends AbstractDsl {
 		return this;
 	}
 
+	@Override
+	public <T extends AbstractDsl> ConfigurationDsl enable(Class<T> clazz) {
+		return (ConfigurationDsl) super.enable(clazz);
+	}
+
+	@Override
+	public <T extends AbstractDsl> ConfigurationDsl enable(Class<T> clazz, Consumer<T> dsl) {
+		return (ConfigurationDsl) super.enable(clazz, dsl);
+	}
+
 	/**
 	 * Declare application event Listeners in order to run tasks when {@link ApplicationEvent}
 	 * like {@link ApplicationReadyEvent} are emitted.
@@ -74,26 +71,6 @@ public class ConfigurationDsl extends AbstractDsl {
 				listener.onApplicationEvent(e);
 			}
 		});
-		return this;
-	}
-
-	public ConfigurationDsl mongodb() {
-		addInitializer(new MongoDsl(dsl -> {}));
-		return this;
-	}
-
-	public ConfigurationDsl mongodb(Consumer<MongoDsl> dsl) {
-		addInitializer(new MongoDsl(dsl));
-		return this;
-	}
-
-	public ConfigurationDsl r2dbc() {
-		addInitializer(new R2dbcDsl(dsl -> {}));
-		return this;
-	}
-
-	public ConfigurationDsl r2dbc(Consumer<R2dbcDsl> dsl) {
-		addInitializer(new R2dbcDsl(dsl));
 		return this;
 	}
 
