@@ -6,22 +6,16 @@ import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
-import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.fu.jafu.ApplicationDsl;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.RouterFunctions;
 import org.springframework.web.reactive.function.server.ServerResponse;
 

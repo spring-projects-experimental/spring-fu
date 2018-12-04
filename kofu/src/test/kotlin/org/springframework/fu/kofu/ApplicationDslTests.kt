@@ -22,7 +22,6 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.getBean
 import org.springframework.boot.web.reactive.context.ReactiveWebServerApplicationContext
 import org.springframework.context.support.ReloadableResourceBundleMessageSource
-import org.springframework.context.support.beans
 import org.springframework.fu.kofu.beans.BeanWithDependency
 import org.springframework.fu.kofu.beans.SimpleBean
 

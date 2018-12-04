@@ -4,8 +4,6 @@ import java.util.function.Consumer;
 
 import org.springframework.boot.autoconfigure.data.mongo.MongoDataInitializer;
 import org.springframework.boot.autoconfigure.data.mongo.MongoReactiveDataInitializer;
-import org.springframework.boot.autoconfigure.data.r2dbc.DatabaseClientInitializer;
-import org.springframework.boot.autoconfigure.data.r2dbc.R2dbcProperties;
 import org.springframework.boot.autoconfigure.mongo.MongoProperties;
 import org.springframework.boot.autoconfigure.mongo.MongoReactiveInitializer;
 import org.springframework.context.support.GenericApplicationContext;

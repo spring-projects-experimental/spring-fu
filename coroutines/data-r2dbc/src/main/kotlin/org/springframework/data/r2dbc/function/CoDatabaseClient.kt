@@ -2,16 +2,13 @@ package org.springframework.data.r2dbc.function
 
 import io.r2dbc.spi.ConnectionFactory
 import io.r2dbc.spi.Row
-import org.springframework.data.r2dbc.function.DatabaseClient.GenericExecuteSpec
-import org.springframework.data.r2dbc.function.DatabaseClient.BindSpec
-import org.reactivestreams.Publisher
 import io.r2dbc.spi.RowMetadata
+import org.reactivestreams.Publisher
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
-import kotlin.reflect.KClass
+import org.springframework.data.r2dbc.function.DatabaseClient.BindSpec
 import org.springframework.data.r2dbc.support.R2dbcExceptionTranslator
-
-
+import kotlin.reflect.KClass
 
 
 interface CoDatabaseClient {

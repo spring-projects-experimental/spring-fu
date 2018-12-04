@@ -21,7 +21,6 @@ import org.springframework.fu.kofu.application
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.test.web.reactive.server.expectBody
 import org.springframework.web.reactive.function.server.router
-import reactor.netty.http.HttpResources
 
 /**
  * @author Sebastien Deleuze

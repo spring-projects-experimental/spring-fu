@@ -1,11 +1,10 @@
 package org.springframework.fu.jafu.web;
 
-import static org.springframework.beans.factory.support.BeanDefinitionReaderUtils.*;
+import static org.springframework.beans.factory.support.BeanDefinitionReaderUtils.uniqueBeanName;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import org.springframework.beans.factory.support.BeanDefinitionReaderUtils;
 import org.springframework.boot.autoconfigure.web.ResourceProperties;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.boot.autoconfigure.web.reactive.FormCodecInitializer;
