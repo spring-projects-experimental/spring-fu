@@ -46,9 +46,17 @@ public class WebFluxServerDsl extends AbstractDsl {
 
 	private ConfigurableReactiveWebServerFactory engine = null;
 
-	public WebFluxServerDsl(Consumer<WebFluxServerDsl> dsl) {
+	private WebFluxServerDsl(Consumer<WebFluxServerDsl> dsl) {
 		super();
 		this.dsl = dsl;
+	}
+
+	public static WebFluxServerDsl server() {
+		return new WebFluxServerDsl(webFluxServerDsl -> {});
+	}
+
+	public static WebFluxServerDsl server(Consumer<WebFluxServerDsl> dsl) {
+		return new WebFluxServerDsl(dsl);
 	}
 
 	/**

@@ -2,9 +2,13 @@ package org.springframework.fu.jafu.web;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.fu.jafu.ApplicationDsl.application;
+import static org.springframework.fu.jafu.web.WebFluxClientDsl.client;
+import static org.springframework.fu.jafu.web.WebFluxServerDsl.server;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
+import static org.springframework.web.reactive.function.server.RouterFunctions.route;
+import static org.springframework.web.reactive.function.server.ServerResponse.ok;
 
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -16,19 +20,16 @@ import reactor.test.StepVerifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.reactive.function.server.RouterFunctions;
-import org.springframework.web.reactive.function.server.ServerResponse;
 
 public class JacksonDslTests {
 
 	@Test
 	void enableJacksonModuleOnServerCreateAndRequestAJSONEndpoint() {
-		var router = RouterFunctions
-				.route()
-				.GET("/user", request -> ServerResponse.ok().header(CONTENT_TYPE, APPLICATION_JSON_UTF8_VALUE).syncBody(new User("Brian")))
+		var router = route()
+				.GET("/user", request -> ok().header(CONTENT_TYPE, APPLICATION_JSON_UTF8_VALUE).syncBody(new User("Brian")))
 				.build();
 
-		var app = application(a -> a.server(s -> s.codecs(c -> c.jackson()).importRouter(router)));
+		var app = application(a -> a.enable(server(s -> s.codecs(c -> c.jackson()).importRouter(router))));
 
 		var context = app.run();
 		var client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:8080").build();
@@ -42,12 +43,13 @@ public class JacksonDslTests {
 
 	@Test
 	void enableJacksonModuleOnClientAndServerCreateAndRequestAJSONEndpoint() {
-		var router = RouterFunctions
-				.route()
-				.GET("/user", request -> ServerResponse.ok().header(CONTENT_TYPE, APPLICATION_JSON_UTF8_VALUE).syncBody(new User("Brian")))
+		var router = route()
+				.GET("/user", request -> ok().header(CONTENT_TYPE, APPLICATION_JSON_UTF8_VALUE).syncBody(new User("Brian")))
 				.build();
 
-		var app = application(a -> a.server(s -> s.codecs(c -> c.jackson()).importRouter(router)).client(c -> c.codecs(codecs -> codecs.jackson())));
+		var app = application(a ->
+				a.enable(server(s -> s.codecs(c -> c.jackson()).importRouter(router)))
+				.enable(client(c -> c.codecs(codecs -> codecs.jackson()))));
 		var context = app.run();
 		var client = context.getBean(WebClient.Builder.class).build();
 		var response = client.get().uri("http://127.0.0.1:8080/user").exchange();
@@ -65,13 +67,12 @@ public class JacksonDslTests {
 
 	@Test
 	void noJacksonCodecOnServerWhenNotDeclared() {
-		var router = RouterFunctions
-				.route()
-				.GET("/user", request -> ServerResponse.ok().header(CONTENT_TYPE, APPLICATION_JSON_UTF8_VALUE).syncBody(new User("Brian")))
+		var router = route()
+				.GET("/user", request -> ok().header(CONTENT_TYPE, APPLICATION_JSON_UTF8_VALUE).syncBody(new User("Brian")))
 				.build();
 
 
-		var app = application(a -> a.server(s -> s.importRouter(router)));
+		var app = application(a -> a.enable(server(s -> s.importRouter(router))));
 		var context = app.run();
 		var client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:8080").build();
 		client.get().uri("/user").exchange().expectStatus().is5xxServerError();

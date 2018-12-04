@@ -17,8 +17,16 @@ public class R2dbcDsl extends AbstractDsl {
 
 	private final R2dbcProperties properties = new R2dbcProperties();
 
-	public R2dbcDsl(Consumer<R2dbcDsl> dsl) {
+	private R2dbcDsl(Consumer<R2dbcDsl> dsl) {
 		this.dsl = dsl;
+	}
+
+	public static R2dbcDsl r2dbc() {
+		return new R2dbcDsl(mongoDsl -> {});
+	}
+
+	public static R2dbcDsl r2dbc(Consumer<R2dbcDsl> dsl) {
+		return new R2dbcDsl(dsl);
 	}
 
 	public R2dbcDsl host(String host) {

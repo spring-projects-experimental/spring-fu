@@ -21,8 +21,16 @@ public class MongoDsl extends AbstractDsl {
 
 	private boolean embedded = false;
 
-	public MongoDsl(Consumer<MongoDsl> dsl) {
+	private MongoDsl(Consumer<MongoDsl> dsl) {
 		this.dsl = dsl;
+	}
+
+	public static MongoDsl mongo() {
+		return new MongoDsl(mongoDsl -> {});
+	}
+
+	public static MongoDsl mongo(Consumer<MongoDsl> dsl) {
+		return new MongoDsl(dsl);
 	}
 
 	public MongoDsl uri(String uri) {

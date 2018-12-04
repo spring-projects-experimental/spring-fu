@@ -37,5 +37,10 @@ public abstract class AbstractDsl implements ApplicationContextInitializer<Gener
 		return Arrays.asList(context.getEnvironment().getActiveProfiles());
 	}
 
+	public <T extends AbstractDsl> AbstractDsl enable(T dsl) {
+		addInitializer(dsl);
+		return this;
+	}
+
 	abstract public void register(GenericApplicationContext context);
 }

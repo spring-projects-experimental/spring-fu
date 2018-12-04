@@ -19,9 +19,16 @@ public class WebFluxClientDsl extends AbstractDsl {
 
 	private String baseUrl = null;
 
-	public WebFluxClientDsl(Consumer<WebFluxClientDsl> dsl) {
-		super();
+	private WebFluxClientDsl(Consumer<WebFluxClientDsl> dsl) {
 		this.dsl = dsl;
+	}
+
+	public static WebFluxClientDsl client() {
+		return new WebFluxClientDsl(webFluxClientDsl -> {});
+	}
+
+	public static WebFluxClientDsl client(Consumer<WebFluxClientDsl> dsl) {
+		return new WebFluxClientDsl(dsl);
 	}
 
 	/**

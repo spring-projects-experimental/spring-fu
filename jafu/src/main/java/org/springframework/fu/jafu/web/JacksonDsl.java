@@ -28,7 +28,7 @@ public class JacksonDsl extends AbstractDsl {
 	private final JacksonProperties properties = new JacksonProperties();
 
 
-	public JacksonDsl(boolean isClientCodec, Consumer<JacksonDsl> dsl) {
+	JacksonDsl(boolean isClientCodec, Consumer<JacksonDsl> dsl) {
 		this.isClientCodec = isClientCodec;
 		this.dsl = dsl;
 	}
