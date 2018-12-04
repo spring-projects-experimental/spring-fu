@@ -25,6 +25,7 @@ import org.springframework.context.ConfigurableApplicationContext
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import org.springframework.context.support.registerBean
+import java.util.concurrent.atomic.AtomicBoolean
 
 /**
  * Kofu DSL for application configuration.
@@ -36,13 +37,16 @@ open class ApplicationDsl internal constructor(private val startServer: Boolean,
 
 	internal class Application
 
-	override fun register(context: GenericApplicationContext) {
-		initApplication()
+	private val initialized = AtomicBoolean()
 
-		context.registerBean("messageSource") {
-			ReloadableResourceBundleMessageSource().apply {
-				setBasename("messages")
-				setDefaultEncoding("UTF-8")
+	override fun register(context: GenericApplicationContext) {
+		if (initialized.compareAndSet(false, true)) {
+			initApplication()
+			context.registerBean("messageSource") {
+				ReloadableResourceBundleMessageSource().apply {
+					setBasename("messages")
+					setDefaultEncoding("UTF-8")
+				}
 			}
 		}
 	}

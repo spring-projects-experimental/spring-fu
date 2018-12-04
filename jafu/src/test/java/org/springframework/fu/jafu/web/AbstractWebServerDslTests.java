@@ -29,13 +29,9 @@ import reactor.test.StepVerifier;
 
 import org.springframework.boot.logging.LogLevel;
 import org.springframework.boot.web.reactive.server.ConfigurableReactiveWebServerFactory;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.fu.jafu.ApplicationDsl;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.reactive.function.server.RouterFunction;
-import org.springframework.web.reactive.function.server.ServerResponse;
 
 /**
  * @author Sebastien Deleuze
@@ -115,5 +111,16 @@ abstract class AbstractWebServerDslTests {
 		client.get().uri("/").exchange().expectStatus().is2xxSuccessful();
 		context.close();
 	}
+
+	@Test
+	void runAnApplication2Times() {
+		var app = application(a -> a.server(s -> s.engine(getServerFactory())));
+		var context = app.run();
+		context.close();
+		context = app.run();
+		context.close();
+	}
+
+	class Foo {}
 
 }

@@ -163,4 +163,17 @@ abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
 		}
 	}
 
+	@Test
+	fun `run an application 2 times`() {
+		val app = application {
+			server {
+				engine = getServerFactory()
+			}
+		}
+		var context = app.run()
+		context.close()
+		context = app.run()
+		context.close()
+	}
+
 }
