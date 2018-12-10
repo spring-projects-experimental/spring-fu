@@ -2,14 +2,21 @@ package org.springframework.data.r2dbc.function
 
 import kotlinx.coroutines.ObsoleteCoroutinesApi
 
-
 /**
  * Contract for fetching results.
  *
  * @author Sebastien Deleuze
  * @author Mark Paluch
  */
-interface CoFetchSpec<T> {
+interface CoFetchSpec<T> : CoRowsFetchSpec<T>, CoUpdatedRowsFetchSpec
+
+/**
+ * Contract for fetching tabular results.
+ *
+ * @author Sebastien Deleuze
+ * @author Mark Paluch
+ */
+interface CoRowsFetchSpec<T> {
 
     /**
      * Get exactly zero or one result.
@@ -34,6 +41,18 @@ interface CoFetchSpec<T> {
      */
     @ObsoleteCoroutinesApi
     suspend fun all(): List<T>
+
+}
+
+
+
+/**
+ * Contract for fetching the number of affected rows.
+ *
+ * @author Sebastien Deleuze
+ * @author Mark Paluch
+ */
+interface CoUpdatedRowsFetchSpec {
 
     /**
      * Get the number of updated rows.

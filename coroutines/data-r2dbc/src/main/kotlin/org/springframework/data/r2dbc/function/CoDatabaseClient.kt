@@ -134,11 +134,9 @@ interface CoDatabaseClient {
         fun fetch(): CoFetchSpec<Map<String, Any>>
 
         /**
-         * Perform the SQL request and return a [CoSqlResult].
-         *
-         * @return the result
+         * Perform the SQL request.
          */
-        suspend fun exchange(): CoSqlResult<Map<String, Any>>
+        suspend fun execute()
     }
 
     /**
@@ -151,7 +149,7 @@ interface CoDatabaseClient {
          * Skip this step if you are anyway fine with the default conversion.
          *
          * @param <R> result type.
-        </R> */
+         */
         fun <R: Any> asType(resultType: KClass<R>): CoTypedExecuteSpec<R>
 
         /**
@@ -160,11 +158,19 @@ interface CoDatabaseClient {
         fun fetch(): CoFetchSpec<T>
 
         /**
-         * Perform the SQL request and return a [SqlResult].
+         * Configure a result mapping function.
+         *
+         * @param mappingFunction must not be {@literal null}.
+         * @return a {@link RowsFetchSpec} for configuration what to fetch.
+         */
+        fun <R> map(mappingFunction: (Row, RowMetadata) -> R): CoRowsFetchSpec<R>
+
+        /**
+         * Perform the SQL request.
          *
          * @return the result
          */
-        suspend fun exchange(): CoSqlResult<T>
+        suspend fun execute()
     }
 
     /**
@@ -200,7 +206,7 @@ interface CoDatabaseClient {
          * @param table must not be null or empty.
          * @return
          */
-        fun into(table: String): CoGenericInsertSpec
+        fun into(table: String): CoGenericInsertSpec<Map<String, Any>>
 
         /**
          * Specify the target table to insert to using the entity class.
@@ -230,11 +236,12 @@ interface CoDatabaseClient {
         fun fetch(): CoFetchSpec<Map<String, Any>>
 
         /**
-         * Perform the SQL request and return a [SqlResult].
+         * Configure a result mapping function.
          *
-         * @return the resultresultType: KClass<R>
+         * @param mappingFunction must not be {@literal null}.
+         * @return a {@link RowsFetchSpec} for configuration what to fetch.
          */
-        suspend fun exchange(): CoSqlResult<Map<String, Any>>
+        fun <R> map(mappingFunction: (Row, RowMetadata) -> R): CoRowsFetchSpec<R>
     }
 
 
@@ -249,28 +256,21 @@ interface CoDatabaseClient {
          *
          * @param <R> result type.
         */
-        fun <R: Any> asType(resultType: KClass<R>): CoTypedSelectSpec<R>
+        fun <R: Any> asType(resultType: KClass<R>): CoRowsFetchSpec<R>
 
         /**
          * Configure a result mapping function.
          *
-         * @param mappingFunction
-         * @param <R> result type.
-         * @return
-        */
-        fun <R> extract(mappingFunction: (Row, RowMetadata) -> R): CoTypedSelectSpec<R>
+         * @param mappingFunction must not be {@literal null}.
+         * @return a {@link RowsFetchSpec} for configuration what to fetch.
+         */
+        fun <R> map(mappingFunction: (Row, RowMetadata) -> R): CoRowsFetchSpec<R>
 
         /**
          * Perform the SQL call and retrieve the result.
          */
         fun fetch(): CoFetchSpec<T>
 
-        /**
-         * Perform the SQL request and return a [SqlResult].
-         *
-         * @return a `Mono` for the result
-         */
-        suspend fun exchange(): CoSqlResult<T>
     }
 
     /**
@@ -303,7 +303,7 @@ interface CoDatabaseClient {
     /**
      * Contract for specifying `INSERT` options leading to the exchange.
      */
-    interface CoGenericInsertSpec : CoInsertSpec {
+    interface CoGenericInsertSpec<T> : CoInsertSpec<T> {
 
         /**
          * Specify a field and non-null value to insert.
@@ -311,7 +311,7 @@ interface CoDatabaseClient {
          * @param field must not be null or empty.
          * @param value must not be null
          */
-        fun value(field: String, value: Any): CoGenericInsertSpec
+        fun value(field: String, value: Any): CoGenericInsertSpec<T>
 
         /**
          * Specify a null value to insert.
@@ -319,7 +319,7 @@ interface CoDatabaseClient {
          * @param field must not be null or empty.
          * @param type must not be null.
          */
-        fun nullValue(field: String, type: KClass<*>): CoGenericInsertSpec
+        fun nullValue(field: String, type: KClass<*>): CoGenericInsertSpec<T>
     }
 
     /**
@@ -330,10 +330,10 @@ interface CoDatabaseClient {
         /**
          * Insert the given `objectToInsert`.
          *
-         * @param objectToInsert
-         * @return
+         * @param objectToInsert the object of which the attributes will provide the values for the insert.
+         * @return a [CoInsertSpec] for further configuration of the insert.
          */
-        fun using(objectToInsert: T): CoInsertSpec
+        fun using(objectToInsert: T): CoInsertSpec<Map<String, Any>>
 
         /**
          * Use the given `tableName` as insert target.
@@ -342,32 +342,30 @@ interface CoDatabaseClient {
          * @return
          */
         fun table(tableName: String): CoTypedInsertSpec<T>
-
-        /**
-         * Insert the given [Publisher] to insert one or more objects.
-         *
-         * @param objectToInsert
-         * @return
-         */
-        fun using(objectToInsert: Publisher<T>): CoInsertSpec
     }
 
     /**
      * Contract for specifying `INSERT` options leading to the exchange.
      */
-    interface CoInsertSpec {
+    interface CoInsertSpec <T> {
 
         /**
          * Perform the SQL call.
          */
-        suspend fun then()
+        suspend fun execute()
 
         /**
-         * Perform the SQL request and return a [SqlResult].
-         *
-         * @return the result
+         * Perform the SQL call and retrieve the result.
          */
-        suspend fun exchange(): CoSqlResult<Map<String, Any>>
+        suspend fun fetch(): CoFetchSpec<T>
+
+        /**
+         * Configure a result mapping function.
+         *
+         * @param mappingFunction must not be {@literal null}.
+         * @return a {@link RowsFetchSpec} for configuration what to fetch.
+         */
+        fun <R> map(mappingFunction: (Row, RowMetadata) -> R): CoRowsFetchSpec<R>
     }
 
 }

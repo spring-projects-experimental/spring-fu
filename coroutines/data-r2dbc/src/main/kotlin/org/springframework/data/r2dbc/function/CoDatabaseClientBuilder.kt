@@ -10,6 +10,7 @@ import org.reactivestreams.Publisher
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.data.r2dbc.support.R2dbcExceptionTranslator
+import java.util.function.BiFunction
 import kotlin.reflect.KClass
 
 class CoDatabaseClientBuilder: CoDatabaseClient.Builder {
@@ -60,7 +61,9 @@ class CoDatabaseClientBuilder: CoDatabaseClient.Builder {
 
                 override fun fetch(): CoFetchSpec<Map<String, Any>> = FetchSpecAdapter(spec.fetch())
 
-                override suspend fun exchange(): CoSqlResult<Map<String, Any>> = spec.exchange().map { SqlResultAdapter(it) }.awaitFirst()
+                override suspend fun execute() {
+                    spec.then().awaitFirstOrNull()
+                }
 
                 override fun bind(index: Int, value: Any): CoDatabaseClient.CoGenericExecuteSpec = GenericExecuteSpecAdapter(spec.bind(index, value))
 
@@ -74,6 +77,21 @@ class CoDatabaseClientBuilder: CoDatabaseClient.Builder {
             }
         }
 
+        private open class RowsFetchSpecAdapter<T>(private val spec: RowsFetchSpec<T>): CoRowsFetchSpec<T> {
+
+            override suspend fun one(): T? = spec.one().awaitFirstOrNull()
+
+            override suspend fun first(): T? = spec.first().awaitFirstOrNull()
+
+            @ObsoleteCoroutinesApi
+            override suspend fun all(): List<T> = spec.all().collectList().awaitFirst()
+        }
+
+        private open class UpdatedRowsFetchSpecAdapter<T>(private val spec: UpdatedRowsFetchSpec): CoUpdatedRowsFetchSpec {
+
+            override suspend fun rowsUpdated(): Int = spec.rowsUpdated().awaitFirst()
+        }
+
         private open class FetchSpecAdapter<T>(private val spec: FetchSpec<T>): CoFetchSpec<T> {
 
             override suspend fun one(): T? = spec.one().awaitFirstOrNull()
@@ -84,12 +102,6 @@ class CoDatabaseClientBuilder: CoDatabaseClient.Builder {
             override suspend fun all(): List<T> = spec.all().collectList().awaitFirst()
 
             override suspend fun rowsUpdated(): Int = spec.rowsUpdated().awaitFirst()
-        }
-
-        private class SqlResultAdapter<T>(private val spec: SqlResult<T>): CoSqlResult<T>, FetchSpecAdapter<T>(spec) {
-
-            override fun <R> extract(mappingFunction: (Row, RowMetadata) -> R): CoSqlResult<R> =
-                    SqlResultAdapter(spec.extract { t, u -> mappingFunction.invoke(t, u) })
 
         }
 
@@ -100,8 +112,12 @@ class CoDatabaseClientBuilder: CoDatabaseClient.Builder {
 
             override fun fetch(): CoFetchSpec<T> = FetchSpecAdapter(spec.fetch())
 
-            override suspend fun exchange(): CoSqlResult<T> =
-                    spec.exchange().map { SqlResultAdapter(it) }.awaitFirst()
+            override fun <R> map(mappingFunction: (Row, RowMetadata) -> R): CoRowsFetchSpec<R> =
+                RowsFetchSpecAdapter(spec.map(mappingFunction::invoke))
+
+            override suspend fun execute() {
+                spec.then().awaitFirstOrNull()
+            }
 
             override fun bind(index: Int, value: Any): CoDatabaseClient.CoTypedExecuteSpec<T>
                     = TypedExecuteSpecAdapter(spec.bind(index, value))
@@ -138,8 +154,8 @@ class CoDatabaseClientBuilder: CoDatabaseClient.Builder {
             override fun fetch(): CoFetchSpec<Map<String, Any>>
                     = FetchSpecAdapter(spec.fetch())
 
-            override suspend fun exchange(): CoSqlResult<Map<String, Any>>
-                    = spec.exchange().map { SqlResultAdapter(it) }.awaitFirst()
+            override fun <R> map(mappingFunction: (Row, RowMetadata) -> R): CoRowsFetchSpec<R>
+                    = RowsFetchSpecAdapter(spec.map(mappingFunction::invoke))
 
             override fun project(vararg selectedFields: String): CoDatabaseClient.CoGenericSelectSpec
                     = GenericSelectSpecAdapter(spec.project(*selectedFields))
@@ -153,17 +169,14 @@ class CoDatabaseClientBuilder: CoDatabaseClient.Builder {
 
         private class TypedSelectSpecAdapter<R>(val spec: DatabaseClient.TypedSelectSpec<R>) : CoDatabaseClient.CoTypedSelectSpec<R> {
 
-            override fun <R : Any> asType(resultType: KClass<R>): CoDatabaseClient.CoTypedSelectSpec<R>
-                    = TypedSelectSpecAdapter(spec.`as`(resultType.java))
-
-            override fun <R> extract(mappingFunction: (Row, RowMetadata) -> R): CoDatabaseClient.CoTypedSelectSpec<R>
-                    = TypedSelectSpecAdapter(spec.extract(mappingFunction))
+            override fun <R : Any> asType(resultType: KClass<R>): CoRowsFetchSpec<R>
+                    = RowsFetchSpecAdapter(spec.`as`(resultType.java))
 
             override fun fetch(): CoFetchSpec<R>
                     = FetchSpecAdapter(spec.fetch())
 
-            override suspend fun exchange(): CoSqlResult<R>
-                    = spec.exchange().map { SqlResultAdapter(it) }.awaitFirst()
+            override fun <R> map(mappingFunction: (Row, RowMetadata) -> R): CoRowsFetchSpec<R> =
+                    RowsFetchSpecAdapter(spec.map(mappingFunction::invoke))
 
             override fun project(vararg selectedFields: String): CoDatabaseClient.CoTypedSelectSpec<R>
                     = TypedSelectSpecAdapter(spec.project(*selectedFields))
@@ -178,49 +191,52 @@ class CoDatabaseClientBuilder: CoDatabaseClient.Builder {
 
         private class InsertIntoSpecAdapter(private val spec: DatabaseClient.InsertIntoSpec): CoDatabaseClient.CoInsertIntoSpec {
 
-            override fun into(table: String): CoDatabaseClient.CoGenericInsertSpec
+            override fun into(table: String): CoDatabaseClient.CoGenericInsertSpec<Map<String, Any>>
                     = GenericInsertSpecAdapter(spec.into(table))
 
             override fun <T : Any> into(table: KClass<T>): CoDatabaseClient.CoTypedInsertSpec<T>
                     = TypedInsertSpecAdapter(spec.into(table.java))
         }
 
-        private class GenericInsertSpecAdapter(private val spec: DatabaseClient.GenericInsertSpec): CoDatabaseClient.CoGenericInsertSpec {
+        private class GenericInsertSpecAdapter<T>(private val spec: DatabaseClient.GenericInsertSpec<T>): CoDatabaseClient.CoGenericInsertSpec<T> {
 
-            override fun value(field: String, value: Any): CoDatabaseClient.CoGenericInsertSpec
+            override fun value(field: String, value: Any): CoDatabaseClient.CoGenericInsertSpec<T>
                     = GenericInsertSpecAdapter(spec.value(field, value))
 
-            override fun nullValue(field: String, type: KClass<*>): CoDatabaseClient.CoGenericInsertSpec
+            override fun nullValue(field: String, type: KClass<*>): CoDatabaseClient.CoGenericInsertSpec<T>
                     = GenericInsertSpecAdapter(spec.nullValue(field, type.java))
 
-            override suspend fun then() {
+            override suspend fun execute() {
                 spec.then().awaitFirstOrNull()
             }
 
-            override suspend fun exchange(): CoSqlResult<Map<String, Any>>
-                    = spec.exchange().map { SqlResultAdapter(it) }.awaitFirst()
+            override suspend fun fetch(): CoFetchSpec<T>
+                    = FetchSpecAdapter(spec.fetch())
+
+            override fun <R> map(mappingFunction: (Row, RowMetadata) -> R): CoRowsFetchSpec<R>
+                    = RowsFetchSpecAdapter(spec.map(mappingFunction::invoke))
         }
 
         private class TypedInsertSpecAdapter<T>(val spec: DatabaseClient.TypedInsertSpec<T>): CoDatabaseClient.CoTypedInsertSpec<T> {
 
-            override fun using(objectToInsert: T): CoDatabaseClient.CoInsertSpec
+            override fun using(objectToInsert: T): CoDatabaseClient.CoInsertSpec<Map<String, Any>>
                     = InsertSpecAdapter(spec.using(objectToInsert))
 
             override fun table(tableName: String): CoDatabaseClient.CoTypedInsertSpec<T>
                     = TypedInsertSpecAdapter(spec.table(tableName))
-
-            override fun using(objectToInsert: Publisher<T>): CoDatabaseClient.CoInsertSpec
-                    = InsertSpecAdapter(spec.using(objectToInsert))
         }
 
-        private class InsertSpecAdapter(val spec: DatabaseClient.InsertSpec): CoDatabaseClient.CoInsertSpec {
+        private class InsertSpecAdapter<T>(val spec: DatabaseClient.InsertSpec<T>): CoDatabaseClient.CoInsertSpec<T> {
 
-            override suspend fun then() {
+            override suspend fun execute() {
                 spec.then().awaitFirstOrNull()
             }
 
-            override suspend fun exchange(): CoSqlResult<Map<String, Any>>
-                    = spec.exchange().map { SqlResultAdapter(it) }.awaitFirst()
+            override suspend fun fetch(): CoFetchSpec<T>
+                    = FetchSpecAdapter(spec.fetch())
+
+            override fun <R> map(mappingFunction: (Row, RowMetadata) -> R): CoRowsFetchSpec<R>
+                = RowsFetchSpecAdapter(spec.map(mappingFunction::invoke))
         }
 
         private class BuilderAdapter(val builder: DatabaseClient.Builder): CoDatabaseClient.Builder {
