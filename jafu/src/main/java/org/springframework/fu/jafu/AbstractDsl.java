@@ -8,14 +8,27 @@ import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.core.env.Environment;
 
+/**
+ * Base class for Jafu DSL.
+ *
+ * @author Sebastien Deleuze
+ */
 public abstract class AbstractDsl implements ApplicationContextInitializer<GenericApplicationContext> {
 
 	private final List<ApplicationContextInitializer<GenericApplicationContext>> initializers = new ArrayList<>();
 
 	protected GenericApplicationContext context;
 
+	/**
+	 * Get a reference to the bean by type or type + name with the syntax
+	 * @param beanClass type the bean must match, can be an interface or superclass
+	 */
 	public <T> T ref(Class<T> beanClass) {
 		return this.context.getBean(beanClass);
+	}
+
+	public <T> T ref(Class<T> beanClass, String name) {
+		return this.context.getBean(name, beanClass);
 	}
 
 	@Override

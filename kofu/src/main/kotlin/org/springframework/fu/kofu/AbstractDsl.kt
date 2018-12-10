@@ -46,6 +46,7 @@ abstract class AbstractDsl : ApplicationContextInitializer<GenericApplicationCon
     fun addInitializer(initializer: ApplicationContextInitializer<GenericApplicationContext>) {
         initializers.add(initializer)
     }
+
 	/**
 	 * Get a reference to the bean by type or type + name with the syntax
 	 * `ref<Foo>()` or `ref<Foo>("foo")`. When leveraging Kotlin type inference
