@@ -3,18 +3,10 @@ plugins {
 	id("java-library")
 }
 
-java {
-	sourceCompatibility = JavaVersion.VERSION_1_8
-	targetCompatibility = JavaVersion.VERSION_1_8
+tasks.compileJava {
+	sourceCompatibility = "1.8"
+	targetCompatibility = "1.8"
 }
-
-tasks.withType<Test> {
-	java {
-		sourceCompatibility = JavaVersion.VERSION_11
-		targetCompatibility = JavaVersion.VERSION_11
-	}
-}
-
 
 dependencies {
 	api("org.springframework.boot:spring-boot")
