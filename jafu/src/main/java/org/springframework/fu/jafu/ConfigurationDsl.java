@@ -5,6 +5,7 @@ import java.util.function.Consumer;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.boot.context.properties.FunctionalConfigurationPropertiesBinder;
 import org.springframework.boot.context.properties.bind.Bindable;
+import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.support.GenericApplicationContext;
@@ -26,7 +27,7 @@ public class ConfigurationDsl extends AbstractDsl {
 	}
 
 	public ConfigurationDsl importConfiguration(Consumer<ConfigurationDsl> dsl) {
-		addInitializer(new ConfigurationDsl(dsl));
+		new ConfigurationDsl(dsl).initialize(context);
 		return this;
 	}
 
@@ -46,13 +47,13 @@ public class ConfigurationDsl extends AbstractDsl {
 	}
 
 	public ConfigurationDsl beans(Consumer<BeanDsl> dsl) {
-		addInitializer(new BeanDsl(dsl));
+		new BeanDsl(dsl).initialize(context);
 		return this;
 	}
 
 	@Override
-	public <T extends AbstractDsl> ConfigurationDsl enable(T dsl) {
-		return (ConfigurationDsl) super.enable(dsl);
+	public ConfigurationDsl enable(ApplicationContextInitializer<GenericApplicationContext> initializer) {
+		return (ConfigurationDsl) super.enable(initializer);
 	}
 
 	/**
@@ -70,7 +71,7 @@ public class ConfigurationDsl extends AbstractDsl {
 	}
 
 	@Override
-	public void register(GenericApplicationContext context) {
+	public void register() {
 		this.dsl.accept(this);
 	}
 

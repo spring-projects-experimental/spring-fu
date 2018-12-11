@@ -21,7 +21,6 @@ import de.flapdoodle.embed.mongo.distribution.Version
 import org.springframework.boot.autoconfigure.mongo.MongoProperties
 import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoInitializer
 import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoProperties
-import org.springframework.context.support.GenericApplicationContext
 import org.springframework.fu.kofu.AbstractDsl
 
 /**
@@ -31,7 +30,7 @@ class EmbeddedMongoDsl(private val mongoProperties: MongoProperties, private val
 
 	private val embeddedMongoProperties = EmbeddedMongoProperties()
 
-	override fun register(context: GenericApplicationContext) {
+	override fun register() {
         init()
 		EmbeddedMongoInitializer(mongoProperties, embeddedMongoProperties).initialize(context)
 	}
@@ -54,5 +53,5 @@ class EmbeddedMongoDsl(private val mongoProperties: MongoProperties, private val
  */
 fun MongoDsl.embedded(dsl: EmbeddedMongoDsl.() -> Unit = {}) {
 	embedded = true
-	addInitializer(EmbeddedMongoDsl(properties, dsl))
+	EmbeddedMongoDsl(properties, dsl).initialize(context)
 }

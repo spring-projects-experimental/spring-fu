@@ -1,15 +1,11 @@
 package org.springframework.fu.kofu.web
 
-import org.springframework.context.support.GenericApplicationContext
 import org.springframework.fu.kofu.AbstractDsl
 
 /**
  * Kofu DSL for WebFlux codecs configuration.
  */
 abstract class WebFluxCodecDsl : AbstractDsl() {
-
-    override fun register(context: GenericApplicationContext) {
-    }
 
     /**
      * Enable [org.springframework.core.codec.CharSequenceEncoder] and [org.springframework.core.codec.StringDecoder]

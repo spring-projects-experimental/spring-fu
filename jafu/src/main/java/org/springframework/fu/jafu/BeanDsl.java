@@ -5,7 +5,6 @@ import java.util.function.Supplier;
 
 import org.springframework.beans.factory.support.BeanDefinitionReaderUtils;
 import org.springframework.context.FunctionalClassPathScanningCandidateComponentProvider;
-import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.core.type.ClassMetadata;
 import org.springframework.util.ClassUtils;
 
@@ -64,7 +63,7 @@ public class BeanDsl extends AbstractDsl {
 	}
 
 	@Override
-	public void register(GenericApplicationContext context) {
+	public void register() {
 		this.dsl.accept(this);
 	}
 }

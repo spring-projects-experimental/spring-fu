@@ -2,7 +2,6 @@ package org.springframework.fu.kofu.web
 
 import org.springframework.boot.autoconfigure.web.reactive.*
 import org.springframework.boot.autoconfigure.web.reactive.function.client.ReactiveWebClientBuilderInitializer
-import org.springframework.context.support.GenericApplicationContext
 import org.springframework.fu.kofu.AbstractDsl
 import org.springframework.fu.kofu.ConfigurationDsl
 import org.springframework.web.reactive.function.client.WebClient
@@ -20,7 +19,7 @@ class WebFluxClientDsl(private val init: WebFluxClientDsl.() -> Unit) : Abstract
      */
     var baseUrl: String? = null
 
-    override fun register(context: GenericApplicationContext) {
+    override fun register() {
         init()
         if (!codecsConfigured) {
             StringCodecInitializer(true).initialize(context)
@@ -39,34 +38,34 @@ class WebFluxClientDsl(private val init: WebFluxClientDsl.() -> Unit) : Abstract
      * @see WebFluxClientCodecDsl.jackson
      */
     fun codecs(dsl: WebFluxClientCodecDsl.() -> Unit =  {}) {
-        addInitializer(WebFluxClientCodecDsl(dsl))
+        WebFluxClientCodecDsl(dsl).initialize(context)
         codecsConfigured = true
     }
 
     class WebFluxClientCodecDsl(private val init: WebFluxClientCodecDsl.() -> Unit) : WebFluxCodecDsl() {
 
-        override fun register(context: GenericApplicationContext) {
+        override fun register() {
             init()
         }
 
         override fun string() {
-            addInitializer(StringCodecInitializer(true))
+            StringCodecInitializer(true).initialize(context)
         }
 
         override fun resource() {
-            addInitializer(ResourceCodecInitializer(true))
+            ResourceCodecInitializer(true).initialize(context)
         }
 
         override fun protobuf() {
-            addInitializer(ProtobufCodecInitializer(true))
+            ProtobufCodecInitializer(true).initialize(context)
         }
 
         override fun form() {
-            addInitializer(FormCodecInitializer(true))
+            FormCodecInitializer(true).initialize(context)
         }
 
         override fun multipart() {
-            addInitializer(MultipartCodecInitializer(true))
+            MultipartCodecInitializer(true).initialize(context)
         }
     }
 }
@@ -84,5 +83,5 @@ class WebFluxClientDsl(private val init: WebFluxClientDsl.() -> Unit) : Abstract
  * @see WebFluxClientDsl.codecs
  */
 fun ConfigurationDsl.client(dsl: WebFluxClientDsl.() -> Unit =  {}) {
-    addInitializer(WebFluxClientDsl(dsl))
+    WebFluxClientDsl(dsl).initialize(context)
 }

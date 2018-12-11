@@ -24,7 +24,6 @@ import org.springframework.context.ConfigurableApplicationContext
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import org.springframework.context.support.registerBean
-import java.util.concurrent.atomic.AtomicBoolean
 
 /**
  * Kofu DSL for application configuration.
@@ -34,18 +33,12 @@ import java.util.concurrent.atomic.AtomicBoolean
  */
 open class ApplicationDsl internal constructor(private val startServer: Boolean, private val initApplication: ApplicationDsl.() -> Unit) : ConfigurationDsl() {
 
-	internal class Application
-
-	private val initialized = AtomicBoolean()
-
-	override fun register(context: GenericApplicationContext) {
-		if (initialized.compareAndSet(false, true)) {
-			initApplication()
-			context.registerBean("messageSource") {
-				ReloadableResourceBundleMessageSource().apply {
-					setBasename("messages")
-					setDefaultEncoding("UTF-8")
-				}
+	override fun register() {
+		initApplication()
+		context.registerBean("messageSource") {
+			ReloadableResourceBundleMessageSource().apply {
+				setBasename("messages")
+				setDefaultEncoding("UTF-8")
 			}
 		}
 	}
@@ -57,6 +50,7 @@ open class ApplicationDsl internal constructor(private val startServer: Boolean,
 	 * @return The application context of the application
 	 */
 	fun run(args: Array<String> = emptyArray(), profiles: String = ""): ConfigurableApplicationContext {
+		class Application
 		val application = object: SpringApplication(Application::class.java) {
 			override fun load(context: ApplicationContext?, sources: Array<out Any>?) {
 				// We don't want the annotation bean definition reader

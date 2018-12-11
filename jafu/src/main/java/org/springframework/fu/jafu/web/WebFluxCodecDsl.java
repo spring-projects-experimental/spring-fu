@@ -2,14 +2,9 @@ package org.springframework.fu.jafu.web;
 
 import java.util.function.Consumer;
 
-import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.fu.jafu.AbstractDsl;
 
 abstract class WebFluxCodecDsl extends AbstractDsl {
-
-	@Override
-	public void register(GenericApplicationContext context) {
-	}
 
 	/**
 	 * Enable {@link org.springframework.core.codec.CharSequenceEncoder} and {@link org.springframework.core.codec.StringDecoder}

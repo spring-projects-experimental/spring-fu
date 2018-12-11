@@ -7,7 +7,6 @@ import de.flapdoodle.embed.mongo.distribution.IFeatureAwareVersion;
 import org.springframework.boot.autoconfigure.mongo.MongoProperties;
 import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoInitializer;
 import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoProperties;
-import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.fu.jafu.AbstractDsl;
 
 /**
@@ -34,7 +33,7 @@ public class EmbeddedMongoDsl extends AbstractDsl {
 	}
 
 	@Override
-	public void register(GenericApplicationContext context) {
+	public void register() {
 		this.dsl.accept(this);
 		new EmbeddedMongoInitializer(mongoProperties, embeddedMongoProperties).initialize(context);
 	}

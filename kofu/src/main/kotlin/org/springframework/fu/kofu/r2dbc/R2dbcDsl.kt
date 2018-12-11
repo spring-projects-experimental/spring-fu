@@ -3,7 +3,6 @@ package org.springframework.fu.kofu.r2dbc
 import org.springframework.boot.autoconfigure.data.r2dbc.CoDatabaseClientInitializer
 import org.springframework.boot.autoconfigure.data.r2dbc.DatabaseClientInitializer
 import org.springframework.boot.autoconfigure.data.r2dbc.R2dbcProperties
-import org.springframework.context.support.GenericApplicationContext
 import org.springframework.fu.kofu.AbstractDsl
 import org.springframework.fu.kofu.ConfigurationDsl
 
@@ -25,7 +24,7 @@ open class R2dbcDsl(private val init: R2dbcDsl.() -> Unit) : AbstractDsl() {
 
     var password: String = ""
 
-    override fun register(context: GenericApplicationContext) {
+    override fun register() {
         init()
 
         val properties = R2dbcProperties()
@@ -50,5 +49,5 @@ open class R2dbcDsl(private val init: R2dbcDsl.() -> Unit) : AbstractDsl() {
  * @sample org.springframework.fu.kofu.samples.r2dbcCoroutines
  */
 fun ConfigurationDsl.r2dbc(dsl: R2dbcDsl.() -> Unit = {}) {
-    addInitializer(R2dbcDsl(dsl))
+    R2dbcDsl(dsl).initialize(context)
 }

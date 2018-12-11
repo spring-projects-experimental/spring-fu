@@ -10,8 +10,6 @@ import org.springframework.boot.web.embedded.netty.NettyReactiveWebServerFactory
 import org.springframework.boot.web.embedded.tomcat.TomcatReactiveWebServerFactory
 import org.springframework.boot.web.embedded.undertow.UndertowReactiveWebServerFactory
 import org.springframework.boot.web.reactive.server.ConfigurableReactiveWebServerFactory
-import org.springframework.context.ApplicationContextInitializer
-import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.registerBean
 import org.springframework.fu.kofu.AbstractDsl
 import org.springframework.fu.kofu.ConfigurationDsl
@@ -51,7 +49,7 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit): Abst
     var engine: ConfigurableReactiveWebServerFactory? = null
 
 
-    override fun register(context: GenericApplicationContext) {
+    override fun register() {
         init()
         if (engine == null) {
             engine = netty()
@@ -78,7 +76,7 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit): Abst
      * @see WebFluxServerCodecDsl.jackson
      */
     fun codecs(init: WebFluxServerCodecDsl.() -> Unit =  {}) {
-        addInitializer(WebFluxServerCodecDsl(init))
+        WebFluxServerCodecDsl(init).initialize(context)
         codecsConfigured = true
     }
 
@@ -86,7 +84,7 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit): Abst
      * Define a request filter for this server
      */
     fun filter(filter: WebFilter) {
-        addInitializer(ApplicationContextInitializer { it.registerBean(BeanDefinitionReaderUtils.uniqueBeanName(RouterFunctionDsl::class.java.name, context)) { filter } })
+        context.registerBean(BeanDefinitionReaderUtils.uniqueBeanName(RouterFunctionDsl::class.java.name, context)) { filter }
     }
 
     /**
@@ -94,7 +92,7 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit): Abst
      * @sample org.springframework.fu.kofu.samples.router
      */
     fun router(routes: (RouterFunctionDsl.() -> Unit)) {
-        addInitializer(ApplicationContextInitializer { it.registerBean(BeanDefinitionReaderUtils.uniqueBeanName(RouterFunctionDsl::class.java.name, context)) { RouterFunctionDsl(routes).invoke() } })
+        context.registerBean(BeanDefinitionReaderUtils.uniqueBeanName(RouterFunctionDsl::class.java.name, context)) { RouterFunctionDsl(routes).invoke() }
     }
 
     /**
@@ -102,7 +100,7 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit): Abst
      * @sample org.springframework.fu.kofu.samples.coRouter
      */
     fun coRouter(routes: (CoRouterFunctionDsl.() -> Unit)) {
-        addInitializer(ApplicationContextInitializer { it.registerBean(BeanDefinitionReaderUtils.uniqueBeanName(CoRouterFunctionDsl::class.java.name, context)) { CoRouterFunctionDsl(routes).invoke() } })
+        context.registerBean(BeanDefinitionReaderUtils.uniqueBeanName(CoRouterFunctionDsl::class.java.name, context)) { CoRouterFunctionDsl(routes).invoke() }
     }
 
     /**
@@ -111,39 +109,27 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit): Abst
      * @sample org.springframework.fu.kofu.samples.importCoRouter
      */
     fun import(router: RouterFunction<ServerResponse>) {
-        addInitializer(ApplicationContextInitializer {
-            context.registerBean(BeanDefinitionReaderUtils.uniqueBeanName(RouterFunctionDsl::class.java.name, context)) { router }
-        })
+        context.registerBean(BeanDefinitionReaderUtils.uniqueBeanName(RouterFunctionDsl::class.java.name, context)) { router }
     }
+
     fun import(f: Function0<RouterFunction<ServerResponse>>) {
-        addInitializer(ApplicationContextInitializer {
-            context.registerBean(BeanDefinitionReaderUtils.uniqueBeanName(RouterFunctionDsl::class.java.name, context)) { f.invoke() }
-        })
+        context.registerBean(BeanDefinitionReaderUtils.uniqueBeanName(RouterFunctionDsl::class.java.name, context)) { f.invoke() }
     }
+
     inline fun <reified A: Any> import(crossinline f: Function1<A, RouterFunction<ServerResponse>>) {
-        addInitializer(ApplicationContextInitializer {
-            context.registerBean(BeanDefinitionReaderUtils.uniqueBeanName(RouterFunctionDsl::class.java.name, context)) { f.invoke(context.getBean()) }
-        })
+        context.registerBean(BeanDefinitionReaderUtils.uniqueBeanName(RouterFunctionDsl::class.java.name, context)) { f.invoke(context.getBean()) }
     }
     inline fun <reified A: Any, reified B: Any> import(crossinline f: Function2<A, B, RouterFunction<ServerResponse>>) {
-        addInitializer(ApplicationContextInitializer {
-            context.registerBean(BeanDefinitionReaderUtils.uniqueBeanName(RouterFunctionDsl::class.java.name, context)) { f.invoke(context.getBean(), context.getBean()) }
-        })
+        context.registerBean(BeanDefinitionReaderUtils.uniqueBeanName(RouterFunctionDsl::class.java.name, context)) { f.invoke(context.getBean(), context.getBean()) }
     }
     inline fun <reified A: Any, reified B: Any, reified C: Any> import(crossinline f: Function3<A, B, C, RouterFunction<ServerResponse>>) {
-        addInitializer(ApplicationContextInitializer {
-            context.registerBean(BeanDefinitionReaderUtils.uniqueBeanName(RouterFunctionDsl::class.java.name, context)) { f.invoke(context.getBean(), context.getBean(), context.getBean()) }
-        })
+        context.registerBean(BeanDefinitionReaderUtils.uniqueBeanName(RouterFunctionDsl::class.java.name, context)) { f.invoke(context.getBean(), context.getBean(), context.getBean()) }
     }
     inline fun <reified A: Any, reified B: Any, reified C: Any, reified D: Any> import(crossinline f: Function4<A, B, C, D, RouterFunction<ServerResponse>>) {
-        addInitializer(ApplicationContextInitializer {
-            context.registerBean(BeanDefinitionReaderUtils.uniqueBeanName(RouterFunctionDsl::class.java.name, context)) { f.invoke(context.getBean(), context.getBean(), context.getBean(), context.getBean()) }
-        })
+        context.registerBean(BeanDefinitionReaderUtils.uniqueBeanName(RouterFunctionDsl::class.java.name, context)) { f.invoke(context.getBean(), context.getBean(), context.getBean(), context.getBean()) }
     }
     inline fun <reified A: Any, reified B: Any, reified C: Any, reified D: Any, reified E: Any> import(crossinline f: Function5<A, B, C, D, E, RouterFunction<ServerResponse>>) {
-        addInitializer(ApplicationContextInitializer {
-            context.registerBean(BeanDefinitionReaderUtils.uniqueBeanName(RouterFunctionDsl::class.java.name, context)) { f.invoke(context.getBean(), context.getBean(), context.getBean(), context.getBean(), context.getBean()) }
-        })
+        context.registerBean(BeanDefinitionReaderUtils.uniqueBeanName(RouterFunctionDsl::class.java.name, context)) { f.invoke(context.getBean(), context.getBean(), context.getBean(), context.getBean(), context.getBean()) }
     }
 
     /**
@@ -201,28 +187,28 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit): Abst
 
     class WebFluxServerCodecDsl(private val init: WebFluxServerCodecDsl.() -> Unit) : WebFluxCodecDsl() {
 
-        override fun register(context: GenericApplicationContext) {
+        override fun register() {
             init()
         }
 
         override fun string() {
-            addInitializer(StringCodecInitializer(false))
+            StringCodecInitializer(false).initialize(context)
         }
 
         override fun resource() {
-            addInitializer(ResourceCodecInitializer(false))
+            ResourceCodecInitializer(false).initialize(context)
         }
 
         override fun protobuf() {
-            addInitializer(ProtobufCodecInitializer(false))
+            ProtobufCodecInitializer(false).initialize(context)
         }
 
         override fun form() {
-            addInitializer(FormCodecInitializer(false))
+            FormCodecInitializer(false).initialize(context)
         }
 
         override fun multipart() {
-            addInitializer(MultipartCodecInitializer(false))
+            MultipartCodecInitializer(false).initialize(context)
         }
     }
 
@@ -247,5 +233,5 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit): Abst
  * @see WebFluxServerDsl.mustache
  */
 fun ConfigurationDsl.server(dsl: WebFluxServerDsl.() -> Unit =  {}) {
-    addInitializer(WebFluxServerDsl(dsl))
+    WebFluxServerDsl(dsl).initialize(context)
 }

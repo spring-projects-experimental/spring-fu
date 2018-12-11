@@ -8,6 +8,7 @@ import org.springframework.boot.autoconfigure.web.reactive.ProtobufCodecInitiali
 import org.springframework.boot.autoconfigure.web.reactive.ResourceCodecInitializer;
 import org.springframework.boot.autoconfigure.web.reactive.StringCodecInitializer;
 import org.springframework.boot.autoconfigure.web.reactive.function.client.ReactiveWebClientBuilderInitializer;
+import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.fu.jafu.AbstractDsl;
 
@@ -23,11 +24,11 @@ public class WebFluxClientDsl extends AbstractDsl {
 		this.dsl = dsl;
 	}
 
-	public static WebFluxClientDsl client() {
+	public static ApplicationContextInitializer<GenericApplicationContext> client() {
 		return new WebFluxClientDsl(webFluxClientDsl -> {});
 	}
 
-	public static WebFluxClientDsl client(Consumer<WebFluxClientDsl> dsl) {
+	public static ApplicationContextInitializer<GenericApplicationContext> client(Consumer<WebFluxClientDsl> dsl) {
 		return new WebFluxClientDsl(dsl);
 	}
 
@@ -49,13 +50,13 @@ public class WebFluxClientDsl extends AbstractDsl {
 	 * @see WebFluxServerDsl.WebFluxServerCodecDsl#jackson
 	 */
 	public WebFluxClientDsl codecs(Consumer<WebFluxClientCodecDsl> init) {
-		addInitializer(new WebFluxClientCodecDsl(init));
+		new WebFluxClientCodecDsl(init).initialize(context);
 		this.codecsConfigured = true;
 		return this;
 	}
 
 	@Override
-	public void register(GenericApplicationContext context) {
+	public void register() {
 		this.dsl.accept(this);
 		if (!this.codecsConfigured) {
 			new StringCodecInitializer(true).initialize(context);
@@ -73,37 +74,37 @@ public class WebFluxClientDsl extends AbstractDsl {
 		}
 
 		@Override
-		public void register(GenericApplicationContext context) {
+		public void register() {
 			this.dsl.accept(this);
 		}
 
 		@Override
 		public WebFluxCodecDsl string() {
-			addInitializer(new StringCodecInitializer(true));
+			new StringCodecInitializer(true).initialize(context);
 			return this;
 		}
 
 		@Override
 		public WebFluxCodecDsl resource() {
-			addInitializer(new ResourceCodecInitializer(true));
+			new ResourceCodecInitializer(true).initialize(context);
 			return this;
 		}
 
 		@Override
 		public WebFluxCodecDsl protobuf() {
-			addInitializer(new ProtobufCodecInitializer(true));
+			new ProtobufCodecInitializer(true).initialize(context);
 			return this;
 		}
 
 		@Override
 		WebFluxCodecDsl form() {
-			addInitializer(new FormCodecInitializer(true));
+			new FormCodecInitializer(true).initialize(context);
 			return this;
 		}
 
 		@Override
 		WebFluxCodecDsl multipart() {
-			addInitializer(new MultipartCodecInitializer(true));
+			new MultipartCodecInitializer(true).initialize(context);
 			return this;
 		}
 
@@ -114,7 +115,7 @@ public class WebFluxClientDsl extends AbstractDsl {
 
 		@Override
 		public WebFluxCodecDsl jackson(Consumer<JacksonDsl> dsl) {
-			addInitializer(new JacksonDsl(true, dsl));
+			new JacksonDsl(true, dsl).initialize(context);
 			return this;
 		}
 	}

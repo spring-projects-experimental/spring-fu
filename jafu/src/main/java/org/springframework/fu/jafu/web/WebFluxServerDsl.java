@@ -19,6 +19,7 @@ import org.springframework.boot.web.embedded.netty.NettyReactiveWebServerFactory
 import org.springframework.boot.web.embedded.tomcat.TomcatReactiveWebServerFactory;
 import org.springframework.boot.web.embedded.undertow.UndertowReactiveWebServerFactory;
 import org.springframework.boot.web.reactive.server.ConfigurableReactiveWebServerFactory;
+import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.fu.jafu.AbstractDsl;
 import org.springframework.web.reactive.function.server.RouterFunction;
@@ -51,11 +52,11 @@ public class WebFluxServerDsl extends AbstractDsl {
 		this.dsl = dsl;
 	}
 
-	public static WebFluxServerDsl server() {
+	public static ApplicationContextInitializer<GenericApplicationContext> server() {
 		return new WebFluxServerDsl(webFluxServerDsl -> {});
 	}
 
-	public static WebFluxServerDsl server(Consumer<WebFluxServerDsl> dsl) {
+	public static ApplicationContextInitializer<GenericApplicationContext> server(Consumer<WebFluxServerDsl> dsl) {
 		return new WebFluxServerDsl(dsl);
 	}
 
@@ -84,13 +85,10 @@ public class WebFluxServerDsl extends AbstractDsl {
 	 * Configure routes via {@link RouterFunctions.Builder}.
 	 */
 	public WebFluxServerDsl router(Consumer<RouterFunctions.Builder> routerDsl) {
-		addInitializer(context -> {
-			RouterFunctions.Builder builder = RouterFunctions.route();
-			context.registerBean(RouterFunction.class, () -> {
-				routerDsl.accept(builder);
-				return builder.build();
-			});
-
+		RouterFunctions.Builder builder = RouterFunctions.route();
+		context.registerBean(RouterFunction.class, () -> {
+			routerDsl.accept(builder);
+			return builder.build();
 		});
 		return this;
 	}
@@ -99,7 +97,7 @@ public class WebFluxServerDsl extends AbstractDsl {
 	 * Import {@link RouterFunction} created via {@link RouterFunctions.Builder}.
 	 */
 	public WebFluxServerDsl importRouter(RouterFunction router) {
-		addInitializer(context -> context.registerBean(uniqueBeanName(RouterFunctionDsl.class.getName(), context), RouterFunction.class, () -> router));
+		context.registerBean(uniqueBeanName(RouterFunctionDsl.class.getName(), context), RouterFunction.class, () -> router);
 		return this;
 	}
 
@@ -113,7 +111,7 @@ public class WebFluxServerDsl extends AbstractDsl {
 	 * @see WebFluxServerCodecDsl#jackson
 	 */
 	public WebFluxServerDsl codecs(Consumer<WebFluxServerCodecDsl> init) {
-		addInitializer(new WebFluxServerCodecDsl(init));
+		new WebFluxServerCodecDsl(init).initialize(context);
 		this.codecsConfigured = true;
 		return this;
 	}
@@ -130,7 +128,7 @@ public class WebFluxServerDsl extends AbstractDsl {
 	 * Require {@code org.springframework.boot:spring-boot-starter-mustache} dependency.
 	 */
 	public WebFluxServerDsl mustache(Consumer<MustacheDsl> dsl) {
-		addInitializer(new MustacheDsl(dsl));
+		new MustacheDsl(dsl).initialize(context);
 		return this;
 	}
 
@@ -168,7 +166,7 @@ public class WebFluxServerDsl extends AbstractDsl {
 
 
 	@Override
-	public void register(GenericApplicationContext context) {
+	public void register() {
 		this.dsl.accept(this);
 		if (engine == null) {
 			engine = netty();
@@ -194,37 +192,37 @@ public class WebFluxServerDsl extends AbstractDsl {
 		}
 
 		@Override
-		public void register(GenericApplicationContext context) {
+		public void register() {
 			this.dsl.accept(this);
 		}
 
 		@Override
 		public WebFluxServerCodecDsl string() {
-			addInitializer(new StringCodecInitializer(false));
+			new StringCodecInitializer(false).initialize(context);
 			return this;
 		}
 
 		@Override
 		public WebFluxServerCodecDsl resource() {
-			addInitializer(new ResourceCodecInitializer(false));
+			new ResourceCodecInitializer(false).initialize(context);
 			return this;
 		}
 
 		@Override
 		public WebFluxServerCodecDsl protobuf() {
-			addInitializer(new ProtobufCodecInitializer(false));
+			new ProtobufCodecInitializer(false).initialize(context);
 			return this;
 		}
 
 		@Override
 		public WebFluxServerCodecDsl form() {
-			addInitializer(new FormCodecInitializer(false));
+			new FormCodecInitializer(false).initialize(context);
 			return this;
 		}
 
 		@Override
 		public WebFluxServerCodecDsl multipart() {
-			addInitializer(new MultipartCodecInitializer(false));
+			new MultipartCodecInitializer(false).initialize(context);
 			return this;
 		}
 
@@ -235,7 +233,7 @@ public class WebFluxServerDsl extends AbstractDsl {
 
 		@Override
 		public WebFluxServerCodecDsl jackson(Consumer<JacksonDsl> dsl) {
-			addInitializer(new JacksonDsl(false, dsl));
+			new JacksonDsl(false, dsl).initialize(context);
 			return this;
 		}
 	}

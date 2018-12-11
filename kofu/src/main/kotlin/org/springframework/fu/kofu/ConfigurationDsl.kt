@@ -6,7 +6,6 @@ import org.springframework.boot.context.properties.bind.Bindable
 import org.springframework.context.ApplicationEvent
 import org.springframework.context.FunctionalClassPathScanningCandidateComponentProvider
 import org.springframework.context.support.BeanDefinitionDsl
-import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.registerBean
 import org.springframework.util.ClassUtils
 
@@ -27,7 +26,7 @@ open class ConfigurationDsl(internal val initConfiguration: ConfigurationDsl.() 
 	 * @sample org.springframework.fu.kofu.samples.beansDsl
 	 */
 	fun beans(dsl: BeanDefinitionDsl.() -> Unit) {
-		addInitializer(BeanDefinitionDsl(dsl))
+		BeanDefinitionDsl(dsl).initialize(context)
 	}
 
 	/**
@@ -55,7 +54,7 @@ open class ConfigurationDsl(internal val initConfiguration: ConfigurationDsl.() 
 	 * @see configuration
 	 */
 	fun import(dsl: AbstractDsl) {
-		addInitializer(dsl)
+		dsl.initialize(context)
 	}
 
 	/**
@@ -105,7 +104,7 @@ open class ConfigurationDsl(internal val initConfiguration: ConfigurationDsl.() 
 		}
 	}
 
-	override fun register(context: GenericApplicationContext) {
+	override fun register() {
 		initConfiguration()
 	}
 }

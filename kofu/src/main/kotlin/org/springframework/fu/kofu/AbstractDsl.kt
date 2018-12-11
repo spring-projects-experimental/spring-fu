@@ -29,8 +29,6 @@ abstract class AbstractDsl : ApplicationContextInitializer<GenericApplicationCon
 	@PublishedApi
 	internal lateinit var context: GenericApplicationContext
 
-	private val initializers = mutableSetOf<ApplicationContextInitializer<GenericApplicationContext>>()
-
 	val env: Environment
 		get() = context.environment
 
@@ -39,13 +37,8 @@ abstract class AbstractDsl : ApplicationContextInitializer<GenericApplicationCon
 
 	override fun initialize(context: GenericApplicationContext) {
 		this.context = context
-		register(context)
-        initializers.forEach { it.initialize(context) }
+		register()
 	}
-
-    fun addInitializer(initializer: ApplicationContextInitializer<GenericApplicationContext>) {
-        initializers.add(initializer)
-    }
 
 	/**
 	 * Get a reference to the bean by type or type + name with the syntax
@@ -60,6 +53,6 @@ abstract class AbstractDsl : ApplicationContextInitializer<GenericApplicationCon
 	}
 
 
-	internal abstract fun register(context: GenericApplicationContext)
+	internal abstract fun register()
 
 }

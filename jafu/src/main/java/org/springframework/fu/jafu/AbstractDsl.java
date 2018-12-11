@@ -1,6 +1,5 @@
 package org.springframework.fu.jafu;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -14,8 +13,6 @@ import org.springframework.core.env.Environment;
  * @author Sebastien Deleuze
  */
 public abstract class AbstractDsl implements ApplicationContextInitializer<GenericApplicationContext> {
-
-	private final List<ApplicationContextInitializer<GenericApplicationContext>> initializers = new ArrayList<>();
 
 	protected GenericApplicationContext context;
 
@@ -34,12 +31,7 @@ public abstract class AbstractDsl implements ApplicationContextInitializer<Gener
 	@Override
 	public void initialize(GenericApplicationContext context) {
 		this.context = context;
-		register(context);
-		this.initializers.forEach(initializer -> initializer.initialize(context));
-	}
-
-	protected void addInitializer(ApplicationContextInitializer<GenericApplicationContext> initializer) {
-		initializers.add(initializer);
+		register();
 	}
 
 	public Environment env() {
@@ -50,10 +42,10 @@ public abstract class AbstractDsl implements ApplicationContextInitializer<Gener
 		return Arrays.asList(context.getEnvironment().getActiveProfiles());
 	}
 
-	public <T extends AbstractDsl> AbstractDsl enable(T dsl) {
-		addInitializer(dsl);
+	public AbstractDsl enable(ApplicationContextInitializer<GenericApplicationContext> initializer) {
+		initializer.initialize(context);
 		return this;
 	}
 
-	abstract public void register(GenericApplicationContext context);
+	abstract public void register();
 }

@@ -27,7 +27,6 @@ import com.fasterxml.jackson.databind.SerializationFeature
 import org.springframework.boot.autoconfigure.jackson.JacksonInitializer
 import org.springframework.boot.autoconfigure.jackson.JacksonJsonCodecInitializer
 import org.springframework.boot.autoconfigure.jackson.JacksonProperties
-import org.springframework.context.support.GenericApplicationContext
 import org.springframework.fu.kofu.AbstractDsl
 import java.util.*
 import kotlin.reflect.KClass
@@ -36,7 +35,7 @@ class JacksonDsl(private val isClientCodec: Boolean, private val init: JacksonDs
 
 	private val properties = JacksonProperties()
 
-	override fun register(context: GenericApplicationContext) {
+	override fun register() {
 		init()
 		if (dateFormat != null) {
 			properties.dateFormat = dateFormat
@@ -166,7 +165,7 @@ class JacksonDsl(private val isClientCodec: Boolean, private val init: JacksonDs
  * @sample org.springframework.fu.kofu.samples.jacksonDsl
  */
 fun WebFluxClientDsl.WebFluxClientCodecDsl.jackson(dsl: JacksonDsl.() -> Unit = {}) {
-	addInitializer(JacksonDsl(true, dsl))
+	JacksonDsl(true, dsl).initialize(context)
 }
 
 /**
@@ -179,5 +178,5 @@ fun WebFluxClientDsl.WebFluxClientCodecDsl.jackson(dsl: JacksonDsl.() -> Unit = 
  * @sample org.springframework.fu.kofu.samples.jacksonDsl
  */
 fun WebFluxServerDsl.WebFluxServerCodecDsl.jackson(dsl: JacksonDsl.() -> Unit = {}) {
-	addInitializer(JacksonDsl(false, dsl))
+	JacksonDsl(false, dsl).initialize(context)
 }

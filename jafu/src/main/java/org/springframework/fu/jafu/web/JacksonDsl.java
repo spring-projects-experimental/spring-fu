@@ -16,7 +16,6 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import org.springframework.boot.autoconfigure.jackson.JacksonInitializer;
 import org.springframework.boot.autoconfigure.jackson.JacksonJsonCodecInitializer;
 import org.springframework.boot.autoconfigure.jackson.JacksonProperties;
-import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.fu.jafu.AbstractDsl;
 
 public class JacksonDsl extends AbstractDsl {
@@ -35,7 +34,7 @@ public class JacksonDsl extends AbstractDsl {
 
 
 	@Override
-	public void register(GenericApplicationContext context) {
+	public void register() {
 		this.dsl.accept(this);
 
 		new JacksonInitializer(properties).initialize(context);

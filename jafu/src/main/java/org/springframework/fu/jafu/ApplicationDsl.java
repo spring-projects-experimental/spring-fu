@@ -1,7 +1,6 @@
 package org.springframework.fu.jafu;
 
 import java.util.Arrays;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
 import org.springframework.boot.SpringApplication;
@@ -26,8 +25,6 @@ public class ApplicationDsl extends ConfigurationDsl {
 	private final Consumer<ApplicationDsl> dsl;
 
 	private final boolean startServer;
-
-	private final AtomicBoolean initialized = new AtomicBoolean();
 
 	public ApplicationDsl(boolean startServer, Consumer<ApplicationDsl> dsl) {
 		super(configurationDsl -> {});
@@ -104,16 +101,14 @@ public class ApplicationDsl extends ConfigurationDsl {
 	}
 
 	@Override
-	public void register(GenericApplicationContext context) {
-		if (this.initialized.compareAndSet(false, true)) {
-			this.dsl.accept(this);
-			context.registerBean("messageSource", MessageSource.class, () -> {
-				ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
-				messageSource.setBasename("messages");
-				messageSource.setDefaultEncoding("UTF-8");
-				return messageSource;
-			});
-		}
+	public void register() {
+		this.dsl.accept(this);
+		context.registerBean("messageSource", MessageSource.class, () -> {
+			ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
+			messageSource.setBasename("messages");
+			messageSource.setDefaultEncoding("UTF-8");
+			return messageSource;
+		});
 	}
 
 	/**

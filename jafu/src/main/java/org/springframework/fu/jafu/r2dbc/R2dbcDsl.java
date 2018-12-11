@@ -4,6 +4,7 @@ import java.util.function.Consumer;
 
 import org.springframework.boot.autoconfigure.data.r2dbc.DatabaseClientInitializer;
 import org.springframework.boot.autoconfigure.data.r2dbc.R2dbcProperties;
+import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.fu.jafu.AbstractDsl;
 
@@ -21,11 +22,11 @@ public class R2dbcDsl extends AbstractDsl {
 		this.dsl = dsl;
 	}
 
-	public static R2dbcDsl r2dbc() {
+	public static ApplicationContextInitializer<GenericApplicationContext> r2dbc() {
 		return new R2dbcDsl(mongoDsl -> {});
 	}
 
-	public static R2dbcDsl r2dbc(Consumer<R2dbcDsl> dsl) {
+	public static ApplicationContextInitializer<GenericApplicationContext> r2dbc(Consumer<R2dbcDsl> dsl) {
 		return new R2dbcDsl(dsl);
 	}
 
@@ -55,7 +56,7 @@ public class R2dbcDsl extends AbstractDsl {
 	}
 
 	@Override
-	public void register(GenericApplicationContext context) {
+	public void register() {
 		this.dsl.accept(this);
 		if (properties.getHost() == null) {
 			properties.setHost("localhost");
