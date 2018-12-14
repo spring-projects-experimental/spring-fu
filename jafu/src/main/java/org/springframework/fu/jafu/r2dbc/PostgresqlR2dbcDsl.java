@@ -4,9 +4,8 @@ import java.util.function.Consumer;
 
 import org.springframework.boot.autoconfigure.data.r2dbc.PostgresqlDatabaseClientInitializer;
 import org.springframework.boot.autoconfigure.data.r2dbc.PostgresqlR2dbcProperties;
-import org.springframework.context.ApplicationContextInitializer;
-import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.fu.jafu.AbstractDsl;
+import org.springframework.fu.jafu.Dsl;
 
 /**
  * Jafu DSL for R2DBC configuration.
@@ -22,11 +21,11 @@ public class PostgresqlR2dbcDsl extends AbstractDsl {
 		this.dsl = dsl;
 	}
 
-	public static ApplicationContextInitializer<GenericApplicationContext> r2dbcPostgresql() {
+	public static Dsl r2dbcPostgresql() {
 		return new PostgresqlR2dbcDsl(mongoDsl -> {});
 	}
 
-	public static ApplicationContextInitializer<GenericApplicationContext> r2dbcPostgresql(Consumer<PostgresqlR2dbcDsl> dsl) {
+	public static Dsl r2dbcPostgresql(Consumer<PostgresqlR2dbcDsl> dsl) {
 		return new PostgresqlR2dbcDsl(dsl);
 	}
 

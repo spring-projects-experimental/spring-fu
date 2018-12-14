@@ -56,7 +56,7 @@ abstract class AbstractWebServerDslTests {
 	@Test
 	void createAndRequestAnEndpoint() {
 		var router = route().GET("/foo", request -> noContent().build()).build();
-		var app = application(a -> a.enable(server(s -> s.engine(getServerFactory()).importRouter(router))));
+		var app = application(a -> a.enable(server(s -> s.engine(getServerFactory()).include(router))));
 
 		var context = app.run();
 		var client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:" + port).build();
@@ -68,7 +68,7 @@ abstract class AbstractWebServerDslTests {
 	void createAWebClientAndRequestAnEndpoint() {
 		var router = route().GET("/", request -> noContent().build()).build();
 		var app = application(a ->
-				a.enable(server(s -> s.engine(getServerFactory()).importRouter(router)))
+				a.enable(server(s -> s.engine(getServerFactory()).include(router)))
 				.enable(client(c -> c.baseUrl("http://127.0.0.1:" + port))));
 
 		var context = app.run();
@@ -85,8 +85,8 @@ abstract class AbstractWebServerDslTests {
 		var router2 = route().GET("/bar", request -> ok().build()).build();
 
 		var app = application(a -> a.enable(server(s -> s.engine(getServerFactory())
-				.importRouter(router1)
-				.importRouter(router2))));
+				.include(router1)
+				.include(router2))));
 		var context = app.run();
 		var client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:" + port).build();
 		client.get().uri("/foo").exchange().expectStatus().isNoContent();
@@ -109,7 +109,7 @@ abstract class AbstractWebServerDslTests {
 		var app = application(a ->
 				a.enable(server(s -> s.engine(getServerFactory())
 				.codecs(c -> c.string().jackson())
-				.importRouter(router)))
+				.include(router)))
 			.logging(l -> l.level(LogLevel.DEBUG))
 			.enable(mongo()));
 		var context = app.run();

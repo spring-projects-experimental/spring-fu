@@ -106,8 +106,8 @@ private fun applicationDslOverview() {
 			level("org.springframework", LogLevel.DEBUG)
 		}
 		properties<City>("city")
-		import(dataConfiguration)
-		import(webConfiguration)
+		enable(dataConfiguration)
+		enable(webConfiguration)
 	}
 
 	fun main(args: Array<String>) = app.run(profiles = "data, web")

@@ -5,16 +5,16 @@ import java.util.function.Consumer;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.boot.context.properties.FunctionalConfigurationPropertiesBinder;
 import org.springframework.boot.context.properties.bind.Bindable;
-import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
-import org.springframework.context.support.GenericApplicationContext;
 
 
 /**
  * Jafu DSL for modular configuration that can be imported in the application.
  *
- * @see ApplicationDsl#importConfiguration(Consumer)
+ * @see ApplicationDsl#enable(Dsl)
+ * @see ApplicationDsl#enable(Consumer)
+ *
  * @author Sebastien Deleuze
  */
 public class ConfigurationDsl extends AbstractDsl {
@@ -24,11 +24,6 @@ public class ConfigurationDsl extends AbstractDsl {
 	public ConfigurationDsl(Consumer<ConfigurationDsl> dsl) {
 		super();
 		this.dsl = dsl;
-	}
-
-	public ConfigurationDsl importConfiguration(Consumer<ConfigurationDsl> dsl) {
-		new ConfigurationDsl(dsl).initialize(context);
-		return this;
 	}
 
 	public ConfigurationDsl logging(Consumer<LoggingDsl> dsl) {
@@ -52,8 +47,13 @@ public class ConfigurationDsl extends AbstractDsl {
 	}
 
 	@Override
-	public ConfigurationDsl enable(ApplicationContextInitializer<GenericApplicationContext> initializer) {
-		return (ConfigurationDsl) super.enable(initializer);
+	public ConfigurationDsl enable(Dsl dsl) {
+		return (ConfigurationDsl) super.enable(dsl);
+	}
+
+	public ConfigurationDsl enable(Consumer<ConfigurationDsl> dsl) {
+		new ConfigurationDsl(dsl).initialize(context);
+		return this;
 	}
 
 	/**

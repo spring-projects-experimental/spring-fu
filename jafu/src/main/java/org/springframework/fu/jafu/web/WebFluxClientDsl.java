@@ -8,9 +8,8 @@ import org.springframework.boot.autoconfigure.web.reactive.ProtobufCodecInitiali
 import org.springframework.boot.autoconfigure.web.reactive.ResourceCodecInitializer;
 import org.springframework.boot.autoconfigure.web.reactive.StringCodecInitializer;
 import org.springframework.boot.autoconfigure.web.reactive.function.client.ReactiveWebClientBuilderInitializer;
-import org.springframework.context.ApplicationContextInitializer;
-import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.fu.jafu.AbstractDsl;
+import org.springframework.fu.jafu.Dsl;
 
 public class WebFluxClientDsl extends AbstractDsl {
 
@@ -24,11 +23,11 @@ public class WebFluxClientDsl extends AbstractDsl {
 		this.dsl = dsl;
 	}
 
-	public static ApplicationContextInitializer<GenericApplicationContext> client() {
+	public static Dsl client() {
 		return new WebFluxClientDsl(webFluxClientDsl -> {});
 	}
 
-	public static ApplicationContextInitializer<GenericApplicationContext> client(Consumer<WebFluxClientDsl> dsl) {
+	public static Dsl client(Consumer<WebFluxClientDsl> dsl) {
 		return new WebFluxClientDsl(dsl);
 	}
 

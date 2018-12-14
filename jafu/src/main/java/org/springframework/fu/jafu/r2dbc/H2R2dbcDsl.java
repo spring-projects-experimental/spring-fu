@@ -4,11 +4,8 @@ import java.util.function.Consumer;
 
 import org.springframework.boot.autoconfigure.data.r2dbc.H2DatabaseClientInitializer;
 import org.springframework.boot.autoconfigure.data.r2dbc.H2R2dbcProperties;
-import org.springframework.boot.autoconfigure.data.r2dbc.PostgresqlDatabaseClientInitializer;
-import org.springframework.boot.autoconfigure.data.r2dbc.PostgresqlR2dbcProperties;
-import org.springframework.context.ApplicationContextInitializer;
-import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.fu.jafu.AbstractDsl;
+import org.springframework.fu.jafu.Dsl;
 
 /**
  * Jafu DSL for R2DBC configuration.
@@ -24,11 +21,11 @@ public class H2R2dbcDsl extends AbstractDsl {
 		this.dsl = dsl;
 	}
 
-	public static ApplicationContextInitializer<GenericApplicationContext> r2dbcH2() {
+	public static Dsl r2dbcH2() {
 		return new H2R2dbcDsl(mongoDsl -> {});
 	}
 
-	public static ApplicationContextInitializer<GenericApplicationContext> r2dbcH2(Consumer<H2R2dbcDsl> dsl) {
+	public static Dsl r2dbcH2(Consumer<H2R2dbcDsl> dsl) {
 		return new H2R2dbcDsl(dsl);
 	}
 

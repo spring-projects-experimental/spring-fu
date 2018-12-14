@@ -20,8 +20,8 @@ import org.springframework.fu.kofu.application
 
 val app = application {
 	properties<SampleProperties>("sample")
-	import(dataConfig)
-	import(webConfig)
+	enable(dataConfig)
+	enable(webConfig)
 }
 
 fun main() {

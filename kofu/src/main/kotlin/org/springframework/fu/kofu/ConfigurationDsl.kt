@@ -50,10 +50,10 @@ open class ConfigurationDsl(internal val initConfiguration: ConfigurationDsl.() 
 	}
 
 	/**
-	 * Import a DSL.
+	 * Enable a configuration described by a DSL.
 	 * @see configuration
 	 */
-	fun import(dsl: AbstractDsl) {
+	fun enable(dsl: Dsl) {
 		dsl.initialize(context)
 	}
 
@@ -111,7 +111,7 @@ open class ConfigurationDsl(internal val initConfiguration: ConfigurationDsl.() 
 
 /**
  * Define a configuration that can be imported in an application or used in tests.
- * @see ApplicationDsl.import
+ * @see ApplicationDsl.enable
  */
 fun configuration(dsl: ConfigurationDsl.() -> Unit)
 		= ConfigurationDsl(dsl)

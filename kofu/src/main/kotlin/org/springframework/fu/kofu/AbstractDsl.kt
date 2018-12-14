@@ -16,15 +16,10 @@
 
 package org.springframework.fu.kofu
 
-import org.springframework.context.ApplicationContextInitializer
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.core.env.Environment
 
-@DslMarker
-internal annotation class KofuMarker
-
-@KofuMarker
-abstract class AbstractDsl : ApplicationContextInitializer<GenericApplicationContext> {
+abstract class AbstractDsl : Dsl {
 
 	@PublishedApi
 	internal lateinit var context: GenericApplicationContext

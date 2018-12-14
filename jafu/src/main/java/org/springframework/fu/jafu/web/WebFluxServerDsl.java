@@ -19,9 +19,8 @@ import org.springframework.boot.web.embedded.netty.NettyReactiveWebServerFactory
 import org.springframework.boot.web.embedded.tomcat.TomcatReactiveWebServerFactory;
 import org.springframework.boot.web.embedded.undertow.UndertowReactiveWebServerFactory;
 import org.springframework.boot.web.reactive.server.ConfigurableReactiveWebServerFactory;
-import org.springframework.context.ApplicationContextInitializer;
-import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.fu.jafu.AbstractDsl;
+import org.springframework.fu.jafu.Dsl;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.RouterFunctionDsl;
 import org.springframework.web.reactive.function.server.RouterFunctions;
@@ -52,11 +51,11 @@ public class WebFluxServerDsl extends AbstractDsl {
 		this.dsl = dsl;
 	}
 
-	public static ApplicationContextInitializer<GenericApplicationContext> server() {
+	public static Dsl server() {
 		return new WebFluxServerDsl(webFluxServerDsl -> {});
 	}
 
-	public static ApplicationContextInitializer<GenericApplicationContext> server(Consumer<WebFluxServerDsl> dsl) {
+	public static Dsl server(Consumer<WebFluxServerDsl> dsl) {
 		return new WebFluxServerDsl(dsl);
 	}
 
@@ -96,7 +95,7 @@ public class WebFluxServerDsl extends AbstractDsl {
 	/**
 	 * Import {@link RouterFunction} created via {@link RouterFunctions.Builder}.
 	 */
-	public WebFluxServerDsl importRouter(RouterFunction router) {
+	public WebFluxServerDsl include(RouterFunction router) {
 		context.registerBean(uniqueBeanName(RouterFunctionDsl.class.getName(), context), RouterFunction.class, () -> router);
 		return this;
 	}

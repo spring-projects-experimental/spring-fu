@@ -8,8 +8,8 @@ import org.springframework.fu.jafu.ApplicationDsl;
 public abstract class Application {
 
 	public static ApplicationDsl app = application(app ->
-		app.importConfiguration(Configurations.dataConfig)
-		   .importConfiguration(Configurations.webConfig)
+		app.enable(Configurations.dataConfig)
+		   .enable(Configurations.webConfig)
 		   .listener(ApplicationReadyEvent.class, e -> app.ref(UserRepository.class).init())
 	);
 

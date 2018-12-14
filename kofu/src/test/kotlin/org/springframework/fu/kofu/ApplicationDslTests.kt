@@ -62,7 +62,7 @@ class ApplicationDslTests {
 			}
 		}
 		val app = application(false) {
-			import(beanConfig)
+			enable(beanConfig)
 		}
 		with(app.run()) {
 			getBean<ReloadableResourceBundleMessageSource>()

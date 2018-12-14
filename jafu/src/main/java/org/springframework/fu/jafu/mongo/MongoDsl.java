@@ -6,9 +6,8 @@ import org.springframework.boot.autoconfigure.data.mongo.MongoDataInitializer;
 import org.springframework.boot.autoconfigure.data.mongo.MongoReactiveDataInitializer;
 import org.springframework.boot.autoconfigure.mongo.MongoProperties;
 import org.springframework.boot.autoconfigure.mongo.MongoReactiveInitializer;
-import org.springframework.context.ApplicationContextInitializer;
-import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.fu.jafu.AbstractDsl;
+import org.springframework.fu.jafu.Dsl;
 
 /**
  * Jafu DSL for MongoDB configuration.
@@ -26,11 +25,11 @@ public class MongoDsl extends AbstractDsl {
 		this.dsl = dsl;
 	}
 
-	public static ApplicationContextInitializer<GenericApplicationContext> mongo() {
+	public static Dsl mongo() {
 		return new MongoDsl(mongoDsl -> {});
 	}
 
-	public static ApplicationContextInitializer<GenericApplicationContext> mongo(Consumer<MongoDsl> dsl) {
+	public static Dsl mongo(Consumer<MongoDsl> dsl) {
 		return new MongoDsl(dsl);
 	}
 

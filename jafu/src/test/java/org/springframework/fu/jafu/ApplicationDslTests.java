@@ -36,7 +36,7 @@ class ApplicationDslTests {
 	@Test
 	void createAnApplicationWithAConfigurationImport() {
 		Consumer<ConfigurationDsl> beansConfig = c -> c.beans(b -> b.bean(Foo.class));
-		var app = application(false, a -> a.importConfiguration(beansConfig));
+		var app = application(false, a -> a.enable(beansConfig));
 		var context = app.run();
 		context.getBean(ReloadableResourceBundleMessageSource.class);
 		context.getBean(Foo.class);
