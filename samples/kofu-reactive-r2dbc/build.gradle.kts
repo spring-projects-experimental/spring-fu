@@ -16,7 +16,7 @@ dependencies {
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.springframework.data:spring-data-r2dbc:1.0.0.M1")
 	implementation("io.r2dbc:r2dbc-spi:1.0.0.M6")
-	implementation("io.r2dbc:r2dbc-postgresql:1.0.0.M6")
+	implementation("io.r2dbc:r2dbc-h2:1.0.0.M6")
 
 	testImplementation("org.junit.jupiter:junit-jupiter-api")
 	testImplementation("org.springframework:spring-test")

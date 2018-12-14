@@ -6,12 +6,13 @@ import io.r2dbc.postgresql.PostgresqlConnectionFactory;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.data.r2dbc.function.CoDatabaseClient;
+import org.springframework.data.r2dbc.function.DatabaseClient;
 
-public class CoDatabaseClientInitializer implements ApplicationContextInitializer<GenericApplicationContext> {
+public class PostgresqlDatabaseClientInitializer implements ApplicationContextInitializer<GenericApplicationContext> {
 
-	private final R2dbcProperties properties;
+	private final PostgresqlR2dbcProperties properties;
 
-	public CoDatabaseClientInitializer(R2dbcProperties properties) {
+	public PostgresqlDatabaseClientInitializer(PostgresqlR2dbcProperties properties) {
 		this.properties = properties;
 	}
 
@@ -27,6 +28,11 @@ public class CoDatabaseClientInitializer implements ApplicationContextInitialize
 				.password(this.properties.getPassword())
 				.build();
 
-		context.registerBean(CoDatabaseClient.class, () -> CoDatabaseClient.Companion.create(new PostgresqlConnectionFactory(configuration)));
+		if (properties.getCoroutines()) {
+			context.registerBean(CoDatabaseClient.class, () -> CoDatabaseClient.Companion.create(new PostgresqlConnectionFactory(configuration)));
+		}
+		else {
+			context.registerBean(DatabaseClient.class, () -> DatabaseClient.builder().connectionFactory(new PostgresqlConnectionFactory(configuration)).build());
+		}
 	}
 }

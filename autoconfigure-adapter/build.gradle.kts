@@ -21,6 +21,9 @@ dependencies {
 
 	compileOnly(project(":coroutines:data-mongodb"))
 	compileOnly(project(":coroutines:data-r2dbc"))
+	compileOnly("io.r2dbc:r2dbc-postgresql:1.0.0.M6")
+	compileOnly("io.r2dbc:r2dbc-h2:1.0.0.M6")
+	compileOnly("io.r2dbc:r2dbc-mssql:1.0.0.M6")
 	compileOnly(project(":coroutines:webflux"))
 }
 

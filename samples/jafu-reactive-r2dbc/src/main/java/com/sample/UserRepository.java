@@ -30,15 +30,16 @@ public class UserRepository {
 	}
 
 	public Mono<String> save(User user) {
-		return client.insert().into(User.class).table("users").using(user).exchange()
-				.flatMap(it -> it.extract((r, m) -> r.get("login", String.class)).one());
+		return client.insert().into(User.class).table("users").using(user)
+				.map((r, m) -> r.get("login", String.class)).one();
 	}
 
 	public void init() {
-		client.execute().sql("CREATE TABLE IF NOT EXISTS users (login varchar PRIMARY KEY, firstname varchar, lastname varchar);").fetch().one().block();
-		deleteAll().block();
-		save(new User("smaldini", "Stéphane","Maldini")).block();
-		save(new User("sdeleuze", "Sébastien","Deleuze")).block();
-		save(new User("bclozel", "Brian","Clozel")).block();
+		client.execute().sql("CREATE TABLE IF NOT EXISTS users (login varchar PRIMARY KEY, firstname varchar, lastname varchar);").then()
+				.then(deleteAll())
+				.then(save(new User("smaldini", "Stéphane","Maldini")))
+				.then(save(new User("sdeleuze", "Sébastien","Deleuze")))
+				.then(save(new User("bclozel", "Brian","Clozel")))
+				.block();
 	}
 }

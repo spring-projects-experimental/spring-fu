@@ -3,7 +3,7 @@ package com.sample
 import kotlinx.coroutines.runBlocking
 import org.springframework.boot.context.event.ApplicationReadyEvent
 import org.springframework.fu.kofu.configuration
-import org.springframework.fu.kofu.r2dbc.r2dbc
+import org.springframework.fu.kofu.r2dbc.r2dbcH2
 import org.springframework.fu.kofu.web.jackson
 import org.springframework.fu.kofu.web.mustache
 import org.springframework.fu.kofu.web.server
@@ -17,7 +17,7 @@ val dataConfig = configuration {
 			ref<UserRepository>().init()
 		}
 	}
-	r2dbc {
+	r2dbcH2 {
 		coroutines = true
 	}
 }

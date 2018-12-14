@@ -1,12 +1,12 @@
 plugins {
 	id("io.spring.dependency-management") version "1.0.6.RELEASE"
-	id("org.springframework.boot") version "2.1.0.RELEASE"
+	id("org.springframework.boot") version "2.1.1.RELEASE"
 	id("java")
 }
 
 java {
-	sourceCompatibility = JavaVersion.VERSION_1_8
-	targetCompatibility = JavaVersion.VERSION_1_8
+	sourceCompatibility = JavaVersion.VERSION_11
+	targetCompatibility = JavaVersion.VERSION_11
 }
 
 dependencies {
@@ -20,7 +20,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-mustache")
 	implementation("org.springframework.data:spring-data-r2dbc:1.0.0.M1")
 	implementation("io.r2dbc:r2dbc-spi:1.0.0.M6")
-	implementation("io.r2dbc:r2dbc-postgresql:1.0.0.M6")
+	implementation("io.r2dbc:r2dbc-h2:1.0.0.M6")
 
 	testImplementation("org.junit.jupiter:junit-jupiter-api")
 	testImplementation("org.springframework:spring-test")

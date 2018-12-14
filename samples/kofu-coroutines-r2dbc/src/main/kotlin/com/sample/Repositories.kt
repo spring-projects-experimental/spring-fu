@@ -12,11 +12,10 @@ class UserRepository(private val client: CoDatabaseClient) {
 
 	suspend fun deleteAll() = client.execute().sql("DELETE FROM users").fetch().one()
 
-	suspend fun save(user: User) = client.insert().into(User::class).table("users").using(user).exchange()
-			.extract { r, _ -> r.get("login", String::class.java) }.all()
+	suspend fun save(user: User) = client.insert().into(User::class).table("users").using(user).map { r, _ -> r.get("login", String::class.java) }.all()
 
 	suspend fun init() {
-		client.execute().sql("CREATE TABLE IF NOT EXISTS users (login varchar PRIMARY KEY, firstname varchar, lastname varchar);").fetch().one()
+		client.execute().sql("CREATE TABLE IF NOT EXISTS users (login varchar PRIMARY KEY, firstname varchar, lastname varchar);").execute()
 		deleteAll()
 		save(User("smaldini", "Stéphane", "Maldini"))
 		save(User("sdeleuze", "Sébastien", "Deleuze"))

@@ -16,6 +16,7 @@ dependencies {
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.springframework.fu:spring-fu-webflux-coroutines:0.0.3.BUILD-SNAPSHOT")
 	implementation("org.springframework.fu:spring-fu-data-r2dbc-coroutines:0.0.3.BUILD-SNAPSHOT")
+	implementation("io.r2dbc:r2dbc-h2:1.0.0.M6")
 
 	testImplementation("org.junit.jupiter:junit-jupiter-api")
 	testImplementation("org.springframework:spring-test")

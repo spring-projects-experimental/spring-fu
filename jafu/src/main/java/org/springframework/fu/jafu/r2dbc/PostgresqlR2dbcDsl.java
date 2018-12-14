@@ -2,8 +2,8 @@ package org.springframework.fu.jafu.r2dbc;
 
 import java.util.function.Consumer;
 
-import org.springframework.boot.autoconfigure.data.r2dbc.DatabaseClientInitializer;
-import org.springframework.boot.autoconfigure.data.r2dbc.R2dbcProperties;
+import org.springframework.boot.autoconfigure.data.r2dbc.PostgresqlDatabaseClientInitializer;
+import org.springframework.boot.autoconfigure.data.r2dbc.PostgresqlR2dbcProperties;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.fu.jafu.AbstractDsl;
@@ -12,45 +12,45 @@ import org.springframework.fu.jafu.AbstractDsl;
  * Jafu DSL for R2DBC configuration.
  * @author Sebastien Deleuze
  */
-public class R2dbcDsl extends AbstractDsl {
+public class PostgresqlR2dbcDsl extends AbstractDsl {
 
-	private final Consumer<R2dbcDsl> dsl;
+	private final Consumer<PostgresqlR2dbcDsl> dsl;
 
-	private final R2dbcProperties properties = new R2dbcProperties();
+	private final PostgresqlR2dbcProperties properties = new PostgresqlR2dbcProperties();
 
-	private R2dbcDsl(Consumer<R2dbcDsl> dsl) {
+	private PostgresqlR2dbcDsl(Consumer<PostgresqlR2dbcDsl> dsl) {
 		this.dsl = dsl;
 	}
 
-	public static ApplicationContextInitializer<GenericApplicationContext> r2dbc() {
-		return new R2dbcDsl(mongoDsl -> {});
+	public static ApplicationContextInitializer<GenericApplicationContext> r2dbcPostgresql() {
+		return new PostgresqlR2dbcDsl(mongoDsl -> {});
 	}
 
-	public static ApplicationContextInitializer<GenericApplicationContext> r2dbc(Consumer<R2dbcDsl> dsl) {
-		return new R2dbcDsl(dsl);
+	public static ApplicationContextInitializer<GenericApplicationContext> r2dbcPostgresql(Consumer<PostgresqlR2dbcDsl> dsl) {
+		return new PostgresqlR2dbcDsl(dsl);
 	}
 
-	public R2dbcDsl host(String host) {
+	public PostgresqlR2dbcDsl host(String host) {
 		properties.setHost(host);
 		return this;
 	}
 
-	public R2dbcDsl port(Integer port) {
+	public PostgresqlR2dbcDsl port(Integer port) {
 		properties.setPort(port);
 		return this;
 	}
 
-	public R2dbcDsl database(String database) {
+	public PostgresqlR2dbcDsl database(String database) {
 		properties.setDatabase(database);
 		return this;
 	}
 
-	public R2dbcDsl username(String username) {
+	public PostgresqlR2dbcDsl username(String username) {
 		properties.setUsername(username);
 		return this;
 	}
 
-	public R2dbcDsl password(String password) {
+	public PostgresqlR2dbcDsl password(String password) {
 		properties.setPassword(password);
 		return this;
 	}
@@ -73,6 +73,6 @@ public class R2dbcDsl extends AbstractDsl {
 		if (properties.getPassword() == null) {
 			properties.setPassword("");
 		}
-		new DatabaseClientInitializer(properties).initialize(context);
+		new PostgresqlDatabaseClientInitializer(properties).initialize(context);
 	}
 }
