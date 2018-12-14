@@ -2,6 +2,9 @@
 
 This is a sample project for a Spring Boot Reactive web application with Jafu configuration and a R2DBC backend.
 
+You can run compile and run it as a https://github.com/oracle/graal/tree/master/substratevm[Graal native image]
+(GraalVM 1.0 RC10+) by running `build.sh` then `./com.sample.applicationkt` (works with Postgresql, broken with H2).
+
 After extracting the `.zip`, rename the default `jafu-reactive-r2dbc` directory name to a customized one.
 
 === IDE

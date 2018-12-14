@@ -1,0 +1,6 @@
+[
+  {
+    "name": "com.sample.Foo",
+    "allPublicMethods": true
+  }
+]

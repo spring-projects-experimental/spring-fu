@@ -7,6 +7,6 @@ target/
 *.iml
 *.ipr
 out/
-samples/kofu-reactive-graal/com.sample.applicationkt
+samples/kofu-reactive-minimal/com.sample.applicationkt
 samples/jafu-reactive-r2dbc/com.sample.application
 .zip

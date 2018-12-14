@@ -40,4 +40,9 @@ tasks.withType<Test> {
 configurations.all {
 	exclude(module = "javax.annotation-api")
 	exclude(module = "hibernate-validator")
+	if (project.hasProperty("graal")) {
+		exclude(module = "netty-transport-native-epoll")
+		exclude(module = "netty-transport-native-unix-common")
+		exclude(module = "netty-codec-http2")
+	}
 }

@@ -1,7 +1,11 @@
 = Kofu Reactive minimal webapp sample
 
 This is a sample project for a Spring Boot Reactive web application with Kofu configuration which provides a
-`http://localhost:8080/` endpoint that displays "Hello world!".
+`http://localhost:8080/` endpoint that displays "Hello world!" and an `http://localhost:8080/api` with a JSON
+endpoint.
+
+You can run compile and run it as a https://github.com/oracle/graal/tree/master/substratevm[Graal native image]
+(GraalVM 1.0 RC10+) by running `build.sh` then `./com.sample.applicationkt`.
 
 After extracting the `.zip`, rename the default `kofu-reactive-minimal` directory name to a customized one.
 

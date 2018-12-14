@@ -6,7 +6,6 @@ include(
 		"kofu-coroutines-mongodb",
 		"kofu-coroutines-minimal",
 		"kofu-coroutines-r2dbc",
-		"kofu-reactive-graal",
 		"kofu-reactive-minimal",
 		"kofu-reactive-mongodb",
 		"kofu-reactive-r2dbc"
