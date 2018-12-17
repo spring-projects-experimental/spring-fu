@@ -26,14 +26,10 @@ import org.springframework.boot.logging.LoggingSystem
  * @author Sebastien Deleuze
  */
 @KofuMarker
-class LoggingDsl(init: LoggingDsl.() -> Unit) {
+class LoggingDsl {
 
 	@PublishedApi
 	internal val loggingSystem: LoggingSystem = LoggingSystem.get(LoggingDsl::class.java.classLoader)
-
-	init {
-		init()
-	}
 
 	/**
 	 * Set the default ROOT log level

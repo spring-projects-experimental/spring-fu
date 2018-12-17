@@ -4,8 +4,9 @@ import java.util.function.Consumer;
 
 import org.springframework.boot.autoconfigure.data.r2dbc.PostgresqlDatabaseClientInitializer;
 import org.springframework.boot.autoconfigure.data.r2dbc.PostgresqlR2dbcProperties;
+import org.springframework.context.ApplicationContextInitializer;
+import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.fu.jafu.AbstractDsl;
-import org.springframework.fu.jafu.Dsl;
 
 /**
  * Jafu DSL for R2DBC configuration.
@@ -17,15 +18,15 @@ public class PostgresqlR2dbcDsl extends AbstractDsl {
 
 	private final PostgresqlR2dbcProperties properties = new PostgresqlR2dbcProperties();
 
-	private PostgresqlR2dbcDsl(Consumer<PostgresqlR2dbcDsl> dsl) {
+	PostgresqlR2dbcDsl(Consumer<PostgresqlR2dbcDsl> dsl) {
 		this.dsl = dsl;
 	}
 
-	public static Dsl r2dbcPostgresql() {
+	public static ApplicationContextInitializer<GenericApplicationContext> r2dbcPostgresql() {
 		return new PostgresqlR2dbcDsl(mongoDsl -> {});
 	}
 
-	public static Dsl r2dbcPostgresql(Consumer<PostgresqlR2dbcDsl> dsl) {
+	public static ApplicationContextInitializer<GenericApplicationContext> r2dbcPostgresql(Consumer<PostgresqlR2dbcDsl> dsl) {
 		return new PostgresqlR2dbcDsl(dsl);
 	}
 
@@ -55,7 +56,8 @@ public class PostgresqlR2dbcDsl extends AbstractDsl {
 	}
 
 	@Override
-	public void register() {
+	public void initialize(GenericApplicationContext context) {
+		super.initialize(context);
 		this.dsl.accept(this);
 		if (properties.getHost() == null) {
 			properties.setHost("localhost");

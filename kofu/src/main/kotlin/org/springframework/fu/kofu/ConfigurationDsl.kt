@@ -3,9 +3,11 @@ package org.springframework.fu.kofu
 import org.springframework.beans.factory.support.BeanDefinitionReaderUtils
 import org.springframework.boot.context.properties.FunctionalConfigurationPropertiesBinder
 import org.springframework.boot.context.properties.bind.Bindable
+import org.springframework.context.ApplicationContextInitializer
 import org.springframework.context.ApplicationEvent
 import org.springframework.context.FunctionalClassPathScanningCandidateComponentProvider
 import org.springframework.context.support.BeanDefinitionDsl
+import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.registerBean
 import org.springframework.util.ClassUtils
 
@@ -38,7 +40,8 @@ open class ConfigurationDsl(internal val initConfiguration: ConfigurationDsl.() 
 	 * TODO Support generating component indexes
 	 * TODO Support exclusion
 	 *
-	 * @param basePackage The base package to scann
+	 * @param basePackage The base package to scan
+	 * @sample org.springframework.fu.kofu.samples.beanScanDsl
 	 */
 	fun BeanDefinitionDsl.scan(basePackage: String) {
 		val componentProvider = FunctionalClassPathScanningCandidateComponentProvider()
@@ -50,23 +53,22 @@ open class ConfigurationDsl(internal val initConfiguration: ConfigurationDsl.() 
 	}
 
 	/**
-	 * Enable a configuration described by a DSL.
+	 * Enable the specified functional configuration.
 	 * @see configuration
+	 * @sample org.springframework.fu.kofu.samples.applicationDslWithConfiguration
 	 */
-	fun enable(dsl: Dsl) {
-		dsl.initialize(context)
+	fun enable(configuration: ApplicationContextInitializer<GenericApplicationContext>) {
+        configuration.initialize(context)
 	}
 
 	/**
-	 * Specify the class and the optional prefux of configuration properties, which is the
-	 * same mechanism than regular
+	 * Specify the class and the optional prefix of configuration properties, which is the same mechanism than regular
 	 * [Spring Boot configuration properties mechanism](https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html#boot-features-external-config-typesafe-configuration-properties),
-	 * without the need to use `@ConfigurationProperties` annotation.
+	 * without `@ConfigurationProperties` annotation.
 	 *
-	 * @sample org.springframework.fu.kofu.samples.properties
-	 * @sample org.springframework.fu.kofu.samples.SampleProperties
+	 * @sample org.springframework.fu.kofu.samples.configurationProperties
 	 */
-	inline fun <reified T : Any> properties(prefix: String = "") {
+	inline fun <reified T : Any> configurationProperties(prefix: String = "") {
 		context.registerBean("${T::class.java.simpleName.toLowerCase()}ConfigurationProperties") {
 			FunctionalConfigurationPropertiesBinder(context).bind(prefix, Bindable.of(T::class.java)).get()
 		}
@@ -77,7 +79,7 @@ open class ConfigurationDsl(internal val initConfiguration: ConfigurationDsl.() 
 	 * @sample org.springframework.fu.kofu.samples.loggingDsl
 	 */
 	fun logging(dsl: LoggingDsl.() -> Unit) {
-		LoggingDsl(dsl)
+		LoggingDsl().dsl()
 	}
 
 	/**
@@ -104,14 +106,17 @@ open class ConfigurationDsl(internal val initConfiguration: ConfigurationDsl.() 
 		}
 	}
 
-	override fun register() {
+	override fun initialize(context: GenericApplicationContext) {
+		super.initialize(context)
 		initConfiguration()
 	}
+
 }
 
 /**
  * Define a configuration that can be imported in an application or used in tests.
  * @see ApplicationDsl.enable
+ * @sample org.springframework.fu.kofu.samples.applicationDslWithConfiguration
  */
 fun configuration(dsl: ConfigurationDsl.() -> Unit)
 		= ConfigurationDsl(dsl)

@@ -5,14 +5,16 @@ import java.util.function.Consumer;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.boot.context.properties.FunctionalConfigurationPropertiesBinder;
 import org.springframework.boot.context.properties.bind.Bindable;
+import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
+import org.springframework.context.support.GenericApplicationContext;
 
 
 /**
  * Jafu DSL for modular configuration that can be imported in the application.
  *
- * @see ApplicationDsl#enable(Dsl)
+ * @see ApplicationDsl#enable(ApplicationContextInitializer)
  * @see ApplicationDsl#enable(Consumer)
  *
  * @author Sebastien Deleuze
@@ -21,38 +23,64 @@ public class ConfigurationDsl extends AbstractDsl {
 
 	private final Consumer<ConfigurationDsl> dsl;
 
-	public ConfigurationDsl(Consumer<ConfigurationDsl> dsl) {
+	ConfigurationDsl(Consumer<ConfigurationDsl> dsl) {
 		super();
 		this.dsl = dsl;
 	}
 
+	/**
+	 * Configure global, package or class logging via a {@link LoggingDsl dedicated DSL}.
+	 */
 	public ConfigurationDsl logging(Consumer<LoggingDsl> dsl) {
 		new LoggingDsl(dsl);
 		return this;
 	}
 
-	public <T> ConfigurationDsl properties(Class<T> clazz) {
-		properties(clazz, "");
+	/**
+	 * Specify the class and the prefix of configuration properties, which is the same mechanism than regular Boot
+	 * configuration properties without `@ConfigurationProperties` annotation.
+	 * @see #configurationProperties(Class, String)
+	 * @see <a href="https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html#boot-features-external-config-typesafe-configuration-properties">Type-safe Configuration Properties</a>
+	 */
+	public <T> ConfigurationDsl configurationProperties(Class<T> clazz) {
+		configurationProperties(clazz, "");
 		return this;
 	}
 
-	public <T> ConfigurationDsl properties(Class<T> clazz, String prefix) {
+	/**
+	 * Specify the class and the optional prefix of configuration properties, which is the same mechanism than regular
+	 * Boot configuration properties without `@ConfigurationProperties` annotation.
+	 * @see #configurationProperties(Class)
+	 * @see <a href="https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html#boot-features-external-config-typesafe-configuration-properties">Type-safe Configuration Properties</a>
+	 */
+	public <T> ConfigurationDsl configurationProperties(Class<T> clazz, String prefix) {
 		context.registerBean(clazz.getSimpleName() + "ConfigurationProperties", clazz, () -> new FunctionalConfigurationPropertiesBinder(context).bind(prefix, Bindable.of(clazz)).get());
 		return this;
 	}
 
+	/**
+	 * Configure beans via a {@link BeanDsl dedicated DSL}.
+	 */
 	public ConfigurationDsl beans(Consumer<BeanDsl> dsl) {
 		new BeanDsl(dsl).initialize(context);
 		return this;
 	}
 
+	/**
+	 * Enable the specified functional configuration.
+	 * @see #enable(Consumer)
+	 */
 	@Override
-	public ConfigurationDsl enable(Dsl dsl) {
-		return (ConfigurationDsl) super.enable(dsl);
+	public ConfigurationDsl enable(ApplicationContextInitializer<GenericApplicationContext> configuration) {
+		return (ConfigurationDsl) super.enable(configuration);
 	}
 
-	public ConfigurationDsl enable(Consumer<ConfigurationDsl> dsl) {
-		new ConfigurationDsl(dsl).initialize(context);
+	/**
+	 * Enable the specified functional configuration.
+	 * @see #enable(ApplicationContextInitializer)
+	 */
+	public ConfigurationDsl enable(Consumer<ConfigurationDsl> configuration) {
+		new ConfigurationDsl(configuration).initialize(context);
 		return this;
 	}
 
@@ -71,7 +99,8 @@ public class ConfigurationDsl extends AbstractDsl {
 	}
 
 	@Override
-	public void register() {
+	public void initialize(GenericApplicationContext context) {
+		super.initialize(context);
 		this.dsl.accept(this);
 	}
 

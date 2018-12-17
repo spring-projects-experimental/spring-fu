@@ -10,6 +10,7 @@ import org.springframework.boot.web.embedded.netty.NettyReactiveWebServerFactory
 import org.springframework.boot.web.embedded.tomcat.TomcatReactiveWebServerFactory
 import org.springframework.boot.web.embedded.undertow.UndertowReactiveWebServerFactory
 import org.springframework.boot.web.reactive.server.ConfigurableReactiveWebServerFactory
+import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.registerBean
 import org.springframework.fu.kofu.AbstractDsl
 import org.springframework.fu.kofu.ConfigurationDsl
@@ -48,14 +49,13 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit): Abst
      */
     var engine: ConfigurableReactiveWebServerFactory? = null
 
-
-    override fun register() {
+    override fun initialize(context: GenericApplicationContext) {
+        super.initialize(context)
         init()
         if (engine == null) {
             engine = netty()
         }
         engine!!.setPort(port)
-
         if (!codecsConfigured) {
             StringCodecInitializer(false).initialize(context)
             ResourceCodecInitializer(false).initialize(context)
@@ -187,7 +187,8 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit): Abst
 
     class WebFluxServerCodecDsl(private val init: WebFluxServerCodecDsl.() -> Unit) : WebFluxCodecDsl() {
 
-        override fun register() {
+        override fun initialize(context: GenericApplicationContext) {
+            super.initialize(context)
             init()
         }
 

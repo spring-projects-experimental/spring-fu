@@ -4,6 +4,7 @@ import org.springframework.boot.autoconfigure.data.r2dbc.H2DatabaseClientInitial
 import org.springframework.boot.autoconfigure.data.r2dbc.H2R2dbcProperties
 import org.springframework.boot.autoconfigure.data.r2dbc.PostgresqlDatabaseClientInitializer
 import org.springframework.boot.autoconfigure.data.r2dbc.PostgresqlR2dbcProperties
+import org.springframework.context.support.GenericApplicationContext
 import org.springframework.fu.kofu.AbstractDsl
 import org.springframework.fu.kofu.ConfigurationDsl
 
@@ -21,7 +22,8 @@ open class H2R2dbcDsl(private val init: H2R2dbcDsl.() -> Unit) : AbstractDsl() {
 
     var password: String? = null
 
-    override fun register() {
+    override fun initialize(context: GenericApplicationContext) {
+        super.initialize(context)
         init()
 
         val properties = H2R2dbcProperties()

@@ -2,6 +2,7 @@ package org.springframework.fu.kofu.web
 
 import org.springframework.boot.autoconfigure.web.reactive.*
 import org.springframework.boot.autoconfigure.web.reactive.function.client.ReactiveWebClientBuilderInitializer
+import org.springframework.context.support.GenericApplicationContext
 import org.springframework.fu.kofu.AbstractDsl
 import org.springframework.fu.kofu.ConfigurationDsl
 import org.springframework.web.reactive.function.client.WebClient
@@ -19,7 +20,9 @@ class WebFluxClientDsl(private val init: WebFluxClientDsl.() -> Unit) : Abstract
      */
     var baseUrl: String? = null
 
-    override fun register() {
+
+    override fun initialize(context: GenericApplicationContext) {
+        super.initialize(context)
         init()
         if (!codecsConfigured) {
             StringCodecInitializer(true).initialize(context)
@@ -44,7 +47,8 @@ class WebFluxClientDsl(private val init: WebFluxClientDsl.() -> Unit) : Abstract
 
     class WebFluxClientCodecDsl(private val init: WebFluxClientCodecDsl.() -> Unit) : WebFluxCodecDsl() {
 
-        override fun register() {
+        override fun initialize(context: GenericApplicationContext) {
+            super.initialize(context)
             init()
         }
 

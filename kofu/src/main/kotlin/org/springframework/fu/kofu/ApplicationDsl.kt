@@ -18,12 +18,11 @@ package org.springframework.fu.kofu
 
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.WebApplicationType
+import org.springframework.boot.autoconfigure.context.MessageSourceInitializer
 import org.springframework.boot.web.reactive.context.ReactiveWebServerApplicationContext
 import org.springframework.context.ApplicationContext
 import org.springframework.context.ConfigurableApplicationContext
 import org.springframework.context.support.GenericApplicationContext
-import org.springframework.context.support.ReloadableResourceBundleMessageSource
-import org.springframework.context.support.registerBean
 
 /**
  * Kofu DSL for application configuration.
@@ -32,16 +31,6 @@ import org.springframework.context.support.registerBean
  * @see application
  */
 open class ApplicationDsl internal constructor(private val startServer: Boolean, private val initApplication: ApplicationDsl.() -> Unit) : ConfigurationDsl() {
-
-	override fun register() {
-		initApplication()
-		context.registerBean("messageSource") {
-			ReloadableResourceBundleMessageSource().apply {
-				setBasename("messages")
-				setDefaultEncoding("UTF-8")
-			}
-		}
-	}
 
 	/**
 	 * Run the current application
@@ -69,6 +58,12 @@ open class ApplicationDsl internal constructor(private val startServer: Boolean,
 		application.addInitializers(this)
 		System.setProperty("spring.backgroundpreinitializer.ignore", "true")
 		return application.run(*args)
+	}
+
+	override fun initialize(context: GenericApplicationContext) {
+		super.initialize(context)
+		initApplication()
+		MessageSourceInitializer().initialize(context)
 	}
 
 }

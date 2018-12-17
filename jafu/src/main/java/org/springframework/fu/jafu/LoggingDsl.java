@@ -14,7 +14,7 @@ public class LoggingDsl {
 
 	private LoggingSystem loggingSystem = LoggingSystem.get(LoggingDsl.class.getClassLoader());
 
-	public LoggingDsl(Consumer<LoggingDsl> dsl) {
+	LoggingDsl(Consumer<LoggingDsl> dsl) {
 		dsl.accept(this);
 	}
 

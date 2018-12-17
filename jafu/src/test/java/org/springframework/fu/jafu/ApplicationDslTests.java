@@ -9,7 +9,7 @@ import java.util.function.Consumer;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.boot.web.reactive.context.ReactiveWebServerApplicationContext;
-import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.context.MessageSource;
 import org.springframework.fu.jafu.beans.BeanWithDependency;
 import org.springframework.fu.jafu.beans.SimpleBean;
 
@@ -20,7 +20,7 @@ class ApplicationDslTests {
 		var app = application(false, it -> {});
 		var context = app.run();
 		assertFalse(context instanceof ReactiveWebServerApplicationContext);
-		context.getBean(ReloadableResourceBundleMessageSource.class);
+		context.getBean(MessageSource.class);
 		context.close();
 	}
 
@@ -28,24 +28,24 @@ class ApplicationDslTests {
 	void createAnApplicationWithACustomBean() {
 		var app = application(false, a -> a.beans(b -> b.bean(Foo.class)));
 		var context = app.run();
-		context.getBean(ReloadableResourceBundleMessageSource.class);
+		context.getBean(MessageSource.class);
 		context.getBean(Foo.class);
 		context.close();
 	}
 
 	@Test
 	void createAnApplicationWithAConfigurationImport() {
-		Consumer<ConfigurationDsl> beansConfig = c -> c.beans(b -> b.bean(Foo.class));
-		var app = application(false, a -> a.enable(beansConfig));
+		Consumer<ConfigurationDsl> conf = c -> c.beans(b -> b.bean(Foo.class));
+		var app = application(false, a -> a.enable(conf));
 		var context = app.run();
-		context.getBean(ReloadableResourceBundleMessageSource.class);
+		context.getBean(MessageSource.class);
 		context.getBean(Foo.class);
 		context.close();
 	}
 
 	@Test
 	void applicationProperties() {
-		var app = application(false, a -> a.properties(City.class, "city"));
+		var app = application(false, a -> a.configurationProperties(City.class, "city"));
 		var context = app.run();
 		assertEquals(context.getBean(City.class).name, "San Francisco");
 		context.close();

@@ -2,6 +2,7 @@ package org.springframework.fu.kofu.r2dbc
 
 import org.springframework.boot.autoconfigure.data.r2dbc.PostgresqlDatabaseClientInitializer
 import org.springframework.boot.autoconfigure.data.r2dbc.PostgresqlR2dbcProperties
+import org.springframework.context.support.GenericApplicationContext
 import org.springframework.fu.kofu.AbstractDsl
 import org.springframework.fu.kofu.ConfigurationDsl
 
@@ -23,7 +24,8 @@ open class PostgresqlR2dbcDsl(private val init: PostgresqlR2dbcDsl.() -> Unit) :
 
     var password: String = ""
 
-    override fun register() {
+    override fun initialize(context: GenericApplicationContext) {
+        super.initialize(context)
         init()
 
         val properties = PostgresqlR2dbcProperties()

@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.getBean
 import org.springframework.boot.web.reactive.context.ReactiveWebServerApplicationContext
-import org.springframework.context.support.ReloadableResourceBundleMessageSource
+import org.springframework.context.MessageSource
 import org.springframework.fu.kofu.beans.BeanWithDependency
 import org.springframework.fu.kofu.beans.SimpleBean
 
@@ -35,7 +35,7 @@ class ApplicationDslTests {
 		val app = application(false) { }
 		with(app.run()) {
 			assertFalse(this is ReactiveWebServerApplicationContext)
-			getBean<ReloadableResourceBundleMessageSource>()
+			getBean<MessageSource>()
 			close()
 		}
 	}
@@ -48,7 +48,7 @@ class ApplicationDslTests {
 			}
 		}
 		with(app.run()) {
-			getBean<ReloadableResourceBundleMessageSource>()
+			getBean<MessageSource>()
 			getBean<Foo>()
 			close()
 		}
@@ -65,7 +65,7 @@ class ApplicationDslTests {
 			enable(beanConfig)
 		}
 		with(app.run()) {
-			getBean<ReloadableResourceBundleMessageSource>()
+			getBean<MessageSource>()
 			getBean<Foo>()
 			close()
 		}
@@ -74,7 +74,7 @@ class ApplicationDslTests {
 	@Test
 	fun `Application properties`() {
 		val app = application(false) {
-			properties<City>("city")
+			configurationProperties<City>("city")
 		}
 		with(app.run()) {
 			assertEquals(getBean<City>().name, "San Francisco")

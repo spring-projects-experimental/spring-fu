@@ -5,7 +5,7 @@ import org.springframework.fu.kofu.application
 val app = application {
 	enable(dataConfig)
 	enable(webConfig)
-	properties<SampleProperties>("sample")
+	configurationProperties<SampleProperties>("sample")
 }
 
 fun main() {

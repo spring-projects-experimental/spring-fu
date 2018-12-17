@@ -34,13 +34,27 @@ import reactor.core.publisher.toMono
 
 private fun applicationDslWithCustomBeanApplication() {
 	// ============================================================================================
-	// This standalone application registers a custom bean `Foo` and a `City` properties properties
+	// This standalone application registers a custom bean `Foo` and a `City` configurationProperties configurationProperties
 	// ============================================================================================
 	val app = application {
 		beans {
 			bean<Foo>()
 		}
-		properties<City>("city")
+		configurationProperties<City>("city")
+	}
+
+	fun main(args: Array<String>) = app.run()
+}
+
+private fun applicationDslWithConfiguration() {
+	val conf = configuration {
+		beans {
+			bean<Foo>()
+		}
+	}
+	val app = application {
+		enable(conf)
+		configurationProperties<City>("city")
 	}
 
 	fun main(args: Array<String>) = app.run()
@@ -105,7 +119,7 @@ private fun applicationDslOverview() {
 			level = LogLevel.INFO
 			level("org.springframework", LogLevel.DEBUG)
 		}
-		properties<City>("city")
+		configurationProperties<City>("city")
 		enable(dataConfiguration)
 		enable(webConfiguration)
 	}

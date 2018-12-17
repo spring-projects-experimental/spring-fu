@@ -27,6 +27,7 @@ import com.fasterxml.jackson.databind.SerializationFeature
 import org.springframework.boot.autoconfigure.jackson.JacksonInitializer
 import org.springframework.boot.autoconfigure.jackson.JacksonJsonCodecInitializer
 import org.springframework.boot.autoconfigure.jackson.JacksonProperties
+import org.springframework.context.support.GenericApplicationContext
 import org.springframework.fu.kofu.AbstractDsl
 import java.util.*
 import kotlin.reflect.KClass
@@ -35,7 +36,8 @@ class JacksonDsl(private val isClientCodec: Boolean, private val init: JacksonDs
 
 	private val properties = JacksonProperties()
 
-	override fun register() {
+	override fun initialize(context: GenericApplicationContext) {
+		super.initialize(context)
 		init()
 		if (dateFormat != null) {
 			properties.dateFormat = dateFormat

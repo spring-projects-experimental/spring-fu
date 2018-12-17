@@ -6,8 +6,9 @@ import org.springframework.boot.autoconfigure.data.mongo.MongoDataInitializer;
 import org.springframework.boot.autoconfigure.data.mongo.MongoReactiveDataInitializer;
 import org.springframework.boot.autoconfigure.mongo.MongoProperties;
 import org.springframework.boot.autoconfigure.mongo.MongoReactiveInitializer;
+import org.springframework.context.ApplicationContextInitializer;
+import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.fu.jafu.AbstractDsl;
-import org.springframework.fu.jafu.Dsl;
 
 /**
  * Jafu DSL for MongoDB configuration.
@@ -21,15 +22,15 @@ public class MongoDsl extends AbstractDsl {
 
 	private boolean embedded = false;
 
-	private MongoDsl(Consumer<MongoDsl> dsl) {
+	MongoDsl(Consumer<MongoDsl> dsl) {
 		this.dsl = dsl;
 	}
 
-	public static Dsl mongo() {
+	public static ApplicationContextInitializer<GenericApplicationContext> mongo() {
 		return new MongoDsl(mongoDsl -> {});
 	}
 
-	public static Dsl mongo(Consumer<MongoDsl> dsl) {
+	public static ApplicationContextInitializer<GenericApplicationContext> mongo(Consumer<MongoDsl> dsl) {
 		return new MongoDsl(dsl);
 	}
 
@@ -51,13 +52,12 @@ public class MongoDsl extends AbstractDsl {
 	}
 
 	@Override
-	public void register() {
+	public void initialize(GenericApplicationContext context) {
+		super.initialize(context);
 		this.dsl.accept(this);
-
 		if (properties.getUri() == null) {
 			properties.setUri("mongodb://localhost/test");
 		}
-
 		new MongoDataInitializer(properties).initialize(context);
 		new MongoReactiveDataInitializer(properties).initialize(context);
 		new MongoReactiveInitializer(properties, embedded).initialize(context);

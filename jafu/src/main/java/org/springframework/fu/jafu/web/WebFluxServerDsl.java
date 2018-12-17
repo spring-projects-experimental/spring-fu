@@ -19,8 +19,9 @@ import org.springframework.boot.web.embedded.netty.NettyReactiveWebServerFactory
 import org.springframework.boot.web.embedded.tomcat.TomcatReactiveWebServerFactory;
 import org.springframework.boot.web.embedded.undertow.UndertowReactiveWebServerFactory;
 import org.springframework.boot.web.reactive.server.ConfigurableReactiveWebServerFactory;
+import org.springframework.context.ApplicationContextInitializer;
+import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.fu.jafu.AbstractDsl;
-import org.springframework.fu.jafu.Dsl;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.RouterFunctionDsl;
 import org.springframework.web.reactive.function.server.RouterFunctions;
@@ -46,16 +47,16 @@ public class WebFluxServerDsl extends AbstractDsl {
 
 	private ConfigurableReactiveWebServerFactory engine = null;
 
-	private WebFluxServerDsl(Consumer<WebFluxServerDsl> dsl) {
+	WebFluxServerDsl(Consumer<WebFluxServerDsl> dsl) {
 		super();
 		this.dsl = dsl;
 	}
 
-	public static Dsl server() {
+	public static ApplicationContextInitializer<GenericApplicationContext> server() {
 		return new WebFluxServerDsl(webFluxServerDsl -> {});
 	}
 
-	public static Dsl server(Consumer<WebFluxServerDsl> dsl) {
+	public static ApplicationContextInitializer<GenericApplicationContext> server(Consumer<WebFluxServerDsl> dsl) {
 		return new WebFluxServerDsl(dsl);
 	}
 
@@ -163,9 +164,14 @@ public class WebFluxServerDsl extends AbstractDsl {
 		return new UndertowDelegate().get();
 	}
 
+	@Override
+	public WebFluxServerDsl enable(ApplicationContextInitializer<GenericApplicationContext> dsl) {
+		return (WebFluxServerDsl) super.enable(dsl);
+	}
 
 	@Override
-	public void register() {
+	public void initialize(GenericApplicationContext context) {
+		super.initialize(context);
 		this.dsl.accept(this);
 		if (engine == null) {
 			engine = netty();
@@ -182,16 +188,22 @@ public class WebFluxServerDsl extends AbstractDsl {
 		new ReactiveWebServerInitializer(serverProperties, resourceProperties, webFluxProperties, engine).initialize(context);
 	}
 
-	static public class WebFluxServerCodecDsl extends WebFluxCodecDsl {
+	static public class WebFluxServerCodecDsl extends AbstractDsl implements WebFluxCodecDsl {
 
 		private final Consumer<WebFluxServerCodecDsl> dsl;
 
-		public WebFluxServerCodecDsl(Consumer<WebFluxServerCodecDsl> dsl) {
+		WebFluxServerCodecDsl(Consumer<WebFluxServerCodecDsl> dsl) {
 			this.dsl = dsl;
 		}
 
 		@Override
-		public void register() {
+		public WebFluxServerCodecDsl enable(ApplicationContextInitializer<GenericApplicationContext> dsl) {
+			return (WebFluxServerCodecDsl) super.enable(dsl);
+		}
+
+		@Override
+		public void initialize(GenericApplicationContext context) {
+			super.initialize(context);
 			this.dsl.accept(this);
 		}
 

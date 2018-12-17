@@ -16,6 +16,7 @@
 
 package org.springframework.fu.kofu.web
 
+import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.registerBean
 import org.springframework.fu.kofu.AbstractDsl
 import org.springframework.web.cors.reactive.CorsWebFilter
@@ -34,7 +35,8 @@ class CorsDsl(
 
 	private val configuration = UrlBasedCorsConfigurationSource()
 
-	override fun register() {
+	override fun initialize(context: GenericApplicationContext) {
+		super.initialize(context)
 		init()
 		context.registerBean("corsFilter") {
 			CorsWebFilter(configuration)

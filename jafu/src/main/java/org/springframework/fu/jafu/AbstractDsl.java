@@ -3,6 +3,7 @@ package org.springframework.fu.jafu;
 import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.core.env.Environment;
 
@@ -11,7 +12,7 @@ import org.springframework.core.env.Environment;
  *
  * @author Sebastien Deleuze
  */
-public abstract class AbstractDsl implements Dsl {
+public abstract class AbstractDsl implements ApplicationContextInitializer<GenericApplicationContext> {
 
 	protected GenericApplicationContext context;
 
@@ -27,24 +28,35 @@ public abstract class AbstractDsl implements Dsl {
 		return this.context.getBean(name, beanClass);
 	}
 
-	@Override
-	public void initialize(GenericApplicationContext context) {
-		this.context = context;
-		register();
-	}
-
+	/**
+	 * Shortcut the get the environment.
+	 */
 	public Environment env() {
 		return context.getEnvironment();
 	}
 
+	/**
+	 * Shortcut the get the active profiles.
+	 */
 	public List<String> profiles() {
 		return Arrays.asList(context.getEnvironment().getActiveProfiles());
 	}
 
-	public AbstractDsl enable(Dsl dsl) {
+	/**
+	 * Override return type in inherited classes to return the concrete class type and make it public where you want
+	 * to make it available.
+	 */
+	protected AbstractDsl enable(ApplicationContextInitializer<GenericApplicationContext> dsl) {
 		dsl.initialize(context);
 		return this;
 	}
 
-	abstract public void register();
+	/**
+	 * Make sure to invoke super.initialize(context) from inherited classes to get context initialized.
+	 */
+	@Override
+	public void initialize(GenericApplicationContext context) {
+		this.context = context;
+	}
+
 }

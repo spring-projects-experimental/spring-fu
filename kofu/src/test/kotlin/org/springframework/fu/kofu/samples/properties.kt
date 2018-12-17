@@ -2,14 +2,14 @@ package org.springframework.fu.kofu.samples
 
 import org.springframework.fu.kofu.application
 
-fun properties() {
+fun configurationProperties() {
 	application {
 
-		/** Will bind `sample.message` property typically defined in an `application.properties`
+		/** Will bind `sample.message` property typically defined in an `application.configurationProperties`
 		 * or `application.yml` file to [SampleProperties.message]. Typically used by retrieving
 		 * a [SampleProperties] bean.
 		 */
-		properties<SampleProperties>(prefix = "sample")
+		configurationProperties<SampleProperties>(prefix = "sample")
 	}
 }
 

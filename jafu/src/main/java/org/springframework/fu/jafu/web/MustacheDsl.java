@@ -5,6 +5,7 @@ import java.util.function.Consumer;
 import org.springframework.boot.autoconfigure.mustache.MustacheInitializer;
 import org.springframework.boot.autoconfigure.mustache.MustacheProperties;
 import org.springframework.boot.autoconfigure.mustache.MustacheReactiveWebInitializer;
+import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.fu.jafu.AbstractDsl;
 
 public class MustacheDsl extends AbstractDsl {
@@ -13,7 +14,7 @@ public class MustacheDsl extends AbstractDsl {
 
 	private MustacheProperties properties = new MustacheProperties();
 
-	public MustacheDsl(Consumer<MustacheDsl> dsl) {
+	MustacheDsl(Consumer<MustacheDsl> dsl) {
 		this.dsl = dsl;
 	}
 
@@ -28,7 +29,8 @@ public class MustacheDsl extends AbstractDsl {
 	}
 
 	@Override
-	public void register() {
+	public void initialize(GenericApplicationContext context) {
+		super.initialize(context);
 		this.dsl.accept(this);
 		new MustacheInitializer(properties).initialize(context);
 		new MustacheReactiveWebInitializer(properties).initialize(context);

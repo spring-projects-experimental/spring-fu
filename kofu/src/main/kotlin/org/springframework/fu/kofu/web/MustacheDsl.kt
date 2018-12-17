@@ -19,6 +19,7 @@ package org.springframework.fu.kofu.web
 import org.springframework.boot.autoconfigure.mustache.MustacheInitializer
 import org.springframework.boot.autoconfigure.mustache.MustacheProperties
 import org.springframework.boot.autoconfigure.mustache.MustacheReactiveWebInitializer
+import org.springframework.context.support.GenericApplicationContext
 import org.springframework.fu.kofu.AbstractDsl
 
 open class MustacheDsl(private val init: MustacheDsl.() -> Unit): AbstractDsl() {
@@ -35,7 +36,8 @@ open class MustacheDsl(private val init: MustacheDsl.() -> Unit): AbstractDsl() 
 			properties.suffix = value
 		}
 
-	override fun register() {
+	override fun initialize(context: GenericApplicationContext) {
+		super.initialize(context)
 		init()
 		MustacheInitializer(properties).initialize(context)
 		MustacheReactiveWebInitializer(properties).initialize(context)

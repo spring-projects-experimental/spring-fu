@@ -5,12 +5,11 @@ import java.util.function.Consumer;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.WebApplicationType;
+import org.springframework.boot.autoconfigure.context.MessageSourceInitializer;
 import org.springframework.boot.web.reactive.context.ReactiveWebServerApplicationContext;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.MessageSource;
 import org.springframework.context.support.GenericApplicationContext;
-import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 
 /**
  * Jafu DSL for application configuration.
@@ -26,7 +25,7 @@ public class ApplicationDsl extends ConfigurationDsl {
 
 	private final boolean startServer;
 
-	public ApplicationDsl(boolean startServer, Consumer<ApplicationDsl> dsl) {
+	ApplicationDsl(boolean startServer, Consumer<ApplicationDsl> dsl) {
 		super(configurationDsl -> {});
 		this.dsl = dsl;
 		this.startServer = startServer;
@@ -100,17 +99,6 @@ public class ApplicationDsl extends ConfigurationDsl {
 		return app.run(args);
 	}
 
-	@Override
-	public void register() {
-		this.dsl.accept(this);
-		context.registerBean("messageSource", MessageSource.class, () -> {
-			ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
-			messageSource.setBasename("messages");
-			messageSource.setDefaultEncoding("UTF-8");
-			return messageSource;
-		});
-	}
-
 	/**
 	 * Define an {@link ApplicationDsl application Jafu configuration} with {@code startServer = true}.
 	 * @see #application(boolean, Consumer)
@@ -129,5 +117,11 @@ public class ApplicationDsl extends ConfigurationDsl {
 		return new ApplicationDsl(startServer, dsl);
 	}
 
+	@Override
+	public void initialize(GenericApplicationContext context) {
+		super.initialize(context);
+		this.dsl.accept(this);
+		new MessageSourceInitializer().initialize(context);
+	}
 
 }

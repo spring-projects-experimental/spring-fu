@@ -16,24 +16,35 @@
 
 package org.springframework.fu.kofu
 
+import org.springframework.context.ApplicationContextInitializer
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.core.env.Environment
 
-abstract class AbstractDsl : Dsl {
+@DslMarker
+internal annotation class KofuMarker
+
+/**
+ * Base class for Kofu DSL.
+ *
+ * @author Sebastien Deleuze
+ */
+@KofuMarker
+abstract class AbstractDsl : ApplicationContextInitializer<GenericApplicationContext> {
 
 	@PublishedApi
 	internal lateinit var context: GenericApplicationContext
 
+	/**
+	 * Shortcut the get the environment.
+	 */
 	val env: Environment
 		get() = context.environment
 
+	/**
+	 * Shortcut the get the active profiles.
+	 */
 	val profiles: Array<String>
 		get() = env.activeProfiles
-
-	override fun initialize(context: GenericApplicationContext) {
-		this.context = context
-		register()
-	}
 
 	/**
 	 * Get a reference to the bean by type or type + name with the syntax
@@ -47,7 +58,11 @@ abstract class AbstractDsl : Dsl {
 		else -> context.getBean(name, T::class.java)
 	}
 
-
-	internal abstract fun register()
+	/**
+	 * Make sure to invoke super.initialize(context) from inherited classes to get context initialized.
+	 */
+	override fun initialize(context: GenericApplicationContext) {
+		this.context = context
+	}
 
 }
