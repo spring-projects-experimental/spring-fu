@@ -22,6 +22,7 @@ import org.springframework.web.server.WebFilter
 
 /**
  * Kofu DSL for WebFlux server configuration.
+ * @see org.springframework.fu.kofu.webApplication
  * @author Sebastien Deleuze
  */
 open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit): AbstractDsl() {

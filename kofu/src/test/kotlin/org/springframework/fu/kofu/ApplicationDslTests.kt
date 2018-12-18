@@ -32,7 +32,7 @@ class ApplicationDslTests {
 
 	@Test
 	fun `Create an empty application`() {
-		val app = application(false) { }
+		val app = application { }
 		with(app.run()) {
 			assertFalse(this is ReactiveWebServerApplicationContext)
 			getBean<MessageSource>()
@@ -42,7 +42,7 @@ class ApplicationDslTests {
 
 	@Test
 	fun `Create an application with a custom bean`() {
-		val app = application(false) {
+		val app = application {
 			beans {
 				bean<Foo>()
 			}
@@ -61,7 +61,7 @@ class ApplicationDslTests {
 				bean<Foo>()
 			}
 		}
-		val app = application(false) {
+		val app = application {
 			enable(beanConfig)
 		}
 		with(app.run()) {
@@ -73,7 +73,7 @@ class ApplicationDslTests {
 
 	@Test
 	fun `Application properties`() {
-		val app = application(false) {
+		val app = application {
 			configurationProperties<City>("city")
 		}
 		with(app.run()) {
@@ -84,7 +84,7 @@ class ApplicationDslTests {
 
 	@Test
 	fun `Create an application with bean scanning`() {
-		val app = application(false) {
+		val app = application {
 			beans {
 				scan("org.springframework.fu.kofu.beans")
 			}

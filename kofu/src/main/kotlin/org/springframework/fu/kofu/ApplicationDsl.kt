@@ -16,12 +16,7 @@
 
 package org.springframework.fu.kofu
 
-import org.springframework.boot.SpringApplication
-import org.springframework.boot.WebApplicationType
 import org.springframework.boot.autoconfigure.context.MessageSourceInitializer
-import org.springframework.boot.web.reactive.context.ReactiveWebServerApplicationContext
-import org.springframework.context.ApplicationContext
-import org.springframework.context.ConfigurableApplicationContext
 import org.springframework.context.support.GenericApplicationContext
 
 /**
@@ -29,36 +24,9 @@ import org.springframework.context.support.GenericApplicationContext
  *
  * @author Sebastien Deleuze
  * @see application
+ * @see webApplication
  */
-open class ApplicationDsl internal constructor(private val startServer: Boolean, private val initApplication: ApplicationDsl.() -> Unit) : ConfigurationDsl() {
-
-	/**
-	 * Run the current application
-	 * @param profiles [ApplicationContext] profiles separated by commas.
-	 * @param args the application arguments (usually passed from a Java main method)
-	 * @return The application context of the application
-	 */
-	fun run(args: Array<String> = emptyArray(), profiles: String = ""): ConfigurableApplicationContext {
-		class Application
-		val application = object: SpringApplication(Application::class.java) {
-			override fun load(context: ApplicationContext?, sources: Array<out Any>?) {
-				// We don't want the annotation bean definition reader
-			}
-		}
-		application.webApplicationType = if(startServer) WebApplicationType.REACTIVE else WebApplicationType.NONE
-		application.setApplicationContextClass(
-				if (startServer)
-					ReactiveWebServerApplicationContext::class.java
-				else
-					GenericApplicationContext::class.java
-		)
-		if (!profiles.isEmpty()) {
-			application.setAdditionalProfiles(*profiles.split(",").map { it.trim() }.toTypedArray())
-		}
-		application.addInitializers(this)
-		System.setProperty("spring.backgroundpreinitializer.ignore", "true")
-		return application.run(*args)
-	}
+open class ApplicationDsl internal constructor(private val initApplication: ApplicationDsl.() -> Unit) : ConfigurationDsl() {
 
 	override fun initialize(context: GenericApplicationContext) {
 		super.initialize(context)
@@ -67,21 +35,3 @@ open class ApplicationDsl internal constructor(private val startServer: Boolean,
 	}
 
 }
-
-/**
- * Define an [application Kofu configuration][ApplicationDsl] that allows to configure a Spring Boot
- * application using Kofu DSL and functional bean registration.
- *
- * Require `org.springframework.fu:spring-fu-kofu` dependency.
- *
- * @sample org.springframework.fu.kofu.samples.applicationDslWithCustomBeanApplication
- * @sample org.springframework.fu.kofu.samples.applicationDslOverview
- * @param startServer Define if Spring Boot should start a web server or not
- * @param dsl The `application { }` DSL
- * @see ApplicationDsl.logging
- * @see org.springframework.fu.kofu.web.server
- * @see org.springframework.fu.kofu.web.client
- * @see org.springframework.fu.kofu.mongo.mongodb
- */
-fun application(startServer: Boolean = true, dsl: ApplicationDsl.() -> Unit)
-		= ApplicationDsl(startServer, dsl)

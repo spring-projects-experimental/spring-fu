@@ -27,9 +27,10 @@ import org.springframework.web.reactive.function.server.RouterFunctionDsl;
 import org.springframework.web.reactive.function.server.RouterFunctions;
 
 /**
- * Jafu DSL for server configuration.
+ * Jafu DSL for WebFlux server configuration.
  *
  * @author Sebastien Deleuze
+ * @see org.springframework.fu.jafu.JafuApplication#webApplication(Consumer)
  */
 public class WebFluxServerDsl extends AbstractDsl {
 
@@ -53,7 +54,7 @@ public class WebFluxServerDsl extends AbstractDsl {
 	}
 
 	public static ApplicationContextInitializer<GenericApplicationContext> server() {
-		return new WebFluxServerDsl(webFluxServerDsl -> {});
+		return new WebFluxServerDsl(dsl -> {});
 	}
 
 	public static ApplicationContextInitializer<GenericApplicationContext> server(Consumer<WebFluxServerDsl> dsl) {

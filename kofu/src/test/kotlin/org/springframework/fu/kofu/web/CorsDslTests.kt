@@ -17,7 +17,7 @@
 package org.springframework.fu.kofu.web
 
 import org.junit.jupiter.api.Test
-import org.springframework.fu.kofu.application
+import org.springframework.fu.kofu.webApplication
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.web.reactive.function.server.router
 
@@ -31,7 +31,7 @@ class CorsDslTests {
 		val router = router {
 			GET("/") { noContent().build() }
 		}
-		val app = application {
+		val app = webApplication {
 			server {
 				import(router)
 				cors {

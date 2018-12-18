@@ -22,9 +22,9 @@ import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.getBean
 import org.springframework.boot.logging.LogLevel
 import org.springframework.boot.web.reactive.server.ConfigurableReactiveWebServerFactory
-import org.springframework.fu.kofu.application
 import org.springframework.fu.kofu.mongo.embedded
 import org.springframework.fu.kofu.mongo.mongodb
+import org.springframework.fu.kofu.webApplication
 import org.springframework.http.HttpStatus.NO_CONTENT
 import org.springframework.http.MediaType
 import org.springframework.test.web.reactive.server.WebTestClient
@@ -41,7 +41,7 @@ abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
 
 	@Test
 	fun `Create an application with an empty server`() {
-		val app = application {
+		val app = webApplication {
 			server {
 				engine = getServerFactory()
 			}
@@ -56,7 +56,7 @@ abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
 		val router = router {
 			GET("/foo") { noContent().build() }
 		}
-		val app = application {
+		val app = webApplication {
 			server {
 				engine = getServerFactory()
 				import(router)
@@ -74,7 +74,7 @@ abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
 		val router = router {
 			GET("/") { noContent().build() }
 		}
-		val app = application {
+		val app = webApplication {
 			server {
 				engine = getServerFactory()
 				import(router)
@@ -101,7 +101,7 @@ abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
 			GET("/bar") { ok().build() }
 		}
 
-		val app = application {
+		val app = webApplication {
 			server {
 				engine = getServerFactory()
 				import(router1)
@@ -118,7 +118,7 @@ abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
 
 	@Test
 	fun `Declare 2 server blocks`() {
-		val app = application {
+		val app = webApplication {
 			server {
 				engine = getServerFactory()
 
@@ -139,7 +139,7 @@ abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
 		val router = router {
 			GET("/") { noContent().build() }
 		}
-		val app = application {
+		val app = webApplication {
 			server {
 				engine = getServerFactory()
 				codecs {
@@ -164,7 +164,7 @@ abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
 
 	@Test
 	fun `run an application 2 times`() {
-		val app = application {
+		val app = webApplication {
 			server {
 				engine = getServerFactory()
 			}

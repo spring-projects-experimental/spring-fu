@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.getBean
 import org.springframework.beans.factory.getBeanProvider
-import org.springframework.fu.kofu.application
+import org.springframework.fu.kofu.webApplication
 import org.springframework.http.HttpHeaders.CONTENT_TYPE
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType.APPLICATION_JSON_UTF8
@@ -44,7 +44,7 @@ class JacksonDslTests {
 				ok().header(CONTENT_TYPE, APPLICATION_JSON_UTF8_VALUE).syncBody(User("Brian"))
 			}
 		}
-		val app = application {
+		val app = webApplication {
 			server {
 				codecs {
 					jackson()
@@ -69,7 +69,7 @@ class JacksonDslTests {
 				ok().header(CONTENT_TYPE, APPLICATION_JSON_UTF8_VALUE).syncBody(User("Brian"))
 			}
 		}
-		val app = application {
+		val app = webApplication {
 			server {
 				codecs {
 					jackson()
@@ -104,7 +104,7 @@ class JacksonDslTests {
 				ok().header(CONTENT_TYPE, APPLICATION_JSON_UTF8_VALUE).syncBody(User("Brian"))
 			}
 		}
-		val app = application {
+		val app = webApplication {
 			server {
 				import(router)
 			}

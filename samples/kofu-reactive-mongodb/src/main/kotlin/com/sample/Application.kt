@@ -16,9 +16,9 @@
 
 package com.sample
 
-import org.springframework.fu.kofu.application
+import org.springframework.fu.kofu.webApplication
 
-val app = application {
+val app = webApplication {
 	configurationProperties<SampleProperties>("sample")
 	enable(dataConfig)
 	enable(webConfig)

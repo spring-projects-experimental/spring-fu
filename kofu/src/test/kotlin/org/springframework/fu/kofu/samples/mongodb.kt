@@ -5,7 +5,7 @@ import org.springframework.fu.kofu.mongo.embedded
 import org.springframework.fu.kofu.mongo.mongodb
 
 fun mongo() {
-	application(startServer = false) {
+	application {
 		mongodb {
 			uri = "mongodb://myserver.com/foo"
 		}
@@ -13,7 +13,7 @@ fun mongo() {
 }
 
 fun mongoEmbedded() {
-	application(startServer = false) {
+	application {
 		mongodb {
 			uri = "mongodb://myserver.com/foo"
 			embedded()
@@ -22,7 +22,7 @@ fun mongoEmbedded() {
 }
 
 fun mongoCoroutines() {
-	application(startServer = false) {
+	application {
 		mongodb {
 			uri = "mongodb://myserver.com/foo"
 			coroutines = true

@@ -1,11 +1,11 @@
 package org.springframework.fu.kofu.samples
 
-import org.springframework.fu.kofu.application
 import org.springframework.fu.kofu.web.cors
 import org.springframework.fu.kofu.web.server
+import org.springframework.fu.kofu.webApplication
 
 fun corsDsl() {
-	application {
+	webApplication {
 		server {
 			cors {
 				"/api/**" {

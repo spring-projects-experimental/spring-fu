@@ -1,13 +1,13 @@
 package com.sample;
 
-import static org.springframework.fu.jafu.ApplicationDsl.*;
+import static org.springframework.fu.jafu.JafuApplication.*;
 
 import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.fu.jafu.ApplicationDsl;
+import org.springframework.fu.jafu.JafuApplication;
 
 public abstract class Application {
 
-	public static ApplicationDsl app = application(app ->
+	public static JafuApplication app = webApplication(app ->
 		app.enable(Configurations.dataConfig)
 		   .enable(Configurations.webConfig)
 		   .listener(ApplicationReadyEvent.class, e -> app.ref(UserRepository.class).init())

@@ -17,7 +17,7 @@
 package org.springframework.fu.jafu.web;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.fu.jafu.ApplicationDsl.application;
+import static org.springframework.fu.jafu.JafuApplication.webApplication;
 import static org.springframework.fu.jafu.mongo.MongoDsl.mongo;
 import static org.springframework.fu.jafu.web.WebFluxClientDsl.client;
 import static org.springframework.fu.jafu.web.WebFluxServerDsl.server;
@@ -48,7 +48,7 @@ abstract class AbstractWebServerDslTests {
 
 	@Test
 	void createAnApplicationWithAnEmptyServer() {
-		var app = application(a -> a.enable(server(s -> s.engine(getServerFactory()))));
+		var app = webApplication(a -> a.enable(server(s -> s.engine(getServerFactory()))));
 		var context = app.run();
 		context.close();
 	}
@@ -56,7 +56,7 @@ abstract class AbstractWebServerDslTests {
 	@Test
 	void createAndRequestAnEndpoint() {
 		var router = route().GET("/foo", request -> noContent().build()).build();
-		var app = application(a -> a.enable(server(s -> s.engine(getServerFactory()).include(router))));
+		var app = webApplication(a -> a.enable(server(s -> s.engine(getServerFactory()).include(router))));
 
 		var context = app.run();
 		var client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:" + port).build();
@@ -67,7 +67,7 @@ abstract class AbstractWebServerDslTests {
 	@Test
 	void createAWebClientAndRequestAnEndpoint() {
 		var router = route().GET("/", request -> noContent().build()).build();
-		var app = application(a ->
+		var app = webApplication(a ->
 				a.enable(server(s -> s.engine(getServerFactory()).include(router)))
 				.enable(client(c -> c.baseUrl("http://127.0.0.1:" + port))));
 
@@ -84,7 +84,7 @@ abstract class AbstractWebServerDslTests {
 		var router1 = route().GET("/foo", request -> noContent().build()).build();
 		var router2 = route().GET("/bar", request -> ok().build()).build();
 
-		var app = application(a -> a.enable(server(s -> s.engine(getServerFactory())
+		var app = webApplication(a -> a.enable(server(s -> s.engine(getServerFactory())
 				.include(router1)
 				.include(router2))));
 		var context = app.run();
@@ -96,7 +96,7 @@ abstract class AbstractWebServerDslTests {
 
 	@Test
 	void declare2ServerBlocks() {
-		var app = application(a -> a
+		var app = webApplication(a -> a
 				.enable(server(s -> s.engine(getServerFactory())))
 				.enable(server(s -> s.engine(getServerFactory()).port(8181))));
 		Assertions.assertThrows(IllegalStateException.class, app::run);
@@ -106,7 +106,7 @@ abstract class AbstractWebServerDslTests {
 	void checkThatConcurrentModificationExceptionIsNotThrown() {
 		var router = route().GET("/", request -> noContent().build()).build();
 
-		var app = application(a ->
+		var app = webApplication(a ->
 				a.enable(server(s -> s.engine(getServerFactory())
 				.codecs(c -> c.string().jackson())
 				.include(router)))
@@ -120,7 +120,7 @@ abstract class AbstractWebServerDslTests {
 
 	@Test
 	void runAnApplication2Times() {
-		var app = application(a -> a.enable(server(s -> s.engine(getServerFactory()))));
+		var app = webApplication(a -> a.enable(server(s -> s.engine(getServerFactory()))));
 		var context = app.run();
 		context.close();
 		context = app.run();

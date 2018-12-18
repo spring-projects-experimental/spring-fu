@@ -33,10 +33,9 @@ Spring projects like Framework, Boot and Data. The table bellow summarize the st
 ```kotlin
 package com.sample
 
-import org.springframework.fu.kofu.application
+import org.springframework.fu.kofu.webApplication
 
-val app = application {
-	// your application here
+val app = webApplication {
 	server {
 		router {
 			GET("/") { ok().syncBody("Hello world!") }
@@ -50,7 +49,7 @@ fun main() {
 
 ==== Jafu
 
- * Create a Spring `2.1.x.RELEASE` project on https://start.spring.io/#!language=kotlin[start.spring.io],
+ * Create a Spring `2.1.x.RELEASE` project on https://start.spring.io/[start.spring.io],
  * Add the `org.springframework.fu:spring-fu-jafu:0.0.3.BUILD-SNAPSHOT` dependency
  * Add the _Reactive Web_ `org.springframework.boot:spring-boot-starter-webflux` dependency
  * Modify the generated `*Application.java` file as following:
@@ -58,15 +57,15 @@ fun main() {
 ```java
 package com.sample;
 
-import static org.springframework.fu.jafu.ApplicationDsl.*;
+import static org.springframework.fu.jafu.JafuApplication.webApplication;
 import static org.springframework.fu.jafu.web.WebFluxServerDsl.server;
 import static org.springframework.web.reactive.function.server.ServerResponse.*;
 
-import org.springframework.fu.jafu.ApplicationDsl;
+import org.springframework.fu.jafu.JafuApplication;
 
-public class Application {
+public class DemoApplication {
 
-	public static ApplicationDsl app = application(a ->
+	public static JafuApplication app = webApplication(a ->
 			a.enable(server(s -> s.router(r ->
 				r.GET("/", request -> ok().syncBody("Hello world!"))
 			)))

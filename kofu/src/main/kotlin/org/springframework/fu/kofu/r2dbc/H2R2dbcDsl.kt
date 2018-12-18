@@ -2,8 +2,6 @@ package org.springframework.fu.kofu.r2dbc
 
 import org.springframework.boot.autoconfigure.data.r2dbc.H2DatabaseClientInitializer
 import org.springframework.boot.autoconfigure.data.r2dbc.H2R2dbcProperties
-import org.springframework.boot.autoconfigure.data.r2dbc.PostgresqlDatabaseClientInitializer
-import org.springframework.boot.autoconfigure.data.r2dbc.PostgresqlR2dbcProperties
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.fu.kofu.AbstractDsl
 import org.springframework.fu.kofu.ConfigurationDsl

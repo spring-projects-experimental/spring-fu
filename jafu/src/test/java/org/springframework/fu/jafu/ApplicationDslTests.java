@@ -2,7 +2,7 @@ package org.springframework.fu.jafu;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.springframework.fu.jafu.ApplicationDsl.application;
+import static org.springframework.fu.jafu.JafuApplication.application;
 
 import java.util.function.Consumer;
 
@@ -17,7 +17,7 @@ class ApplicationDslTests {
 
 	@Test
 	void createAnEmptyApplication() {
-		var app = application(false, it -> {});
+		var app = application(it -> {});
 		var context = app.run();
 		assertFalse(context instanceof ReactiveWebServerApplicationContext);
 		context.getBean(MessageSource.class);
@@ -26,7 +26,7 @@ class ApplicationDslTests {
 
 	@Test
 	void createAnApplicationWithACustomBean() {
-		var app = application(false, a -> a.beans(b -> b.bean(Foo.class)));
+		var app = application(a -> a.beans(b -> b.bean(Foo.class)));
 		var context = app.run();
 		context.getBean(MessageSource.class);
 		context.getBean(Foo.class);
@@ -36,7 +36,7 @@ class ApplicationDslTests {
 	@Test
 	void createAnApplicationWithAConfigurationImport() {
 		Consumer<ConfigurationDsl> conf = c -> c.beans(b -> b.bean(Foo.class));
-		var app = application(false, a -> a.enable(conf));
+		var app = application(a -> a.enable(conf));
 		var context = app.run();
 		context.getBean(MessageSource.class);
 		context.getBean(Foo.class);
@@ -45,7 +45,7 @@ class ApplicationDslTests {
 
 	@Test
 	void applicationProperties() {
-		var app = application(false, a -> a.configurationProperties(City.class, "city"));
+		var app = application(a -> a.configurationProperties(City.class, "city"));
 		var context = app.run();
 		assertEquals(context.getBean(City.class).name, "San Francisco");
 		context.close();
@@ -53,7 +53,7 @@ class ApplicationDslTests {
 
 	@Test
 	void createAnApplicationWithBeanScanning() {
-		var app = application(false, a -> a.beans(beans -> beans.scan("org.springframework.fu.jafu.beans")));
+		var app = application(a -> a.beans(beans -> beans.scan("org.springframework.fu.jafu.beans")));
 		var context = app.run();
 		context.getBean(SimpleBean.class);
 		context.getBean(BeanWithDependency.class);

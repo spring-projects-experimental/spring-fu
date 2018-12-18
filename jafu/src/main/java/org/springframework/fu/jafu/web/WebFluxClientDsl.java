@@ -12,6 +12,11 @@ import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.fu.jafu.AbstractDsl;
 
+/**
+ * Jafu DSL for WebFlux client configuration.
+ *
+ * @author Sebastien Deleuze
+ */
 public class WebFluxClientDsl extends AbstractDsl {
 
 	private final Consumer<WebFluxClientDsl> dsl;

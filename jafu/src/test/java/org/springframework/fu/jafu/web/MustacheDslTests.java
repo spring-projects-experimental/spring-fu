@@ -1,6 +1,6 @@
 package org.springframework.fu.jafu.web;
 
-import static org.springframework.fu.jafu.ApplicationDsl.application;
+import static org.springframework.fu.jafu.JafuApplication.webApplication;
 import static org.springframework.fu.jafu.web.WebFluxServerDsl.server;
 import static org.springframework.web.reactive.function.server.ServerResponse.ok;
 
@@ -19,7 +19,7 @@ public class MustacheDslTests {
 				.route()
 				.GET("/view", request -> ok().render("template", Collections.singletonMap("name", "world")))
 				.build();
-		var app = application(a -> a.enable(server(s -> s.mustache().include(router))));
+		var app = webApplication(a -> a.enable(server(s -> s.mustache().include(router))));
 
 		var context = app.run();
 		var client = WebTestClient.bindToServer().baseUrl("http://0.0.0.0:8080").build();

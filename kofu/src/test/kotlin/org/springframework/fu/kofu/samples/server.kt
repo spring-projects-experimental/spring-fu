@@ -1,12 +1,12 @@
 package org.springframework.fu.kofu.samples
 
-import org.springframework.fu.kofu.application
 import org.springframework.fu.kofu.web.server
+import org.springframework.fu.kofu.webApplication
 import org.springframework.web.function.server.coRouter
 import org.springframework.web.reactive.function.server.router
 
 private fun router() {
-	application {
+	webApplication {
 		server {
 			val htmlHandler = ref<HtmlHandler>()
 			val apiHandler = ref<ApiHandler>()
@@ -35,7 +35,7 @@ private fun importRouter() {
 			DELETE("/{id}", apiHandler::delete)
 		}
 	}
-	application {
+	webApplication {
 		server {
 			import(::routes)
 		}
@@ -53,7 +53,7 @@ private fun customEngine() {
 			DELETE("/{id}", apiHandler::delete)
 		}
 	}
-	application {
+	webApplication {
 		server {
 			engine = jetty()
 			import(::routes)
@@ -62,7 +62,7 @@ private fun customEngine() {
 }
 
 private fun coRouter() {
-	application {
+	webApplication {
 		beans {
 			bean<HtmlCoroutinesHandler>()
 			bean<ApiCoroutinesHandler>()
@@ -95,7 +95,7 @@ private fun importCoRouter() {
 			DELETE("/{id}", apiHandler::delete)
 		}
 	}
-	application {
+	webApplication {
 		beans {
 			bean<HtmlCoroutinesHandler>()
 			bean<ApiCoroutinesHandler>()

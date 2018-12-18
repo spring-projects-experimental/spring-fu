@@ -24,6 +24,7 @@ import org.springframework.fu.kofu.application
 import org.springframework.fu.kofu.configuration
 import org.springframework.fu.kofu.mongo.mongodb
 import org.springframework.fu.kofu.web.*
+import org.springframework.fu.kofu.webApplication
 import org.springframework.web.function.server.CoServerRequest
 import org.springframework.web.function.server.coHandler
 import org.springframework.web.reactive.function.server.ServerRequest
@@ -114,7 +115,7 @@ private fun applicationDslOverview() {
 		}
 	}
 
-	val app = application {
+	val app = webApplication {
 		logging {
 			level = LogLevel.INFO
 			level("org.springframework", LogLevel.DEBUG)

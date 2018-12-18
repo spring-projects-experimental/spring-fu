@@ -31,7 +31,7 @@ internal class LoggingDslTests {
 
 	@Test
 	fun `Change default ROOT Log level`() {
-		application(false) {
+		application {
 			logging {
 				level = LogLevel.DEBUG
 			}
@@ -44,7 +44,7 @@ internal class LoggingDslTests {
 	@Test
 	fun `Change package Log level`() {
 		val packageName = "org.springframework"
-		application(false) {
+		application {
 			logging {
 				level(packageName, LogLevel.DEBUG)
 			}
@@ -58,7 +58,7 @@ internal class LoggingDslTests {
 	fun `Change class Log level`() {
 		val loggingSystem = LoggingSystem.get(LoggingDslTests::class.java.classLoader)
 		loggingSystem.setLogLevel("ROOT", LogLevel.INFO)
-		application(false) {
+		application {
 			logging {
 				level<DefaultListableBeanFactory>(LogLevel.DEBUG)
 			}

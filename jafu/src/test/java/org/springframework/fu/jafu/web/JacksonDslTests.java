@@ -1,7 +1,7 @@
 package org.springframework.fu.jafu.web;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.fu.jafu.ApplicationDsl.application;
+import static org.springframework.fu.jafu.JafuApplication.webApplication;
 import static org.springframework.fu.jafu.web.WebFluxClientDsl.client;
 import static org.springframework.fu.jafu.web.WebFluxServerDsl.server;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
@@ -29,7 +29,7 @@ public class JacksonDslTests {
 				.GET("/user", request -> ok().header(CONTENT_TYPE, APPLICATION_JSON_UTF8_VALUE).syncBody(new User("Brian")))
 				.build();
 
-		var app = application(a -> a.enable(server(s -> s.codecs(c -> c.jackson()).include(router))));
+		var app = webApplication(a -> a.enable(server(s -> s.codecs(c -> c.jackson()).include(router))));
 
 		var context = app.run();
 		var client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:8080").build();
@@ -47,7 +47,7 @@ public class JacksonDslTests {
 				.GET("/user", request -> ok().header(CONTENT_TYPE, APPLICATION_JSON_UTF8_VALUE).syncBody(new User("Brian")))
 				.build();
 
-		var app = application(a ->
+		var app = webApplication(a ->
 				a.enable(server(s -> s.codecs(c -> c.jackson()).include(router)))
 				.enable(client(c -> c.codecs(codecs -> codecs.jackson()))));
 		var context = app.run();
@@ -72,7 +72,7 @@ public class JacksonDslTests {
 				.build();
 
 
-		var app = application(a -> a.enable(server(s -> s.include(router))));
+		var app = webApplication(a -> a.enable(server(s -> s.include(router))));
 		var context = app.run();
 		var client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:8080").build();
 		client.get().uri("/user").exchange().expectStatus().is5xxServerError();

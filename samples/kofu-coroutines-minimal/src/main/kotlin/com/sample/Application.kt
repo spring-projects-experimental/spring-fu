@@ -1,9 +1,9 @@
 package com.sample
 
-import org.springframework.fu.kofu.application
 import org.springframework.fu.kofu.web.server
+import org.springframework.fu.kofu.webApplication
 
-val app = application {
+val app = webApplication {
 	server {
 		port = if (profiles.contains("test")) 8181 else 8080
 		coRouter {
