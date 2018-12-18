@@ -24,7 +24,7 @@ private fun router() {
 	}
 }
 
-private fun importRouter() {
+private fun includeRouter() {
 	fun routes(htmlHandler: HtmlHandler, apiHandler: ApiHandler) = router {
 		GET("/", htmlHandler::blog)
 		GET("/article/{id}", htmlHandler::article)
@@ -37,7 +37,7 @@ private fun importRouter() {
 	}
 	webApplication {
 		server {
-			import(::routes)
+			include(::routes)
 		}
 	}
 }
@@ -56,7 +56,7 @@ private fun customEngine() {
 	webApplication {
 		server {
 			engine = jetty()
-			import(::routes)
+			include(::routes)
 		}
 	}
 }
@@ -84,7 +84,7 @@ private fun coRouter() {
 	}
 }
 
-private fun importCoRouter() {
+private fun includeCoRouter() {
 	fun routes(htmlHandler: HtmlCoroutinesHandler, apiHandler: ApiCoroutinesHandler) = coRouter {
 		GET("/", htmlHandler::blog)
 		GET("/article/{id}", htmlHandler::article)
@@ -101,7 +101,7 @@ private fun importCoRouter() {
 			bean<ApiCoroutinesHandler>()
 		}
 		server {
-			import(::routes)
+			include(::routes)
 		}
 	}
 }

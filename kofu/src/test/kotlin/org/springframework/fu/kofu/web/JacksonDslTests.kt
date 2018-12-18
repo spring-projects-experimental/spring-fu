@@ -49,7 +49,7 @@ class JacksonDslTests {
 				codecs {
 					jackson()
 				}
-				import(router)
+				include(router)
 			}
 		}
 		val context = app.run()
@@ -74,7 +74,7 @@ class JacksonDslTests {
 				codecs {
 					jackson()
 				}
-				import(router)
+				include(router)
 			}
 			client {
 				codecs {
@@ -106,7 +106,7 @@ class JacksonDslTests {
 		}
 		val app = webApplication {
 			server {
-				import(router)
+				include(router)
 			}
 		}
 		val context = app.run()

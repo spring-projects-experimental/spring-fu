@@ -10,6 +10,10 @@ fun clientDsl() {
 			codecs {
 				string()
 				jackson()
+				resource()
+				protobuf()
+				form()
+				multipart()
 			}
 		}
 	}

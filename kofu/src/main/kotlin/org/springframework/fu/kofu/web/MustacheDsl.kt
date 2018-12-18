@@ -22,7 +22,16 @@ import org.springframework.boot.autoconfigure.mustache.MustacheReactiveWebInitia
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.fu.kofu.AbstractDsl
 
-open class MustacheDsl(private val init: MustacheDsl.() -> Unit): AbstractDsl() {
+/**
+ * Kofu DSL for Mustache template engine.
+ *
+ * Configure a [Mustache](https://github.com/samskivert/jmustache) view resolver.
+ *
+ * Required dependencies can be retrieve using `org.springframework.boot:spring-boot-starter-mustache`.
+ *
+ * @author Sebastien Deleuze
+ */
+class MustacheDsl(private val init: MustacheDsl.() -> Unit): AbstractDsl() {
 
 	private val properties = MustacheProperties()
 

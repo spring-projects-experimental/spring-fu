@@ -21,7 +21,24 @@ import org.springframework.web.reactive.function.server.ServerResponse
 import org.springframework.web.server.WebFilter
 
 /**
- * Kofu DSL for WebFlux server configuration.
+ * Kofu DSL for WebFlux server.
+ *
+ * This DSL to be used in [org.springframework.fu.kofu.webApplication] configures a
+ * [WebFlux server](https://docs.spring.io/spring/docs/current/spring-framework-reference/web-reactive.html#spring-webflux).
+ *
+ * When no codec is configured, `String` and `Resource` ones are configured by default.
+ * When a `codecs { }` block is declared, no one is configured by default.
+ *
+ * You can chose the underlying engine via the [WebFluxServerDsl.engine] parameter.
+ *
+ * Required dependencies can be retrieve using `org.springframework.boot:spring-boot-starter-webflux`.
+ *
+ * @sample org.springframework.fu.kofu.samples.router
+ * @see WebFluxServerDsl.include
+ * @see WebFluxServerDsl.codecs
+ * @see WebFluxServerDsl.cors
+ * @see WebFluxServerDsl.mustache
+ *
  * @see org.springframework.fu.kofu.webApplication
  * @author Sebastien Deleuze
  */
@@ -69,12 +86,6 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit): Abst
 
     /**
      * Configure codecs via a [dedicated DSL][WebFluxServerCodecDsl].
-     * @see WebFluxCodecDsl.resource
-     * @see WebFluxCodecDsl.string
-     * @see WebFluxCodecDsl.protobuf
-     * @see WebFluxCodecDsl.form
-     * @see WebFluxCodecDsl.multipart
-     * @see WebFluxServerCodecDsl.jackson
      */
     fun codecs(init: WebFluxServerCodecDsl.() -> Unit =  {}) {
         WebFluxServerCodecDsl(init).initialize(context)
@@ -105,31 +116,31 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit): Abst
     }
 
     /**
-     * Import routes written using a [dedicated DSL][RouterFunctionDsl].
-     * @sample org.springframework.fu.kofu.samples.importRouter
-     * @sample org.springframework.fu.kofu.samples.importCoRouter
+     * Include routes written using a [dedicated DSL][RouterFunctionDsl].
+     * @sample org.springframework.fu.kofu.samples.includeRouter
+     * @sample org.springframework.fu.kofu.samples.includeCoRouter
      */
-    fun import(router: RouterFunction<ServerResponse>) {
+    fun include(router: RouterFunction<ServerResponse>) {
         context.registerBean(BeanDefinitionReaderUtils.uniqueBeanName(RouterFunctionDsl::class.java.name, context)) { router }
     }
 
-    fun import(f: Function0<RouterFunction<ServerResponse>>) {
+    fun include(f: Function0<RouterFunction<ServerResponse>>) {
         context.registerBean(BeanDefinitionReaderUtils.uniqueBeanName(RouterFunctionDsl::class.java.name, context)) { f.invoke() }
     }
 
-    inline fun <reified A: Any> import(crossinline f: Function1<A, RouterFunction<ServerResponse>>) {
+    inline fun <reified A: Any> include(crossinline f: Function1<A, RouterFunction<ServerResponse>>) {
         context.registerBean(BeanDefinitionReaderUtils.uniqueBeanName(RouterFunctionDsl::class.java.name, context)) { f.invoke(context.getBean()) }
     }
-    inline fun <reified A: Any, reified B: Any> import(crossinline f: Function2<A, B, RouterFunction<ServerResponse>>) {
+    inline fun <reified A: Any, reified B: Any> include(crossinline f: Function2<A, B, RouterFunction<ServerResponse>>) {
         context.registerBean(BeanDefinitionReaderUtils.uniqueBeanName(RouterFunctionDsl::class.java.name, context)) { f.invoke(context.getBean(), context.getBean()) }
     }
-    inline fun <reified A: Any, reified B: Any, reified C: Any> import(crossinline f: Function3<A, B, C, RouterFunction<ServerResponse>>) {
+    inline fun <reified A: Any, reified B: Any, reified C: Any> include(crossinline f: Function3<A, B, C, RouterFunction<ServerResponse>>) {
         context.registerBean(BeanDefinitionReaderUtils.uniqueBeanName(RouterFunctionDsl::class.java.name, context)) { f.invoke(context.getBean(), context.getBean(), context.getBean()) }
     }
-    inline fun <reified A: Any, reified B: Any, reified C: Any, reified D: Any> import(crossinline f: Function4<A, B, C, D, RouterFunction<ServerResponse>>) {
+    inline fun <reified A: Any, reified B: Any, reified C: Any, reified D: Any> include(crossinline f: Function4<A, B, C, D, RouterFunction<ServerResponse>>) {
         context.registerBean(BeanDefinitionReaderUtils.uniqueBeanName(RouterFunctionDsl::class.java.name, context)) { f.invoke(context.getBean(), context.getBean(), context.getBean(), context.getBean()) }
     }
-    inline fun <reified A: Any, reified B: Any, reified C: Any, reified D: Any, reified E: Any> import(crossinline f: Function5<A, B, C, D, E, RouterFunction<ServerResponse>>) {
+    inline fun <reified A: Any, reified B: Any, reified C: Any, reified D: Any, reified E: Any> include(crossinline f: Function5<A, B, C, D, E, RouterFunction<ServerResponse>>) {
         context.registerBean(BeanDefinitionReaderUtils.uniqueBeanName(RouterFunctionDsl::class.java.name, context)) { f.invoke(context.getBean(), context.getBean(), context.getBean(), context.getBean(), context.getBean()) }
     }
 
@@ -186,30 +197,65 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit): Abst
         }
     }
 
-    class WebFluxServerCodecDsl(private val init: WebFluxServerCodecDsl.() -> Unit) : WebFluxCodecDsl() {
+    class WebFluxServerCodecDsl(private val init: WebFluxServerCodecDsl.() -> Unit) : AbstractDsl() {
 
         override fun initialize(context: GenericApplicationContext) {
             super.initialize(context)
             init()
         }
 
-        override fun string() {
+        /**
+         * Enable [org.springframework.core.codec.CharSequenceEncoder] and [org.springframework.core.codec.StringDecoder]
+         */
+        fun string() {
             StringCodecInitializer(false).initialize(context)
         }
 
-        override fun resource() {
+        /**
+         * Enable [org.springframework.http.codec.ResourceHttpMessageWriter] and [org.springframework.core.codec.ResourceDecoder]
+         */
+        fun resource() {
             ResourceCodecInitializer(false).initialize(context)
         }
 
-        override fun protobuf() {
+        /**
+         * Register an `ObjectMapper` bean and configure a [Jackson](https://github.com/FasterXML/jackson)
+         * JSON codec on WebFlux client via a [dedicated DSL][JacksonDsl].
+         *
+         * Required dependencies can be retrieve using `org.springframework.boot:spring-boot-starter-json`
+         * (included by default in `spring-boot-starter-webflux`).
+         *
+         * @sample org.springframework.fu.kofu.samples.jacksonDsl
+         */
+        fun jackson(dsl: JacksonDsl.() -> Unit = {}) {
+            JacksonDsl(false, dsl).initialize(context)
+        }
+
+        /**
+         * Enable [org.springframework.http.codec.protobuf.ProtobufEncoder] and [org.springframework.http.codec.protobuf.ProtobufDecoder]
+         *
+         * This codec requires Protobuf 3 or higher with the official `com.google.protobuf:protobuf-java` dependency, and
+         * supports `application/x-protobuf` and `application/octet-stream`.
+         */
+        fun protobuf() {
             ProtobufCodecInitializer(false).initialize(context)
         }
 
-        override fun form() {
+        /**
+         * Enable [org.springframework.http.codec.FormHttpMessageWriter] and [org.springframework.http.codec.FormHttpMessageReader]
+         */
+        fun form() {
             FormCodecInitializer(false).initialize(context)
         }
 
-        override fun multipart() {
+        /**
+         * Enable [org.springframework.http.codec.multipart.MultipartHttpMessageWriter] and
+         * [org.springframework.http.codec.multipart.MultipartHttpMessageReader]
+         *
+         * This codec requires Synchronoss NIO Multipart library via  the `org.synchronoss.cloud:nio-multipart-parser`
+         * dependency.
+         */
+        fun multipart() {
             MultipartCodecInitializer(false).initialize(context)
         }
     }
@@ -217,22 +263,8 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit): Abst
 }
 
 /**
- * Configure a WebFlux server via a via a [dedicated DSL][WebFluxServerDsl].
- *
- * This DSL configures [WebFlux server](https://docs.spring.io/spring/docs/current/spring-framework-reference/web-reactive.html#spring-webflux).
- * When no codec is configured, `String` and `Resource` ones are configured by default.
- * When a `codecs { }` block is declared, no one is configured by default.
- * [org.springframework.fu.kofu.ApplicationDsl.startServer] needs to be set to `true` (it is by default).
- *
- * You can chose the underlying engine via the [WebFluxServerDsl.engine] parameter.
- *
- * Require `org.springframework.boot:spring-boot-starter-webflux` dependency.
- *
- * @sample org.springframework.fu.kofu.samples.router
- * @see WebFluxServerDsl.import
- * @see WebFluxServerDsl.codecs
- * @see WebFluxServerDsl.cors
- * @see WebFluxServerDsl.mustache
+ * Declare a WebFlux server.
+ * @see WebFluxServerDsl
  */
 fun ConfigurationDsl.server(dsl: WebFluxServerDsl.() -> Unit =  {}) {
     WebFluxServerDsl(dsl).initialize(context)

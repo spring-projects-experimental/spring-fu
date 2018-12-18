@@ -59,7 +59,7 @@ abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
 		val app = webApplication {
 			server {
 				engine = getServerFactory()
-				import(router)
+				include(router)
 			}
 		}
 		with(app.run()) {
@@ -77,7 +77,7 @@ abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
 		val app = webApplication {
 			server {
 				engine = getServerFactory()
-				import(router)
+				include(router)
 			}
 			client {
 				baseUrl = "http://127.0.0.1:$port"
@@ -104,8 +104,8 @@ abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
 		val app = webApplication {
 			server {
 				engine = getServerFactory()
-				import(router1)
-				import(router2)
+				include(router1)
+				include(router2)
 			}
 		}
 		with(app.run()) {
@@ -146,7 +146,7 @@ abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
 					string()
 					jackson()
 				}
-				import(router)
+				include(router)
 			}
 			logging {
 				level = LogLevel.DEBUG

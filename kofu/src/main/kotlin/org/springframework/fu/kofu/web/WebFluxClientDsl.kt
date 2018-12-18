@@ -8,7 +8,17 @@ import org.springframework.fu.kofu.ConfigurationDsl
 import org.springframework.web.reactive.function.client.WebClient
 
 /**
- * Kofu DSL for WebFlux client configuration.
+ * Kofu DSL for WebFlux client.
+ *
+ * Register a [WebClient.builder] bean via a [dedicated DSL][WebFluxClientDsl].
+ *
+ * When no codec is configured, `String` and `Resource` ones are configured by default.
+ * When a `codecs { }` block is declared, the one specified are configured by default.
+ *
+ * Required dependencies can be retrieve using `org.springframework.boot:spring-boot-starter-webflux`.
+ *
+ * @sample org.springframework.fu.kofu.samples.clientDsl
+ * @see WebFluxClientDsl.codecs
  * @author Sebastien Deleuze
  */
 class WebFluxClientDsl(private val init: WebFluxClientDsl.() -> Unit) : AbstractDsl() {
@@ -33,58 +43,79 @@ class WebFluxClientDsl(private val init: WebFluxClientDsl.() -> Unit) : Abstract
 
     /**
      * Configure codecs via a [dedicated DSL][WebFluxClientCodecDsl].
-     * @see WebFluxCodecDsl.resource
-     * @see WebFluxCodecDsl.string
-     * @see WebFluxCodecDsl.protobuf
-     * @see WebFluxCodecDsl.form
-     * @see WebFluxCodecDsl.multipart
-     * @see WebFluxClientCodecDsl.jackson
      */
     fun codecs(dsl: WebFluxClientCodecDsl.() -> Unit =  {}) {
         WebFluxClientCodecDsl(dsl).initialize(context)
         codecsConfigured = true
     }
 
-    class WebFluxClientCodecDsl(private val init: WebFluxClientCodecDsl.() -> Unit) : WebFluxCodecDsl() {
+    class WebFluxClientCodecDsl(private val init: WebFluxClientCodecDsl.() -> Unit) : AbstractDsl() {
 
         override fun initialize(context: GenericApplicationContext) {
             super.initialize(context)
             init()
         }
 
-        override fun string() {
+        /**
+         * Enable [org.springframework.core.codec.CharSequenceEncoder] and [org.springframework.core.codec.StringDecoder]
+         */
+        fun string() {
             StringCodecInitializer(true).initialize(context)
         }
 
-        override fun resource() {
+        /**
+         * Enable [org.springframework.http.codec.ResourceHttpMessageWriter] and [org.springframework.core.codec.ResourceDecoder]
+         */
+        fun resource() {
             ResourceCodecInitializer(true).initialize(context)
         }
 
-        override fun protobuf() {
+        /**
+         * Register an `ObjectMapper` bean and configure a [Jackson](https://github.com/FasterXML/jackson)
+         * JSON codec on WebFlux client via a [dedicated DSL][JacksonDsl].
+         *
+         * Required dependencies can be retrieve using `org.springframework.boot:spring-boot-starter-json`
+         * (included by default in `spring-boot-starter-webflux`).
+         *
+         * @sample org.springframework.fu.kofu.samples.jacksonDsl
+         */
+        fun jackson(dsl: JacksonDsl.() -> Unit = {}) {
+            JacksonDsl(true, dsl).initialize(context)
+        }
+
+        /**
+         * Enable [org.springframework.http.codec.protobuf.ProtobufEncoder] and [org.springframework.http.codec.protobuf.ProtobufDecoder]
+         *
+         * This codec requires Protobuf 3 or higher with the official `com.google.protobuf:protobuf-java` dependency, and
+         * supports `application/x-protobuf` and `application/octet-stream`.
+         */
+        fun protobuf() {
             ProtobufCodecInitializer(true).initialize(context)
         }
 
-        override fun form() {
+        /**
+         * Enable [org.springframework.http.codec.FormHttpMessageWriter] and [org.springframework.http.codec.FormHttpMessageReader]
+         */
+        fun form() {
             FormCodecInitializer(true).initialize(context)
         }
 
-        override fun multipart() {
+        /**
+        * Enable [org.springframework.http.codec.multipart.MultipartHttpMessageWriter] and
+        * [org.springframework.http.codec.multipart.MultipartHttpMessageReader]
+        *
+        * This codec requires Synchronoss NIO Multipart library via  the `org.synchronoss.cloud:nio-multipart-parser`
+        * dependency.
+        */
+        fun multipart() {
             MultipartCodecInitializer(true).initialize(context)
         }
     }
 }
 
 /**
- * Configure a [WebFlux client](https://docs.spring.io/spring/docs/current/spring-framework-reference/web-reactive.html#webflux-client) builder ([WebClient.builder]) via a [dedicated DSL][WebFluxClientBuilderDsl].
- *
- * When no codec is configured, `String` and `Resource` ones are configured by default.
- * When a `codecs { }` block is declared, no one is configured by default.
- *
- * Require `org.springframework.boot:spring-boot-starter-webflux` dependency.
- *
- * @param dsl The [WebFlux client](https://docs.spring.io/spring/docs/current/spring-framework-reference/web-reactive.html#webflux-client) builder ([WebClient.builder]) DSL
- * @sample org.springframework.fu.kofu.samples.clientDsl
- * @see WebFluxClientDsl.codecs
+ * Declare a WebFlux client.
+ * @see WebFluxClientDsl
  */
 fun ConfigurationDsl.client(dsl: WebFluxClientDsl.() -> Unit =  {}) {
     WebFluxClientDsl(dsl).initialize(context)

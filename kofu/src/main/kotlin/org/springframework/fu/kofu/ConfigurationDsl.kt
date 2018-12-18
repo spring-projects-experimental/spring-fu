@@ -12,11 +12,14 @@ import org.springframework.context.support.registerBean
 import org.springframework.util.ClassUtils
 
 /**
- * Kofu DSL for modular configuration that can be imported in the application.
+ * Kofu DSL for a configuration that can be imported in an application or used in tests.
  *
+ * @see configuration
+ * @see enable
+ * @sample org.springframework.fu.kofu.samples.applicationDslWithConfiguration
  * @author Sebastien Deleuze
  */
-open class ConfigurationDsl(internal val initConfiguration: ConfigurationDsl.() -> Unit = {}): AbstractDsl() {
+open class ConfigurationDsl(private val dsl: ConfigurationDsl.() -> Unit): AbstractDsl() {
 
 	/**
 	 * Configure beans via a [dedicated DSL][BeanDefinitionDsl].
@@ -108,15 +111,7 @@ open class ConfigurationDsl(internal val initConfiguration: ConfigurationDsl.() 
 
 	override fun initialize(context: GenericApplicationContext) {
 		super.initialize(context)
-		initConfiguration()
+		dsl()
 	}
 
 }
-
-/**
- * Define a configuration that can be imported in an application or used in tests.
- * @see ApplicationDsl.enable
- * @sample org.springframework.fu.kofu.samples.applicationDslWithConfiguration
- */
-fun configuration(dsl: ConfigurationDsl.() -> Unit)
-		= ConfigurationDsl(dsl)

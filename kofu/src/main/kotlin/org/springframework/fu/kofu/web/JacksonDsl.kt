@@ -32,6 +32,14 @@ import org.springframework.fu.kofu.AbstractDsl
 import java.util.*
 import kotlin.reflect.KClass
 
+/**
+ * Kofu DSL for [Jackson](https://github.com/FasterXML/jackson) serialization library.
+ *
+ * Required dependencies can be retrieve using `org.springframework.boot:spring-boot-starter-json`
+ * (included by default in `spring-boot-starter-webflux`).
+ *
+ * @author Sebastien Deleuze
+ */
 class JacksonDsl(private val isClientCodec: Boolean, private val init: JacksonDsl.() -> Unit): AbstractDsl() {
 
 	private val properties = JacksonProperties()
@@ -155,30 +163,4 @@ class JacksonDsl(private val isClientCodec: Boolean, private val init: JacksonDs
 		properties.generator[feature] = false
 	}
 
-}
-
-/**
- * Register an `ObjectMapper` bean and configure a [Jackson](https://github.com/FasterXML/jackson)
- * JSON codec on WebFlux client via a [dedicated DSL][JacksonDsl].
- *
- * Require `org.springframework.boot:spring-boot-starter-json` dependency
- * (included by default in `spring-boot-starter-webflux`).
-
- * @sample org.springframework.fu.kofu.samples.jacksonDsl
- */
-fun WebFluxClientDsl.WebFluxClientCodecDsl.jackson(dsl: JacksonDsl.() -> Unit = {}) {
-	JacksonDsl(true, dsl).initialize(context)
-}
-
-/**
- * Register an `ObjectMapper` bean and configure a [Jackson](https://github.com/FasterXML/jackson)
- * JSON codec on WebFlux client via a [dedicated DSL][JacksonDsl].
- *
- * Require `org.springframework.boot:spring-boot-starter-json` dependency
- * (included by default in `spring-boot-starter-webflux`).
-
- * @sample org.springframework.fu.kofu.samples.jacksonDsl
- */
-fun WebFluxServerDsl.WebFluxServerCodecDsl.jackson(dsl: JacksonDsl.() -> Unit = {}) {
-	JacksonDsl(false, dsl).initialize(context)
 }

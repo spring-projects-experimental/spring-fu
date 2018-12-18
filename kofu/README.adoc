@@ -1,0 +1,108 @@
+:spring-fu-version: 0.0.3.BUILD-SNAPSHOT
+:kofu-kdoc-url: http://repo.spring.io/snapshot/org/springframework/fu/spring-fu-kofu/{spring-fu-version}/spring-fu-kofu-{spring-fu-version}-javadoc.jar!
+:framework-kdoc-url: https://docs.spring.io/spring-framework/docs/5.1.x/kdoc-api
+= Kofu DSL for Spring Boot
+
+Kofu (for **Ko**tlin and **fu**nctional) is an alternative way of configuring your Spring Boot application,
+different from regular auto-configuration. It is based on Spring Boot infrastructure, but
+https://github.com/spring-projects/spring-fu/tree/master/autoconfigure-adapter[used in a functional way]
+via lambdas instead of annotations. It has following characteristics:
+
+ * Explicit configuration via a https://dzone.com/articles/kotlin-dsl-from-theory-to-practice[Kotlin DSL] instead of annotation
+ * Minimal set of features enabled by default
+ * No classpath scanning, no feature enabled based on classpath detection
+ * Both declarative (via the DSL) and programmatic (code auto-complete, allow any kind of `if`, `for` statements)
+ * Functional configuration based on pure lambdas
+ * Minimal reflection usage, no CGLIB proxy, no annotation processing
+ * Faster startup and lower memory consumption
+ * https://github.com/oracle/graal/tree/master/substratevm[GraalVM native image] friendly
+
+== API reference
+
+An overview of Kofu DSL is provided bellow with the related {kofu-kdoc-url}/kofu/org.springframework.fu.kofu/index.html[API documentation].
+
+```kotlin
+val dataConf = configuration { <1>
+	beans { } <2>
+	mongodb { } <3>
+	r2dbcH2 { } <4>
+	r2dbcPostgresql {} <5>
+}
+
+val webConf = configuration { <1>
+	beans { } <2>
+	server { <6>
+		engine = <7>
+		port = <8>
+		router { } <9>
+		include() <10>
+		coRouter { } <11>
+		cors { } <12>
+		codecs { } <13>
+		mustache() <14>
+		filter() <15>
+	}
+	client { <16>
+		codecs { } <13>
+	}
+}
+
+val app = webApplication { <17>
+	logging { } <18>
+	configurationProperties<SampleProperties>() <19>
+	listener<SampleEvent> { } <20>
+	profile("sample"){ } <21>
+	enable(dataConf) <22>
+    enable(webConf) <22>
+}
+```
+<1> {kofu-kdoc-url}/kofu/org.springframework.fu.kofu/-configuration-dsl/index.html[configuration documentation]
+<2> {framework-kdoc-url}/spring-framework/org.springframework.context.support/-bean-definition-dsl/index.html[beans documentation]
+<3> {kofu-kdoc-url}/kofu/org.springframework.fu.kofu.mongo/-mongo-dsl/index.html[mongo documentation]
+<4> {kofu-kdoc-url}/kofu/org.springframework.fu.kofu.r2dbc/r2dbc-h2.html[r2dbc-h2 documentation]
+<5> {kofu-kdoc-url}/kofu/org.springframework.fu.kofu.r2dbc/r2dbc-postgresql.html[r2dbc-postgresql documentation]
+<6> {kofu-kdoc-url}/kofu/org.springframework.fu.kofu.web/-web-flux-server-dsl/index.html[WebFlux server documentation]
+<7> {kofu-kdoc-url}/kofu/org.springframework.fu.kofu.web/-web-flux-server-dsl/engine.html[engine documentation]
+<8> {kofu-kdoc-url}/kofu/org.springframework.fu.kofu.web/-web-flux-server-dsl/port.html[port documentation]
+<9> {framework-kdoc-url}/spring-framework/org.springframework.web.reactive.function.server/-router-function-dsl/index.html[router documentation]
+<10> {kofu-kdoc-url}/kofu/org.springframework.fu.kofu.web/-web-flux-server-dsl/co-router.html[Coroutines router documentation]
+<11> {kofu-kdoc-url}/kofu/org.springframework.fu.kofu.web/-web-flux-server-dsl/include.html[Include router documentation]
+<12> {kofu-kdoc-url}/kofu/org.springframework.fu.kofu.web/cors.html[cors documentation]
+<13> {kofu-kdoc-url}/kofu/org.springframework.fu.kofu.web/-web-flux-codec-dsl/index.html[codecs documentation]
+<14> {kofu-kdoc-url}/kofu/build/dokka/kofu/org.springframework.fu.kofu.web/mustache.html[mustache documentation]
+<15> {kofu-kdoc-url}/kofu/org.springframework.fu.kofu.web/-web-flux-server-dsl/filter.html[filter documentation]
+<16> {kofu-kdoc-url}/kofu/org.springframework.fu.kofu.web/-web-flux-client-dsl/index.html[WebFlux client documentation]
+<17> {kofu-kdoc-url}/kofu/kofu/org.springframework.fu.kofu/-application-dsl/index.html[application/webApplication documentation]
+<18> {kofu-kdoc-url}/kofu/org.springframework.fu.kofu/-logging-dsl/index.html[logging documentation]
+<19> {kofu-kdoc-url}/kofu/org.springframework.fu.kofu/-configuration-dsl/configuration-properties.html[configuration-properties documentation]
+<20> {kofu-kdoc-url}/kofu/org.springframework.fu.kofu/-configuration-dsl/listener.html[listener-properties documentation]
+<21> {kofu-kdoc-url}/kofu/org.springframework.fu.kofu/-configuration-dsl/profile.html[profile-properties documentation]
+<22> {kofu-kdoc-url}/kofu/org.springframework.fu.kofu/-configuration-dsl/enable.html[enable-properties documentation]
+
+== Getting started
+
+* Create a Spring `2.1.x` project on https://start.spring.io/#!language=kotlin[start.spring.io],
+* Add the `org.springframework.fu:spring-fu-kofu:{spring-fu-version}` dependency
+* Add the _Reactive Web_ `org.springframework.boot:spring-boot-starter-webflux` dependency
+* Use latest Kotlin `1.3.x`
+* Modify the generated `*Application.kt` file as following:
+
+```kotlin
+package com.sample
+
+import org.springframework.fu.kofu.webApplication
+
+val app = webApplication {
+server {
+	router {
+		GET("/") { ok().syncBody("Hello world!") }
+	}
+}
+}
+fun main() {
+app.run()
+}
+```
+
+You can also have a look to the https://github.com/spring-projects/spring-fu/tree/master/samples/[sample applications].
+

@@ -33,10 +33,7 @@ import org.springframework.web.reactive.function.server.router
 import reactor.core.publisher.Mono
 import reactor.core.publisher.toMono
 
-private fun applicationDslWithCustomBeanApplication() {
-	// ============================================================================================
-	// This standalone application registers a custom bean `Foo` and a `City` configurationProperties configurationProperties
-	// ============================================================================================
+private fun applicationDsl() {
 	val app = application {
 		beans {
 			bean<Foo>()
@@ -61,10 +58,7 @@ private fun applicationDslWithConfiguration() {
 	fun main(args: Array<String>) = app.run()
 }
 
-private fun applicationDslOverview() {
-	// ============================================================================================
-	// Overview of a more complete web application
-	// ============================================================================================
+private fun webApplicationDsl() {
 	fun routes(htmlHandler: HtmlHandler, apiHandler: ApiHandler) = router {
 		GET("/", htmlHandler::blog)
 		GET("/article/{id}", htmlHandler::article)
@@ -105,7 +99,7 @@ private fun applicationDslOverview() {
 				string()
 				jackson()
 			}
-			import(::routes)
+			include(::routes)
 		}
 		client {
 			codecs {

@@ -16,24 +16,34 @@
 
 package org.springframework.fu.kofu.mongo
 
+import de.flapdoodle.embed.mongo.distribution.IFeatureAwareVersion
+import de.flapdoodle.embed.mongo.distribution.Version
 import org.springframework.boot.autoconfigure.data.mongo.MongoDataInitializer
 import org.springframework.boot.autoconfigure.data.mongo.MongoReactiveDataInitializer
 import org.springframework.boot.autoconfigure.mongo.MongoProperties
 import org.springframework.boot.autoconfigure.mongo.MongoReactiveInitializer
 import org.springframework.boot.autoconfigure.mongo.coroutines.CoroutinesMongoInitializer
+import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoInitializer
+import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoProperties
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.fu.kofu.AbstractDsl
 import org.springframework.fu.kofu.ConfigurationDsl
 
 /**
  * Kofu DSL for MongoDB configuration.
+ *
+ * Enable and [configure][MongoDsl] Reactive MongoDB support by registering a [org.springframework.data.mongodb.core.ReactiveMongoTemplate].
+ *
+ * Required dependencies can be retrieve using `org.springframework.boot:spring-boot-starter-data-mongodb-reactive`.
+ *
+ * @sample org.springframework.fu.kofu.samples.mongo
  * @author Sebastien Deleuze
  */
 open class MongoDsl(
 	private val init: MongoDsl.() -> Unit
 ) : AbstractDsl() {
 
-	internal val properties = MongoProperties()
+	private val properties = MongoProperties()
 
 	internal var embedded = false
 
@@ -45,23 +55,60 @@ open class MongoDsl(
 		MongoReactiveInitializer(properties, embedded).initialize(context)
 	}
 
+	/**
+	 * Enable coroutines support when set to `true` (register a `CoMongoTemplate` bean).
+	 */
 	var coroutines: Boolean = false
 		set(value) {
 			if (value) CoroutinesMongoInitializer().initialize(context)
 		}
 
+	/**
+	 * Configure the database url. By default set to `mongodb://localhost/test`.
+	 */
 	var uri: String? = "mongodb://localhost/test"
 		set(value) {
 			properties.uri = value
 		}
+
+	/**
+	 * Enable MongoDB embedded server.
+	 *
+	 * Require `de.flapdoodle.embed:de.flapdoodle.embed.mongo` dependency.
+	 *
+	 * @sample org.springframework.fu.kofu.samples.mongoEmbedded
+	 */
+	fun embedded(dsl: EmbeddedMongoDsl.() -> Unit = {}) {
+		embedded = true
+		EmbeddedMongoDsl(properties, dsl).initialize(context)
+	}
+
+	/**
+	 * Kofu DSL for embedded MongoDB configuration.
+	 */
+	class EmbeddedMongoDsl(private val mongoProperties: MongoProperties, private val init: EmbeddedMongoDsl.() -> Unit) : AbstractDsl() {
+
+		private val embeddedMongoProperties = EmbeddedMongoProperties()
+
+		override fun initialize(context: GenericApplicationContext) {
+			super.initialize(context)
+			init()
+			EmbeddedMongoInitializer(mongoProperties, embeddedMongoProperties).initialize(context)
+		}
+
+		/**
+		 * Version of Mongo to use
+		 */
+		var version: IFeatureAwareVersion = Version.Main.PRODUCTION
+			set(value) {
+				embeddedMongoProperties.version = value.asInDownloadPath()
+			}
+	}
 }
 
 /**
- * Enable and [configure][MongoDsl] Reactive MongoDB support by registering a [org.springframework.data.mongodb.core.ReactiveMongoTemplate].
- *
- * Require `org.springframework.boot:spring-boot-starter-data-mongodb-reactive` dependency.
- *
- * @sample org.springframework.fu.kofu.samples.mongo
+ * Configure MongoDB Reactive support.
+ * @see MongoDsl
  */
 fun ConfigurationDsl.mongodb(dsl: MongoDsl.() -> Unit = {}) {
 	MongoDsl(dsl).initialize(context)

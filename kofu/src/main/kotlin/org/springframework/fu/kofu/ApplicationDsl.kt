@@ -20,17 +20,20 @@ import org.springframework.boot.autoconfigure.context.MessageSourceInitializer
 import org.springframework.context.support.GenericApplicationContext
 
 /**
- * Kofu DSL for application configuration.
+ * Kofu top level DSL for application which allows to configure a Spring Boot
+ * application using Kofu and functional bean registration.
  *
- * @author Sebastien Deleuze
+ * @sample org.springframework.fu.kofu.samples.webApplicationDsl
+ * @param dsl The `application { }` DSL
  * @see application
  * @see webApplication
+ * @author Sebastien Deleuze
  */
-open class ApplicationDsl internal constructor(private val initApplication: ApplicationDsl.() -> Unit) : ConfigurationDsl() {
+open class ApplicationDsl internal constructor(private val dsl: ApplicationDsl.() -> Unit) : ConfigurationDsl({}) {
 
 	override fun initialize(context: GenericApplicationContext) {
 		super.initialize(context)
-		initApplication()
+        dsl()
 		MessageSourceInitializer().initialize(context)
 	}
 

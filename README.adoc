@@ -2,11 +2,12 @@
 
 image::https://ci.spring.io/api/v1/teams/spring-fu/pipelines/spring-fu/badge["Build Status", link="https://ci.spring.io/teams/spring-fu/pipelines/spring-fu"]
 
-Spring Fu is an incubator for new Spring features related to functional configuration and runtime efficiency.
+Spring Fu is an incubator for new Spring features related to explicit configuration and runtime efficiency.
 
-Instead of using JavaConfig and auto-configuration, it provides an explicit way of configuring Spring Boot applications
-with a http://repo.spring.io/snapshot/org/springframework/fu/spring-fu-kofu/0.0.3.BUILD-SNAPSHOT/spring-fu-kofu-0.0.3.BUILD-SNAPSHOT-javadoc.jar!/kofu/org.springframework.fu.kofu/application.html[Kotlin DSL (Kofu)]
-or a https://github.com/spring-projects/spring-fu/tree/master/jafu[Java DSL (Jafu)] and lambdas
+While regular Spring Boot applications are configured using annotations, conventions and automatic configuration based
+on conditions like "Is this class available in the classpath?", Spring Fu provides an explicit way of configuring
+Spring Boot applications with a https://github.com/spring-projects/spring-fu/tree/master/kofu[Kotlin DSL (Kofu)]
+or a https://github.com/spring-projects/spring-fu/tree/master/jafu[Java DSL (Jafu)]
 using functional bean definitions for both Spring Boot infrastructure and application code.
 
 The project also incubates various other features like
@@ -15,71 +16,7 @@ You can see https://github.com/spring-projects/spring-fu/blob/master/ROADMAP.ado
 
 It is not intended to be used in production, but rather to incubate and get feedback and contributions
 from the community in order to reach a point where its features can be integrated as part of existing
-Spring projects like Framework, Boot and Data. The table bellow summarize the status of current features.
-
-
-== Getting started
-
-=== Via start.spring.io
-
-==== Kofu
-
- * Create a Spring `2.1.x.RELEASE` project on https://start.spring.io/#!language=kotlin[start.spring.io],
- * Add the `org.springframework.fu:spring-fu-kofu:0.0.3.BUILD-SNAPSHOT` dependency
- * Add the _Reactive Web_ `org.springframework.boot:spring-boot-starter-webflux` dependency 
- * Use latest Kotlin `1.3.x`
- * Modify the generated `*Application.kt` file as following:
-
-```kotlin
-package com.sample
-
-import org.springframework.fu.kofu.webApplication
-
-val app = webApplication {
-	server {
-		router {
-			GET("/") { ok().syncBody("Hello world!") }
-		}
-	}
-}
-fun main() {
-	app.run()
-}
-```
-
-==== Jafu
-
- * Create a Spring `2.1.x.RELEASE` project on https://start.spring.io/[start.spring.io],
- * Add the `org.springframework.fu:spring-fu-jafu:0.0.3.BUILD-SNAPSHOT` dependency
- * Add the _Reactive Web_ `org.springframework.boot:spring-boot-starter-webflux` dependency
- * Modify the generated `*Application.java` file as following:
-
-```java
-package com.sample;
-
-import static org.springframework.fu.jafu.JafuApplication.webApplication;
-import static org.springframework.fu.jafu.web.WebFluxServerDsl.server;
-import static org.springframework.web.reactive.function.server.ServerResponse.*;
-
-import org.springframework.fu.jafu.JafuApplication;
-
-public class DemoApplication {
-
-	public static JafuApplication app = webApplication(a ->
-			a.enable(server(s -> s.router(r ->
-				r.GET("/", request -> ok().syncBody("Hello world!"))
-			)))
-	);
-
-	public static void main (String[] args) {
-		app.run(args);
-	}
-}
-```
-
-=== Samples
-
-You can also have a look to the https://github.com/spring-projects/spring-fu/tree/master/samples/[sample applications].
+Spring projects like Framework, Boot and Data.
 
 === Credits
 

@@ -24,7 +24,7 @@ import org.springframework.core.env.Environment
 internal annotation class KofuMarker
 
 /**
- * Base class for Kofu DSL.
+ * Kofu DSL base class.
  *
  * @author Sebastien Deleuze
  */
@@ -58,9 +58,6 @@ abstract class AbstractDsl : ApplicationContextInitializer<GenericApplicationCon
 		else -> context.getBean(name, T::class.java)
 	}
 
-	/**
-	 * Make sure to invoke super.initialize(context) from inherited classes to get context initialized.
-	 */
 	override fun initialize(context: GenericApplicationContext) {
 		this.context = context
 	}
