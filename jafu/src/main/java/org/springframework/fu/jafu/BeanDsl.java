@@ -3,6 +3,7 @@ package org.springframework.fu.jafu;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import org.springframework.beans.factory.config.BeanDefinitionCustomizer;
 import org.springframework.beans.factory.support.BeanDefinitionReaderUtils;
 import org.springframework.context.FunctionalClassPathScanningCandidateComponentProvider;
 import org.springframework.context.support.GenericApplicationContext;
@@ -22,23 +23,23 @@ public class BeanDsl extends AbstractDsl {
 		this.dsl = dsl;
 	}
 
-	public <T> BeanDsl bean(Class<T> beanClass) {
-		this.context.registerBean(beanClass);
+	public <T> BeanDsl bean(Class<T> beanClass, BeanDefinitionCustomizer... customizers) {
+		this.context.registerBean(beanClass, customizers);
 		return this;
 	}
 
-	public <T> BeanDsl bean(String beanName, Class<T> beanClass) {
+	public <T> BeanDsl bean(String beanName, Class<T> beanClass, BeanDefinitionCustomizer... customizers) {
 		this.context.registerBean(beanName, beanClass);
 		return this;
 	}
 
-	public <T> BeanDsl bean(Class<T> beanClass, Supplier<T> supplier) {
-		this.context.registerBean(beanClass, supplier);
+	public <T> BeanDsl bean(Class<T> beanClass, Supplier<T> supplier, BeanDefinitionCustomizer... customizers) {
+		this.context.registerBean(beanClass, supplier, customizers);
 		return this;
 	}
 
-	public <T> BeanDsl bean(String beanName, Class<T> beanClass, Supplier<T> supplier) {
-		this.context.registerBean(beanName, beanClass, supplier);
+	public <T> BeanDsl bean(String beanName, Class<T> beanClass, Supplier<T> supplier, BeanDefinitionCustomizer... customizers) {
+		this.context.registerBean(beanName, beanClass, supplier, customizers);
 		return this;
 	}
 
