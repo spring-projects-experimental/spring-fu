@@ -12,7 +12,7 @@ using functional bean definitions for both Spring Boot infrastructure and applic
 
 It has following characteristics:
 
- * Explicit configuration via a https://dzone.com/articles/kotlin-dsl-from-theory-to-practice[Kotlin DSL] instead of annotation
+ * Explicit configuration via Kotlin or Java DSL instead of annotations
  * Minimal set of features enabled by default
  * No classpath scanning, no feature enabled based on classpath detection
  * Both declarative (via the DSL) and programmatic (code auto-complete, allow any kind of `if`, `for` statements)
@@ -29,7 +29,14 @@ It is not intended to be used in production, but rather to incubate and get feed
 from the community in order to reach a point where its features can be integrated as part of existing
 Spring projects like Framework, Boot and Data.
 
-=== Credits
+== Getting started
+
+Choose your flavor and follow the documentation:
+
+ * https://github.com/spring-projects/spring-fu/tree/master/jafu[Jafu] for Spring Boot applications written in Java
+ * https://github.com/spring-projects/spring-fu/tree/master/kofu[Kofu] for Spring Boot applications written in Kotlin
+
+== Credits
 
 In addition to the whole Spring and Reactor teams, special credits to:
 
