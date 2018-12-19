@@ -1,9 +1,0 @@
-= Jafu reactive webapp
-
-This is an experimental sample reactive webapp with Jafu configuration (Kofu variant in Java).
-
-This Java variant has following limitations compared to Kofu
- - Restricted DSL capabilities
- - It is necessary to specify the class in the `Supplier` variant of register Bean because of the lack of https://kotlinlang.org/docs/reference/inline-functions.html#reified-type-parameters[reified type parameters]
- - Require using static methods for extensibility due to the lack of https://kotlinlang.org/docs/reference/extensions.html[extension mechanism]
-
