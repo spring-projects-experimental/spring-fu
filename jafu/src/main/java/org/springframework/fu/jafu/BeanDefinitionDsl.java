@@ -13,32 +13,45 @@ import org.springframework.util.ClassUtils;
 /**
  * Jafu DSL for beans configuration.
  *
+ * @see ConfigurationDsl#beans(Consumer)
  * @author Sebastien Deleuze
  */
-public class BeanDsl extends AbstractDsl {
+public class BeanDefinitionDsl extends AbstractDsl {
 
-	private final Consumer<BeanDsl> dsl;
+	private final Consumer<BeanDefinitionDsl> dsl;
 
-	BeanDsl(Consumer<BeanDsl> dsl) {
+	BeanDefinitionDsl(Consumer<BeanDefinitionDsl> dsl) {
 		this.dsl = dsl;
 	}
 
-	public <T> BeanDsl bean(Class<T> beanClass, BeanDefinitionCustomizer... customizers) {
+	/**
+	 * Declare a bean definition from the given bean class.
+	 */
+	public <T> BeanDefinitionDsl bean(Class<T> beanClass, BeanDefinitionCustomizer... customizers) {
 		this.context.registerBean(beanClass, customizers);
 		return this;
 	}
 
-	public <T> BeanDsl bean(String beanName, Class<T> beanClass, BeanDefinitionCustomizer... customizers) {
+	/**
+	 * Declare a bean definition from the given bean name and class.
+	 */
+	public <T> BeanDefinitionDsl bean(String beanName, Class<T> beanClass, BeanDefinitionCustomizer... customizers) {
 		this.context.registerBean(beanName, beanClass);
 		return this;
 	}
 
-	public <T> BeanDsl bean(Class<T> beanClass, Supplier<T> supplier, BeanDefinitionCustomizer... customizers) {
+	/**
+	 * Declare a bean definition from the given bean class and supplier.
+	 */
+	public <T> BeanDefinitionDsl bean(Class<T> beanClass, Supplier<T> supplier, BeanDefinitionCustomizer... customizers) {
 		this.context.registerBean(beanClass, supplier, customizers);
 		return this;
 	}
 
-	public <T> BeanDsl bean(String beanName, Class<T> beanClass, Supplier<T> supplier, BeanDefinitionCustomizer... customizers) {
+	/**
+	 * Declare a bean definition from the given bean name, class and supplier.
+	 */
+	public <T> BeanDefinitionDsl bean(String beanName, Class<T> beanClass, Supplier<T> supplier, BeanDefinitionCustomizer... customizers) {
 		this.context.registerBean(beanName, beanClass, supplier, customizers);
 		return this;
 	}
@@ -51,7 +64,7 @@ public class BeanDsl extends AbstractDsl {
 	 *
 	 * @param basePackage The base package to scan
 	 */
-	public BeanDsl scan(String basePackage) {
+	public BeanDefinitionDsl scan(String basePackage) {
 		FunctionalClassPathScanningCandidateComponentProvider componentProvider = new FunctionalClassPathScanningCandidateComponentProvider();
 		for(ClassMetadata metadata : componentProvider.findCandidateComponents(basePackage)) {
 			Class<?> source = ClassUtils.resolveClassName(metadata.getClassName(), null);

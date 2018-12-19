@@ -61,10 +61,10 @@ public class ConfigurationDsl extends AbstractDsl {
 	}
 
 	/**
-	 * Configure beans via a {@link BeanDsl dedicated DSL}.
+	 * Configure beans via a {@link BeanDefinitionDsl dedicated DSL}.
 	 */
-	public ConfigurationDsl beans(Consumer<BeanDsl> dsl) {
-		new BeanDsl(dsl).initialize(context);
+	public ConfigurationDsl beans(Consumer<BeanDefinitionDsl> dsl) {
+		new BeanDefinitionDsl(dsl).initialize(context);
 		return this;
 	}
 
