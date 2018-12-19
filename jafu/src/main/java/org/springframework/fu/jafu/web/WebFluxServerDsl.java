@@ -14,23 +14,35 @@ import org.springframework.boot.autoconfigure.web.reactive.ReactiveWebServerInit
 import org.springframework.boot.autoconfigure.web.reactive.ResourceCodecInitializer;
 import org.springframework.boot.autoconfigure.web.reactive.StringCodecInitializer;
 import org.springframework.boot.autoconfigure.web.reactive.WebFluxProperties;
-import org.springframework.boot.web.embedded.jetty.JettyReactiveWebServerFactory;
 import org.springframework.boot.web.embedded.netty.NettyReactiveWebServerFactory;
-import org.springframework.boot.web.embedded.tomcat.TomcatReactiveWebServerFactory;
-import org.springframework.boot.web.embedded.undertow.UndertowReactiveWebServerFactory;
 import org.springframework.boot.web.reactive.server.ConfigurableReactiveWebServerFactory;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.fu.jafu.AbstractDsl;
+import org.springframework.fu.jafu.JafuApplication;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.RouterFunctionDsl;
 import org.springframework.web.reactive.function.server.RouterFunctions;
+import org.springframework.web.server.WebFilter;
 
 /**
- * Jafu DSL for WebFlux server configuration.
+ * Jafu DSL for WebFlux server.
  *
+ * This DSL to be used with {@link org.springframework.fu.jafu.Jafu#webApplication(java.util.function.Consumer)} configures a
+ * <a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/web-reactive.html#spring-webflux"></a>WebFlux server</a>.
+ *
+ * When no codec is configured, {@code String} and {@code Resource} ones are configured by default.
+ * When a {@code codecs} block is declared, the one specified are configured by default.
+ *
+ * You can chose the underlying engine via the {@link WebFluxServerDsl#engine(ConfigurableReactiveWebServerFactory)} parameter.
+ *
+ * Required dependencies can be retrieve using {@code org.springframework.boot:spring-boot-starter-webflux}.
+ *
+ * @see org.springframework.fu.jafu.Jafu#webApplication(java.util.function.Consumer)
+ * @see WebFluxServerDsl#include(RouterFunction)
+ * @see WebFluxServerDsl#codecs(Consumer)
+ * @see WebFluxServerDsl#mustache()
  * @author Sebastien Deleuze
- * @see org.springframework.fu.jafu.JafuApplication#webApplication(Consumer)
  */
 public class WebFluxServerDsl extends AbstractDsl {
 
@@ -71,11 +83,6 @@ public class WebFluxServerDsl extends AbstractDsl {
 
 	/**
 	 * Define the underlying engine used.
-	 *
-	 * @see #netty
-	 * @see #tomcat
-	 * @see #jetty
-	 * @see #undertow
 	 */
 	public WebFluxServerDsl engine(ConfigurableReactiveWebServerFactory engine) {
 		this.engine = engine;
@@ -95,7 +102,7 @@ public class WebFluxServerDsl extends AbstractDsl {
 	}
 
 	/**
-	 * Import {@link RouterFunction} created via {@link RouterFunctions.Builder}.
+	 * Include {@link RouterFunction} created via {@link RouterFunctions.Builder}.
 	 */
 	public WebFluxServerDsl include(RouterFunction router) {
 		context.registerBean(uniqueBeanName(RouterFunctionDsl.class.getName(), context), RouterFunction.class, () -> router);
@@ -104,11 +111,6 @@ public class WebFluxServerDsl extends AbstractDsl {
 
 	/**
 	 * Configure codecs via a [dedicated DSL][WebFluxServerCodecDsl].
-	 * @see WebFluxCodecDsl#resource
-	 * @see WebFluxCodecDsl#string
-	 * @see WebFluxCodecDsl#protobuf
-	 * @see WebFluxCodecDsl#form
-	 * @see WebFluxCodecDsl#multipart
 	 * @see WebFluxServerCodecDsl#jackson
 	 */
 	public WebFluxServerDsl codecs(Consumer<WebFluxServerCodecDsl> init) {
@@ -118,11 +120,20 @@ public class WebFluxServerDsl extends AbstractDsl {
 	}
 
 	/**
+	 * Define a request filter for this server
+	 */
+	public WebFluxServerDsl filter(WebFilter filter) {
+		context.registerBean(uniqueBeanName(RouterFunctionDsl.class.getName(), context), WebFilter.class, () -> filter);
+		return this;
+	}
+
+	/**
 	 * @see #mustache(Consumer)
 	 */
 	public WebFluxServerDsl mustache() {
 		return mustache(dsl -> {});
 	}
+
 	/**
 	 * Configure Mustache view resolver.
 	 *
@@ -134,37 +145,8 @@ public class WebFluxServerDsl extends AbstractDsl {
 	}
 
 	/**
-	 * Netty engine.
-	 * @see #engine
+	 * Enable an external codec.
 	 */
-	public ConfigurableReactiveWebServerFactory netty() {
-		return new NettyDelegate().get();
-	}
-
-	/**
-	 * Tomcat engine.
-	 * @see #engine
-	 */
-	public ConfigurableReactiveWebServerFactory tomcat() {
-		return new TomcatDelegate().get();
-	}
-
-	/**
-	 * Jetty engine.
-	 * @see #engine
-	 */
-	public ConfigurableReactiveWebServerFactory jetty() {
-		return new JettyDelegate().get();
-	}
-
-	/**
-	 * Undertow engine.
-	 * @see #engine
-	 */
-	public ConfigurableReactiveWebServerFactory undertow() {
-		return new UndertowDelegate().get();
-	}
-
 	@Override
 	public WebFluxServerDsl enable(ApplicationContextInitializer<GenericApplicationContext> dsl) {
 		return (WebFluxServerDsl) super.enable(dsl);
@@ -175,7 +157,7 @@ public class WebFluxServerDsl extends AbstractDsl {
 		super.initialize(context);
 		this.dsl.accept(this);
 		if (engine == null) {
-			engine = netty();
+			engine = new NettyDelegate().get();
 		}
 		engine.setPort(port);
 
@@ -187,9 +169,13 @@ public class WebFluxServerDsl extends AbstractDsl {
 			throw new IllegalStateException("Only one server per application is supported");
 		}
 		new ReactiveWebServerInitializer(serverProperties, resourceProperties, webFluxProperties, engine).initialize(context);
+
 	}
 
-	static public class WebFluxServerCodecDsl extends AbstractDsl implements WebFluxCodecDsl {
+	/**
+	 * Jafu DSL for WebFlux server codecs.
+	 */
+	static public class WebFluxServerCodecDsl extends AbstractDsl {
 
 		private final Consumer<WebFluxServerCodecDsl> dsl;
 
@@ -208,42 +194,66 @@ public class WebFluxServerDsl extends AbstractDsl {
 			this.dsl.accept(this);
 		}
 
-		@Override
+		/**
+		 * Enable {@link org.springframework.core.codec.CharSequenceEncoder} and {@link org.springframework.core.codec.StringDecoder}
+		 */
 		public WebFluxServerCodecDsl string() {
 			new StringCodecInitializer(false).initialize(context);
 			return this;
 		}
 
-		@Override
+		/**
+		 * Enable {@link org.springframework.http.codec.ResourceHttpMessageWriter} and {@link org.springframework.core.codec.ResourceDecoder}
+		 */
 		public WebFluxServerCodecDsl resource() {
 			new ResourceCodecInitializer(false).initialize(context);
 			return this;
 		}
 
-		@Override
+		/**
+		 * Enable {@link org.springframework.http.codec.protobuf.ProtobufEncoder} and {@link org.springframework.http.codec.protobuf.ProtobufDecoder}
+		 *
+		 * This codec requires Protobuf 3 or higher with the official `com.google.protobuf:protobuf-java` dependency, and
+		 * supports `application/x-protobuf` and `application/octet-stream`.
+		 */
 		public WebFluxServerCodecDsl protobuf() {
 			new ProtobufCodecInitializer(false).initialize(context);
 			return this;
 		}
 
-		@Override
+		/**
+		 * Enable {@link org.springframework.http.codec.FormHttpMessageWriter} and {@link org.springframework.http.codec.FormHttpMessageReader}
+		 */
 		public WebFluxServerCodecDsl form() {
 			new FormCodecInitializer(false).initialize(context);
 			return this;
 		}
 
-		@Override
+		/**
+		 * Enable {@link org.springframework.http.codec.multipart.MultipartHttpMessageWriter} and
+		 * {@link org.springframework.http.codec.multipart.MultipartHttpMessageReader}
+		 *
+		 * This codec requires Synchronoss NIO Multipart library via  the {@code org.synchronoss.cloud:nio-multipart-parser} dependency.
+		 */
 		public WebFluxServerCodecDsl multipart() {
 			new MultipartCodecInitializer(false).initialize(context);
 			return this;
 		}
 
-		@Override
+		/**
+		 * @see #jackson(Consumer)
+		 */
 		public WebFluxServerCodecDsl jackson() {
 			return jackson(dsl -> {});
 		}
 
-		@Override
+		/**
+		 * Register an `ObjectMapper` bean and configure a [Jackson](https://github.com/FasterXML/jackson)
+		 * JSON codec on WebFlux server via a [dedicated DSL][JacksonDsl].
+		 *
+		 * Required dependencies can be retrieve using `org.springframework.boot:spring-boot-starter-json`
+		 * (included by default in `spring-boot-starter-webflux`).
+		 */
 		public WebFluxServerCodecDsl jackson(Consumer<JacksonDsl> dsl) {
 			new JacksonDsl(false, dsl).initialize(context);
 			return this;
@@ -257,24 +267,4 @@ public class WebFluxServerDsl extends AbstractDsl {
 		}
 	}
 
-	private static class TomcatDelegate implements Supplier<ConfigurableReactiveWebServerFactory> {
-		@Override
-		public ConfigurableReactiveWebServerFactory get() {
-			return new TomcatReactiveWebServerFactory();
-		}
-	}
-
-	private static class JettyDelegate implements Supplier<ConfigurableReactiveWebServerFactory> {
-		@Override
-		public ConfigurableReactiveWebServerFactory get() {
-			return new JettyReactiveWebServerFactory();
-		}
-	}
-
-	private static class UndertowDelegate implements Supplier<ConfigurableReactiveWebServerFactory> {
-		@Override
-		public ConfigurableReactiveWebServerFactory get() {
-			return new UndertowReactiveWebServerFactory();
-		}
-	}
 }

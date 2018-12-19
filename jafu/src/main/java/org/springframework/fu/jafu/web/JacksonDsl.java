@@ -20,6 +20,14 @@ import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.fu.jafu.AbstractDsl;
 
+/**
+ * Jafu DSL for <a href="https://github.com/FasterXML/jackson">Jackson</a> serialization library.
+ *
+ * Required dependencies can be retrieve using {@code org.springframework.boot:spring-boot-starter-json}7444444444444444444444444444444444
+ * (included by default in {@code spring-boot-starter-webflux}).
+ *
+ * @author Sebastien Deleuze
+ */
 public class JacksonDsl extends AbstractDsl {
 
 	private final boolean isClientCodec;

@@ -8,12 +8,25 @@ tasks.compileJava {
 	targetCompatibility = "1.8"
 }
 
+tasks.withType<Javadoc> {
+	with (options as StandardJavadocDocletOptions) {
+		links = listOf(
+				"https://docs.spring.io/spring-framework/docs/5.1.x/javadoc-api/",
+				"https://docs.spring.io/spring-boot/docs/2.1.x/api/"
+		)
+		addStringOption("Xdoclint:none", "-quiet")
+		memberLevel = org.gradle.external.javadoc.JavadocMemberLevel.PROTECTED
+	}
+}
+
 dependencies {
 	api("org.springframework.boot:spring-boot")
 	implementation(project(":autoconfigure-adapter"))
 	compileOnly("org.springframework:spring-webflux")
 	compileOnly("com.fasterxml.jackson.core:jackson-databind")
+	compileOnly("org.springframework.data:spring-data-mongodb")
 	compileOnly("de.flapdoodle.embed:de.flapdoodle.embed.mongo")
+	compileOnly("org.springframework.data:spring-data-r2dbc:1.0.0.M1")
 
 	testImplementation("org.junit.jupiter:junit-jupiter-api")
 	testImplementation("org.springframework:spring-test")

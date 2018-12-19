@@ -1,7 +1,7 @@
 package org.springframework.fu.jafu.web;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.fu.jafu.JafuApplication.webApplication;
+import static org.springframework.fu.jafu.Jafu.webApplication;
 import static org.springframework.fu.jafu.web.WebFluxClientDsl.client;
 import static org.springframework.fu.jafu.web.WebFluxServerDsl.server;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;

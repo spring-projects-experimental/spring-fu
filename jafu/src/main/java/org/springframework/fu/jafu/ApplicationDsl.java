@@ -6,11 +6,12 @@ import org.springframework.boot.autoconfigure.context.MessageSourceInitializer;
 import org.springframework.context.support.GenericApplicationContext;
 
 /**
- * Jafu DSL for application configuration.
+ * Jafu top level DSL for application which allows to configure a Spring Boot
+ * application using Jafu and functional bean registration.
  *
  * @author Sebastien Deleuze
- * @see JafuApplication#application
- * @see JafuApplication#webApplication
+ * @see org.springframework.fu.jafu.Jafu#application
+ * @see org.springframework.fu.jafu.Jafu#webApplication
  */
 public class ApplicationDsl extends ConfigurationDsl {
 

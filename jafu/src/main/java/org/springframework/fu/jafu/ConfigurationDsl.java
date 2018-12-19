@@ -14,6 +14,8 @@ import org.springframework.context.support.GenericApplicationContext;
 /**
  * Jafu DSL for modular configuration that can be imported in the application.
  *
+ * Usage: {@code Consumer<ConfigurationDsl> conf = c -> c.beans(b -> b.bean(Foo.class));}
+ *
  * @see ApplicationDsl#enable(ApplicationContextInitializer)
  * @see ApplicationDsl#enable(Consumer)
  *

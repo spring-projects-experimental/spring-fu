@@ -1,7 +1,7 @@
 package org.springframework.fu.jafu;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.fu.jafu.JafuApplication.application;
+import static org.springframework.fu.jafu.Jafu.application;
 
 import org.junit.jupiter.api.Test;
 

@@ -8,6 +8,15 @@ import org.springframework.boot.autoconfigure.mustache.MustacheReactiveWebInitia
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.fu.jafu.AbstractDsl;
 
+/**
+ * Jafu DSL for Mustache template engine.
+ *
+ * Configure a <a href="https://github.com/samskivert/jmustache">Mustache</a> view resolver.
+ *
+ * Required dependencies can be retrieve using {@code org.springframework.boot:spring-boot-starter-mustache}.
+ *
+ * @author Sebastien Deleuze
+ */
 public class MustacheDsl extends AbstractDsl {
 
 	private final Consumer<MustacheDsl> dsl;
@@ -18,11 +27,17 @@ public class MustacheDsl extends AbstractDsl {
 		this.dsl = dsl;
 	}
 
+	/**
+	 * Prefix to apply to template names.
+	 */
 	public MustacheDsl prefix(String prefix) {
 		this.properties.setPrefix(prefix);
 		return this;
 	}
 
+	/**
+	 * Suffix to apply to template names.
+	 */
 	public MustacheDsl suffix(String suffix) {
 		this.properties.setSuffix(suffix);
 		return this;

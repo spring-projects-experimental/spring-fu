@@ -10,6 +10,9 @@ import org.springframework.core.env.Environment;
 /**
  * Base class for Jafu DSL.
  *
+ * Make sure to invoke {@code super.initialize(context)} from {@link #initialize(GenericApplicationContext)} in
+ * inherited classes to get the context initialized.
+ *
  * @author Sebastien Deleuze
  */
 public abstract class AbstractDsl implements ApplicationContextInitializer<GenericApplicationContext> {
@@ -17,13 +20,17 @@ public abstract class AbstractDsl implements ApplicationContextInitializer<Gener
 	protected GenericApplicationContext context;
 
 	/**
-	 * Get a reference to the bean by type or type + name with the syntax
+	 * Get a reference to the bean by type.
 	 * @param beanClass type the bean must match, can be an interface or superclass
 	 */
 	public <T> T ref(Class<T> beanClass) {
 		return this.context.getBean(beanClass);
 	}
 
+	/**
+	 * Get a reference to the bean by type + name.
+	 * @param beanClass type the bean must match, can be an interface or superclass
+	 */
 	public <T> T ref(Class<T> beanClass, String name) {
 		return this.context.getBean(name, beanClass);
 	}
@@ -51,9 +58,6 @@ public abstract class AbstractDsl implements ApplicationContextInitializer<Gener
 		return this;
 	}
 
-	/**
-	 * Make sure to invoke super.initialize(context) from inherited classes to get context initialized.
-	 */
 	@Override
 	public void initialize(GenericApplicationContext context) {
 		this.context = context;

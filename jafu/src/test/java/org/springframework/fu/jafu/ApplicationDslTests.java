@@ -2,7 +2,7 @@ package org.springframework.fu.jafu;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.springframework.fu.jafu.JafuApplication.application;
+import static org.springframework.fu.jafu.Jafu.application;
 
 import java.util.function.Consumer;
 
