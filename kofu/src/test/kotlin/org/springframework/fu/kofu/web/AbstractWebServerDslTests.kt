@@ -22,7 +22,6 @@ import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.getBean
 import org.springframework.boot.logging.LogLevel
 import org.springframework.boot.web.reactive.server.ConfigurableReactiveWebServerFactory
-import org.springframework.fu.kofu.mongo.embedded
 import org.springframework.fu.kofu.mongo.mongodb
 import org.springframework.fu.kofu.webApplication
 import org.springframework.http.HttpStatus.NO_CONTENT

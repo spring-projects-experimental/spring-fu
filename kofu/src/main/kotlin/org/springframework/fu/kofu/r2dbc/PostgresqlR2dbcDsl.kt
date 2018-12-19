@@ -9,7 +9,7 @@ import org.springframework.fu.kofu.ConfigurationDsl
 /**
  * Kofu DSL for R2DBC Postgresql configuration.
  *
- * Enable and [configure][PostgresqlR2dbcDsl] R2DBC support by registering a [org.springframework.data.r2dbc.function.DatabaseClient]
+ * Enable and configure R2DBC support by registering a [org.springframework.data.r2dbc.function.DatabaseClient]
  * (or a [org.springframework.data.r2dbc.function.CoDatabaseClient] for Coroutines) bean.
  *
  * Required dependencies are `io.r2dbc:r2dbc-postgresql` and `org.springframework.data:spring-data-r2dbc`.
@@ -37,7 +37,7 @@ class PostgresqlR2dbcDsl(private val init: PostgresqlR2dbcDsl.() -> Unit) : Abst
     var port: Int = 5432
 
     /**
-     * Configure the database name, by default set to `postgres`.
+     * Configure the database, by default set to `postgres`.
      */
     var database: String = "postgres"
 

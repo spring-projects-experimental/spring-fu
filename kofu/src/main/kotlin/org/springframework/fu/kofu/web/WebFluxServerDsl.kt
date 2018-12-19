@@ -34,12 +34,11 @@ import org.springframework.web.server.WebFilter
  * Required dependencies can be retrieve using `org.springframework.boot:spring-boot-starter-webflux`.
  *
  * @sample org.springframework.fu.kofu.samples.router
+ * @see org.springframework.fu.kofu.webApplication
  * @see WebFluxServerDsl.include
  * @see WebFluxServerDsl.codecs
  * @see WebFluxServerDsl.cors
  * @see WebFluxServerDsl.mustache
- *
- * @see org.springframework.fu.kofu.webApplication
  * @author Sebastien Deleuze
  */
 open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit): AbstractDsl() {
@@ -220,7 +219,7 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit): Abst
 
         /**
          * Register an `ObjectMapper` bean and configure a [Jackson](https://github.com/FasterXML/jackson)
-         * JSON codec on WebFlux client via a [dedicated DSL][JacksonDsl].
+         * JSON codec on WebFlux server via a [dedicated DSL][JacksonDsl].
          *
          * Required dependencies can be retrieve using `org.springframework.boot:spring-boot-starter-json`
          * (included by default in `spring-boot-starter-webflux`).

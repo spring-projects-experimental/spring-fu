@@ -1,6 +1,6 @@
 package com.sample;
 
-import static org.springframework.fu.jafu.JafuApplication.webApplication;
+import static org.springframework.fu.jafu.Jafu.webApplication;
 import static org.springframework.fu.jafu.web.WebFluxServerDsl.server;
 import static org.springframework.web.reactive.function.server.ServerResponse.*;
 

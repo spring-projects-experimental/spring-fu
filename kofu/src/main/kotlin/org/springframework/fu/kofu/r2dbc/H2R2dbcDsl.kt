@@ -27,7 +27,8 @@ class H2R2dbcDsl(private val init: H2R2dbcDsl.() -> Unit) : AbstractDsl() {
     var coroutines: Boolean = false
 
     /**
-     * Configure the database url. Includes everything after the `jdbc:h2:` prefix.
+     * Configure the database url, `mem:test;DB_CLOSE_DELAY=-1` by default.
+     * Includes everything after the `jdbc:h2:` prefix.
      * For in-memory and file-based databases, must include the proper prefix (e.g. `file:` or `mem:`).
      *
      * See [http://www.h2database.com/html/features.html#database_url](http://www.h2database.com/html/features.html#database_url) for more details.

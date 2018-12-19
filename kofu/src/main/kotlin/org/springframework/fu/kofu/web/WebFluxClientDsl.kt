@@ -10,7 +10,7 @@ import org.springframework.web.reactive.function.client.WebClient
 /**
  * Kofu DSL for WebFlux client.
  *
- * Register a [WebClient.builder] bean via a [dedicated DSL][WebFluxClientDsl].
+ * Register a [WebClient.Builder] bean via a [dedicated DSL][WebFluxClientDsl].
  *
  * When no codec is configured, `String` and `Resource` ones are configured by default.
  * When a `codecs { }` block is declared, the one specified are configured by default.

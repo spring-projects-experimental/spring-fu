@@ -26,6 +26,8 @@ internal annotation class KofuMarker
 /**
  * Kofu DSL base class.
  *
+ * Make sure to invoke `super.initialize(context)` from [initialize] in inherited classes to get the context initialized.
+ *
  * @author Sebastien Deleuze
  */
 @KofuMarker

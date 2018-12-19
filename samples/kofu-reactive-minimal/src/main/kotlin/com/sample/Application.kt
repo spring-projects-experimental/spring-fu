@@ -1,6 +1,5 @@
 package com.sample
 
-import org.springframework.fu.kofu.web.jackson
 import org.springframework.fu.kofu.web.server
 import org.springframework.fu.kofu.webApplication
 

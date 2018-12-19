@@ -5,12 +5,6 @@ dependencies {
 	api("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
 }
 
-repositories {
-	maven("https://repo.spring.io/snapshot")
-	maven("https://repo.spring.io/milestone")
-}
-
-
 publishing {
 	publications {
 		create(project.name, MavenPublication::class.java) {

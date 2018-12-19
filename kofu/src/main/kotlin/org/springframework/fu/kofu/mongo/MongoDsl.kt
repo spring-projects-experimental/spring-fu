@@ -32,7 +32,7 @@ import org.springframework.fu.kofu.ConfigurationDsl
 /**
  * Kofu DSL for MongoDB configuration.
  *
- * Enable and [configure][MongoDsl] Reactive MongoDB support by registering a [org.springframework.data.mongodb.core.ReactiveMongoTemplate].
+ * Enable and configure Reactive MongoDB support by registering a [org.springframework.data.mongodb.core.ReactiveMongoTemplate].
  *
  * Required dependencies can be retrieve using `org.springframework.boot:spring-boot-starter-data-mongodb-reactive`.
  *
@@ -64,9 +64,9 @@ open class MongoDsl(
 		}
 
 	/**
-	 * Configure the database url. By default set to `mongodb://localhost/test`.
+	 * Configure the database uri. By default set to `mongodb://localhost/test`.
 	 */
-	var uri: String? = "mongodb://localhost/test"
+	var uri: String? = MongoProperties.DEFAULT_URI
 		set(value) {
 			properties.uri = value
 		}
