@@ -4,7 +4,7 @@
 a|**Feature** |**Status** |**Related issue**
 
 a|
-http://repo.spring.io/snapshot/org/springframework/fu/spring-fu-kofu/0.0.3.BUILD-SNAPSHOT/spring-fu-kofu-0.0.3.BUILD-SNAPSHOT-javadoc.jar!/kofu/org.springframework.fu.kofu/application.html[Kofu] and
+https://github.com/spring-projects/spring-fu/tree/master/kofu[Kofu] and
 https://github.com/spring-projects/spring-fu/tree/master/jafu[Jafu] configuration DSL
 a|
 Incubating in Spring Fu
@@ -13,7 +13,7 @@ Slightly related: https://github.com/spring-projects/spring-boot/issues/8115[spr
 To be created in Spring Boot issue tracker
 
 a|
-More efficient Spring Boot startup via https://github.com/spring-projects/spring-fu/tree/master/autoconfigure-adapter[functional bean registration]
+More efficient Spring Boot startup via explicit configuration and https://github.com/spring-projects/spring-fu/tree/master/autoconfigure-adapter[functional bean registration]
 a|
 Manually created in Spring Fu
 
@@ -84,6 +84,5 @@ a|
 Not started yet
 a|
 https://github.com/spring-projects/spring-restdocs/issues/213[spring-restdocs#213]
-
 
 |=====
