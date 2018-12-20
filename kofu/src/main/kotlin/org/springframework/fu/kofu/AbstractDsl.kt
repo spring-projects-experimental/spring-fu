@@ -60,6 +60,16 @@ abstract class AbstractDsl : ApplicationContextInitializer<GenericApplicationCon
 		else -> context.getBean(name, T::class.java)
 	}
 
+	/**
+	 * Take in account functional properties enclosed in the provided lambda only when the
+	 * specified profile is active.
+	 */
+	fun profile(profile: String, block: () -> Unit) {
+		if (env.activeProfiles.contains(profile)) {
+			block()
+		}
+	}
+
 	override fun initialize(context: GenericApplicationContext) {
 		this.context = context
 	}
