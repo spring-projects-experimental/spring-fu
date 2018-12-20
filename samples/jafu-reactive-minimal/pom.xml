@@ -5,7 +5,7 @@
 
 	<groupId>org.springframework.fu</groupId>
 	<artifactId>jafu-reactive-minimal</artifactId>
-	<version>0.0.3-SNAPSHOT</version>
+	<version>0.0.4.BUILD-SNAPSHOT-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>jafu-reactive-minimal</name>
@@ -29,7 +29,7 @@
 		<dependency>
 			<groupId>org.springframework.fu</groupId>
 			<artifactId>spring-fu-jafu</artifactId>
-			<version>0.0.3</version>
+			<version>0.0.4.BUILD-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
