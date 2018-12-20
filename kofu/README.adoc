@@ -45,7 +45,7 @@ val app = webApplication { <19>
 	listener<SampleEvent> { } <22>
 	profile("sample"){ } <23>
 	enable(dataConf) <24>
-    enable(webConf) <24>
+	enable(webConf) <24>
 }
 
 fun main() {
