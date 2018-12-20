@@ -10,7 +10,7 @@ instead of JavaConfig.
 
 == API reference
 
-An overview of Kofu DSL is provided bellow with the related {kofu-kdoc-url}/kofu/org.springframework.fu.kofu/index.html[API documentation].
+An overview of Kofu DSL is provided bellow with the related {kofu-kdoc-url}/kofu/index.html[API documentation].
 
 ```kotlin
 val dataConf = configuration { <1>
