@@ -109,4 +109,23 @@ public class DemoApplication {
 }
 ```
 
-You can also have a look to the https://github.com/spring-projects/spring-fu/tree/master/samples/[sample applications].
+== Samples
+
+=== jafu-reactive-minimal
+
+https://github.com/spring-projects/spring-fu/tree/master/samples/jafu-reactive-minimal[Browse source] |
+http://repo.spring.io/snapshot/org/springframework/fu/spring-fu-samples-jafu-reactive-minimal/{spring-fu-version}/spring-fu-samples-jafu-reactive-minimal-{spring-fu-version}.zip[Download]
+
+This is a sample project for a Spring Boot Reactive web application with Jafu configuration which provides a
+`http://localhost:8080/` endpoint that displays "Hello world!" and an `http://localhost:8080/api` with a JSON
+endpoint.
+
+You can run compile and run it as a https://github.com/oracle/graal/tree/master/substratevm[Graal native image]
+(GraalVM 1.0 RC10+) by running `./build.sh` then `./com.sample.application`.
+
+=== jafu-reactive-r2dbc
+
+https://github.com/spring-projects/spring-fu/tree/master/samples/jafu-reactive-r2dbc[Browse source] |
+http://repo.spring.io/snapshot/org/springframework/fu/spring-fu-samples-jafu-reactive-r2dbc/{spring-fu-version}/spring-fu-samples-jafu-reactive-r2dbc-{spring-fu-version}.zip[Download]
+
+This is a sample project for a Spring Boot Reactive web application with Jafu configuration and a R2DBC backend.

@@ -75,7 +75,7 @@ publishing {
 			artifactId = "spring-fu-samples-jafu-reactive-minimal"
 			artifact(task<Zip>("jafuReactiveMinimalSampleZip") {
 				from("samples/jafu-reactive-minimal") {
-					exclude("build", "target", ".gradle", ".idea", "out", "*.iml")
+					exclude("build", "com.sample.application", "target", ".gradle", ".idea", "out", "*.iml")
 				}
 				destinationDir = file("$buildDir/dist")
 				into("jafu-reactive-minimal")
@@ -88,23 +88,10 @@ publishing {
 			artifactId = "spring-fu-samples-jafu-reactive-r2dbc"
 			artifact(task<Zip>("jafuReactiveR2dbcSampleZip") {
 				from("samples/jafu-reactive-r2dbc") {
-					exclude("build", "target", "com.sample.application", ".gradle", ".idea", "out", "*.iml")
+					exclude("build", "target", ".gradle", ".idea", "out", "*.iml")
 				}
 				destinationDir = file("$buildDir/dist")
 				into("jafu-reactive-r2dbc")
-				setExecutablePermissions()
-			})
-		}
-
-		create<MavenPublication>("kofu-coroutines-minimal") {
-			groupId = "org.springframework.fu"
-			artifactId = "spring-fu-samples-kofu-coroutines-minimal"
-			artifact(task<Zip>("kofuCoroutinesMinimalSampleZip") {
-				from("samples/kofu-coroutines-minimal") {
-					exclude("build", ".gradle", ".idea", "out", "*.iml")
-				}
-				destinationDir = file("$buildDir/dist")
-				into("kofu-coroutines-minimal")
 				setExecutablePermissions()
 			})
 		}

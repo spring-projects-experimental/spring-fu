@@ -215,5 +215,14 @@
 		"allPublicMethods": true,
 		"allDeclaredMethods": true,
 		"allDeclaredFields": true
+	},
+	{
+		"name": "java.util.logging.LogManager",
+		"allDeclaredConstructors" : true,
+		"allPublicConstructors" : true,
+		"allPublicFields": true,
+		"allPublicMethods": true,
+		"allDeclaredMethods": true,
+		"allDeclaredFields": true
 	}
 ]

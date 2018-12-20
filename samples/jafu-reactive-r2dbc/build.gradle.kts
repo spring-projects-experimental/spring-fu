@@ -5,8 +5,8 @@ plugins {
 }
 
 java {
-	sourceCompatibility = JavaVersion.VERSION_1_8 // For GraalVM compat
-	targetCompatibility = JavaVersion.VERSION_1_8 // For GraalVM compat
+	sourceCompatibility = JavaVersion.VERSION_11
+	targetCompatibility = JavaVersion.VERSION_11
 }
 
 dependencies {
@@ -33,9 +33,4 @@ repositories {
 configurations.all {
 	exclude(module = "javax.annotation-api")
 	exclude(module = "hibernate-validator")
-	if (project.hasProperty("graal")) {
-		exclude(module = "netty-transport-native-epoll")
-		exclude(module = "netty-transport-native-unix-common")
-		exclude(module = "netty-codec-http2")
-	}
 }

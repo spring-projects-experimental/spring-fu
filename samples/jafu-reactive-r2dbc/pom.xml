@@ -5,7 +5,7 @@
 
 	<groupId>org.springframework.fu</groupId>
 	<artifactId>jafu-reactive-minimal</artifactId>
-	<version>0.0.3-SNAPSHOT</version>
+	<version>0.0.3.BUILD-SNAPSHOT-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>jafu-reactive-r2dbc</name>

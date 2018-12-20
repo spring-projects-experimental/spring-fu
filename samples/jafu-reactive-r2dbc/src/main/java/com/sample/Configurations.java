@@ -22,7 +22,7 @@ public abstract class Configurations {
 					server.port(8080);
 				}
 				server.router(router -> {
-					UserHandler userHandler = conf.ref(UserHandler.class);
+					var userHandler = conf.ref(UserHandler.class);
 					router.GET("/", userHandler::listApi);
 				}).codecs(codecs -> codecs.string().jackson());
 			}));

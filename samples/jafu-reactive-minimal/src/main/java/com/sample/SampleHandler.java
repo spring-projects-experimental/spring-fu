@@ -18,4 +18,8 @@ public class SampleHandler {
 	public Mono<ServerResponse> hello(ServerRequest request) {
 		return ok().syncBody(sampleService.generateMessage());
 	}
+
+	public Mono<ServerResponse> json(ServerRequest request) {
+		return ok().syncBody(new Sample(sampleService.generateMessage()));
+	}
 }

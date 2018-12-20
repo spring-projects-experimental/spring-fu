@@ -24,6 +24,13 @@ class IntegrationTests {
 				.expectBody<String>().isEqualTo("Hello world!")
 	}
 
+	@Test
+	fun `Request API endpoint`() {
+		client.get().uri("/api").exchange()
+				.expectStatus().is2xxSuccessful
+				.expectBody<String>().isEqualTo("{\"message\":\"Hello world!\"}")
+	}
+
 	@AfterAll
 	fun afterAll() {
 		context.close()

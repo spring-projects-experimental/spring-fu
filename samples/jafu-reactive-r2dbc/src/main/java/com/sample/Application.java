@@ -14,9 +14,6 @@ public abstract class Application {
 	);
 
 	public static void main (String[] args) {
-		if (System.getProperty("org.graalvm.nativeimage.imagecode") != null) {
-			System.setProperty("org.springframework.boot.logging.LoggingSystem", "org.springframework.boot.logging.java.JavaLoggingSystem");
-		}
 		app.run(args);
 	}
 }

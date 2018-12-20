@@ -9,13 +9,13 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 
 public class IntegrationTests {
 
-	private WebTestClient client = WebTestClient.bindToServer().baseUrl("http://localhost:8080").build();
+	private WebTestClient client = WebTestClient.bindToServer().baseUrl("http://localhost:8181").build();
 
 	private ConfigurableApplicationContext context;
 
 	@BeforeAll
 	public void beforeAll() {
-		context = Application.app.run();
+		context = Application.app.run("test");
 	}
 
 	@Test
@@ -23,6 +23,13 @@ public class IntegrationTests {
 		client.get().uri("/").exchange()
 				.expectStatus().is2xxSuccessful()
 				.expectBody(String.class).isEqualTo("Hello world!");
+	}
+
+	@Test
+	public void requestApiEndpoint() {
+		client.get().uri("/api").exchange()
+				.expectStatus().is2xxSuccessful()
+				.expectBody(String.class).isEqualTo("{\"message\":\"Hello world!\"}");
 	}
 
 	@AfterAll

@@ -5,8 +5,8 @@ plugins {
 }
 
 java {
-	sourceCompatibility = JavaVersion.VERSION_1_8
-	targetCompatibility = JavaVersion.VERSION_1_8
+	sourceCompatibility = JavaVersion.VERSION_1_8 // For GraalVM compat
+	targetCompatibility = JavaVersion.VERSION_1_8 // For GraalVM compat
 }
 
 dependencies {
@@ -28,4 +28,14 @@ repositories {
 	mavenCentral()
 	maven("https://repo.spring.io/milestone")
 	maven("https://repo.spring.io/snapshot")
+}
+
+configurations.all {
+	exclude(module = "javax.annotation-api")
+	exclude(module = "hibernate-validator")
+	if (project.hasProperty("graal")) {
+		exclude(module = "netty-transport-native-epoll")
+		exclude(module = "netty-transport-native-unix-common")
+		exclude(module = "netty-codec-http2")
+	}
 }

@@ -8,5 +8,5 @@ target/
 *.ipr
 out/
 samples/kofu-reactive-minimal/com.sample.applicationkt
-samples/jafu-reactive-r2dbc/com.sample.application
+samples/jafu-reactive-minimal/com.sample.application
 .zip
