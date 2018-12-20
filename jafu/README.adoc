@@ -1,5 +1,5 @@
-:spring-fu-version: 0.0.3.BUILD-SNAPSHOT
-:jafu-javadoc-url: http://repo.spring.io/snapshot/org/springframework/fu/spring-fu-jafu/{spring-fu-version}/spring-fu-jafu-{spring-fu-version}-javadoc.jar!
+:spring-fu-version: 0.0.3
+:jafu-javadoc-url: http://repo.spring.io/milestone/org/springframework/fu/spring-fu-jafu/{spring-fu-version}/spring-fu-jafu-{spring-fu-version}-javadoc.jar!
 :framework-javadoc-url: https://docs.spring.io/spring-framework/docs/5.1.x/javadoc-api
 = Jafu DSL for Spring Boot
 
@@ -114,7 +114,7 @@ public class DemoApplication {
 === jafu-reactive-minimal
 
 https://github.com/spring-projects/spring-fu/tree/master/samples/jafu-reactive-minimal[Browse source] |
-http://repo.spring.io/snapshot/org/springframework/fu/spring-fu-samples-jafu-reactive-minimal/{spring-fu-version}/spring-fu-samples-jafu-reactive-minimal-{spring-fu-version}.zip[Download]
+http://repo.spring.io/milestone/org/springframework/fu/spring-fu-samples-jafu-reactive-minimal/{spring-fu-version}/spring-fu-samples-jafu-reactive-minimal-{spring-fu-version}.zip[Download]
 
 This is a sample project for a Spring Boot Reactive web application with Jafu configuration which provides a
 `http://localhost:8080/` endpoint that displays "Hello world!" and an `http://localhost:8080/api` with a JSON
@@ -126,6 +126,6 @@ You can run compile and run it as a https://github.com/oracle/graal/tree/master/
 === jafu-reactive-r2dbc
 
 https://github.com/spring-projects/spring-fu/tree/master/samples/jafu-reactive-r2dbc[Browse source] |
-http://repo.spring.io/snapshot/org/springframework/fu/spring-fu-samples-jafu-reactive-r2dbc/{spring-fu-version}/spring-fu-samples-jafu-reactive-r2dbc-{spring-fu-version}.zip[Download]
+http://repo.spring.io/milestone/org/springframework/fu/spring-fu-samples-jafu-reactive-r2dbc/{spring-fu-version}/spring-fu-samples-jafu-reactive-r2dbc-{spring-fu-version}.zip[Download]
 
 This is a sample project for a Spring Boot Reactive web application with Jafu configuration and a R2DBC backend.
