@@ -92,14 +92,15 @@ package com.sample
 import org.springframework.fu.kofu.webApplication
 
 val app = webApplication {
-server {
-	router {
-		GET("/") { ok().syncBody("Hello world!") }
+	server {
+		router {
+			GET("/") { ok().syncBody("Hello world!") }
+		}
 	}
 }
-}
+
 fun main() {
-app.run()
+	app.run()
 }
 ```
 
