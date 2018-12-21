@@ -6,8 +6,8 @@ Spring Fu is an incubator for new Spring features related to explicit configurat
 
 While regular Spring Boot applications are configured using annotations, conventions and automatic configuration based
 on conditions like "Is this class available in the classpath?", Spring Fu provides an explicit way of configuring
-Spring Boot applications with a https://github.com/spring-projects/spring-fu/tree/master/kofu[Kotlin DSL (Kofu)]
-or a https://github.com/spring-projects/spring-fu/tree/master/jafu[Java DSL (Jafu)]
+Spring Boot applications with a https://github.com/spring-projects/spring-fu/tree/master/kofu/README.adoc[Kotlin DSL (Kofu)]
+or a https://github.com/spring-projects/spring-fu/blob/master/jafu/README.adoc[Java DSL (Jafu)]
 using functional bean definitions for both Spring Boot infrastructure and application code.
 
 It has following characteristics:
@@ -33,8 +33,8 @@ Spring projects like Framework, Boot and Data.
 
 Choose your flavor and follow the documentation:
 
- * https://github.com/spring-projects/spring-fu/tree/master/jafu[Jafu] for Spring Boot applications written in Java
- * https://github.com/spring-projects/spring-fu/tree/master/kofu[Kofu] for Spring Boot applications written in Kotlin
+ * https://github.com/spring-projects/spring-fu/tree/master/kofu/README.adoc[Kofu] for Spring Boot applications written in Kotlin
+ * https://github.com/spring-projects/spring-fu/blob/master/jafu/README.adoc[Jafu] for Spring Boot applications written in Java
 
 == Credits
 
