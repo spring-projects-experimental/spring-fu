@@ -70,7 +70,7 @@ fun main() {
 <16> {kofu-kdoc-url}/kofu/org.springframework.fu.kofu.web/-web-flux-client-dsl/index.html[WebFlux client documentation]
 <17> {kofu-kdoc-url}/kofu/org.springframework.fu.kofu.web/-web-flux-client-dsl/base-url.html[baseUrl documentation]
 <18> {kofu-kdoc-url}/kofu/org.springframework.fu.kofu.web/-web-flux-client-dsl/-web-flux-client-codec-dsl/index.html[codecs documentation]
-<19> {kofu-kdoc-url}/kofu/kofu/org.springframework.fu.kofu/-application-dsl/index.html[application/webApplication documentation]
+<19> {kofu-kdoc-url}/kofu/org.springframework.fu.kofu/-application-dsl/index.html[application/webApplication documentation]
 <20> {kofu-kdoc-url}/kofu/org.springframework.fu.kofu/-logging-dsl/index.html[logging documentation]
 <21> {kofu-kdoc-url}/kofu/org.springframework.fu.kofu/-configuration-dsl/configuration-properties.html[configuration-properties documentation]
 <22> {kofu-kdoc-url}/kofu/org.springframework.fu.kofu/-configuration-dsl/listener.html[listener-properties documentation]
