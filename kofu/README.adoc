@@ -80,12 +80,11 @@ fun main() {
 
 == Getting started
 
-* Create a Spring `2.1.x` project on https://start.spring.io/#!language=kotlin[start.spring.io],
-* Add the Spring milestone and snapshot repositories "https://repo.spring.io/milestone" "https://repo.spring.io/snapshot"
+* Create a Spring `2.1.x` project on https://start.spring.io/#!language=kotlin[start.spring.io] with the "Reactive web" starter
+* Add the Spring milestone repository `https://repo.spring.io/milestone`
 * Add the `org.springframework.fu:spring-fu-kofu:{spring-fu-version}` dependency
-* Add the _Reactive Web_ `org.springframework.boot:spring-boot-starter-webflux` dependency
 * Use latest Kotlin `1.3.x`
-* Modify the generated `*Application.kt` file as following:
+* Modify the generated `DemoApplication.kt` file as following:
 
 ```kotlin
 package com.sample

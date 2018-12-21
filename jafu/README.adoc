@@ -81,10 +81,10 @@ public class Application {
 
 == Getting started
 
- * Create a Spring `2.1.x.RELEASE` project on https://start.spring.io/[start.spring.io],
+ * Create a Spring `2.1.x.RELEASE` project on https://start.spring.io/[start.spring.io] with the "Reactive web" starter
+ * Add the Spring milestone repository `https://repo.spring.io/milestone`
  * Add the `org.springframework.fu:spring-fu-jafu:{spring-fu-version}` dependency
- * Add the _Reactive Web_ `org.springframework.boot:spring-boot-starter-webflux` dependency
- * Modify the generated `*Application.java` file as following:
+ * Modify the generated `DemoApplication.java` file as following:
 
 ```java
 package com.sample;
