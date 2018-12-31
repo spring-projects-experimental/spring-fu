@@ -24,11 +24,15 @@ import org.springframework.boot.logging.LogLevel
 import org.springframework.boot.web.reactive.server.ConfigurableReactiveWebServerFactory
 import org.springframework.fu.kofu.mongo.mongodb
 import org.springframework.fu.kofu.webApplication
-import org.springframework.http.HttpStatus.NO_CONTENT
+import org.springframework.http.HttpStatus.*
 import org.springframework.http.MediaType
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.server.router
+import org.springframework.web.server.ServerWebExchange
+import org.springframework.web.server.WebFilter
+import org.springframework.web.server.WebFilterChain
+import reactor.core.publisher.Mono
 import reactor.test.test
 
 /**
@@ -51,6 +55,21 @@ abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
 	}
 
 	@Test
+	fun `Create an application with a server and a filter`() {
+		val app = webApplication {
+			server {
+				engine = getServerFactory()
+				filter<MyFilter>()
+			}
+		}
+		with(app.run()){
+			val client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:$port").build()
+			client.get().uri("/foo").accept(MediaType.TEXT_PLAIN).exchange().expectStatus().isEqualTo(UNAUTHORIZED)
+			close()
+		}
+	}
+
+	@Test
 	fun `Create and request an endpoint`() {
 		val router = router {
 			GET("/foo") { noContent().build() }
@@ -63,7 +82,7 @@ abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
 		}
 		with(app.run()) {
 			val client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:$port").build()
-			client.get().uri("/foo"). accept(MediaType.TEXT_PLAIN).exchange().expectStatus().is2xxSuccessful
+			client.get().uri("/foo").accept(MediaType.TEXT_PLAIN).exchange().expectStatus().is2xxSuccessful
 			close()
 		}
 	}
@@ -172,6 +191,13 @@ abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
 		context.close()
 		context = app.run()
 		context.close()
+	}
+
+	class MyFilter : WebFilter {
+		override fun filter(exchange: ServerWebExchange, chain: WebFilterChain): Mono<Void> {
+			exchange.response.statusCode = UNAUTHORIZED
+			return Mono.empty()
+		}
 	}
 
 }

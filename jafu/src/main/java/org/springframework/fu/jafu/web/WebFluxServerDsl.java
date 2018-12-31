@@ -122,8 +122,8 @@ public class WebFluxServerDsl extends AbstractDsl {
 	/**
 	 * Define a request filter for this server
 	 */
-	public WebFluxServerDsl filter(WebFilter filter) {
-		context.registerBean(uniqueBeanName(RouterFunctionDsl.class.getName(), context), WebFilter.class, () -> filter);
+	public WebFluxServerDsl filter(Class<? extends WebFilter> clazz) {
+		context.registerBean(uniqueBeanName(clazz.getName(), context), clazz);
 		return this;
 	}
 

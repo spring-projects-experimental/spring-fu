@@ -94,8 +94,8 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit): Abst
     /**
      * Define a request filter for this server
      */
-    fun filter(filter: WebFilter) {
-        context.registerBean(BeanDefinitionReaderUtils.uniqueBeanName(RouterFunctionDsl::class.java.name, context)) { filter }
+    inline fun <reified T: WebFilter> filter() {
+        context.registerBean<T>(BeanDefinitionReaderUtils.uniqueBeanName(T::class.java.name, context))
     }
 
     /**

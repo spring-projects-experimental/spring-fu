@@ -22,12 +22,14 @@ import static org.springframework.fu.jafu.mongo.MongoDsl.mongo;
 import static org.springframework.fu.jafu.web.WebFluxClientDsl.client;
 import static org.springframework.fu.jafu.web.WebFluxServerDsl.server;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 import static org.springframework.web.reactive.function.server.ServerResponse.noContent;
 import static org.springframework.web.reactive.function.server.ServerResponse.ok;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import org.springframework.boot.logging.LogLevel;
@@ -35,6 +37,9 @@ import org.springframework.boot.web.reactive.server.ConfigurableReactiveWebServe
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.server.ServerWebExchange;
+import org.springframework.web.server.WebFilter;
+import org.springframework.web.server.WebFilterChain;
 
 /**
  * @author Sebastien Deleuze
@@ -50,6 +55,15 @@ abstract class AbstractWebServerDslTests {
 	void createAnApplicationWithAnEmptyServer() {
 		var app = webApplication(a -> a.enable(server(s -> s.engine(getServerFactory()))));
 		var context = app.run();
+		context.close();
+	}
+
+	@Test
+	void createAnApplicationWithAServerAndAFilter() {
+		var app = webApplication(a -> a.enable(server(s -> s.engine(getServerFactory()).filter(MyFilter.class))));
+		var context = app.run();
+		var client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:" + port).build();
+		client.get().uri("/foo"). accept(MediaType.TEXT_PLAIN).exchange().expectStatus().isEqualTo(UNAUTHORIZED);
 		context.close();
 	}
 
@@ -127,6 +141,13 @@ abstract class AbstractWebServerDslTests {
 		context.close();
 	}
 
-	class Foo {}
+	static class MyFilter implements WebFilter {
+
+		@Override
+		public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
+			exchange.getResponse().setStatusCode(UNAUTHORIZED);
+			return Mono.empty();
+		}
+	}
 
 }
