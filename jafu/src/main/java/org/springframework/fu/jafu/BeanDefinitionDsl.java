@@ -28,7 +28,8 @@ public class BeanDefinitionDsl extends AbstractDsl {
 	 * Declare a bean definition from the given bean class.
 	 */
 	public <T> BeanDefinitionDsl bean(Class<T> beanClass, BeanDefinitionCustomizer... customizers) {
-		this.context.registerBean(beanClass, customizers);
+		String beanName = BeanDefinitionReaderUtils.uniqueBeanName(beanClass.getName(), context);
+		this.context.registerBean(beanName, beanClass, customizers);
 		return this;
 	}
 
@@ -44,7 +45,8 @@ public class BeanDefinitionDsl extends AbstractDsl {
 	 * Declare a bean definition from the given bean class and supplier.
 	 */
 	public <T> BeanDefinitionDsl bean(Class<T> beanClass, Supplier<T> supplier, BeanDefinitionCustomizer... customizers) {
-		this.context.registerBean(beanClass, supplier, customizers);
+		String beanName = BeanDefinitionReaderUtils.uniqueBeanName(beanClass.getName(), context);
+		this.context.registerBean(beanName, beanClass, supplier, customizers);
 		return this;
 	}
 
