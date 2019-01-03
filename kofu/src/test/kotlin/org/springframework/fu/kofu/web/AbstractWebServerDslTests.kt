@@ -24,7 +24,8 @@ import org.springframework.boot.logging.LogLevel
 import org.springframework.boot.web.reactive.server.ConfigurableReactiveWebServerFactory
 import org.springframework.fu.kofu.mongo.mongodb
 import org.springframework.fu.kofu.webApplication
-import org.springframework.http.HttpStatus.*
+import org.springframework.http.HttpStatus.NO_CONTENT
+import org.springframework.http.HttpStatus.UNAUTHORIZED
 import org.springframework.http.MediaType
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.web.reactive.function.client.WebClient

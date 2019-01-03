@@ -19,7 +19,6 @@ import org.springframework.boot.web.reactive.server.ConfigurableReactiveWebServe
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.fu.jafu.AbstractDsl;
-import org.springframework.fu.jafu.JafuApplication;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.RouterFunctionDsl;
 import org.springframework.web.reactive.function.server.RouterFunctions;
