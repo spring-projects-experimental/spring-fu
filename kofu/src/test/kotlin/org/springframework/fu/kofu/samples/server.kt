@@ -1,5 +1,6 @@
 package org.springframework.fu.kofu.samples
 
+import org.springframework.fu.kofu.bean
 import org.springframework.fu.kofu.web.server
 import org.springframework.fu.kofu.webApplication
 import org.springframework.web.function.server.coRouter
@@ -36,8 +37,8 @@ private fun includeRouter() {
 		}
 	}
 	webApplication {
-		server {
-			include(::routes)
+		beans {
+			bean(::routes)
 		}
 	}
 }
@@ -54,9 +55,11 @@ private fun customEngine() {
 		}
 	}
 	webApplication {
+		beans {
+			bean(::routes)
+		}
 		server {
 			engine = jetty()
-			include(::routes)
 		}
 	}
 }
@@ -99,9 +102,8 @@ private fun includeCoRouter() {
 		beans {
 			bean<HtmlCoroutinesHandler>()
 			bean<ApiCoroutinesHandler>()
+			bean(::routes)
 		}
-		server {
-			include(::routes)
-		}
+		server()
 	}
 }

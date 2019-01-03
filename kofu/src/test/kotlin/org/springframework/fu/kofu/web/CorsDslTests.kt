@@ -28,12 +28,11 @@ class CorsDslTests {
 
 	@Test
 	fun `Enable cors module on server, create and request a JSON endpoint`() {
-		val router = router {
-			GET("/") { noContent().build() }
-		}
 		val app = webApplication {
 			server {
-				include(router)
+				router {
+					GET("/") { noContent().build() }
+				}
 				cors {
 					"/api" {
 						allowedOrigins = "first.example.com, second.example.com"

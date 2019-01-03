@@ -2,6 +2,7 @@ package org.springframework.fu.kofu.web
 
 import org.springframework.beans.factory.getBean
 import org.springframework.beans.factory.support.BeanDefinitionReaderUtils
+import org.springframework.beans.factory.support.BeanDefinitionReaderUtils.*
 import org.springframework.boot.autoconfigure.web.ResourceProperties
 import org.springframework.boot.autoconfigure.web.ServerProperties
 import org.springframework.boot.autoconfigure.web.reactive.*
@@ -95,7 +96,7 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit): Abst
      * Define a request filter for this server
      */
     inline fun <reified T: WebFilter> filter() {
-        context.registerBean<T>(BeanDefinitionReaderUtils.uniqueBeanName(T::class.java.name, context))
+        context.registerBean<T>(uniqueBeanName(T::class.java.name, context))
     }
 
     /**
@@ -103,7 +104,7 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit): Abst
      * @sample org.springframework.fu.kofu.samples.router
      */
     fun router(routes: (RouterFunctionDsl.() -> Unit)) {
-        context.registerBean(BeanDefinitionReaderUtils.uniqueBeanName(RouterFunctionDsl::class.java.name, context)) { RouterFunctionDsl(routes).invoke() }
+        context.registerBean(uniqueBeanName(RouterFunctionDsl::class.java.name, context)) { RouterFunctionDsl(routes).invoke() }
     }
 
     /**
@@ -111,36 +112,7 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit): Abst
      * @sample org.springframework.fu.kofu.samples.coRouter
      */
     fun coRouter(routes: (CoRouterFunctionDsl.() -> Unit)) {
-        context.registerBean(BeanDefinitionReaderUtils.uniqueBeanName(CoRouterFunctionDsl::class.java.name, context)) { CoRouterFunctionDsl(routes).invoke() }
-    }
-
-    /**
-     * Include routes written using a [dedicated DSL][RouterFunctionDsl].
-     * @sample org.springframework.fu.kofu.samples.includeRouter
-     * @sample org.springframework.fu.kofu.samples.includeCoRouter
-     */
-    fun include(router: RouterFunction<ServerResponse>) {
-        context.registerBean(BeanDefinitionReaderUtils.uniqueBeanName(RouterFunctionDsl::class.java.name, context)) { router }
-    }
-
-    fun include(f: Function0<RouterFunction<ServerResponse>>) {
-        context.registerBean(BeanDefinitionReaderUtils.uniqueBeanName(RouterFunctionDsl::class.java.name, context)) { f.invoke() }
-    }
-
-    inline fun <reified A: Any> include(crossinline f: Function1<A, RouterFunction<ServerResponse>>) {
-        context.registerBean(BeanDefinitionReaderUtils.uniqueBeanName(RouterFunctionDsl::class.java.name, context)) { f.invoke(context.getBean()) }
-    }
-    inline fun <reified A: Any, reified B: Any> include(crossinline f: Function2<A, B, RouterFunction<ServerResponse>>) {
-        context.registerBean(BeanDefinitionReaderUtils.uniqueBeanName(RouterFunctionDsl::class.java.name, context)) { f.invoke(context.getBean(), context.getBean()) }
-    }
-    inline fun <reified A: Any, reified B: Any, reified C: Any> include(crossinline f: Function3<A, B, C, RouterFunction<ServerResponse>>) {
-        context.registerBean(BeanDefinitionReaderUtils.uniqueBeanName(RouterFunctionDsl::class.java.name, context)) { f.invoke(context.getBean(), context.getBean(), context.getBean()) }
-    }
-    inline fun <reified A: Any, reified B: Any, reified C: Any, reified D: Any> include(crossinline f: Function4<A, B, C, D, RouterFunction<ServerResponse>>) {
-        context.registerBean(BeanDefinitionReaderUtils.uniqueBeanName(RouterFunctionDsl::class.java.name, context)) { f.invoke(context.getBean(), context.getBean(), context.getBean(), context.getBean()) }
-    }
-    inline fun <reified A: Any, reified B: Any, reified C: Any, reified D: Any, reified E: Any> include(crossinline f: Function5<A, B, C, D, E, RouterFunction<ServerResponse>>) {
-        context.registerBean(BeanDefinitionReaderUtils.uniqueBeanName(RouterFunctionDsl::class.java.name, context)) { f.invoke(context.getBean(), context.getBean(), context.getBean(), context.getBean(), context.getBean()) }
+        context.registerBean(uniqueBeanName(CoRouterFunctionDsl::class.java.name, context)) { CoRouterFunctionDsl(routes).invoke() }
     }
 
     /**

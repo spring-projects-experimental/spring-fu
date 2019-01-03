@@ -20,7 +20,6 @@ import org.junit.jupiter.api.Test
 import org.springframework.fu.kofu.webApplication
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.test.web.reactive.server.expectBody
-import org.springframework.web.reactive.function.server.router
 
 /**
  * @author Sebastien Deleuze
@@ -29,13 +28,12 @@ class MustacheDslTests {
 
 	@Test
 	fun `Create and request a Mustache view`() {
-		val router = router {
-			GET("/view") { ok().render("template", mapOf("name" to "world")) }
-		}
 		val app = webApplication {
 			server {
 				mustache()
-				include(router)
+				router {
+					GET("/view") { ok().render("template", mapOf("name" to "world")) }
+				}
 			}
 		}
 		val context = app.run()

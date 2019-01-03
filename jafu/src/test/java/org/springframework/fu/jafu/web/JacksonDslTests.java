@@ -7,7 +7,6 @@ import static org.springframework.fu.jafu.web.WebFluxServerDsl.server;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
-import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 import static org.springframework.web.reactive.function.server.ServerResponse.ok;
 
 import java.util.Objects;
@@ -25,11 +24,7 @@ public class JacksonDslTests {
 
 	@Test
 	void enableJacksonModuleOnServerCreateAndRequestAJSONEndpoint() {
-		var router = route()
-				.GET("/user", request -> ok().header(CONTENT_TYPE, APPLICATION_JSON_UTF8_VALUE).syncBody(new User("Brian")))
-				.build();
-
-		var app = webApplication(a -> a.enable(server(s -> s.codecs(c -> c.jackson()).include(router))));
+		var app = webApplication(a -> a.enable(server(s -> s.codecs(c -> c.jackson()).router(r -> r.GET("/user", request -> ok().header(CONTENT_TYPE, APPLICATION_JSON_UTF8_VALUE).syncBody(new User("Brian")))))));
 
 		var context = app.run();
 		var client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:8080").build();
@@ -43,12 +38,8 @@ public class JacksonDslTests {
 
 	@Test
 	void enableJacksonModuleOnClientAndServerCreateAndRequestAJSONEndpoint() {
-		var router = route()
-				.GET("/user", request -> ok().header(CONTENT_TYPE, APPLICATION_JSON_UTF8_VALUE).syncBody(new User("Brian")))
-				.build();
-
 		var app = webApplication(a ->
-				a.enable(server(s -> s.codecs(c -> c.jackson()).include(router)))
+				a.enable(server(s -> s.codecs(c -> c.jackson()).router(r -> r.GET("/user", request -> ok().header(CONTENT_TYPE, APPLICATION_JSON_UTF8_VALUE).syncBody(new User("Brian"))))))
 				.enable(client(c -> c.codecs(codecs -> codecs.jackson()))));
 		var context = app.run();
 		var client = context.getBean(WebClient.Builder.class).build();
@@ -67,12 +58,7 @@ public class JacksonDslTests {
 
 	@Test
 	void noJacksonCodecOnServerWhenNotDeclared() {
-		var router = route()
-				.GET("/user", request -> ok().header(CONTENT_TYPE, APPLICATION_JSON_UTF8_VALUE).syncBody(new User("Brian")))
-				.build();
-
-
-		var app = webApplication(a -> a.enable(server(s -> s.include(router))));
+		var app = webApplication(a -> a.enable(server(s -> s.router(r -> r.GET("/user", request -> ok().header(CONTENT_TYPE, APPLICATION_JSON_UTF8_VALUE).syncBody(new User("Brian")))))));
 		var context = app.run();
 		var client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:8080").build();
 		client.get().uri("/user").exchange().expectStatus().is5xxServerError();

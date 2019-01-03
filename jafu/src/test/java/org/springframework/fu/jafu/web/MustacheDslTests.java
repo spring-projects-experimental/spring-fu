@@ -9,17 +9,12 @@ import java.util.Collections;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.web.reactive.function.server.RouterFunctions;
 
 public class MustacheDslTests {
 
 	@Test
 	void createAndRequestAMustacheView() {
-		var router = RouterFunctions
-				.route()
-				.GET("/view", request -> ok().render("template", Collections.singletonMap("name", "world")))
-				.build();
-		var app = webApplication(a -> a.enable(server(s -> s.mustache().include(router))));
+		var app = webApplication(a -> a.enable(server(s -> s.mustache().router(r -> r.GET("/view", request -> ok().render("template", Collections.singletonMap("name", "world")))))));
 
 		var context = app.run();
 		var client = WebTestClient.bindToServer().baseUrl("http://0.0.0.0:8080").build();

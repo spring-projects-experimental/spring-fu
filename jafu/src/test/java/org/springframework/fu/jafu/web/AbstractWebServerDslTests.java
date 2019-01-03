@@ -23,7 +23,6 @@ import static org.springframework.fu.jafu.web.WebFluxClientDsl.client;
 import static org.springframework.fu.jafu.web.WebFluxServerDsl.server;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
-import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 import static org.springframework.web.reactive.function.server.ServerResponse.noContent;
 import static org.springframework.web.reactive.function.server.ServerResponse.ok;
 
@@ -69,8 +68,7 @@ abstract class AbstractWebServerDslTests {
 
 	@Test
 	void createAndRequestAnEndpoint() {
-		var router = route().GET("/foo", request -> noContent().build()).build();
-		var app = webApplication(a -> a.enable(server(s -> s.engine(getServerFactory()).include(router))));
+		var app = webApplication(a -> a.enable(server(s -> s.engine(getServerFactory()).router(r -> r.GET("/foo", request -> noContent().build())))));
 
 		var context = app.run();
 		var client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:" + port).build();
@@ -80,9 +78,8 @@ abstract class AbstractWebServerDslTests {
 
 	@Test
 	void createAWebClientAndRequestAnEndpoint() {
-		var router = route().GET("/", request -> noContent().build()).build();
 		var app = webApplication(a ->
-				a.enable(server(s -> s.engine(getServerFactory()).include(router)))
+				a.enable(server(s -> s.engine(getServerFactory()).router(r -> r.GET("/", request -> noContent().build()))))
 				.enable(client(c -> c.baseUrl("http://127.0.0.1:" + port))));
 
 		var context = app.run();
@@ -95,12 +92,9 @@ abstract class AbstractWebServerDslTests {
 
 	@Test
 	void declare2RouterBlocks() {
-		var router1 = route().GET("/foo", request -> noContent().build()).build();
-		var router2 = route().GET("/bar", request -> ok().build()).build();
-
 		var app = webApplication(a -> a.enable(server(s -> s.engine(getServerFactory())
-				.include(router1)
-				.include(router2))));
+				.router(r -> r.GET("/foo", request -> noContent().build()))
+				.router(r -> r.GET("/bar", request -> ok().build())))));
 		var context = app.run();
 		var client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:" + port).build();
 		client.get().uri("/foo").exchange().expectStatus().isNoContent();
@@ -118,12 +112,10 @@ abstract class AbstractWebServerDslTests {
 
 	@Test
 	void checkThatConcurrentModificationExceptionIsNotThrown() {
-		var router = route().GET("/", request -> noContent().build()).build();
-
 		var app = webApplication(a ->
 				a.enable(server(s -> s.engine(getServerFactory())
 				.codecs(c -> c.string().jackson())
-				.include(router)))
+				.router(r -> r.GET("/", request -> noContent().build()))))
 			.logging(l -> l.level(LogLevel.DEBUG))
 			.enable(mongo()));
 		var context = app.run();

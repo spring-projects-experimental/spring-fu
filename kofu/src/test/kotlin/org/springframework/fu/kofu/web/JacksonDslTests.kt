@@ -39,17 +39,16 @@ class JacksonDslTests {
 
 	@Test
 	fun `Enable jackson module on server, create and request a JSON endpoint`() {
-		val router = router {
-			GET("/user") {
-				ok().header(CONTENT_TYPE, APPLICATION_JSON_UTF8_VALUE).syncBody(User("Brian"))
-			}
-		}
 		val app = webApplication {
 			server {
 				codecs {
 					jackson()
 				}
-				include(router)
+				router {
+					GET("/user") {
+						ok().header(CONTENT_TYPE, APPLICATION_JSON_UTF8_VALUE).syncBody(User("Brian"))
+					}
+				}
 			}
 		}
 		val context = app.run()
@@ -64,17 +63,16 @@ class JacksonDslTests {
 
 	@Test
 	fun `Enable jackson module on client and server, create and request a JSON endpoint`() {
-		val router = router {
-			GET("/user") {
-				ok().header(CONTENT_TYPE, APPLICATION_JSON_UTF8_VALUE).syncBody(User("Brian"))
-			}
-		}
 		val app = webApplication {
 			server {
 				codecs {
 					jackson()
 				}
-				include(router)
+				router {
+					GET("/user") {
+						ok().header(CONTENT_TYPE, APPLICATION_JSON_UTF8_VALUE).syncBody(User("Brian"))
+					}
+				}
 			}
 			client {
 				codecs {
@@ -99,14 +97,13 @@ class JacksonDslTests {
 
 	@Test
 	fun `No Jackson codec on server when not declared`() {
-		val router = router {
-			GET("/user") {
-				ok().header(CONTENT_TYPE, APPLICATION_JSON_UTF8_VALUE).syncBody(User("Brian"))
-			}
-		}
 		val app = webApplication {
 			server {
-				include(router)
+				router {
+					GET("/user") {
+						ok().header(CONTENT_TYPE, APPLICATION_JSON_UTF8_VALUE).syncBody(User("Brian"))
+					}
+				}
 			}
 		}
 		val context = app.run()

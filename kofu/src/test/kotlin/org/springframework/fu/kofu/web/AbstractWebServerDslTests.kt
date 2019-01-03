@@ -29,7 +29,6 @@ import org.springframework.http.HttpStatus.UNAUTHORIZED
 import org.springframework.http.MediaType
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.web.reactive.function.client.WebClient
-import org.springframework.web.reactive.function.server.router
 import org.springframework.web.server.ServerWebExchange
 import org.springframework.web.server.WebFilter
 import org.springframework.web.server.WebFilterChain
@@ -72,13 +71,12 @@ abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
 
 	@Test
 	fun `Create and request an endpoint`() {
-		val router = router {
-			GET("/foo") { noContent().build() }
-		}
 		val app = webApplication {
 			server {
 				engine = getServerFactory()
-				include(router)
+				router {
+					GET("/foo") { noContent().build() }
+				}
 			}
 		}
 		with(app.run()) {
@@ -90,13 +88,12 @@ abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
 
 	@Test
 	fun `Create a WebClient and request an endpoint`() {
-		val router = router {
-			GET("/") { noContent().build() }
-		}
 		val app = webApplication {
 			server {
 				engine = getServerFactory()
-				include(router)
+				router {
+					GET("/") { noContent().build() }
+				}
 			}
 			client {
 				baseUrl = "http://127.0.0.1:$port"
@@ -113,18 +110,15 @@ abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
 
 	@Test
 	fun `Declare 2 router blocks`() {
-		val router1 = router {
-			GET("/foo") { noContent().build() }
-		}
-		val router2 = router {
-			GET("/bar") { ok().build() }
-		}
-
 		val app = webApplication {
 			server {
 				engine = getServerFactory()
-				include(router1)
-				include(router2)
+				router {
+					GET("/foo") { noContent().build() }
+				}
+				router {
+					GET("/bar") { ok().build() }
+				}
 			}
 		}
 		with(app.run()) {
@@ -155,9 +149,6 @@ abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
 
 	@Test
 	fun `Check that ConcurrentModificationException is not thrown`() {
-		val router = router {
-			GET("/") { noContent().build() }
-		}
 		val app = webApplication {
 			server {
 				engine = getServerFactory()
@@ -165,7 +156,9 @@ abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
 					string()
 					jackson()
 				}
-				include(router)
+				router {
+					GET("/") { noContent().build() }
+				}
 			}
 			logging {
 				level = LogLevel.DEBUG

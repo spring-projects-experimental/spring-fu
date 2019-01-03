@@ -5,6 +5,8 @@ import static org.springframework.beans.factory.support.BeanDefinitionReaderUtil
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import org.springframework.beans.factory.config.BeanDefinitionCustomizer;
+import org.springframework.beans.factory.support.BeanDefinitionReaderUtils;
 import org.springframework.boot.autoconfigure.web.ResourceProperties;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.boot.autoconfigure.web.reactive.FormCodecInitializer;
@@ -38,7 +40,6 @@ import org.springframework.web.server.WebFilter;
  * Required dependencies can be retrieve using {@code org.springframework.boot:spring-boot-starter-webflux}.
  *
  * @see org.springframework.fu.jafu.Jafu#webApplication(java.util.function.Consumer)
- * @see WebFluxServerDsl#include(RouterFunction)
  * @see WebFluxServerDsl#codecs(Consumer)
  * @see WebFluxServerDsl#mustache()
  * @author Sebastien Deleuze
@@ -90,21 +91,14 @@ public class WebFluxServerDsl extends AbstractDsl {
 
 	/**
 	 * Configure routes via {@link RouterFunctions.Builder}.
+	 * @see org.springframework.fu.jafu.BeanDefinitionDsl#bean(Class, BeanDefinitionCustomizer...)
 	 */
 	public WebFluxServerDsl router(Consumer<RouterFunctions.Builder> routerDsl) {
 		RouterFunctions.Builder builder = RouterFunctions.route();
-		context.registerBean(RouterFunction.class, () -> {
+		context.registerBean(BeanDefinitionReaderUtils.uniqueBeanName(RouterFunctionDsl.class.getName(), context), RouterFunction.class, () -> {
 			routerDsl.accept(builder);
 			return builder.build();
 		});
-		return this;
-	}
-
-	/**
-	 * Include {@link RouterFunction} created via {@link RouterFunctions.Builder}.
-	 */
-	public WebFluxServerDsl include(RouterFunction router) {
-		context.registerBean(uniqueBeanName(RouterFunctionDsl.class.getName(), context), RouterFunction.class, () -> router);
 		return this;
 	}
 
