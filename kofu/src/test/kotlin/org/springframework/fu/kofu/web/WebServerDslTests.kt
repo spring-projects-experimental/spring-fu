@@ -21,7 +21,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.getBean
 import org.springframework.boot.logging.LogLevel
-import org.springframework.boot.web.reactive.server.ConfigurableReactiveWebServerFactory
 import org.springframework.fu.kofu.mongo.mongodb
 import org.springframework.fu.kofu.webApplication
 import org.springframework.http.HttpStatus.NO_CONTENT
@@ -37,17 +36,16 @@ import reactor.test.test
 
 /**
  * @author Alexey Nesterov
+ * @author Sebastien Deleuze
  */
-abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
+class WebServerDslTests {
 
-	abstract fun getServerFactory(): ConfigurableReactiveWebServerFactory
+	private val port: Int = 8080
 
 	@Test
 	fun `Create an application with an empty server`() {
 		val app = webApplication {
-			server {
-				engine = getServerFactory()
-			}
+			server()
 		}
 		with(app.run()){
 			close()
@@ -58,7 +56,6 @@ abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
 	fun `Create an application with a server and a filter`() {
 		val app = webApplication {
 			server {
-				engine = getServerFactory()
 				filter<MyFilter>()
 			}
 		}
@@ -73,8 +70,24 @@ abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
 	fun `Create and request an endpoint`() {
 		val app = webApplication {
 			server {
-				engine = getServerFactory()
 				router {
+					GET("/foo") { noContent().build() }
+				}
+			}
+		}
+		with(app.run()) {
+			val client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:$port").build()
+			client.get().uri("/foo").accept(MediaType.TEXT_PLAIN).exchange().expectStatus().is2xxSuccessful
+			close()
+		}
+	}
+
+	@Test
+	fun `Create and request an endpoint with a customized engine`() {
+		val app = webApplication {
+			server {
+				router {
+					engine = tomcat()
 					GET("/foo") { noContent().build() }
 				}
 			}
@@ -90,7 +103,6 @@ abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
 	fun `Create a WebClient and request an endpoint`() {
 		val app = webApplication {
 			server {
-				engine = getServerFactory()
 				router {
 					GET("/") { noContent().build() }
 				}
@@ -112,7 +124,6 @@ abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
 	fun `Declare 2 router blocks`() {
 		val app = webApplication {
 			server {
-				engine = getServerFactory()
 				router {
 					GET("/foo") { noContent().build() }
 				}
@@ -132,12 +143,8 @@ abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
 	@Test
 	fun `Declare 2 server blocks`() {
 		val app = webApplication {
+			server ()
 			server {
-				engine = getServerFactory()
-
-			}
-			server {
-				engine = getServerFactory()
 				port = 8181
 			}
 		}
@@ -151,7 +158,6 @@ abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
 	fun `Check that ConcurrentModificationException is not thrown`() {
 		val app = webApplication {
 			server {
-				engine = getServerFactory()
 				codecs {
 					string()
 					jackson()
@@ -177,9 +183,7 @@ abstract class AbstractWebServerDslTests(protected val port: Int = 8080) {
 	@Test
 	fun `run an application 2 times`() {
 		val app = webApplication {
-			server {
-				engine = getServerFactory()
-			}
+			server()
 		}
 		var context = app.run()
 		context.close()

@@ -32,7 +32,7 @@ import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import org.springframework.boot.logging.LogLevel;
-import org.springframework.boot.web.reactive.server.ConfigurableReactiveWebServerFactory;
+import org.springframework.boot.web.embedded.tomcat.TomcatReactiveWebServerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -44,22 +44,20 @@ import org.springframework.web.server.WebFilterChain;
  * @author Sebastien Deleuze
  * @author Alexey Nesterov
  */
-abstract class AbstractWebServerDslTests {
+class WebServerDslTests {
 
-	protected int port = 8080;
-
-	abstract ConfigurableReactiveWebServerFactory getServerFactory();
+	private int port = 8080;
 
 	@Test
 	void createAnApplicationWithAnEmptyServer() {
-		var app = webApplication(a -> a.enable(server(s -> s.engine(getServerFactory()))));
+		var app = webApplication(a -> a.enable(server()));
 		var context = app.run();
 		context.close();
 	}
 
 	@Test
 	void createAnApplicationWithAServerAndAFilter() {
-		var app = webApplication(a -> a.enable(server(s -> s.engine(getServerFactory()).filter(MyFilter.class))));
+		var app = webApplication(a -> a.enable(server(s -> s.filter(MyFilter.class))));
 		var context = app.run();
 		var client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:" + port).build();
 		client.get().uri("/foo"). accept(MediaType.TEXT_PLAIN).exchange().expectStatus().isEqualTo(UNAUTHORIZED);
@@ -68,7 +66,17 @@ abstract class AbstractWebServerDslTests {
 
 	@Test
 	void createAndRequestAnEndpoint() {
-		var app = webApplication(a -> a.enable(server(s -> s.engine(getServerFactory()).router(r -> r.GET("/foo", request -> noContent().build())))));
+		var app = webApplication(a -> a.enable(server(s -> s.router(r -> r.GET("/foo", request -> noContent().build())))));
+
+		var context = app.run();
+		var client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:" + port).build();
+		client.get().uri("/foo"). accept(MediaType.TEXT_PLAIN).exchange().expectStatus().is2xxSuccessful();
+		context.close();
+	}
+
+	@Test
+	void createAndRequestAnEndpointWithACustomizedEngine() {
+		var app = webApplication(a -> a.enable(server(s -> s.engine(new TomcatReactiveWebServerFactory()).router(r -> r.GET("/foo", request -> noContent().build())))));
 
 		var context = app.run();
 		var client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:" + port).build();
@@ -79,7 +87,7 @@ abstract class AbstractWebServerDslTests {
 	@Test
 	void createAWebClientAndRequestAnEndpoint() {
 		var app = webApplication(a ->
-				a.enable(server(s -> s.engine(getServerFactory()).router(r -> r.GET("/", request -> noContent().build()))))
+				a.enable(server(s -> s.router(r -> r.GET("/", request -> noContent().build()))))
 				.enable(client(c -> c.baseUrl("http://127.0.0.1:" + port))));
 
 		var context = app.run();
@@ -92,7 +100,7 @@ abstract class AbstractWebServerDslTests {
 
 	@Test
 	void declare2RouterBlocks() {
-		var app = webApplication(a -> a.enable(server(s -> s.engine(getServerFactory())
+		var app = webApplication(a -> a.enable(server(s -> s
 				.router(r -> r.GET("/foo", request -> noContent().build()))
 				.router(r -> r.GET("/bar", request -> ok().build())))));
 		var context = app.run();
@@ -105,15 +113,15 @@ abstract class AbstractWebServerDslTests {
 	@Test
 	void declare2ServerBlocks() {
 		var app = webApplication(a -> a
-				.enable(server(s -> s.engine(getServerFactory())))
-				.enable(server(s -> s.engine(getServerFactory()).port(8181))));
+				.enable(server())
+				.enable(server(s -> s.port(8181))));
 		Assertions.assertThrows(IllegalStateException.class, app::run);
 	}
 
 	@Test
 	void checkThatConcurrentModificationExceptionIsNotThrown() {
 		var app = webApplication(a ->
-				a.enable(server(s -> s.engine(getServerFactory())
+				a.enable(server(s -> s
 				.codecs(c -> c.string().jackson())
 				.router(r -> r.GET("/", request -> noContent().build()))))
 			.logging(l -> l.level(LogLevel.DEBUG))
@@ -126,7 +134,7 @@ abstract class AbstractWebServerDslTests {
 
 	@Test
 	void runAnApplication2Times() {
-		var app = webApplication(a -> a.enable(server(s -> s.engine(getServerFactory()))));
+		var app = webApplication(a -> a.enable(server()));
 		var context = app.run();
 		context.close();
 		context = app.run();
