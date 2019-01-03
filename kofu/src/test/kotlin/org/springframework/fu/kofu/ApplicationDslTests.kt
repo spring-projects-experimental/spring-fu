@@ -22,8 +22,6 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.getBean
 import org.springframework.boot.web.reactive.context.ReactiveWebServerApplicationContext
 import org.springframework.context.MessageSource
-import org.springframework.fu.kofu.beans.BeanWithDependency
-import org.springframework.fu.kofu.beans.SimpleBean
 
 /**
  * @author Sebastien Deleuze
@@ -78,20 +76,6 @@ class ApplicationDslTests {
 		}
 		with(app.run()) {
 			assertEquals(getBean<City>().name, "San Francisco")
-			close()
-		}
-	}
-
-	@Test
-	fun `Create an application with bean scanning`() {
-		val app = application {
-			beans {
-				scan("org.springframework.fu.kofu.beans")
-			}
-		}
-		with(app.run()) {
-			getBean<SimpleBean>()
-			getBean<BeanWithDependency>()
 			close()
 		}
 	}

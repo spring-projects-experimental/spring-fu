@@ -1,15 +1,12 @@
 package org.springframework.fu.kofu
 
-import org.springframework.beans.factory.support.BeanDefinitionReaderUtils
 import org.springframework.boot.context.properties.FunctionalConfigurationPropertiesBinder
 import org.springframework.boot.context.properties.bind.Bindable
 import org.springframework.context.ApplicationContextInitializer
 import org.springframework.context.ApplicationEvent
-import org.springframework.context.FunctionalClassPathScanningCandidateComponentProvider
 import org.springframework.context.support.BeanDefinitionDsl
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.registerBean
-import org.springframework.util.ClassUtils
 
 /**
  * Kofu DSL for a configuration that can be imported in an application or used in tests.
@@ -32,27 +29,6 @@ open class ConfigurationDsl(private val dsl: ConfigurationDsl.() -> Unit): Abstr
 	 */
 	fun beans(dsl: BeanDefinitionDsl.() -> Unit) {
 		BeanDefinitionDsl(dsl).initialize(context)
-	}
-
-	/**
-	 * Scan beans from the provided base package.
-	 *
-	 * The preferred constructor (Kotlin primary constructor and standard public constructors)
-	 * are evaluated for autowiring before falling back to default instantiation.
-	 *
-	 * TODO Support generating component indexes
-	 * TODO Support exclusion
-	 *
-	 * @param basePackage The base package to scan
-	 * @sample org.springframework.fu.kofu.samples.beanScanDsl
-	 */
-	fun BeanDefinitionDsl.scan(basePackage: String) {
-		val componentProvider = FunctionalClassPathScanningCandidateComponentProvider()
-		for(metadata in componentProvider.findCandidateComponents(basePackage)) {
-			val source = ClassUtils.resolveClassName(metadata.className, null)
-			val beanName = BeanDefinitionReaderUtils.uniqueBeanName(source.name, context)
-			context.registerBean(beanName, source)
-		}
 	}
 
 	/**

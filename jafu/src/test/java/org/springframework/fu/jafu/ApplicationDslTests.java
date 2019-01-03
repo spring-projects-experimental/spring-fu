@@ -10,8 +10,6 @@ import org.junit.jupiter.api.Test;
 
 import org.springframework.boot.web.reactive.context.ReactiveWebServerApplicationContext;
 import org.springframework.context.MessageSource;
-import org.springframework.fu.jafu.beans.BeanWithDependency;
-import org.springframework.fu.jafu.beans.SimpleBean;
 
 class ApplicationDslTests {
 
@@ -48,15 +46,6 @@ class ApplicationDslTests {
 		var app = application(a -> a.configurationProperties(City.class, "city"));
 		var context = app.run();
 		assertEquals(context.getBean(City.class).name, "San Francisco");
-		context.close();
-	}
-
-	@Test
-	void createAnApplicationWithBeanScanning() {
-		var app = application(a -> a.beans(beans -> beans.scan("org.springframework.fu.jafu.beans")));
-		var context = app.run();
-		context.getBean(SimpleBean.class);
-		context.getBean(BeanWithDependency.class);
 		context.close();
 	}
 

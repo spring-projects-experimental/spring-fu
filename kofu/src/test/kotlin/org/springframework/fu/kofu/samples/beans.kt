@@ -13,10 +13,3 @@ private fun beansDsl() {
 	}
 }
 
-private fun beanScanDsl() {
-	application {
-		beans {
-			scan("com.example.beans")
-		}
-	}
-}
