@@ -22,7 +22,6 @@ import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.fu.jafu.AbstractDsl;
 import org.springframework.web.reactive.function.server.RouterFunction;
-import org.springframework.web.reactive.function.server.RouterFunctionDsl;
 import org.springframework.web.reactive.function.server.RouterFunctions;
 import org.springframework.web.server.WebFilter;
 
@@ -95,7 +94,7 @@ public class WebFluxServerDsl extends AbstractDsl {
 	 */
 	public WebFluxServerDsl router(Consumer<RouterFunctions.Builder> routerDsl) {
 		RouterFunctions.Builder builder = RouterFunctions.route();
-		context.registerBean(BeanDefinitionReaderUtils.uniqueBeanName(RouterFunctionDsl.class.getName(), context), RouterFunction.class, () -> {
+		context.registerBean(BeanDefinitionReaderUtils.uniqueBeanName(RouterFunction.class.getName(), context), RouterFunction.class, () -> {
 			routerDsl.accept(builder);
 			return builder.build();
 		});
