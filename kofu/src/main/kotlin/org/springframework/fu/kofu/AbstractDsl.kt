@@ -49,18 +49,6 @@ abstract class AbstractDsl : ApplicationContextInitializer<GenericApplicationCon
 		get() = env.activeProfiles
 
 	/**
-	 * Get a reference to the bean by type or type + name with the syntax
-	 * `ref<Foo>()` or `ref<Foo>("foo")`. When leveraging Kotlin type inference
-	 * it could be as short as `ref()` or `ref("foo")`.
-	 * @param name the name of the bean to retrieve
-	 * @param T type the bean must match, can be an interface or superclass
-	 */
-	inline fun <reified T : Any> ref(name: String? = null): T = when (name) {
-		null -> context.getBean(T::class.java)
-		else -> context.getBean(name, T::class.java)
-	}
-
-	/**
 	 * Take in account functional properties enclosed in the provided lambda only when the
 	 * specified profile is active.
 	 */

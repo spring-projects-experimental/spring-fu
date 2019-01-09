@@ -64,13 +64,14 @@ open class ConfigurationDsl(private val dsl: ConfigurationDsl.() -> Unit): Abstr
 	/**
 	 * Declare application event Listeners in order to run tasks when `ApplicationEvent`
 	 * like `ApplicationReadyEvent` are emitted.
+     * TODO Update when SPR-17648 will be fixed
 	 * @sample org.springframework.fu.kofu.samples.listener
 	 */
-	inline fun <reified E : ApplicationEvent>listener(crossinline listener: (E) -> Unit) {
+	inline fun <reified E : ApplicationEvent>listener(crossinline listener: BeanDefinitionContext.(E) -> Unit) {
 		context.addApplicationListener {
 			// TODO Leverage SPR-16872 when it will be fixed
 			if (it is E) {
-				listener.invoke(it)
+				listener.invoke(BeanDefinitionContext(context), it)
 			}
 		}
 	}

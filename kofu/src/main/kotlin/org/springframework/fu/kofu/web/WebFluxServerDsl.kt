@@ -1,8 +1,8 @@
 package org.springframework.fu.kofu.web
 
-import org.springframework.beans.factory.getBean
-import org.springframework.beans.factory.support.BeanDefinitionReaderUtils
-import org.springframework.beans.factory.support.BeanDefinitionReaderUtils.*
+import org.springframework.beans.factory.ObjectProvider
+import org.springframework.beans.factory.getBeanProvider
+import org.springframework.beans.factory.support.BeanDefinitionReaderUtils.uniqueBeanName
 import org.springframework.boot.autoconfigure.web.ResourceProperties
 import org.springframework.boot.autoconfigure.web.ServerProperties
 import org.springframework.boot.autoconfigure.web.reactive.*
@@ -16,9 +16,7 @@ import org.springframework.context.support.registerBean
 import org.springframework.fu.kofu.AbstractDsl
 import org.springframework.fu.kofu.ConfigurationDsl
 import org.springframework.web.function.server.CoRouterFunctionDsl
-import org.springframework.web.reactive.function.server.RouterFunction
 import org.springframework.web.reactive.function.server.RouterFunctionDsl
-import org.springframework.web.reactive.function.server.ServerResponse
 import org.springframework.web.server.WebFilter
 
 /**
@@ -108,12 +106,54 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit): Abst
     }
 
     /**
+     * Get a reference to the bean by type or type + name with the syntax
+     * `ref<Foo>()` or `ref<Foo>("foo")`. When leveraging Kotlin type inference
+     * it could be as short as `ref()` or `ref("foo")`.
+     * TODO Update when SPR-17648 will be fixed
+     * @param name the name of the bean to retrieve
+     * @param T type the bean must match, can be an interface or superclass
+     */
+    inline fun <reified T : Any> RouterFunctionDsl.ref(name: String? = null): T = when (name) {
+        null -> context.getBean(T::class.java)
+        else -> context.getBean(name, T::class.java)
+    }
+
+    /**
+     * Return an provider for the specified bean, allowing for lazy on-demand retrieval
+     * of instances, including availability and uniqueness options.
+     * TODO Update when SPR-17648 will be fixed
+     * @see org.springframework.beans.factory.BeanFactory.getBeanProvider
+     */
+    inline fun <reified T : Any> RouterFunctionDsl.provider() : ObjectProvider<T> = context.getBeanProvider()
+
+    /**
      * Configure Coroutines routes via a [dedicated DSL][CoRouterFunctionDsl].
      * @sample org.springframework.fu.kofu.samples.coRouter
      */
     fun coRouter(routes: (CoRouterFunctionDsl.() -> Unit)) {
         context.registerBean(uniqueBeanName(CoRouterFunctionDsl::class.java.name, context)) { CoRouterFunctionDsl(routes).invoke() }
     }
+
+    /**
+     * Get a reference to the bean by type or type + name with the syntax
+     * `ref<Foo>()` or `ref<Foo>("foo")`. When leveraging Kotlin type inference
+     * it could be as short as `ref()` or `ref("foo")`.
+     * TODO Update when SPR-17648 will be fixed
+     * @param name the name of the bean to retrieve
+     * @param T type the bean must match, can be an interface or superclass
+     */
+    inline fun <reified T : Any> CoRouterFunctionDsl.ref(name: String? = null): T = when (name) {
+        null -> context.getBean(T::class.java)
+        else -> context.getBean(name, T::class.java)
+    }
+
+    /**
+     * Return an provider for the specified bean, allowing for lazy on-demand retrieval
+     * of instances, including availability and uniqueness options.
+     * TODO Update when SPR-17648 will be fixed
+     * @see org.springframework.beans.factory.BeanFactory.getBeanProvider
+     */
+    inline fun <reified T : Any> CoRouterFunctionDsl.provider() : ObjectProvider<T> = context.getBeanProvider()
 
     /**
      * Netty engine.

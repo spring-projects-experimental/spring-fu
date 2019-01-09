@@ -9,9 +9,9 @@ import org.springframework.web.reactive.function.server.router
 private fun router() {
 	webApplication {
 		server {
-			val htmlHandler = ref<HtmlHandler>()
-			val apiHandler = ref<ApiHandler>()
 			router {
+				val htmlHandler = ref<HtmlHandler>()
+				val apiHandler = ref<ApiHandler>()
 				GET("/", htmlHandler::blog)
 				GET("/article/{id}", htmlHandler::article)
 				"/api".nest {
