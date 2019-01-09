@@ -2,6 +2,7 @@ package org.springframework.boot.autoconfigure.context;
 
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.MessageSource;
+import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.GenericApplicationContext;
 
 public class MessageSourceInitializer implements ApplicationContextInitializer<GenericApplicationContext> {
@@ -18,6 +19,6 @@ public class MessageSourceInitializer implements ApplicationContextInitializer<G
 
 	@Override
 	public void initialize(GenericApplicationContext context) {
-		context.registerBean(MessageSource.class, () -> new MessageSourceAutoConfiguration().messageSource(this.properties));
+		context.registerBean(AbstractApplicationContext.MESSAGE_SOURCE_BEAN_NAME, MessageSource.class, () -> new MessageSourceAutoConfiguration().messageSource(this.properties));
 	}
 }

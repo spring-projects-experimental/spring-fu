@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.fu.jafu.Jafu.application;
 
+import java.util.Locale;
 import java.util.function.Consumer;
 
 import org.junit.jupiter.api.Test;
@@ -14,11 +15,12 @@ import org.springframework.context.MessageSource;
 class ApplicationDslTests {
 
 	@Test
-	void createAnEmptyApplication() {
+	void createAnEmptyApplicationAndCheckMessageSource() {
 		var app = application(it -> {});
 		var context = app.run();
 		assertFalse(context instanceof ReactiveWebServerApplicationContext);
-		context.getBean(MessageSource.class);
+		var messageSource = context.getBean(MessageSource.class);
+		assertEquals("Spring Fu!", messageSource.getMessage("sample.message", null, Locale.getDefault()));
 		context.close();
 	}
 

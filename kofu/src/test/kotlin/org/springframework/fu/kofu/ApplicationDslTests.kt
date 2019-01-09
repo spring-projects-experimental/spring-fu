@@ -22,6 +22,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.getBean
 import org.springframework.boot.web.reactive.context.ReactiveWebServerApplicationContext
 import org.springframework.context.MessageSource
+import java.util.*
 
 /**
  * @author Sebastien Deleuze
@@ -29,11 +30,12 @@ import org.springframework.context.MessageSource
 class ApplicationDslTests {
 
 	@Test
-	fun `Create an empty application`() {
+	fun `Create an empty application and check message source`() {
 		val app = application { }
 		with(app.run()) {
 			assertFalse(this is ReactiveWebServerApplicationContext)
-			getBean<MessageSource>()
+			val messageSource = getBean<MessageSource>()
+			assertEquals("Spring Fu!", messageSource.getMessage("sample.message", null, Locale.getDefault()))
 			close()
 		}
 	}
