@@ -1,6 +1,7 @@
 rootProject.name = "spring-fu-build"
 
 include(
+		"gradle-plugin",
 		"autoconfigure-adapter",
 		"kofu",
 		"jafu",
