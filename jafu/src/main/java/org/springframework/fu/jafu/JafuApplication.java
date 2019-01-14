@@ -3,7 +3,7 @@ package org.springframework.fu.jafu;
 import java.util.Arrays;
 import java.util.function.Consumer;
 
-import org.springframework.boot.SpringApplication;
+import org.springframework.boot.SpringFuApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -68,21 +68,14 @@ public abstract class JafuApplication {
 	 * @see #run(String)
 	 */
 	public ConfigurableApplicationContext run(String profiles, String[] args) {
-		SpringApplication app = new SpringApplication(JafuApplication.class) {
-			@Override
-			protected void load(ApplicationContext context, Object[] sources) {
-				// We don't want the annotation bean definition reader
-			}
-		};
-		initializeWebApplicationContext(app);
+		SpringFuApplication app = getApplication();
 		if (!profiles.isEmpty()) {
 			app.setAdditionalProfiles(Arrays.stream(profiles.split(",")).map(it -> it.trim()).toArray(String[]::new));
 		}
 		app.addInitializers(this.initializer);
-		System.setProperty("spring.backgroundpreinitializer.ignore", "true");
 		return app.run(args);
 	}
 
-	protected abstract void initializeWebApplicationContext(SpringApplication app);
+	protected abstract SpringFuApplication getApplication();
 
 }

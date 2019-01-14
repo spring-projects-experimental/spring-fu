@@ -2,10 +2,11 @@ package org.springframework.fu.jafu;
 
 import java.util.function.Consumer;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.WebApplicationType;
+import org.springframework.boot.SpringFuApplication;
 import org.springframework.boot.web.reactive.context.ReactiveWebServerApplicationContext;
+import org.springframework.boot.web.reactive.context.StandardReactiveWebEnvironment;
 import org.springframework.context.support.GenericApplicationContext;
+import org.springframework.core.env.StandardEnvironment;
 
 /**
  * Provide {@link #application(Consumer)} and {@link #webApplication(Consumer)} to declare an application.
@@ -21,9 +22,8 @@ public abstract class Jafu {
 		return new JafuApplication(new ApplicationDsl(dsl)) {
 
 			@Override
-			protected void initializeWebApplicationContext(SpringApplication app) {
-				app.setWebApplicationType(WebApplicationType.NONE);
-				app.setApplicationContextClass(GenericApplicationContext.class);
+			protected SpringFuApplication getApplication() {
+				return new SpringFuApplication(new GenericApplicationContext(), new StandardEnvironment());
 			}
 		};
 	}
@@ -37,9 +37,8 @@ public abstract class Jafu {
 		return new JafuApplication(new ApplicationDsl(dsl)) {
 
 			@Override
-			protected void initializeWebApplicationContext(SpringApplication app) {
-				app.setWebApplicationType(WebApplicationType.REACTIVE);
-				app.setApplicationContextClass(ReactiveWebServerApplicationContext.class);
+			protected SpringFuApplication getApplication() {
+				return new SpringFuApplication(new ReactiveWebServerApplicationContext(), new StandardReactiveWebEnvironment());
 			}
 		};
 	}

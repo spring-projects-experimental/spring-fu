@@ -1,9 +1,11 @@
 package org.springframework.fu.kofu
 
-import org.springframework.boot.SpringApplication
+import org.springframework.boot.SpringFuApplication
 import org.springframework.boot.WebApplicationType
 import org.springframework.boot.web.reactive.context.ReactiveWebServerApplicationContext
+import org.springframework.boot.web.reactive.context.StandardReactiveWebEnvironment
 import org.springframework.context.support.GenericApplicationContext
+import org.springframework.core.env.StandardEnvironment
 
 /**
  * Declare an [application][ApplicationDsl] that allows to configure a Spring Boot
@@ -17,10 +19,7 @@ import org.springframework.context.support.GenericApplicationContext
  */
 fun application(dsl: ApplicationDsl.() -> Unit)
         = object: KofuApplication(ApplicationDsl(dsl)) {
-    override fun initializeWebApplicationContext(app: SpringApplication) {
-        app.webApplicationType = WebApplicationType.NONE
-        app.setApplicationContextClass(GenericApplicationContext::class.java)
-    }
+    override fun getApplication() = SpringFuApplication(GenericApplicationContext(), StandardEnvironment())
 }
 
 /**
@@ -34,10 +33,7 @@ fun application(dsl: ApplicationDsl.() -> Unit)
  */
 fun webApplication(dsl: ApplicationDsl.() -> Unit)
         = object: KofuApplication(ApplicationDsl(dsl)) {
-    override fun initializeWebApplicationContext(app: SpringApplication) {
-        app.webApplicationType = WebApplicationType.REACTIVE
-        app.setApplicationContextClass(ReactiveWebServerApplicationContext::class.java)
-    }
+    override fun getApplication() = SpringFuApplication(ReactiveWebServerApplicationContext(), StandardReactiveWebEnvironment())
 }
 
 /**
