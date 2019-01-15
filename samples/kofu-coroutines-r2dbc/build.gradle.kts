@@ -9,13 +9,13 @@ plugins {
 }
 
 dependencies {
-	implementation("org.springframework.fu:spring-fu-kofu:0.0.4.BUILD-SNAPSHOT")
+	implementation("org.springframework.fu:spring-fu-kofu:0.0.4")
 
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
 	implementation("org.springframework.boot:spring-boot-starter-mustache")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-	implementation("org.springframework.fu:spring-fu-webflux-coroutines:0.0.4.BUILD-SNAPSHOT")
-	implementation("org.springframework.fu:spring-fu-data-r2dbc-coroutines:0.0.4.BUILD-SNAPSHOT")
+	implementation("org.springframework.fu:spring-fu-webflux-coroutines:0.0.4")
+	implementation("org.springframework.fu:spring-fu-data-r2dbc-coroutines:0.0.4")
 	implementation("io.r2dbc:r2dbc-h2:1.0.0.M6")
 
 	testImplementation("org.junit.jupiter:junit-jupiter-api")
