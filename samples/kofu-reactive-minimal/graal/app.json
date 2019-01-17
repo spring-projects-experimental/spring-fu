@@ -6,6 +6,12 @@
     "allDeclaredMethods": true
   },
   {
+    "name": "[Lcom.sample.SampleService;",
+    "allPublicConstructors" : true,
+    "allDeclaredConstructors" : true,
+    "allDeclaredMethods": true
+  },
+  {
     "name": "com.sample.SampleHandler",
     "allDeclaredConstructors" : true,
     "allDeclaredMethods": true
