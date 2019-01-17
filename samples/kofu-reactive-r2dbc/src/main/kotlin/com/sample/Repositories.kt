@@ -1,17 +1,8 @@
 package com.sample
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.readValue
-
-import org.springframework.core.io.ClassPathResource
 import org.springframework.data.r2dbc.function.DatabaseClient
-import reactor.core.publisher.Mono
-import reactor.core.publisher.whenComplete
 
-class UserRepository(
-		private val client: DatabaseClient,
-		private val objectMapper: ObjectMapper
-) {
+class UserRepository(private val client: DatabaseClient) {
 
 	fun count() = client.execute().sql("SELECT COUNT(*) FROM users").asType(Int::class).fetch().one()
 
