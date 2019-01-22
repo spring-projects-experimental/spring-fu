@@ -29,10 +29,10 @@ import org.springframework.fu.kofu.web.cors
 import org.springframework.fu.kofu.web.mustache
 import org.springframework.fu.kofu.web.server
 import org.springframework.fu.kofu.webApplication
-import org.springframework.web.function.server.CoServerRequest
-import org.springframework.web.function.server.coHandler
+import org.springframework.web.function.server.await
 import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse
+import org.springframework.web.reactive.function.server.ServerResponse.ok
 import org.springframework.web.reactive.function.server.router
 import reactor.core.publisher.Mono
 import reactor.core.publisher.toMono
@@ -154,27 +154,19 @@ interface ApiHandler {
 	fun delete(request: ServerRequest): Mono<ServerResponse>
 }
 
-class HtmlCoroutinesHandler(private val userRepository: UserRepository,
-				  private val articleRepository: ArticleRepository) {
-	suspend fun blog(request: CoServerRequest) = coHandler {
-		ok().build()
-	}
-	suspend fun article(request: CoServerRequest) = coHandler {
-		ok().build()
-	}
+class HtmlCoroutinesHandler(
+		private val userRepository: UserRepository,
+		private val articleRepository: ArticleRepository) {
+
+	suspend fun blog(request: ServerRequest) = ok().await()
+	suspend fun article(request: ServerRequest) = ok().await()
+
 }
 
 class ApiCoroutinesHandler {
-	suspend fun list(request: CoServerRequest) = coHandler {
-		ok().build()
-	}
-	suspend fun create(request: CoServerRequest) = coHandler {
-		ok().build()
-	}
-	suspend fun update(request: CoServerRequest) = coHandler {
-		ok().build()
-	}
-	suspend fun delete(request: CoServerRequest) = coHandler {
-		ok().build()
-	}
+	suspend fun list(request: ServerRequest) = ok().await()
+	suspend fun create(request: ServerRequest) = ok().await()
+	suspend fun update(request: ServerRequest) = ok().await()
+	suspend fun delete(request: ServerRequest) = ok().await()
+
 }

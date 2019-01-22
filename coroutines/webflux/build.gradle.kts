@@ -1,7 +1,12 @@
 dependencies {
 	api("org.springframework:spring-webflux")
+	api("org.springframework:spring-context")
 	api("org.jetbrains.kotlinx:kotlinx-coroutines-core")
 	api("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
+
+	testImplementation("org.junit.jupiter:junit-jupiter-api")
+	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+	testImplementation("io.mockk:mockk:1.9")
 }
 
 publishing {
