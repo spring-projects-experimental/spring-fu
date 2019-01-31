@@ -73,7 +73,7 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit): Abst
         }
         engine!!.setPort(port)
         if (!codecsConfigured) {
-            StringCodecInitializer(false).initialize(context)
+            StringCodecInitializer(false, false).initialize(context)
             ResourceCodecInitializer(false).initialize(context)
         }
         if (context.containsBeanDefinition("webHandler")) {
@@ -218,8 +218,8 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit): Abst
         /**
          * Enable [org.springframework.core.codec.CharSequenceEncoder] and [org.springframework.core.codec.StringDecoder]
          */
-        fun string() {
-            StringCodecInitializer(false).initialize(context)
+        fun string(textPlainOnly: Boolean = false) {
+            StringCodecInitializer(false, textPlainOnly).initialize(context)
         }
 
         /**

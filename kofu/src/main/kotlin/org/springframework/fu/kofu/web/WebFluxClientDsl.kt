@@ -35,7 +35,7 @@ class WebFluxClientDsl(private val init: WebFluxClientDsl.() -> Unit) : Abstract
         super.initialize(context)
         init()
         if (!codecsConfigured) {
-            StringCodecInitializer(true).initialize(context)
+            StringCodecInitializer(true, false).initialize(context)
             ResourceCodecInitializer(true).initialize(context)
         }
         ReactiveWebClientBuilderInitializer(baseUrl).initialize(context)
@@ -59,8 +59,8 @@ class WebFluxClientDsl(private val init: WebFluxClientDsl.() -> Unit) : Abstract
         /**
          * Enable [org.springframework.core.codec.CharSequenceEncoder] and [org.springframework.core.codec.StringDecoder]
          */
-        fun string() {
-            StringCodecInitializer(true).initialize(context)
+        fun string(textPlainOnly: Boolean = false) {
+            StringCodecInitializer(true, textPlainOnly).initialize(context)
         }
 
         /**

@@ -154,7 +154,7 @@ public class WebFluxServerDsl extends AbstractDsl {
 		engine.setPort(port);
 
 		if (!codecsConfigured) {
-			new StringCodecInitializer(false).initialize(context);
+			new StringCodecInitializer(false, false).initialize(context);
 			new ResourceCodecInitializer(false).initialize(context);
 		}
 		if (context.containsBeanDefinition("webHandler")) {
@@ -187,10 +187,18 @@ public class WebFluxServerDsl extends AbstractDsl {
 		}
 
 		/**
-		 * Enable {@link org.springframework.core.codec.CharSequenceEncoder} and {@link org.springframework.core.codec.StringDecoder}
+		 * Enable {@link org.springframework.core.codec.CharSequenceEncoder} and {@link org.springframework.core.codec.StringDecoder} for all media types
 		 */
 		public WebFluxServerCodecDsl string() {
-			new StringCodecInitializer(false).initialize(context);
+			new StringCodecInitializer(false, false).initialize(context);
+			return this;
+		}
+
+		/**
+		 * Enable {@link org.springframework.core.codec.CharSequenceEncoder} and {@link org.springframework.core.codec.StringDecoder}
+		 */
+		public WebFluxServerCodecDsl string(boolean textPlainOnly) {
+			new StringCodecInitializer(false, textPlainOnly).initialize(context);
 			return this;
 		}
 
