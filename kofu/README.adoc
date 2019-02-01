@@ -1,4 +1,4 @@
-:spring-fu-version: 0.0.4
+:spring-fu-version: 0.0.5
 :kofu-kdoc-url: http://repo.spring.io/milestone/org/springframework/fu/spring-fu-kofu/{spring-fu-version}/spring-fu-kofu-{spring-fu-version}-javadoc.jar!
 :framework-kdoc-url: https://docs.spring.io/spring-framework/docs/5.1.x/kdoc-api
 = Kofu DSL for Spring Boot
