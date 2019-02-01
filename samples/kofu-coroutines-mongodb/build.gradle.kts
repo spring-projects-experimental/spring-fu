@@ -8,12 +8,12 @@ plugins {
 }
 
 dependencies {
-	implementation("org.springframework.fu:spring-fu-kofu:0.0.5")
+	implementation("org.springframework.fu:spring-fu-kofu:0.0.6.BUILD-SNAPSHOT")
 
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
 	implementation("org.springframework.boot:spring-boot-starter-mustache")
-	implementation("org.springframework.fu:spring-fu-webflux-coroutines:0.0.5")
-	implementation("org.springframework.fu:spring-fu-data-mongodb-coroutines:0.0.5")
+	implementation("org.springframework.fu:spring-fu-webflux-coroutines:0.0.6.BUILD-SNAPSHOT")
+	implementation("org.springframework.fu:spring-fu-data-mongodb-coroutines:0.0.6.BUILD-SNAPSHOT")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("de.flapdoodle.embed:de.flapdoodle.embed.mongo")
 
