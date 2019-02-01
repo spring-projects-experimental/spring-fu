@@ -16,6 +16,8 @@
 
 package org.springframework.fu.kofu
 
+import io.mockk.every
+import io.mockk.mockk
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Test
@@ -44,7 +46,7 @@ class ApplicationDslTests {
 	fun `Create an application with a custom bean`() {
 		val app = application {
 			beans {
-				bean<Foo>()
+				bean<Foo>(isPrimary = true)
 			}
 		}
 		with(app.run()) {
@@ -82,8 +84,31 @@ class ApplicationDslTests {
 		}
 	}
 
+	@Test
+	fun `Mock a bean of an existing application`() {
+		val app = application {
+			beans {
+				bean { Bar("original") }
+			}
+		}
+		app.customize {
+			beans {
+				bean(isPrimary = true) {
+					mockk<Bar>().apply {
+						every { value } returns "customized"
+					}
+				}
+			}
+		}
+		with(app.run()) {
+			assertEquals("customized", getBean<Bar>().value)
+			close()
+		}
+	}
+
 
 	class Foo
+	class Bar(val value: String)
 
 	// Switch to data classes when https://github.com/spring-projects/spring-boot/issues/8762 will be fixed
 	class City {

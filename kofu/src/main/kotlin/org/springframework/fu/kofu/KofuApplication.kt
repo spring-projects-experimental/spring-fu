@@ -14,6 +14,8 @@ import org.springframework.context.support.GenericApplicationContext
  */
 abstract class KofuApplication(private val initializer: ApplicationContextInitializer<GenericApplicationContext>) {
 
+    private var customizer: (ApplicationDsl.() -> Unit)? = null
+
     /**
      * Run the current application
      * @param profiles [ApplicationContext] profiles separated by commas.
@@ -31,8 +33,13 @@ abstract class KofuApplication(private val initializer: ApplicationContextInitia
             app.setAdditionalProfiles(*profiles.split(",").map { it.trim() }.toTypedArray())
         }
         app.addInitializers(initializer)
+        if (customizer != null) app.addInitializers(ApplicationDsl(customizer!!))
         System.setProperty("spring.backgroundpreinitializer.ignore", "true")
         return app.run(*args)
+    }
+
+    fun customize(customizer: ApplicationDsl.() -> Unit) {
+        this.customizer = customizer
     }
 
     protected abstract fun initializeWebApplicationContext(app: SpringApplication)

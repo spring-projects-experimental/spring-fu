@@ -19,6 +19,8 @@ public abstract class JafuApplication {
 
 	private final ApplicationContextInitializer<GenericApplicationContext> initializer;
 
+	private ApplicationContextInitializer<GenericApplicationContext> customizer;
+
 	protected JafuApplication(ApplicationContextInitializer<GenericApplicationContext> initializer) {
 		this.initializer = initializer;
 	}
@@ -79,8 +81,14 @@ public abstract class JafuApplication {
 			app.setAdditionalProfiles(Arrays.stream(profiles.split(",")).map(it -> it.trim()).toArray(String[]::new));
 		}
 		app.addInitializers(this.initializer);
+		if (this.customizer != null) app.addInitializers(this.customizer);
 		System.setProperty("spring.backgroundpreinitializer.ignore", "true");
 		return app.run(args);
+	}
+
+	public JafuApplication customize(Consumer<ApplicationDsl> customizer) {
+		this.customizer = new ApplicationDsl(customizer);
+		return this;
 	}
 
 	protected abstract void initializeWebApplicationContext(SpringApplication app);

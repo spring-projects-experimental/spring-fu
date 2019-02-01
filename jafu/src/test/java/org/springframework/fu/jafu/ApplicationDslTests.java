@@ -51,8 +51,29 @@ class ApplicationDslTests {
 		context.close();
 	}
 
+	@Test
+	void replaceBeanOfExistingApplication() {
+		var app = application(a -> a.beans(b -> b.bean(Bar.class, () -> new Bar("original"))));
+		var context = app.customize(a -> a.beans(b -> b.bean(Bar.class, () -> new Bar("customized"), c -> c.setPrimary(true)))).run();
+		assertEquals("customized", context.getBean(Bar.class).value);
+		context.close();
+	}
+
 
 	static class Foo {}
+
+	static class Bar {
+
+		private final String value;
+
+		public Bar(String value) {
+			this.value = value;
+		}
+
+		public String getValue() {
+			return value;
+		}
+	}
 
 	static class City {
 

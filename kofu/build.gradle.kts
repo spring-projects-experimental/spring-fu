@@ -40,6 +40,7 @@ dependencies {
 	testRuntimeOnly("de.flapdoodle.embed:de.flapdoodle.embed.mongo")
 	testImplementation(project(":coroutines:data-mongodb"))
 	testImplementation(project(":coroutines:webflux"))
+	testImplementation("io.mockk:mockk:1.9")
 }
 
 tasks.withType<DokkaTask> {
