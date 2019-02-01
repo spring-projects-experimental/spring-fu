@@ -94,7 +94,7 @@ class ApplicationDslTests {
 		app.customize {
 			beans {
 				bean(isPrimary = true) {
-					mockk<Bar>().apply {
+					mockk<Bar> {
 						every { value } returns "customized"
 					}
 				}
