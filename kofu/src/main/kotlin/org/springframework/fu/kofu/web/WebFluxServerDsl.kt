@@ -11,8 +11,11 @@ import org.springframework.boot.web.embedded.netty.NettyReactiveWebServerFactory
 import org.springframework.boot.web.embedded.tomcat.TomcatReactiveWebServerFactory
 import org.springframework.boot.web.embedded.undertow.UndertowReactiveWebServerFactory
 import org.springframework.boot.web.reactive.server.ConfigurableReactiveWebServerFactory
+import org.springframework.context.ApplicationContext
+import org.springframework.context.ConfigurableApplicationContext
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.registerBean
+import org.springframework.core.env.get
 import org.springframework.fu.kofu.AbstractDsl
 import org.springframework.fu.kofu.ConfigurationDsl
 import org.springframework.web.function.server.CoRouterFunctionDsl
@@ -280,3 +283,9 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit): Abst
 fun ConfigurationDsl.server(dsl: WebFluxServerDsl.() -> Unit =  {}) {
     WebFluxServerDsl(dsl).initialize(context)
 }
+
+/**
+ * Shortcut for `environment["local.server.port"]`.
+ */
+val ApplicationContext.localServerPort: String
+        get() = environment["local.server.port"]!!

@@ -19,7 +19,6 @@ package org.springframework.fu.kofu.web
 import org.junit.jupiter.api.Test
 import org.springframework.fu.kofu.webApplication
 import org.springframework.test.web.reactive.server.WebTestClient
-import org.springframework.web.reactive.function.server.router
 
 /**
  * @author Ireneusz Kozłowski
@@ -30,6 +29,7 @@ class CorsDslTests {
 	fun `Enable cors module on server, create and request a JSON endpoint`() {
 		val app = webApplication {
 			server {
+				port = 0
 				router {
 					GET("/") { noContent().build() }
 				}
@@ -55,9 +55,8 @@ class CorsDslTests {
 		}
 		with(app.run()) {
 			assert(containsBean("corsFilter"))
-			val client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:8080").build()
-			client.get().uri("/").exchange()
-					.expectStatus().is2xxSuccessful
+			val client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:$localServerPort").build()
+			client.get().uri("/").exchange().expectStatus().is2xxSuccessful
 			close()
 		}
 	}

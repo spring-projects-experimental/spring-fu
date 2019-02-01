@@ -21,6 +21,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.getBean
 import org.springframework.boot.logging.LogLevel
+import org.springframework.core.env.get
 import org.springframework.fu.kofu.mongo.mongodb
 import org.springframework.fu.kofu.webApplication
 import org.springframework.http.HttpStatus.NO_CONTENT
@@ -40,12 +41,12 @@ import reactor.test.test
  */
 class WebServerDslTests {
 
-	private val port: Int = 8080
-
 	@Test
 	fun `Create an application with an empty server`() {
 		val app = webApplication {
-			server()
+			server {
+				port = 0
+			}
 		}
 		with(app.run()){
 			close()
@@ -56,11 +57,12 @@ class WebServerDslTests {
 	fun `Create an application with a server and a filter`() {
 		val app = webApplication {
 			server {
+				port = 0
 				filter<MyFilter>()
 			}
 		}
 		with(app.run()){
-			val client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:$port").build()
+			val client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:$localServerPort").build()
 			client.get().uri("/foo").accept(MediaType.TEXT_PLAIN).exchange().expectStatus().isEqualTo(UNAUTHORIZED)
 			close()
 		}
@@ -70,13 +72,14 @@ class WebServerDslTests {
 	fun `Create and request an endpoint`() {
 		val app = webApplication {
 			server {
+				port = 0
 				router {
 					GET("/foo") { noContent().build() }
 				}
 			}
 		}
 		with(app.run()) {
-			val client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:$port").build()
+			val client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:$localServerPort").build()
 			client.get().uri("/foo").accept(MediaType.TEXT_PLAIN).exchange().expectStatus().is2xxSuccessful
 			close()
 		}
@@ -86,6 +89,7 @@ class WebServerDslTests {
 	fun `Create and request an endpoint with a customized engine`() {
 		val app = webApplication {
 			server {
+				port = 0
 				router {
 					engine = tomcat()
 					GET("/foo") { noContent().build() }
@@ -93,7 +97,7 @@ class WebServerDslTests {
 			}
 		}
 		with(app.run()) {
-			val client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:$port").build()
+			val client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:$localServerPort").build()
 			client.get().uri("/foo").accept(MediaType.TEXT_PLAIN).exchange().expectStatus().is2xxSuccessful
 			close()
 		}
@@ -103,17 +107,16 @@ class WebServerDslTests {
 	fun `Create a WebClient and request an endpoint`() {
 		val app = webApplication {
 			server {
+				port = 0
 				router {
 					GET("/") { noContent().build() }
 				}
 			}
-			client {
-				baseUrl = "http://127.0.0.1:$port"
-			}
+			client()
 		}
 		with(app.run()) {
 			val client = getBean<WebClient.Builder>().build()
-			client.get().uri("/").exchange().test()
+			client.get().uri("http://127.0.0.1:$localServerPort/").exchange().test()
 					.consumeNextWith { assertEquals(NO_CONTENT, it.statusCode()) }
 					.verifyComplete()
 			close()
@@ -124,6 +127,7 @@ class WebServerDslTests {
 	fun `Declare 2 router blocks`() {
 		val app = webApplication {
 			server {
+				port = 0
 				router {
 					GET("/foo") { noContent().build() }
 				}
@@ -133,7 +137,7 @@ class WebServerDslTests {
 			}
 		}
 		with(app.run()) {
-			val client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:$port").build()
+			val client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:$localServerPort").build()
 			client.get().uri("/foo").exchange().expectStatus().isNoContent
 			client.get().uri("/bar").exchange().expectStatus().isOk
 			close()
@@ -143,9 +147,11 @@ class WebServerDslTests {
 	@Test
 	fun `Declare 2 server blocks`() {
 		val app = webApplication {
-			server ()
 			server {
-				port = 8181
+				port = 0
+			}
+			server {
+				port = 0
 			}
 		}
 
@@ -158,6 +164,7 @@ class WebServerDslTests {
 	fun `Check that ConcurrentModificationException is not thrown`() {
 		val app = webApplication {
 			server {
+				port = 0
 				codecs {
 					string()
 					jackson()
@@ -174,7 +181,7 @@ class WebServerDslTests {
 			}
 		}
 		with(app.run()) {
-			val client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:$port").build()
+			val client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:$localServerPort").build()
 			client.get().uri("/").exchange().expectStatus().is2xxSuccessful
 			close()
 		}
@@ -183,7 +190,9 @@ class WebServerDslTests {
 	@Test
 	fun `run an application 2 times`() {
 		val app = webApplication {
-			server()
+			server {
+				port = 0
+			}
 		}
 		var context = app.run()
 		context.close()

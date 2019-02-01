@@ -29,7 +29,6 @@ import org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.test.web.reactive.server.expectBody
 import org.springframework.web.reactive.function.client.WebClient
-import org.springframework.web.reactive.function.server.router
 import reactor.test.test
 
 /**
@@ -41,6 +40,7 @@ class JacksonDslTests {
 	fun `Enable jackson module on server, create and request a JSON endpoint`() {
 		val app = webApplication {
 			server {
+				port = 0
 				codecs {
 					jackson()
 				}
@@ -51,20 +51,22 @@ class JacksonDslTests {
 				}
 			}
 		}
-		val context = app.run()
-		val client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:8080").build()
-		client.get().uri("/user").exchange()
-				.expectStatus().is2xxSuccessful
-				.expectHeader().contentType(APPLICATION_JSON_UTF8_VALUE)
-				.expectBody<User>()
-				.isEqualTo(User("Brian"))
-		context.close()
+		with (app.run())  {
+			val client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:$localServerPort").build()
+			client.get().uri("/user").exchange()
+					.expectStatus().is2xxSuccessful
+					.expectHeader().contentType(APPLICATION_JSON_UTF8_VALUE)
+					.expectBody<User>()
+					.isEqualTo(User("Brian"))
+			close()
+		}
 	}
 
 	@Test
 	fun `Enable jackson module on client and server, create and request a JSON endpoint`() {
 		val app = webApplication {
 			server {
+				port = 0
 				codecs {
 					jackson()
 				}
@@ -82,7 +84,7 @@ class JacksonDslTests {
 		}
 		with(app.run()) {
 			val client = getBean<WebClient.Builder>().build()
-			val response = client.get().uri("http://127.0.0.1:8080/user").exchange()
+			val response = client.get().uri("http://127.0.0.1:$localServerPort/user").exchange()
 			response.test()
 					.consumeNextWith {
 						assertEquals(HttpStatus.OK, it.statusCode())
@@ -99,6 +101,7 @@ class JacksonDslTests {
 	fun `No Jackson codec on server when not declared`() {
 		val app = webApplication {
 			server {
+				port = 0
 				router {
 					GET("/user") {
 						ok().header(CONTENT_TYPE, APPLICATION_JSON_UTF8_VALUE).syncBody(User("Brian"))
@@ -106,11 +109,11 @@ class JacksonDslTests {
 				}
 			}
 		}
-		val context = app.run()
-		val client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:8080").build()
-		client.get().uri("/user").exchange()
-				.expectStatus().is5xxServerError
-		context.close()
+		with(app.run()) {
+			val client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:$localServerPort").build()
+			client.get().uri("/user").exchange().expectStatus().is5xxServerError
+			close()
+		}
 	}
 
 	data class User(val name: String)

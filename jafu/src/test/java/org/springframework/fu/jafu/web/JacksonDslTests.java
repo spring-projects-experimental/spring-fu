@@ -24,10 +24,11 @@ public class JacksonDslTests {
 
 	@Test
 	void enableJacksonModuleOnServerCreateAndRequestAJSONEndpoint() {
-		var app = webApplication(a -> a.enable(server(s -> s.codecs(c -> c.jackson()).router(r -> r.GET("/user", request -> ok().header(CONTENT_TYPE, APPLICATION_JSON_UTF8_VALUE).syncBody(new User("Brian")))))));
+		var app = webApplication(a -> a.enable(server(s -> s.port(0).codecs(c -> c.jackson()).router(r -> r.GET("/user", request -> ok().header(CONTENT_TYPE, APPLICATION_JSON_UTF8_VALUE).syncBody(new User("Brian")))))));
 
 		var context = app.run();
-		var client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:8080").build();
+		var port = context.getEnvironment().getProperty("local.server.port");
+		var client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:" + port).build();
 		client.get().uri("/user").exchange()
 				.expectStatus().is2xxSuccessful()
 				.expectHeader().contentType(APPLICATION_JSON_UTF8_VALUE)
@@ -39,11 +40,12 @@ public class JacksonDslTests {
 	@Test
 	void enableJacksonModuleOnClientAndServerCreateAndRequestAJSONEndpoint() {
 		var app = webApplication(a ->
-				a.enable(server(s -> s.codecs(c -> c.jackson()).router(r -> r.GET("/user", request -> ok().header(CONTENT_TYPE, APPLICATION_JSON_UTF8_VALUE).syncBody(new User("Brian"))))))
+				a.enable(server(s -> s.port(0).codecs(c -> c.jackson()).router(r -> r.GET("/user", request -> ok().header(CONTENT_TYPE, APPLICATION_JSON_UTF8_VALUE).syncBody(new User("Brian"))))))
 				.enable(client(c -> c.codecs(codecs -> codecs.jackson()))));
 		var context = app.run();
+		var port = context.getEnvironment().getProperty("local.server.port");
 		var client = context.getBean(WebClient.Builder.class).build();
-		var response = client.get().uri("http://127.0.0.1:8080/user").exchange();
+		var response = client.get().uri("http://127.0.0.1:" + port + "/user").exchange();
 
 		StepVerifier.create(response)
 					.consumeNextWith(it -> {
@@ -58,9 +60,10 @@ public class JacksonDslTests {
 
 	@Test
 	void noJacksonCodecOnServerWhenNotDeclared() {
-		var app = webApplication(a -> a.enable(server(s -> s.router(r -> r.GET("/user", request -> ok().header(CONTENT_TYPE, APPLICATION_JSON_UTF8_VALUE).syncBody(new User("Brian")))))));
+		var app = webApplication(a -> a.enable(server(s -> s.port(0).router(r -> r.GET("/user", request -> ok().header(CONTENT_TYPE, APPLICATION_JSON_UTF8_VALUE).syncBody(new User("Brian")))))));
 		var context = app.run();
-		var client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:8080").build();
+		var port = context.getEnvironment().getProperty("local.server.port");
+		var client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:" + port).build();
 		client.get().uri("/user").exchange().expectStatus().is5xxServerError();
 		context.close();
 	}

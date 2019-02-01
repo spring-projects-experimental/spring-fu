@@ -30,19 +30,21 @@ class MustacheDslTests {
 	fun `Create and request a Mustache view`() {
 		val app = webApplication {
 			server {
+				port = 0
 				mustache()
 				router {
 					GET("/view") { ok().render("template", mapOf("name" to "world")) }
 				}
 			}
 		}
-		val context = app.run()
-		val client = WebTestClient.bindToServer().baseUrl("http://0.0.0.0:8080").build()
-		client.get().uri("/view").exchange()
-			.expectStatus().is2xxSuccessful
-			.expectBody<String>()
-			.isEqualTo("Hello world!")
-		context.close()
+		with(app.run()) {
+			val client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:$localServerPort").build()
+			client.get().uri("/view").exchange()
+					.expectStatus().is2xxSuccessful
+					.expectBody<String>()
+					.isEqualTo("Hello world!")
+			close()
+		}
 	}
 
 }
