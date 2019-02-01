@@ -38,6 +38,10 @@ abstract class KofuApplication(private val initializer: ApplicationContextInitia
         return app.run(*args)
     }
 
+    /**
+     * Customize an existing application for testing, mocking, etc. `bean(isPrimary = true) { ... }` can be used
+     * to override existing beans.
+     */
     fun customize(customizer: ApplicationDsl.() -> Unit) {
         this.customizer = customizer
     }

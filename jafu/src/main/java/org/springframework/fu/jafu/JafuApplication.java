@@ -86,6 +86,9 @@ public abstract class JafuApplication {
 		return app.run(args);
 	}
 
+	/**
+	 * Customize an existing application for testing, mocking, etc.
+	 */
 	public JafuApplication customize(Consumer<ApplicationDsl> customizer) {
 		this.customizer = new ApplicationDsl(customizer);
 		return this;
