@@ -8,8 +8,6 @@ public class H2R2dbcProperties {
 
 	private String password;
 
-	private boolean coroutines;
-
 
 	public String getUrl() {
 		return url;
@@ -35,11 +33,4 @@ public class H2R2dbcProperties {
 		this.password = password;
 	}
 
-	public boolean getCoroutines() {
-		return coroutines;
-	}
-
-	public void setCoroutines(boolean coroutines) {
-		this.coroutines = coroutines;
-	}
 }

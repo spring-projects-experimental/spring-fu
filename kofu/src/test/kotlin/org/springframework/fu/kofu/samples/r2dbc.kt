@@ -28,11 +28,3 @@ fun r2dbcPostgresqlCoroutines() {
 		}
 	}
 }
-
-fun r2dbcH2Coroutines() {
-	application {
-		r2dbcH2 {
-			coroutines = true
-		}
-	}
-}

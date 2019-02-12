@@ -15,7 +15,6 @@ import org.springframework.fu.kofu.ConfigurationDsl
  * Required dependencies are `io.r2dbc:r2dbc-postgresql` and `org.springframework.data:spring-data-r2dbc`.
  *
  * @sample org.springframework.fu.kofu.samples.r2dbcPostgresql
- * @sample org.springframework.fu.kofu.samples.r2dbcPostgresqlCoroutines
  * @author Sebastien Deleuze
  */
 class PostgresqlR2dbcDsl(private val init: PostgresqlR2dbcDsl.() -> Unit) : AbstractDsl() {

@@ -9,22 +9,14 @@ import org.springframework.fu.kofu.ConfigurationDsl
 /**
  * Kofu DSL for R2DBC H2 configuration.
  *
- * Enable and [configure][H2R2dbcDsl] R2DBC support by registering a [org.springframework.data.r2dbc.function.DatabaseClient]
- * (or a [org.springframework.data.r2dbc.function.CoDatabaseClient] for Coroutines) bean.
+ * Enable and [configure][H2R2dbcDsl] R2DBC support by registering a [org.springframework.data.r2dbc.function.DatabaseClient].
  *
  * Required dependencies are `io.r2dbc:r2dbc-h2` and `org.springframework.data:spring-data-r2dbc`.
 
  * @sample org.springframework.fu.kofu.samples.r2dbcH2
- * @sample org.springframework.fu.kofu.samples.r2dbcH2Coroutines
  * @author Sebastien Deleuze
  */
 class H2R2dbcDsl(private val init: H2R2dbcDsl.() -> Unit) : AbstractDsl() {
-
-    /**
-     * Enable coroutines support when set to `true` (register a [org.springframework.data.r2dbc.function.CoDatabaseClient] bean
-     * instead of a [org.springframework.data.r2dbc.function.DatabaseClient] one). By default, set to `false`.
-     */
-    var coroutines: Boolean = false
 
     /**
      * Configure the database url, `mem:test;DB_CLOSE_DELAY=-1` by default.
@@ -53,7 +45,6 @@ class H2R2dbcDsl(private val init: H2R2dbcDsl.() -> Unit) : AbstractDsl() {
         properties.url = url
         properties.username = username
         properties.password = password
-        properties.coroutines = coroutines
 
         H2DatabaseClientInitializer(properties).initialize(context)
     }

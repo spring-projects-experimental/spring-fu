@@ -5,7 +5,6 @@ import io.r2dbc.postgresql.PostgresqlConnectionFactory;
 
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
-import org.springframework.data.r2dbc.function.CoDatabaseClient;
 import org.springframework.data.r2dbc.function.DatabaseClient;
 
 public class PostgresqlDatabaseClientInitializer implements ApplicationContextInitializer<GenericApplicationContext> {
@@ -28,11 +27,6 @@ public class PostgresqlDatabaseClientInitializer implements ApplicationContextIn
 				.password(this.properties.getPassword())
 				.build();
 
-		if (properties.getCoroutines()) {
-			context.registerBean(CoDatabaseClient.class, () -> CoDatabaseClient.Companion.create(new PostgresqlConnectionFactory(configuration)));
-		}
-		else {
-			context.registerBean(DatabaseClient.class, () -> DatabaseClient.builder().connectionFactory(new PostgresqlConnectionFactory(configuration)).build());
-		}
+		context.registerBean(DatabaseClient.class, () -> DatabaseClient.builder().connectionFactory(new PostgresqlConnectionFactory(configuration)).build());
 	}
 }

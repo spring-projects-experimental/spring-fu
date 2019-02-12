@@ -5,7 +5,6 @@ import io.r2dbc.h2.H2ConnectionFactory;
 
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
-import org.springframework.data.r2dbc.function.CoDatabaseClient;
 import org.springframework.data.r2dbc.function.DatabaseClient;
 
 public class H2DatabaseClientInitializer implements ApplicationContextInitializer<GenericApplicationContext> {
@@ -26,11 +25,7 @@ public class H2DatabaseClientInitializer implements ApplicationContextInitialize
 				.password(this.properties.getPassword())
 				.build();
 
-		if (properties.getCoroutines()) {
-			context.registerBean(CoDatabaseClient.class, () -> CoDatabaseClient.Companion.create(new H2ConnectionFactory(configuration)));
-		}
-		else {
-			context.registerBean(DatabaseClient.class, () -> DatabaseClient.builder().connectionFactory(new H2ConnectionFactory(configuration)).build());
-		}
+		context.registerBean(DatabaseClient.class, () -> DatabaseClient.builder().connectionFactory(new H2ConnectionFactory(configuration)).build());
+
 	}
 }

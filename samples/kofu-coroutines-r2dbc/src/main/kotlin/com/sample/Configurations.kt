@@ -17,9 +17,7 @@ val dataConfig = configuration {
 			ref<UserRepository>().init()
 		}
 	}
-	r2dbcH2 {
-		coroutines = true
-	}
+	r2dbcH2()
 }
 
 val webConfig = configuration {
