@@ -29,7 +29,7 @@ import org.springframework.fu.kofu.web.cors
 import org.springframework.fu.kofu.web.mustache
 import org.springframework.fu.kofu.web.server
 import org.springframework.fu.kofu.webApplication
-import org.springframework.web.function.server.await
+import org.springframework.web.function.server.buildAndAwait
 import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse
 import org.springframework.web.reactive.function.server.ServerResponse.ok
@@ -158,15 +158,15 @@ class HtmlCoroutinesHandler(
 		private val userRepository: UserRepository,
 		private val articleRepository: ArticleRepository) {
 
-	suspend fun blog(request: ServerRequest) = ok().await()
-	suspend fun article(request: ServerRequest) = ok().await()
+	suspend fun blog(request: ServerRequest) = ok().buildAndAwait()
+	suspend fun article(request: ServerRequest) = ok().buildAndAwait()
 
 }
 
 class ApiCoroutinesHandler {
-	suspend fun list(request: ServerRequest) = ok().await()
-	suspend fun create(request: ServerRequest) = ok().await()
-	suspend fun update(request: ServerRequest) = ok().await()
-	suspend fun delete(request: ServerRequest) = ok().await()
+	suspend fun list(request: ServerRequest) = ok().buildAndAwait()
+	suspend fun create(request: ServerRequest) = ok().buildAndAwait()
+	suspend fun update(request: ServerRequest) = ok().buildAndAwait()
+	suspend fun delete(request: ServerRequest) = ok().buildAndAwait()
 
 }

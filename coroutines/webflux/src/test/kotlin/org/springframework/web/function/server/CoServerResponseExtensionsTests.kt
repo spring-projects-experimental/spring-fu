@@ -15,7 +15,7 @@ class CoServerResponseExtensionsTests {
         val builder = mockk<ServerResponse.HeadersBuilder<*>>()
         every { builder.build() } returns Mono.just(response)
         runBlocking {
-            assertEquals(response, builder.await())
+            assertEquals(response, builder.buildAndAwait())
         }
     }
 

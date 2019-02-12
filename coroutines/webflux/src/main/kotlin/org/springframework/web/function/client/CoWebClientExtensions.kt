@@ -17,7 +17,7 @@ import org.springframework.web.reactive.function.client.bodyToMono
  * @author Sebastien Deleuze
  * @since 5.2
  */
-suspend fun WebClient.RequestHeadersSpec<out WebClient.RequestHeadersSpec<*>>.awaitExchange(): ClientResponse = exchange().awaitSingle()
+suspend fun WebClient.RequestHeadersSpec<out WebClient.RequestHeadersSpec<*>>.exchangeAndAwait(): ClientResponse = exchange().awaitSingle()
 
 /**
  * Coroutines variant of [WebClient.RequestBodySpec.body].

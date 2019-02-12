@@ -10,7 +10,7 @@ import org.springframework.web.reactive.function.server.ServerResponse
  * @author Sebastien Deleuze
  * @since 5.2
  */
-suspend fun ServerResponse.HeadersBuilder<out ServerResponse.HeadersBuilder<*>>.await(): ServerResponse = build().awaitSingle()
+suspend fun ServerResponse.HeadersBuilder<out ServerResponse.HeadersBuilder<*>>.buildAndAwait(): ServerResponse = build().awaitSingle()
 
 /**
  * Coroutines variant of [ServerResponse.BodyBuilder.syncBody].

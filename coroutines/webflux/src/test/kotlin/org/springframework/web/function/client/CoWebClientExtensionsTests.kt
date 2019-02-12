@@ -6,13 +6,10 @@ import io.mockk.verify
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
-import org.springframework.web.function.server.awaitBody
 import org.springframework.web.reactive.function.client.ClientResponse
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.body
 import org.springframework.web.reactive.function.client.bodyToMono
-import org.springframework.web.reactive.function.server.ServerRequest
-import org.springframework.web.reactive.function.server.bodyToMono
 import reactor.core.publisher.Mono
 
 class CoWebClientExtensionsTests {
@@ -23,7 +20,7 @@ class CoWebClientExtensionsTests {
         val response = mockk<ClientResponse>()
         every { spec.exchange() } returns Mono.just(response)
         runBlocking {
-            Assertions.assertEquals(response, spec.awaitExchange())
+            Assertions.assertEquals(response, spec.exchangeAndAwait())
         }
     }
 
