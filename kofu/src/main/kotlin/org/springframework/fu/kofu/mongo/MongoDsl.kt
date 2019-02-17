@@ -22,7 +22,6 @@ import org.springframework.boot.autoconfigure.data.mongo.MongoDataInitializer
 import org.springframework.boot.autoconfigure.data.mongo.MongoReactiveDataInitializer
 import org.springframework.boot.autoconfigure.mongo.MongoProperties
 import org.springframework.boot.autoconfigure.mongo.MongoReactiveInitializer
-import org.springframework.boot.autoconfigure.mongo.coroutines.CoroutinesMongoInitializer
 import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoInitializer
 import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoProperties
 import org.springframework.context.support.GenericApplicationContext
@@ -54,14 +53,6 @@ open class MongoDsl(
 		MongoReactiveDataInitializer(properties).initialize(context)
 		MongoReactiveInitializer(properties, embedded).initialize(context)
 	}
-
-	/**
-	 * Enable coroutines support when set to `true` (register a `CoMongoTemplate` bean).
-	 */
-	var coroutines: Boolean = false
-		set(value) {
-			if (value) CoroutinesMongoInitializer().initialize(context)
-		}
 
 	/**
 	 * Configure the database uri. By default set to `mongodb://localhost/test`.

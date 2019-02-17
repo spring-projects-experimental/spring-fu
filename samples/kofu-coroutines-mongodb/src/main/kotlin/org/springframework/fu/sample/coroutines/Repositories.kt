@@ -4,27 +4,34 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import org.springframework.core.io.ClassPathResource
 import org.springframework.data.mongodb.core.*
+import org.springframework.data.mongodb.core.query.Criteria.*
+import org.springframework.data.mongodb.core.query.Query.*
+import org.springframework.data.mongodb.core.query.isEqualTo
 
 class UserRepository(
-		private val mongo: CoMongoTemplate,
+		private val mongo: ReactiveFluentMongoOperations,
 		private val objectMapper: ObjectMapper
 ) {
 
-	suspend fun count() = mongo.count<User>()
+	suspend fun count() = mongo.query<User>().awaitCount()
 
-	suspend fun findAll() = mongo.findAll<User>()
+	suspend fun findAll() = mongo.query<User>().awaitAll()
 
-	suspend fun findOne(id: String) = mongo.findById<User>(id)
+	suspend fun findOne(id: String) = mongo.query<User>().matching(query(where("id").isEqualTo(id))).awaitOne()
 
-	suspend fun deleteAll() = mongo.remove<User>()
+	suspend fun deleteAll() {
+		mongo.remove<User>().allAndAwait()
+	}
 
-	suspend fun save(user: User) = mongo.save(user)
+	suspend fun insert(user: User) = mongo.insert<User>().oneAndAwait(user)
+
+	suspend fun update(user: User) = mongo.update<User>().replaceWith(user).asType<User>().findReplaceAndAwait()!!
 
 	suspend fun init() {
 		val eventsResource = ClassPathResource("data/users.json")
 		val users: List<User> = objectMapper.readValue(eventsResource.inputStream)
 		users.forEach {
-			save(it)
+			insert(it)
 		}
 
 	}

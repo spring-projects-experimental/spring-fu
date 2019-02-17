@@ -2,8 +2,11 @@ dependencies {
 	api("org.springframework.data:spring-data-mongodb")
 	api("org.jetbrains.kotlinx:kotlinx-coroutines-core")
 	api("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
-
 	implementation("org.mongodb:mongodb-driver-reactivestreams")
+
+	testImplementation("org.junit.jupiter:junit-jupiter-api")
+	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+	testImplementation("io.mockk:mockk:1.9")
 }
 
 publishing {

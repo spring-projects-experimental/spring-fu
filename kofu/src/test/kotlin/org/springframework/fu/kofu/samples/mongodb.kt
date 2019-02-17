@@ -19,12 +19,3 @@ fun mongoEmbedded() {
 		}
 	}
 }
-
-fun mongoCoroutines() {
-	application {
-		mongodb {
-			uri = "mongodb://myserver.com/foo"
-			coroutines = true
-		}
-	}
-}

@@ -19,7 +19,6 @@ val dataConfig = configuration {
 		}
 	}
 	mongodb {
-		coroutines = true
 		embedded {
 			version = Version.Main.PRODUCTION
 		}
