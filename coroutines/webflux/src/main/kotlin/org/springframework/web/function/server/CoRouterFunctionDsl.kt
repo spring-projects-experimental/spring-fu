@@ -125,7 +125,7 @@ open class CoRouterFunctionDsl(private val init: (CoRouterFunctionDsl.() -> Unit
      * @see RouterFunctions.route
      */
     fun GET(pattern: String, f: suspend (ServerRequest) -> ServerResponse) {
-        builder.add(RouterFunctions.route(RequestPredicates.GET(pattern), asHandlerFunction(f)))
+        builder.GET(pattern, asHandlerFunction(f))
     }
 
     /**
@@ -140,7 +140,7 @@ open class CoRouterFunctionDsl(private val init: (CoRouterFunctionDsl.() -> Unit
      * @see RouterFunctions.route
      */
     fun HEAD(pattern: String, f: suspend (ServerRequest) -> ServerResponse) {
-        builder.add(RouterFunctions.route(RequestPredicates.HEAD(pattern), asHandlerFunction(f)))
+        builder.HEAD(pattern, asHandlerFunction(f))
     }
 
     /**
@@ -155,7 +155,7 @@ open class CoRouterFunctionDsl(private val init: (CoRouterFunctionDsl.() -> Unit
      * @see RouterFunctions.route
      */
     fun POST(pattern: String, f: suspend (ServerRequest) -> ServerResponse) {
-        builder.add(RouterFunctions.route(RequestPredicates.POST(pattern), asHandlerFunction(f)))
+        builder.POST(pattern, asHandlerFunction(f))
     }
 
     /**
@@ -170,7 +170,7 @@ open class CoRouterFunctionDsl(private val init: (CoRouterFunctionDsl.() -> Unit
      * @see RouterFunctions.route
      */
     fun PUT(pattern: String, f: suspend (ServerRequest) -> ServerResponse) {
-        builder.add(RouterFunctions.route(RequestPredicates.PUT(pattern), asHandlerFunction(f)))
+        builder.PUT(pattern, asHandlerFunction(f))
     }
 
     /**
@@ -185,7 +185,7 @@ open class CoRouterFunctionDsl(private val init: (CoRouterFunctionDsl.() -> Unit
      * @see RouterFunctions.route
      */
     fun PATCH(pattern: String, f: suspend (ServerRequest) -> ServerResponse) {
-        builder.add(RouterFunctions.route(RequestPredicates.PATCH(pattern), asHandlerFunction(f)))
+        builder.PATCH(pattern, asHandlerFunction(f))
     }
 
     /**
@@ -202,7 +202,7 @@ open class CoRouterFunctionDsl(private val init: (CoRouterFunctionDsl.() -> Unit
      * @see RouterFunctions.route
      */
     fun DELETE(pattern: String, f: suspend (ServerRequest) -> ServerResponse) {
-        builder.add(RouterFunctions.route(RequestPredicates.DELETE(pattern), asHandlerFunction(f)))
+        builder.DELETE(pattern, asHandlerFunction(f))
     }
 
     /**
@@ -219,7 +219,7 @@ open class CoRouterFunctionDsl(private val init: (CoRouterFunctionDsl.() -> Unit
      * @see RouterFunctions.route
      */
     fun OPTIONS(pattern: String, f: suspend (ServerRequest) -> ServerResponse) {
-        builder.add(RouterFunctions.route(RequestPredicates.OPTIONS(pattern), asHandlerFunction(f)))
+        builder.OPTIONS(pattern, asHandlerFunction(f))
     }
 
     /**
@@ -382,7 +382,7 @@ open class CoRouterFunctionDsl(private val init: (CoRouterFunctionDsl.() -> Unit
      * @see RouterFunctions.resources
      */
     fun resources(path: String, location: Resource) {
-        builder.add(RouterFunctions.resources(path, location))
+        builder.resources(path, location)
     }
 
     /**
@@ -392,11 +392,11 @@ open class CoRouterFunctionDsl(private val init: (CoRouterFunctionDsl.() -> Unit
      */
     @UseExperimental(ExperimentalCoroutinesApi::class)
     fun resources(lookupFunction: suspend (ServerRequest) -> Resource) {
-        builder.add(RouterFunctions.resources {
+        builder.resources {
             GlobalScope.mono(Dispatchers.Unconfined) {
                 lookupFunction.invoke(it)
             }
-        })
+        }
     }
 
     override fun invoke(): RouterFunction<ServerResponse> {
