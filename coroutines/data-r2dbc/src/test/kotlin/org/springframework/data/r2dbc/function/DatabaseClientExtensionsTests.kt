@@ -2,6 +2,7 @@ package org.springframework.data.r2dbc.function
 
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -16,6 +17,9 @@ class DatabaseClientExtensionsTests {
         runBlocking {
             spec.await()
         }
+        verify {
+            spec.then()
+        }
     }
 
     @Test
@@ -25,6 +29,9 @@ class DatabaseClientExtensionsTests {
         every { genericSpec.`as`(String::class.java) } returns typedSpec
         runBlocking {
             assertEquals(typedSpec, genericSpec.asType<String>())
+        }
+        verify {
+            genericSpec.`as`(String::class.java)
         }
     }
 
@@ -36,6 +43,9 @@ class DatabaseClientExtensionsTests {
         runBlocking {
             assertEquals(typedSpec, genericSpec.asType<String>())
         }
+        verify {
+            genericSpec.`as`(String::class.java)
+        }
     }
 
     @Test
@@ -44,6 +54,9 @@ class DatabaseClientExtensionsTests {
         every { spec.then() } returns Mono.empty()
         runBlocking {
             spec.await()
+        }
+        verify {
+            spec.then()
         }
     }
 
@@ -54,6 +67,9 @@ class DatabaseClientExtensionsTests {
         runBlocking {
             assertEquals(spec, spec.asType())
         }
+        verify {
+            spec.`as`(String::class.java)
+        }
     }
 
     @Test
@@ -62,6 +78,9 @@ class DatabaseClientExtensionsTests {
         every { spec.then() } returns Mono.empty()
         runBlocking {
             spec.await()
+        }
+        verify {
+            spec.then()
         }
     }
 
@@ -72,6 +91,9 @@ class DatabaseClientExtensionsTests {
         every { spec.into(String::class.java) } returns typedSpec
         runBlocking {
             assertEquals(typedSpec, spec.into<String>())
+        }
+        verify {
+            spec.into(String::class.java)
         }
     }
 
