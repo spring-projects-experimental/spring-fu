@@ -7,21 +7,8 @@ import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import reactor.core.publisher.Flux
-import reactor.core.publisher.Mono
 
 class CoReactiveInsertOperationExtensionsTests {
-
-    @Test
-    fun terminatingFindAwaitOne() {
-        val find = mockk<ReactiveInsertOperation.TerminatingInsert<String>>()
-        every { find.one("foo") } returns Mono.just("foo")
-        runBlocking {
-            assertEquals("foo", find.oneAndAwait("foo"))
-        }
-        verify {
-            find.one("foo")
-        }
-    }
 
     @Test
     fun terminatingFindAwaitAll() {

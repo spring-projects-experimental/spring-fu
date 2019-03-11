@@ -81,8 +81,8 @@ public class ReactiveWebServerInitializer implements ApplicationContextInitializ
 		context.registerBean(ConfigurableReactiveWebServerFactory.class, () -> serverFactory);
 		context.registerBean(ErrorAttributes.class, () -> new DefaultErrorAttributes(serverProperties.getError().isIncludeException()));
 		context.registerBean(ErrorWebExceptionHandler.class,  () -> {
-			ErrorWebFluxAutoConfiguration errorConfiguration = new ErrorWebFluxAutoConfiguration(this.serverProperties, this.resourceProperties, context.getBeanProvider(ViewResolver.class), context.getBean(ServerCodecConfigurer.class), context);
-			return errorConfiguration.errorWebExceptionHandler(context.getBean(ErrorAttributes.class));
+			ErrorWebFluxAutoConfiguration errorConfiguration = new ErrorWebFluxAutoConfiguration(this.serverProperties);
+			return errorConfiguration.errorWebExceptionHandler(context.getBean(ErrorAttributes.class), this.resourceProperties, context.getBeanProvider(ViewResolver.class), context.getBean(ServerCodecConfigurer.class), context);
 		});
 		context.registerBean(EnableWebFluxConfigurationWrapper.class, () -> new EnableWebFluxConfigurationWrapper(context, webFluxProperties));
 		context.registerBean(WebHttpHandlerBuilder.LOCALE_CONTEXT_RESOLVER_BEAN_NAME, LocaleContextResolver.class, () -> context.getBean(EnableWebFluxConfigurationWrapper.class).localeContextResolver());

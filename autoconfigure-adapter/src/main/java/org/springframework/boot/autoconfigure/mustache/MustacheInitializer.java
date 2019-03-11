@@ -34,8 +34,8 @@ public class MustacheInitializer implements ApplicationContextInitializer<Generi
 
 	@Override
 	public void initialize(GenericApplicationContext context) {
-		MustacheAutoConfiguration configuration = new MustacheAutoConfiguration(this.properties, context.getEnvironment(), context);
+		MustacheAutoConfiguration configuration = new MustacheAutoConfiguration(this.properties, context);
 		context.registerBean(MustacheResourceTemplateLoader.class, () -> configuration.mustacheTemplateLoader());
-		context.registerBean(Mustache.Compiler.class, () -> configuration.mustacheCompiler(context.getBean(Mustache.TemplateLoader.class)));
+		context.registerBean(Mustache.Compiler.class, () -> configuration.mustacheCompiler(context.getBean(Mustache.TemplateLoader.class), context.getEnvironment()));
 	}
 }

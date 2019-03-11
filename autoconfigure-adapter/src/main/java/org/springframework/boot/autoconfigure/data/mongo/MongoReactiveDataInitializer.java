@@ -42,9 +42,9 @@ public class MongoReactiveDataInitializer implements ApplicationContextInitializ
 
 	@Override
 	public void initialize(GenericApplicationContext context) {
-		MongoReactiveDataAutoConfiguration configuration = new MongoReactiveDataAutoConfiguration(this.properties);
+		MongoReactiveDataAutoConfiguration configuration = new MongoReactiveDataAutoConfiguration();
 		context.registerBean(MappingMongoConverter.class, () -> configuration.mappingMongoConverter(context.getBean(MongoMappingContext.class), context.getBean(MongoCustomConversions.class)));
-		context.registerBean(SimpleReactiveMongoDatabaseFactory.class, () -> configuration.reactiveMongoDatabaseFactory(context.getBean(MongoClient.class)));
+		context.registerBean(SimpleReactiveMongoDatabaseFactory.class, () -> configuration.reactiveMongoDatabaseFactory(this.properties, context.getBean(MongoClient.class)));
 		context.registerBean(ReactiveMongoTemplate.class, () -> configuration.reactiveMongoTemplate(context.getBean(ReactiveMongoDatabaseFactory.class), context.getBean(MongoConverter.class)));
 	}
 }

@@ -40,7 +40,8 @@ public class MongoReactiveInitializer implements ApplicationContextInitializer<G
 	public void initialize(GenericApplicationContext context) {
 		context.registerBean(MongoClientSettingsBuilderCustomizer.class, () -> new MongoReactiveAutoConfiguration.NettyDriverConfiguration().nettyDriverCustomizer(context.getDefaultListableBeanFactory().getBeanProvider(MongoClientSettings.class)));
 
-		context.registerBean(MongoClient.class, () -> new MongoReactiveAutoConfiguration(context.getBeanProvider(MongoClientSettings.class)).reactiveStreamsMongoClient(this.properties, context.getEnvironment(), context.getBeanProvider(MongoClientSettingsBuilderCustomizer.class)), (definition) -> {
+		MongoReactiveAutoConfiguration configuration = new MongoReactiveAutoConfiguration();
+		context.registerBean(MongoClient.class, () -> configuration.reactiveStreamsMongoClient(this.properties, context.getEnvironment(), context.getBeanProvider(MongoClientSettingsBuilderCustomizer.class), context.getBeanProvider(MongoClientSettings.class)), (definition) -> {
 			if (embeddedServer) {
 				definition.setDependsOn("embeddedMongoServer");
 			}

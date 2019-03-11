@@ -2,24 +2,9 @@ package org.springframework.data.mongodb.core
 
 import kotlinx.coroutines.ObsoleteCoroutinesApi
 import kotlinx.coroutines.channels.ReceiveChannel
-import kotlinx.coroutines.reactive.awaitFirstOrNull
 import kotlinx.coroutines.reactive.awaitSingle
 import kotlinx.coroutines.reactive.openSubscription
 import org.springframework.data.geo.GeoResult
-
-/**
- * Coroutines variant of [ReactiveFindOperation.TerminatingFind.one].
- *
- * @author Sebastien Deleuze
- */
-suspend inline fun <reified T: Any> ReactiveFindOperation.TerminatingFind<T>.awaitOne(): T? = one().awaitFirstOrNull()
-
-/**
- * Coroutines variant of [ReactiveFindOperation.TerminatingFind.first].
- *
- * @author Sebastien Deleuze
- */
-suspend inline fun <reified T: Any> ReactiveFindOperation.TerminatingFind<T>.awaitFirst(): T? = first().awaitFirstOrNull()
 
 /**
  * Coroutines variant of [ReactiveFindOperation.TerminatingFind.all].
@@ -38,20 +23,6 @@ suspend inline fun <reified T: Any> ReactiveFindOperation.TerminatingFind<T>.awa
  */
 @ObsoleteCoroutinesApi
 fun <T : Any> ReactiveFindOperation.TerminatingFind<T>.tailToChannel(): ReceiveChannel<T> = tail().openSubscription()
-
-/**
- * Coroutines variant of [ReactiveFindOperation.TerminatingFind.count].
- *
- * @author Sebastien Deleuze
- */
-suspend fun <T : Any> ReactiveFindOperation.TerminatingFind<T>.awaitCount(): Long = count().awaitSingle()
-
-/**
- * Coroutines variant of [ReactiveFindOperation.TerminatingFind.exists].
- *
- * @author Sebastien Deleuze
- */
-suspend fun <T : Any> ReactiveFindOperation.TerminatingFind<T>.awaitExists(): Boolean = exists().awaitSingle()
 
 /**
  * Coroutines variant of [ReactiveFindOperation.TerminatingFindNear.all].
