@@ -39,11 +39,10 @@ public class EmbeddedMongoInitializer implements ApplicationContextInitializer<G
 
 	@Override
 	public void initialize(GenericApplicationContext context) {
-		IRuntimeConfig config = new EmbeddedMongoAutoConfiguration.RuntimeConfigConfiguration().embeddedMongoRuntimeConfig();
-		EmbeddedMongoAutoConfiguration configuration = new EmbeddedMongoAutoConfiguration(this.properties, this.embeddedProperties, context, config);
+		EmbeddedMongoAutoConfiguration configuration = new EmbeddedMongoAutoConfiguration(this.properties, this.embeddedProperties);
 		context.registerBean(IMongodConfig.class, () -> {
 			try {
-				return configuration.embeddedMongoConfiguration();
+				return configuration.embeddedMongoConfiguration(this.embeddedProperties);
 			}
 			catch (IOException e) {
 				e.printStackTrace();
@@ -52,7 +51,7 @@ public class EmbeddedMongoInitializer implements ApplicationContextInitializer<G
 		});
 		context.registerBean("embeddedMongoServer", MongodExecutable.class, () -> {
 			try {
-				return configuration.embeddedMongoServer(context.getBean(IMongodConfig.class));
+				return configuration.embeddedMongoServer(context.getBean(IMongodConfig.class), context.getBean(IRuntimeConfig.class), context);
 			}
 			catch (IOException e) {
 				e.printStackTrace();
@@ -62,6 +61,6 @@ public class EmbeddedMongoInitializer implements ApplicationContextInitializer<G
 			definition.setInitMethodName("start");
 			definition.setDestroyMethodName("stop");
 		});
-		context.registerBean(IRuntimeConfig.class, () -> config);
+		context.registerBean(IRuntimeConfig.class, () -> new EmbeddedMongoAutoConfiguration.RuntimeConfigConfiguration().embeddedMongoRuntimeConfig(context.getBeanProvider(DownloadConfigBuilderCustomizer.class)));
 	}
 }

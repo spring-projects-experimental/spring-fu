@@ -3,13 +3,6 @@ package org.springframework.data.mongodb.core
 import kotlinx.coroutines.reactive.awaitSingle
 
 /**
- * Coroutines variant of [ReactiveInsertOperation.TerminatingInsert.one].
- *
- * @author Sebastien Deleuze
- */
-suspend inline fun <reified T: Any> ReactiveInsertOperation.TerminatingInsert<T>.oneAndAwait(o: T): T = one(o).awaitSingle()
-
-/**
  * Coroutines variant of [ReactiveInsertOperation.TerminatingInsert.all].
  *
  * * **Note: This API will become obsolete in future updates with introduction of lazy asynchronous streams.**

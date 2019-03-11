@@ -35,10 +35,11 @@ public class MongoDataInitializer implements ApplicationContextInitializer<Gener
 
 	@Override
 	public void initialize(GenericApplicationContext context) {
-		MongoDataConfiguration dataConfiguration = new MongoDataConfiguration(context, this.properties);
+		MongoDataConfiguration dataConfiguration = new MongoDataConfiguration();
+		context.registerBean(MongoCustomConversions.class, () -> dataConfiguration.mongoCustomConversions());
 		context.registerBean(MongoMappingContext.class, () -> {
 			try {
-				return dataConfiguration.mongoMappingContext(context.getBean(MongoCustomConversions.class));
+				return dataConfiguration.mongoMappingContext(context, properties, context.getBean(MongoCustomConversions.class));
 			}
 			catch (ClassNotFoundException e) {
 				e.printStackTrace();

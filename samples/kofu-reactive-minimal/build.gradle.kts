@@ -4,7 +4,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
 	id("org.jetbrains.kotlin.jvm") version "1.3.21"
 	id("io.spring.dependency-management") version "1.0.6.RELEASE"
-	id("org.springframework.boot") version "2.1.2.RELEASE"
+	id("org.springframework.boot") version "2.2.0.BUILD-SNAPSHOT"
 }
 
 dependencies {
@@ -38,8 +38,6 @@ tasks.withType<Test> {
 }
 
 configurations.all {
-	exclude(module = "javax.annotation-api")
-	exclude(module = "hibernate-validator")
 	if (project.hasProperty("graal")) {
 		exclude(module = "netty-transport-native-epoll")
 		exclude(module = "netty-transport-native-unix-common")

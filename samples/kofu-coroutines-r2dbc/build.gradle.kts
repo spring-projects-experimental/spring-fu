@@ -1,11 +1,10 @@
-import org.jetbrains.kotlin.gradle.dsl.Coroutines
 import org.gradle.kotlin.dsl.version
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
 	id("org.jetbrains.kotlin.jvm") version "1.3.21"
 	id("io.spring.dependency-management") version "1.0.6.RELEASE"
-	id("org.springframework.boot") version "2.1.2.RELEASE"
+	id("org.springframework.boot") version "2.2.0.BUILD-SNAPSHOT"
 }
 
 dependencies {
@@ -17,6 +16,7 @@ dependencies {
 	implementation("org.springframework.fu:spring-fu-webflux-coroutines:0.0.6.BUILD-SNAPSHOT")
 	implementation("org.springframework.fu:spring-fu-data-r2dbc-coroutines:0.0.6.BUILD-SNAPSHOT")
 	implementation("io.r2dbc:r2dbc-h2:1.0.0.M6")
+	implementation("com.h2database:h2:1.4.197") // See https://github.com/r2dbc/r2dbc-h2/issues/51
 
 	testImplementation("org.junit.jupiter:junit-jupiter-api")
 	testImplementation("org.springframework:spring-test")
@@ -40,9 +40,4 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
-}
-
-configurations.all {
-	exclude(module = "javax.annotation-api")
-	exclude(module = "hibernate-validator")
 }
