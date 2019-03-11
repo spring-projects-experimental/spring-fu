@@ -128,11 +128,7 @@ private fun webApplicationDsl() {
 
 class Foo
 
-// Switch to data classes when https://github.com/spring-projects/spring-boot/issues/8762 will be fixed
-class City {
-	lateinit var name: String
-	lateinit var country: String
-}
+class City(val name: String, val country: String)
 
 interface UserRepository {
 	fun init()

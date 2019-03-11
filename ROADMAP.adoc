@@ -36,7 +36,7 @@ To be created in Spring Data issue tracker for MongoDB and SQL support
 a|
 Data classes support for configuration properties
 a|
-Expected in Spring Boot 2.2 (to be confirmed)
+Available in Spring Boot 2.2 snapshots
 a|
 https://github.com/spring-projects/spring-boot/issues/8762[spring-boot#8762]
 
