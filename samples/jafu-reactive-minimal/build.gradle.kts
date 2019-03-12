@@ -31,7 +31,7 @@ repositories {
 }
 
 configurations.all {
-	exclude(module = "javax.annotation-api")
+	exclude(module = "jakarta.validation-api")
 	exclude(module = "hibernate-validator")
 	if (project.hasProperty("graal")) {
 		exclude(module = "netty-transport-native-epoll")

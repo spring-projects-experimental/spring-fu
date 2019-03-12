@@ -38,6 +38,8 @@ tasks.withType<Test> {
 }
 
 configurations.all {
+	exclude(module = "jakarta.validation-api")
+	exclude(module = "hibernate-validator")
 	if (project.hasProperty("graal")) {
 		exclude(module = "netty-transport-native-epoll")
 		exclude(module = "netty-transport-native-unix-common")

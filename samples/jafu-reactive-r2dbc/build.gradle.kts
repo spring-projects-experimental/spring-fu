@@ -29,3 +29,8 @@ repositories {
 	maven("https://repo.spring.io/milestone")
 	maven("https://repo.spring.io/snapshot")
 }
+
+configurations.all {
+	exclude(module = "jakarta.validation-api")
+	exclude(module = "hibernate-validator")
+}
