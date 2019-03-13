@@ -12,13 +12,12 @@ class UserRepository(private val client: DatabaseClient) {
 	suspend fun findOne(id: String) =
 			client.execute().sql("SELECT * FROM users WHERE login = \$1").bind(1, id).asType<User>().fetch().awaitOne()!!
 
-	suspend fun deleteAll() {
+	suspend fun deleteAll() =
 		client.execute().sql("DELETE FROM users").await()
-	}
 
-	suspend fun save(user: User) {
+	suspend fun save(user: User)=
 		client.insert().into<User>().table("users").using(user).await()
-	}
+
 
 	suspend fun init() {
 		client.execute().sql("CREATE TABLE IF NOT EXISTS users (login varchar PRIMARY KEY, firstname varchar, lastname varchar);").await()

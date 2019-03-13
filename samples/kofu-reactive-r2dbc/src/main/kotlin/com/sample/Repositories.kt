@@ -1,19 +1,25 @@
 package com.sample
 
 import org.springframework.data.r2dbc.function.DatabaseClient
+import org.springframework.data.r2dbc.function.asType
+import org.springframework.data.r2dbc.function.into
 
 class UserRepository(private val client: DatabaseClient) {
 
-	fun count() = client.execute().sql("SELECT COUNT(*) FROM users").asType(Int::class).fetch().one()
+	fun count() =
+			client.execute().sql("SELECT COUNT(*) FROM users").asType<Int>().fetch().one()
 
-	fun findAll() = client.select().from("users").asType(User::class).fetch().all()
+	fun findAll() =
+			client.select().from("users").asType<User>().fetch().all()
 
-	fun findOne(id: String) = client.execute().sql("SELECT * FROM users WHERE login = \$1").bind(1, id).asType(User::class).fetch().one()
+	fun findOne(id: String) =
+			client.execute().sql("SELECT * FROM users WHERE login = \$1").bind(1, id).asType<User>().fetch().one()
 
-	fun deleteAll() = client.execute().sql("DELETE FROM users").fetch().one().then()
+	fun deleteAll() =
+			client.execute().sql("DELETE FROM users").fetch().one().then()
 
-	fun save(user: User) = client.insert().into(User::class).table("users").using(user)
-			.map {r, _ -> r.get("login", String::class) }.one()
+	fun save(user: User) =
+			client.insert().into<User>().table("users").using(user).then()
 
 	fun init() {
 		client.execute().sql("CREATE TABLE IF NOT EXISTS users (login varchar PRIMARY KEY, firstname varchar, lastname varchar);").then()

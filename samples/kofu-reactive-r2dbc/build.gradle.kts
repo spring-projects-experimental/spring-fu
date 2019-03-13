@@ -15,6 +15,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-mustache")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.springframework.data:spring-data-r2dbc:1.0.0.M1")
+	implementation("org.springframework.fu:spring-fu-data-r2dbc-coroutines:0.0.6.BUILD-SNAPSHOT") // For some Kotlin extensions
 	implementation("io.r2dbc:r2dbc-spi:1.0.0.M6")
 	implementation("io.r2dbc:r2dbc-h2:1.0.0.M6")
 	implementation("com.h2database:h2:1.4.197") // See https://github.com/r2dbc/r2dbc-h2/issues/51
