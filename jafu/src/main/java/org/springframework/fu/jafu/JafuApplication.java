@@ -83,6 +83,7 @@ public abstract class JafuApplication {
 		app.addInitializers(this.initializer);
 		if (this.customizer != null) app.addInitializers(this.customizer);
 		System.setProperty("spring.backgroundpreinitializer.ignore", "true");
+		System.setProperty("spring.main.lazy-initialization", "true");
 		return app.run(args);
 	}
 
