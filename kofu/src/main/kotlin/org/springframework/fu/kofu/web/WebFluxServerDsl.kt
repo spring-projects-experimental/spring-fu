@@ -12,13 +12,12 @@ import org.springframework.boot.web.embedded.tomcat.TomcatReactiveWebServerFacto
 import org.springframework.boot.web.embedded.undertow.UndertowReactiveWebServerFactory
 import org.springframework.boot.web.reactive.server.ConfigurableReactiveWebServerFactory
 import org.springframework.context.ApplicationContext
-import org.springframework.context.ConfigurableApplicationContext
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.registerBean
 import org.springframework.core.env.get
 import org.springframework.fu.kofu.AbstractDsl
 import org.springframework.fu.kofu.ConfigurationDsl
-import org.springframework.web.function.server.CoRouterFunctionDsl
+import org.springframework.web.reactive.function.server.CoRouterFunctionDsl
 import org.springframework.web.reactive.function.server.RouterFunctionDsl
 import org.springframework.web.server.WebFilter
 
@@ -37,7 +36,6 @@ import org.springframework.web.server.WebFilter
  *
  * @sample org.springframework.fu.kofu.samples.router
  * @see org.springframework.fu.kofu.webApplication
- * @see WebFluxServerDsl.include
  * @see WebFluxServerDsl.codecs
  * @see WebFluxServerDsl.cors
  * @see WebFluxServerDsl.mustache

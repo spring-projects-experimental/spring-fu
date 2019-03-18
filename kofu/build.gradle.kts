@@ -22,8 +22,6 @@ dependencies {
 	compileOnly("org.mongodb:mongodb-driver-reactivestreams")
 	compileOnly("com.fasterxml.jackson.core:jackson-databind")
 	compileOnly("com.samskivert:jmustache")
-	compileOnly(project(":coroutines:data-mongodb"))
-	compileOnly(project(":coroutines:webflux"))
 
 	testImplementation("org.junit.jupiter:junit-jupiter-api")
 	testImplementation("org.springframework:spring-test")
@@ -38,8 +36,6 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")
 	testImplementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	testRuntimeOnly("de.flapdoodle.embed:de.flapdoodle.embed.mongo")
-	testImplementation(project(":coroutines:data-mongodb"))
-	testImplementation(project(":coroutines:webflux"))
 	testImplementation("io.mockk:mockk:1.9")
 }
 

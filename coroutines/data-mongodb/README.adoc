@@ -1,5 +1,0 @@
-= Spring Data MongoDB Coroutines support
-
-This work-in-progress module provides support for Coroutines for Spring Data MongoDB.
-
-The dependency to use is `org.springframework.fu:spring-fu-data-mongodb-coroutines`.

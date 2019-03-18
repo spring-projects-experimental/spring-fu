@@ -1,5 +1,0 @@
-= Spring Data R2DBC Coroutines support
-
-This work-in-progress module provides Coroutines support for https://github.com/spring-projects/spring-data-r2dbc[Spring Data R2DBC].
-
-The dependency to use is `org.springframework.fu:spring-fu-data-r2dbc-coroutines`.

@@ -1,5 +1,0 @@
-= WebFlux Coroutines support
-
-This work-in-progress module provides support for Coroutines for Webflux functional client and server.
-
-The dependency to use is `org.springframework.fu:spring-fu-webflux-coroutines`.

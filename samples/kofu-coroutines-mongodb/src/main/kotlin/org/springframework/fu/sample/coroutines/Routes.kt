@@ -1,6 +1,6 @@
 package org.springframework.fu.sample.coroutines
 
-import org.springframework.web.function.server.coRouter
+import org.springframework.web.reactive.function.server.coRouter
 
 fun routes(userHandler: UserHandler) = coRouter {
 

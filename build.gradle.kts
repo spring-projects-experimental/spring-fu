@@ -20,12 +20,19 @@ allprojects {
 	dependencyManagement {
 		val bootVersion: String by project
 		val coroutinesVersion: String by project
+		val springDataR2dbcVersion: String by project
+		val r2dbcVersion: String by project
 		imports {
 			mavenBom("org.springframework.boot:spring-boot-dependencies:$bootVersion")
 		}
 		dependencies {
 			dependency("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
 			dependency("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:$coroutinesVersion")
+			dependency("org.springframework.data:spring-data-r2dbc:$springDataR2dbcVersion")
+			dependency("io.r2dbc:r2dbc-spi:$r2dbcVersion")
+			dependency("io.r2dbc:r2dbc-postgresql:$r2dbcVersion")
+			dependency("io.r2dbc:r2dbc-h2:$r2dbcVersion")
+			dependency("io.r2dbc:r2dbc-mssql:$r2dbcVersion")
 		}
 	}
 

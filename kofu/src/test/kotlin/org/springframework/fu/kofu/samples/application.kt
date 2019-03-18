@@ -29,10 +29,10 @@ import org.springframework.fu.kofu.web.cors
 import org.springframework.fu.kofu.web.mustache
 import org.springframework.fu.kofu.web.server
 import org.springframework.fu.kofu.webApplication
-import org.springframework.web.function.server.buildAndAwait
 import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse
 import org.springframework.web.reactive.function.server.ServerResponse.ok
+import org.springframework.web.reactive.function.server.buildAndAwait
 import org.springframework.web.reactive.function.server.router
 import reactor.core.publisher.Mono
 import reactor.core.publisher.toMono

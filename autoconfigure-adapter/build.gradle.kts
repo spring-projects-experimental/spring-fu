@@ -18,13 +18,10 @@ dependencies {
 	compileOnly("org.mongodb:mongodb-driver-reactivestreams")
 	compileOnly("com.fasterxml.jackson.core:jackson-databind")
 	compileOnly("com.samskivert:jmustache")
-
-	compileOnly(project(":coroutines:data-mongodb"))
-	compileOnly(project(":coroutines:data-r2dbc"))
-	compileOnly("io.r2dbc:r2dbc-postgresql:1.0.0.M6")
-	compileOnly("io.r2dbc:r2dbc-h2:1.0.0.M6")
-	compileOnly("io.r2dbc:r2dbc-mssql:1.0.0.M6")
-	compileOnly(project(":coroutines:webflux"))
+	compileOnly("org.springframework.data:spring-data-r2dbc")
+	compileOnly("io.r2dbc:r2dbc-postgresql")
+	compileOnly("io.r2dbc:r2dbc-h2")
+	compileOnly("io.r2dbc:r2dbc-mssql")
 }
 
 repositories {

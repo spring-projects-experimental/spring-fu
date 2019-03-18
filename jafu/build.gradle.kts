@@ -26,7 +26,7 @@ dependencies {
 	compileOnly("com.fasterxml.jackson.core:jackson-databind")
 	compileOnly("org.springframework.data:spring-data-mongodb")
 	compileOnly("de.flapdoodle.embed:de.flapdoodle.embed.mongo")
-	compileOnly("org.springframework.data:spring-data-r2dbc:1.0.0.M1")
+	compileOnly("org.springframework.data:spring-data-r2dbc")
 
 	testImplementation("org.junit.jupiter:junit-jupiter-api")
 	testImplementation("org.springframework:spring-test")

@@ -1,5 +1,6 @@
 package com.sample
 
+import kotlinx.coroutines.reactive.awaitSingle
 import org.springframework.data.r2dbc.function.*
 
 class UserRepository(private val client: DatabaseClient) {
@@ -7,7 +8,7 @@ class UserRepository(private val client: DatabaseClient) {
 	suspend fun count() =
 			client.execute().sql("SELECT COUNT(*) FROM users").asType<Int>().fetch().awaitOne()!!
 
-	suspend fun findAll() = client.select().from("users").asType<User>().fetch().awaitAll()
+	suspend fun findAll() = client.select().from("users").asType<User>().fetch().all().collectList().awaitSingle()
 
 	suspend fun findOne(id: String) =
 			client.execute().sql("SELECT * FROM users WHERE login = \$1").bind(1, id).asType<User>().fetch().awaitOne()!!

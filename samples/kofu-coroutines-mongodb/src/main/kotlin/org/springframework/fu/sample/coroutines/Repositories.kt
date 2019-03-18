@@ -2,6 +2,7 @@ package org.springframework.fu.sample.coroutines
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
+import kotlinx.coroutines.reactive.awaitSingle
 import org.springframework.core.io.ClassPathResource
 import org.springframework.data.mongodb.core.*
 import org.springframework.data.mongodb.core.query.Criteria.*
@@ -15,7 +16,7 @@ class UserRepository(
 
 	suspend fun count() = mongo.query<User>().awaitCount()
 
-	suspend fun findAll() = mongo.query<User>().awaitAll()
+	suspend fun findAll() = mongo.query<User>().all().collectList().awaitSingle()
 
 	suspend fun findOne(id: String) = mongo.query<User>().matching(query(where("id").isEqualTo(id))).awaitOne()
 
