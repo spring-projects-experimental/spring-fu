@@ -1,4 +1,3 @@
-import org.jetbrains.dokka.DokkaConfiguration
 import org.jetbrains.dokka.gradle.DokkaTask
 import java.net.URL
 
@@ -40,15 +39,15 @@ dependencies {
 }
 
 tasks.withType<DokkaTask> {
-	//reportUndocumented = false
+	reportUndocumented = false
 	outputFormat = "html"
 	samples = listOf("src/test/kotlin/org/springframework/fu/kofu/samples")
-	externalDocumentationLink(delegateClosureOf<DokkaConfiguration.ExternalDocumentationLink.Builder> {
+	externalDocumentationLink {
 		url = URL("https://docs.spring.io/spring-framework/docs/5.1.x/javadoc-api/")
-	})
-	externalDocumentationLink(delegateClosureOf<DokkaConfiguration.ExternalDocumentationLink.Builder> {
+	}
+	externalDocumentationLink {
 		url = URL("https://docs.spring.io/spring-framework/docs/5.1.x/kdoc-api/spring-framework/")
-	})
+	}
 }
 
 publishing {
