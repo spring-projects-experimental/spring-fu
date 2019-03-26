@@ -5,7 +5,7 @@ image::https://ci.spring.io/api/v1/teams/spring-fu/pipelines/spring-fu/badge["Bu
 Spring Fu is an incubator for new Spring features related to functional configuration and runtime efficiency.
 
 Instead of using JavaConfig and auto-configuration, it provides an explicit way of configuring Spring Boot applications
-with a http://repo.spring.io/snapshot/org/springframework/fu/spring-fu-kofu/0.0.3.BUILD-SNAPSHOT/spring-fu-kofu-0.0.3.BUILD-SNAPSHOT-javadoc.jar!/kofu/org.springframework.fu.kofu/application.html[Kotlin DSL (Kofu)]
+with a https://repo.spring.io/snapshot/org/springframework/fu/spring-fu-kofu/0.0.3.BUILD-SNAPSHOT/spring-fu-kofu-0.0.3.BUILD-SNAPSHOT-javadoc.jar!/kofu/org.springframework.fu.kofu/application.html[Kotlin DSL (Kofu)]
 or a https://github.com/spring-projects/spring-fu/tree/master/jafu[Java DSL (Jafu)] and lambdas
 using functional bean definitions for both Spring Boot infrastructure and application code.
 

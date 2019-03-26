@@ -21,7 +21,7 @@ public class MustacheDslTests {
 		var app = application(a -> a.enable(WebFluxServerDsl.class, s -> s.mustache().importRouter(router)));
 
 		var context = app.run();
-		var client = WebTestClient.bindToServer().baseUrl("http://0.0.0.0:8080").build();
+		var client = WebTestClient.bindToServer().baseUrl("https://0.0.0.0:8080").build();
 		client.get().uri("/view").exchange()
 				.expectStatus().is2xxSuccessful()
 				.expectBody(String.class)

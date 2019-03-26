@@ -4,7 +4,7 @@
 a|**Feature** |**Status** |**Related issue**
 
 a|
-http://repo.spring.io/snapshot/org/springframework/fu/spring-fu-kofu/0.0.3.BUILD-SNAPSHOT/spring-fu-kofu-0.0.3.BUILD-SNAPSHOT-javadoc.jar!/kofu/org.springframework.fu.kofu/application.html[Kofu] and
+https://repo.spring.io/snapshot/org/springframework/fu/spring-fu-kofu/0.0.3.BUILD-SNAPSHOT/spring-fu-kofu-0.0.3.BUILD-SNAPSHOT-javadoc.jar!/kofu/org.springframework.fu.kofu/application.html[Kofu] and
 https://github.com/spring-projects/spring-fu/tree/master/jafu[Jafu] configuration DSL
 a|
 Incubating in Spring Fu
