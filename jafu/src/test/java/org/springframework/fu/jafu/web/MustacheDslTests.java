@@ -17,7 +17,7 @@ public class MustacheDslTests {
 		var app = webApplication(a -> a.enable(server(s -> s.mustache().router(r -> r.GET("/view", request -> ok().render("template", Collections.singletonMap("name", "world")))))));
 
 		var context = app.run();
-		var client = WebTestClient.bindToServer().baseUrl("http://0.0.0.0:8080").build();
+		var client = WebTestClient.bindToServer().baseUrl("https://0.0.0.0:8080").build();
 		client.get().uri("/view").exchange()
 				.expectStatus().is2xxSuccessful()
 				.expectBody(String.class)
