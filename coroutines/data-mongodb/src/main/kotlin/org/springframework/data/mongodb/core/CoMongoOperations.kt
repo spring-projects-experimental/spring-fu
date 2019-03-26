@@ -615,7 +615,7 @@ interface CoMongoOperations {
      * String then MongoDB ObjectId will be used to populate that string. Otherwise, the conversion from ObjectId to your
      * property type will be handled by Spring's BeanWrapper class that leverages Type Conversion API. See
      * [
- * Spring's Type Conversion"](http://docs.spring.io/spring/docs/current/spring-framework-reference/html/validation.html#core-convert) for more details.
+ * Spring's Type Conversion"](https://docs.spring.io/spring/docs/current/spring-framework-reference/html/validation.html#core-convert) for more details.
      *
      *
      *
@@ -681,7 +681,7 @@ interface CoMongoOperations {
      * String then MongoDB ObjectId will be used to populate that string. Otherwise, the conversion from ObjectId to your
      * property type will be handled by Spring's BeanWrapper class that leverages Type Conversion API. See
      * [
- * Spring's Type Conversion"](http://docs.spring.io/spring/docs/current/spring-framework-reference/html/validation.html#core-convert) for more details.
+ * Spring's Type Conversion"](https://docs.spring.io/spring/docs/current/spring-framework-reference/html/validation.html#core-convert) for more details.
      *
      *
      *
@@ -733,7 +733,7 @@ interface CoMongoOperations {
      * String then MongoDB ObjectId will be used to populate that string. Otherwise, the conversion from ObjectId to your
      * property type will be handled by Spring's BeanWrapper class that leverages Type Conversion API. See
      * [
- * Spring's Type Conversion"](http://docs.spring.io/spring/docs/current/spring-framework-reference/html/validation.html#core-convert) for more details.
+ * Spring's Type Conversion"](https://docs.spring.io/spring/docs/current/spring-framework-reference/html/validation.html#core-convert) for more details.
      *
      * @param objectToSave the object to store in the collection
      * @return
@@ -773,7 +773,7 @@ interface CoMongoOperations {
      * String then MongoDB ObjectId will be used to populate that string. Otherwise, the conversion from ObjectId to your
      * property type will be handled by Spring's BeanWrapper class that leverages Type Conversion API. See
      * [
- * Spring's Type Conversion"](http://docs.spring.io/spring/docs/current/spring-framework-reference/html/validation.html#core-convert) for more details.
+ * Spring's Type Conversion"](https://docs.spring.io/spring/docs/current/spring-framework-reference/html/validation.html#core-convert) for more details.
      *
      * @param objectToSave the object to store in the collection
      * @return

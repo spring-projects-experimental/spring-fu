@@ -31,7 +31,7 @@ class H2R2dbcDsl(private val init: H2R2dbcDsl.() -> Unit) : AbstractDsl() {
      * Includes everything after the `jdbc:h2:` prefix.
      * For in-memory and file-based databases, must include the proper prefix (e.g. `file:` or `mem:`).
      *
-     * See [http://www.h2database.com/html/features.html#database_url](http://www.h2database.com/html/features.html#database_url) for more details.
+     * See [https://www.h2database.com/html/features.html#database_url](https://www.h2database.com/html/features.html#database_url) for more details.
      */
     var url: String = "mem:test;DB_CLOSE_DELAY=-1"
 
