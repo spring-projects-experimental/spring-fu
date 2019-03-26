@@ -66,7 +66,7 @@ class CorsDsl(
 		}
 
 		/**
-		 * Set the origins to allow, separated by commas, e.g. `http://domain1.com, http://domain2.com`. The special value `*` allows all domains.
+		 * Set the origins to allow, separated by commas, e.g. `https://domain1.com, https://domain2.com`. The special value `*` allows all domains.
 		 * By default, all origins are allowed.
 		 */
 		var allowedOrigins: String = "*"
@@ -78,7 +78,7 @@ class CorsDsl(
 		 * Set the HTTP methods to allow,  separated by commas, e.g. `GET, POST, PUT`. The special value `*` allows all methods.
 		 * If not set, only `GET` and `HEAD` are allowed. By default, allow "simple" methods `GET`, `HEAD` and `POST`.
 		 *
-		 * Note: CORS checks use values from `Forwarded` ([RFC 7239](http://tools.ietf.org/html/rfc7239),
+		 * Note: CORS checks use values from `Forwarded` ([RFC 7239](https://tools.ietf.org/html/rfc7239),
 		 * `X-Forwarded-Host`, `X-Forwarded-Port`, and `X-Forwarded-Proto` headers if present, in order
 		 * to reflect the client-originated address.
 		 */
