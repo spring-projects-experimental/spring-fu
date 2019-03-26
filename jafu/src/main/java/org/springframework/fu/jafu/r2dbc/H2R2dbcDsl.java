@@ -50,7 +50,7 @@ public class H2R2dbcDsl extends AbstractDsl {
 	 * Includes everything after the {@code jdbc:h2:} prefix.
 	 * For in-memory and file-based databases, must include the proper prefix (e.g. {@code file:} or {@code mem:}).
 	 *
-	 * See <a href="http://www.h2database.com/html/features.html#database_url">http://www.h2database.com/html/features.html#database_url</a> for more details.
+	 * See <a href="https://www.h2database.com/html/features.html#database_url">https://www.h2database.com/html/features.html#database_url</a> for more details.
 	 */
 	public H2R2dbcDsl url(String url) {
 		properties.setUrl(url);
