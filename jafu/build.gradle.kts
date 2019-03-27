@@ -8,6 +8,11 @@ tasks.compileJava {
 	targetCompatibility = "1.8"
 }
 
+tasks.compileTestJava {
+	sourceCompatibility = "11"
+	targetCompatibility = "11"
+}
+
 tasks.withType<Javadoc> {
 	with (options as StandardJavadocDocletOptions) {
 		links = listOf(
