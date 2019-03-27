@@ -9,7 +9,7 @@ import org.springframework.context.support.BeanDefinitionDsl
  * @see BeanDefinitionDsl.bean
  */
 inline fun <reified T: Any, reified A: Any>
-        BeanDefinitionDsl.bean(crossinline f: Function1<A, T>,
+        BeanDefinitionDsl.bean(crossinline f: (A) -> T,
                                name: String? = null,
                                scope: BeanDefinitionDsl.Scope? = null,
                                isLazyInit: Boolean? = null,
@@ -31,7 +31,7 @@ inline fun <reified T: Any, reified A: Any>
  * @see BeanDefinitionDsl.bean
  */
 inline fun <reified T: Any, reified A: Any, reified B: Any>
-        BeanDefinitionDsl.bean(crossinline f: Function2<A,B,T>,
+        BeanDefinitionDsl.bean(crossinline f: (A, B) -> T,
                                name: String? = null,
                                scope: BeanDefinitionDsl.Scope? = null,
                                isLazyInit: Boolean? = null,
@@ -53,7 +53,7 @@ inline fun <reified T: Any, reified A: Any, reified B: Any>
  * @see BeanDefinitionDsl.bean
  */
 inline fun <reified T: Any, reified A: Any, reified B: Any, reified C: Any>
-        BeanDefinitionDsl.bean(crossinline f: Function3<A,B,C,T>,
+        BeanDefinitionDsl.bean(crossinline f: (A, B, C) -> T,
                                name: String? = null,
                                scope: BeanDefinitionDsl.Scope? = null,
                                isLazyInit: Boolean? = null,
@@ -75,7 +75,7 @@ inline fun <reified T: Any, reified A: Any, reified B: Any, reified C: Any>
  * @see BeanDefinitionDsl.bean
  */
 inline fun <reified T: Any, reified A: Any, reified B: Any, reified C: Any, reified D: Any>
-        BeanDefinitionDsl.bean(crossinline f: Function4<A,B,C,D,T>,
+        BeanDefinitionDsl.bean(crossinline f: (A, B, C, D) -> T,
                                name: String? = null,
                                scope: BeanDefinitionDsl.Scope? = null,
                                isLazyInit: Boolean? = null,
@@ -97,7 +97,7 @@ inline fun <reified T: Any, reified A: Any, reified B: Any, reified C: Any, reif
  * @see BeanDefinitionDsl.bean
  */
 inline fun <reified T: Any, reified A: Any, reified B: Any, reified C: Any, reified D: Any, reified E: Any>
-        BeanDefinitionDsl.bean(crossinline f: Function5<A,B,C,D,E,T>,
+        BeanDefinitionDsl.bean(crossinline f: (A, B, C, D, E) -> T,
                                name: String? = null,
                                scope: BeanDefinitionDsl.Scope? = null,
                                isLazyInit: Boolean? = null,
@@ -119,7 +119,7 @@ inline fun <reified T: Any, reified A: Any, reified B: Any, reified C: Any, reif
  * @see BeanDefinitionDsl.bean
  */
 inline fun <reified T: Any, reified A: Any, reified B: Any, reified C: Any, reified D: Any, reified E: Any, reified F: Any>
-        BeanDefinitionDsl.bean(crossinline f: Function6<A,B,C,D,E,F,T>,
+        BeanDefinitionDsl.bean(crossinline f: (A, B, C, D, E, F) -> T,
                                name: String? = null,
                                scope: BeanDefinitionDsl.Scope? = null,
                                isLazyInit: Boolean? = null,
@@ -142,7 +142,7 @@ inline fun <reified T: Any, reified A: Any, reified B: Any, reified C: Any, reif
  */
 inline fun <reified T: Any, reified A: Any, reified B: Any, reified C: Any, reified D: Any, reified E: Any, reified F: Any,
         reified G: Any>
-        BeanDefinitionDsl.bean(crossinline f: Function7<A,B,C,D,E,F,G,T>,
+        BeanDefinitionDsl.bean(crossinline f: (A, B, C, D, E, F, G) -> T,
                                name: String? = null,
                                scope: BeanDefinitionDsl.Scope? = null,
                                isLazyInit: Boolean? = null,
@@ -165,7 +165,7 @@ inline fun <reified T: Any, reified A: Any, reified B: Any, reified C: Any, reif
  */
 inline fun <reified T: Any, reified A: Any, reified B: Any, reified C: Any, reified D: Any, reified E: Any, reified F: Any,
         reified G: Any, reified H: Any>
-        BeanDefinitionDsl.bean(crossinline f: Function8<A,B,C,D,E,F,G,H,T>,
+        BeanDefinitionDsl.bean(crossinline f: (A, B, C, D, E, F, G, H) -> T,
                                name: String? = null,
                                scope: BeanDefinitionDsl.Scope? = null,
                                isLazyInit: Boolean? = null,
@@ -188,7 +188,7 @@ inline fun <reified T: Any, reified A: Any, reified B: Any, reified C: Any, reif
  */
 inline fun <reified T: Any, reified A: Any, reified B: Any, reified C: Any, reified D: Any, reified E: Any, reified F: Any,
         reified G: Any, reified H: Any, reified I: Any>
-        BeanDefinitionDsl.bean(crossinline f: Function9<A,B,C,D,E,F,G,H,I,T>,
+        BeanDefinitionDsl.bean(crossinline f: (A, B, C, D, E, F, G, H, I) -> T,
                                name: String? = null,
                                scope: BeanDefinitionDsl.Scope? = null,
                                isLazyInit: Boolean? = null,
@@ -211,7 +211,7 @@ inline fun <reified T: Any, reified A: Any, reified B: Any, reified C: Any, reif
  */
 inline fun <reified T: Any, reified A: Any, reified B: Any, reified C: Any, reified D: Any, reified E: Any, reified F: Any,
         reified G: Any, reified H: Any, reified I: Any, reified J: Any>
-        BeanDefinitionDsl.bean(crossinline f: Function10<A,B,C,D,E,F,G,H,I,J,T>,
+        BeanDefinitionDsl.bean(crossinline f: (A, B, C, D, E, F, G, H, I, J) -> T,
                                name: String? = null,
                                scope: BeanDefinitionDsl.Scope? = null,
                                isLazyInit: Boolean? = null,
@@ -234,7 +234,7 @@ inline fun <reified T: Any, reified A: Any, reified B: Any, reified C: Any, reif
  */
 inline fun <reified T: Any, reified A: Any, reified B: Any, reified C: Any, reified D: Any, reified E: Any, reified F: Any,
         reified G: Any, reified H: Any, reified I: Any, reified J: Any, reified K: Any>
-        BeanDefinitionDsl.bean(crossinline f: Function11<A,B,C,D,E,F,G,H,I,J,K,T>,
+        BeanDefinitionDsl.bean(crossinline f: (A, B, C, D, E, F, G, H, I, J, K) -> T,
                                name: String? = null,
                                scope: BeanDefinitionDsl.Scope? = null,
                                isLazyInit: Boolean? = null,
@@ -257,7 +257,7 @@ inline fun <reified T: Any, reified A: Any, reified B: Any, reified C: Any, reif
  */
 inline fun <reified T: Any, reified A: Any, reified B: Any, reified C: Any, reified D: Any, reified E: Any, reified F: Any,
         reified G: Any, reified H: Any, reified I: Any, reified J: Any, reified K: Any, reified L: Any>
-        BeanDefinitionDsl.bean(crossinline f: Function12<A,B,C,D,E,F,G,H,I,J,K,L,T>,
+        BeanDefinitionDsl.bean(crossinline f: (A, B, C, D, E, F, G, H, I, J, K, L) -> T,
                                name: String? = null,
                                scope: BeanDefinitionDsl.Scope? = null,
                                isLazyInit: Boolean? = null,
@@ -280,7 +280,7 @@ inline fun <reified T: Any, reified A: Any, reified B: Any, reified C: Any, reif
  */
 inline fun <reified T: Any, reified A: Any, reified B: Any, reified C: Any, reified D: Any, reified E: Any, reified F: Any,
         reified G: Any, reified H: Any, reified I: Any, reified J: Any, reified K: Any, reified L: Any, reified M: Any>
-        BeanDefinitionDsl.bean(crossinline f: Function13<A,B,C,D,E,F,G,H,I,J,K,L,M,T>,
+        BeanDefinitionDsl.bean(crossinline f: (A, B, C, D, E, F, G, H, I, J, K, L, M) -> T,
                                name: String? = null,
                                scope: BeanDefinitionDsl.Scope? = null,
                                isLazyInit: Boolean? = null,
@@ -304,7 +304,7 @@ inline fun <reified T: Any, reified A: Any, reified B: Any, reified C: Any, reif
 inline fun <reified T: Any, reified A: Any, reified B: Any, reified C: Any, reified D: Any, reified E: Any, reified F: Any,
         reified G: Any, reified H: Any, reified I: Any, reified J: Any, reified K: Any, reified L: Any, reified M: Any,
         reified N: Any>
-        BeanDefinitionDsl.bean(crossinline f: Function14<A,B,C,D,E,F,G,H,I,J,K,L,M,N,T>,
+        BeanDefinitionDsl.bean(crossinline f: (A, B, C, D, E, F, G, H, I, J, K, L, M, N) -> T,
                                name: String? = null,
                                scope: BeanDefinitionDsl.Scope? = null,
                                isLazyInit: Boolean? = null,
@@ -328,7 +328,7 @@ inline fun <reified T: Any, reified A: Any, reified B: Any, reified C: Any, reif
 inline fun <reified T: Any, reified A: Any, reified B: Any, reified C: Any, reified D: Any, reified E: Any, reified F: Any,
         reified G: Any, reified H: Any, reified I: Any, reified J: Any, reified K: Any, reified L: Any, reified M: Any,
         reified N: Any, reified O: Any>
-        BeanDefinitionDsl.bean(crossinline f: Function15<A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,T>,
+        BeanDefinitionDsl.bean(crossinline f: (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O) -> T,
                                name: String? = null,
                                scope: BeanDefinitionDsl.Scope? = null,
                                isLazyInit: Boolean? = null,
@@ -352,7 +352,7 @@ inline fun <reified T: Any, reified A: Any, reified B: Any, reified C: Any, reif
 inline fun <reified T: Any, reified A: Any, reified B: Any, reified C: Any, reified D: Any, reified E: Any, reified F: Any,
         reified G: Any, reified H: Any, reified I: Any, reified J: Any, reified K: Any, reified L: Any, reified M: Any,
         reified N: Any, reified O: Any, reified P: Any>
-        BeanDefinitionDsl.bean(crossinline f: Function16<A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,T>,
+        BeanDefinitionDsl.bean(crossinline f: (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P) -> T,
                                name: String? = null,
                                scope: BeanDefinitionDsl.Scope? = null,
                                isLazyInit: Boolean? = null,
@@ -376,7 +376,7 @@ inline fun <reified T: Any, reified A: Any, reified B: Any, reified C: Any, reif
 inline fun <reified T: Any, reified A: Any, reified B: Any, reified C: Any, reified D: Any, reified E: Any, reified F: Any,
         reified G: Any, reified H: Any, reified I: Any, reified J: Any, reified K: Any, reified L: Any, reified M: Any,
         reified N: Any, reified O: Any, reified P: Any, reified Q: Any>
-        BeanDefinitionDsl.bean(crossinline f: Function17<A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,T>,
+        BeanDefinitionDsl.bean(crossinline f: (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q) -> T,
                                name: String? = null,
                                scope: BeanDefinitionDsl.Scope? = null,
                                isLazyInit: Boolean? = null,
@@ -400,7 +400,7 @@ inline fun <reified T: Any, reified A: Any, reified B: Any, reified C: Any, reif
 inline fun <reified T: Any, reified A: Any, reified B: Any, reified C: Any, reified D: Any, reified E: Any, reified F: Any,
         reified G: Any, reified H: Any, reified I: Any, reified J: Any, reified K: Any, reified L: Any, reified M: Any,
         reified N: Any, reified O: Any, reified P: Any, reified Q: Any, reified R: Any>
-        BeanDefinitionDsl.bean(crossinline f: Function18<A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,T>,
+        BeanDefinitionDsl.bean(crossinline f: (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R) -> T,
                                name: String? = null,
                                scope: BeanDefinitionDsl.Scope? = null,
                                isLazyInit: Boolean? = null,
@@ -412,7 +412,7 @@ inline fun <reified T: Any, reified A: Any, reified B: Any, reified C: Any, reif
                                role: BeanDefinitionDsl.Role? = null) {
 
     bean(name, scope, isLazyInit, isPrimary, isAutowireCandidate, initMethodName, destroyMethodName, description, role) {
-        f.invoke(ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(),ref())
+        f.invoke(ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref())
     }
 }
 
@@ -424,7 +424,7 @@ inline fun <reified T: Any, reified A: Any, reified B: Any, reified C: Any, reif
 inline fun <reified T: Any, reified A: Any, reified B: Any, reified C: Any, reified D: Any, reified E: Any, reified F: Any,
         reified G: Any, reified H: Any, reified I: Any, reified J: Any, reified K: Any, reified L: Any, reified M: Any,
         reified N: Any, reified O: Any, reified P: Any, reified Q: Any, reified R: Any, reified S: Any>
-        BeanDefinitionDsl.bean(crossinline f: Function19<A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T>,
+        BeanDefinitionDsl.bean(crossinline f: (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S) -> T,
                                name: String? = null,
                                scope: BeanDefinitionDsl.Scope? = null,
                                isLazyInit: Boolean? = null,
@@ -436,7 +436,7 @@ inline fun <reified T: Any, reified A: Any, reified B: Any, reified C: Any, reif
                                role: BeanDefinitionDsl.Role? = null) {
 
     bean(name, scope, isLazyInit, isPrimary, isAutowireCandidate, initMethodName, destroyMethodName, description, role) {
-        f.invoke(ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(),ref(),ref())
+        f.invoke(ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref())
     }
 }
 
@@ -448,7 +448,7 @@ inline fun <reified T: Any, reified A: Any, reified B: Any, reified C: Any, reif
 inline fun <reified T: Any, reified A: Any, reified B: Any, reified C: Any, reified D: Any, reified E: Any, reified F: Any,
         reified G: Any, reified H: Any, reified I: Any, reified J: Any, reified K: Any, reified L: Any, reified M: Any,
         reified N: Any, reified O: Any, reified P: Any, reified Q: Any, reified R: Any, reified S: Any, reified U: Any>
-        BeanDefinitionDsl.bean(crossinline f: Function20<A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,U,T>,
+        BeanDefinitionDsl.bean(crossinline f: (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, U) -> T,
                                name: String? = null,
                                scope: BeanDefinitionDsl.Scope? = null,
                                isLazyInit: Boolean? = null,
@@ -460,7 +460,7 @@ inline fun <reified T: Any, reified A: Any, reified B: Any, reified C: Any, reif
                                role: BeanDefinitionDsl.Role? = null) {
 
     bean(name, scope, isLazyInit, isPrimary, isAutowireCandidate, initMethodName, destroyMethodName, description, role) {
-        f.invoke(ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(),ref(),ref(), ref())
+        f.invoke(ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref())
     }
 }
 
@@ -473,7 +473,7 @@ inline fun <reified T: Any, reified A: Any, reified B: Any, reified C: Any, reif
         reified G: Any, reified H: Any, reified I: Any, reified J: Any, reified K: Any, reified L: Any, reified M: Any,
         reified N: Any, reified O: Any, reified P: Any, reified Q: Any, reified R: Any, reified S: Any, reified U: Any,
         reified V: Any>
-        BeanDefinitionDsl.bean(crossinline f: Function21<A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,U,V,T>,
+        BeanDefinitionDsl.bean(crossinline f: (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, U, V) -> T,
                                name: String? = null,
                                scope: BeanDefinitionDsl.Scope? = null,
                                isLazyInit: Boolean? = null,
@@ -485,7 +485,7 @@ inline fun <reified T: Any, reified A: Any, reified B: Any, reified C: Any, reif
                                role: BeanDefinitionDsl.Role? = null) {
 
     bean(name, scope, isLazyInit, isPrimary, isAutowireCandidate, initMethodName, destroyMethodName, description, role) {
-        f.invoke(ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(),ref(),ref(), ref(), ref())
+        f.invoke(ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref())
     }
 }
 
@@ -498,7 +498,7 @@ inline fun <reified T: Any, reified A: Any, reified B: Any, reified C: Any, reif
         reified G: Any, reified H: Any, reified I: Any, reified J: Any, reified K: Any, reified L: Any, reified M: Any,
         reified N: Any, reified O: Any, reified P: Any, reified Q: Any, reified R: Any, reified S: Any, reified U: Any,
         reified V: Any, reified W: Any>
-        BeanDefinitionDsl.bean(crossinline f: Function22<A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,U,V,W,T>,
+        BeanDefinitionDsl.bean(crossinline f: (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, U, V, W) -> T,
                                name: String? = null,
                                scope: BeanDefinitionDsl.Scope? = null,
                                isLazyInit: Boolean? = null,
@@ -510,6 +510,6 @@ inline fun <reified T: Any, reified A: Any, reified B: Any, reified C: Any, reif
                                role: BeanDefinitionDsl.Role? = null) {
 
     bean(name, scope, isLazyInit, isPrimary, isAutowireCandidate, initMethodName, destroyMethodName, description, role) {
-        f.invoke(ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(),ref(),ref(), ref(), ref(), ref())
+        f.invoke(ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref(), ref())
     }
 }
