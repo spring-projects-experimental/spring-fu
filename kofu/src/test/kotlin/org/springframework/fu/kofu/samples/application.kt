@@ -21,7 +21,6 @@ package org.springframework.fu.kofu.samples
 import org.springframework.boot.logging.LogLevel
 import org.springframework.context.event.ContextStartedEvent
 import org.springframework.fu.kofu.application
-import org.springframework.fu.kofu.bean
 import org.springframework.fu.kofu.configuration
 import org.springframework.fu.kofu.mongo.mongodb
 import org.springframework.fu.kofu.web.client
