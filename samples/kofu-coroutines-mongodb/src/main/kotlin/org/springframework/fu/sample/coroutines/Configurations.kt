@@ -3,7 +3,6 @@ package org.springframework.fu.sample.coroutines
 import de.flapdoodle.embed.mongo.distribution.Version
 import kotlinx.coroutines.runBlocking
 import org.springframework.boot.context.event.ApplicationReadyEvent
-import org.springframework.fu.kofu.bean
 import org.springframework.fu.kofu.configuration
 import org.springframework.fu.kofu.mongo.mongodb
 import org.springframework.fu.kofu.web.mustache
