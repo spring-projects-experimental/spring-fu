@@ -7,7 +7,7 @@ import org.springframework.fu.jafu.JafuApplication;
 
 public abstract class Application {
 
-	public static JafuApplication app = webApplication(app ->
+	public static JafuApplication app = reactiveWebApplication(app ->
 		app.enable(Configurations.dataConfig)
 		   .enable(Configurations.webConfig)
 		   .listener(ApplicationReadyEvent.class, e -> app.ref(UserRepository.class).init())

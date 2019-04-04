@@ -1,16 +1,16 @@
 package com.sample
 
-import org.springframework.fu.kofu.web.server
-import org.springframework.fu.kofu.webApplication
+import org.springframework.fu.kofu.webflux.webFlux
+import org.springframework.fu.kofu.reactiveWebApplication
 import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse.ok
 
-val app = webApplication {
+val app = reactiveWebApplication {
 	beans {
 		bean<SampleService>()
 		bean<SampleHandler>()
 	}
-	server {
+	webFlux {
 		port = if (profiles.contains("test")) 8181 else 8080
 		router {
 			val handler = ref<SampleHandler>()

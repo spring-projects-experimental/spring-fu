@@ -1,7 +1,7 @@
 package com.sample;
 
 import static org.springframework.fu.jafu.r2dbc.H2R2dbcDsl.r2dbcH2;
-import static org.springframework.fu.jafu.web.WebFluxServerDsl.server;
+import static org.springframework.fu.jafu.webflux.WebFluxServerDsl.webFlux;
 
 import java.util.function.Consumer;
 
@@ -14,7 +14,7 @@ public abstract class Configurations {
 
 	public static Consumer<ConfigurationDsl> webConfig = conf ->
 			conf.beans(beans -> beans.bean(UserHandler.class))
-			.enable(server(server -> {
+			.enable(webFlux(server -> {
 				if (conf.profiles().contains("test")) {
 					server.port(8181);
 				}

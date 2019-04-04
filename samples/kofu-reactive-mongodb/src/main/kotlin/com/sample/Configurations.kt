@@ -2,9 +2,9 @@ package com.sample
 
 import org.springframework.boot.context.event.ApplicationReadyEvent
 import org.springframework.fu.kofu.configuration
-import org.springframework.fu.kofu.mongo.mongodb
-import org.springframework.fu.kofu.web.mustache
-import org.springframework.fu.kofu.web.server
+import org.springframework.fu.kofu.mongo.reactiveMongodb
+import org.springframework.fu.kofu.webflux.mustache
+import org.springframework.fu.kofu.webflux.webFlux
 
 val dataConfig = configuration {
 	beans {
@@ -13,7 +13,7 @@ val dataConfig = configuration {
 	listener<ApplicationReadyEvent> {
 		ref<UserRepository>().init()
 	}
-	mongodb {
+	reactiveMongodb {
 		embedded()
 	}
 }
@@ -23,7 +23,7 @@ val webConfig = configuration {
 		bean<UserHandler>()
 		bean(::routes)
 	}
-	server {
+	webFlux {
 		port = if (profiles.contains("test")) 8181 else 8080
 		mustache()
 		codecs {
