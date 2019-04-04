@@ -89,8 +89,8 @@ public class Application {
 ```java
 package com.sample;
 
-import static org.springframework.fu.jafu.Jafu.webApplication;
-import static org.springframework.fu.jafu.web.WebFluxServerDsl.server;
+import static webReactiveApplication;
+import static webFlux;
 import static org.springframework.web.reactive.function.server.ServerResponse.*;
 
 import org.springframework.fu.jafu.JafuApplication;

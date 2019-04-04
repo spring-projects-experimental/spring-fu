@@ -38,8 +38,8 @@ import org.springframework.fu.kofu.ConfigurationDsl
  * @sample org.springframework.fu.kofu.samples.mongo
  * @author Sebastien Deleuze
  */
-open class MongoDsl(
-	private val init: MongoDsl.() -> Unit
+open class ReactiveMongoDsl(
+	private val init: ReactiveMongoDsl.() -> Unit
 ) : AbstractDsl() {
 
 	private val properties = MongoProperties()
@@ -63,7 +63,7 @@ open class MongoDsl(
 		}
 
 	/**
-	 * Enable MongoDB embedded server.
+	 * Enable MongoDB embedded webFlux.
 	 *
 	 * Require `de.flapdoodle.embed:de.flapdoodle.embed.mongo` dependency.
 	 *
@@ -99,8 +99,8 @@ open class MongoDsl(
 
 /**
  * Configure MongoDB Reactive support.
- * @see MongoDsl
+ * @see ReactiveMongoDsl
  */
-fun ConfigurationDsl.mongodb(dsl: MongoDsl.() -> Unit = {}) {
-	MongoDsl(dsl).initialize(context)
+fun ConfigurationDsl.reactiveMongodb(dsl: ReactiveMongoDsl.() -> Unit = {}) {
+	ReactiveMongoDsl(dsl).initialize(context)
 }

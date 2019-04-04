@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.fu.kofu.web
+package org.springframework.fu.kofu.webflux
 
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.registerBean
@@ -80,7 +80,7 @@ class CorsDsl(
 		 *
 		 * Note: CORS checks use values from `Forwarded` ([RFC 7239](http://tools.ietf.org/html/rfc7239),
 		 * `X-Forwarded-Host`, `X-Forwarded-Port`, and `X-Forwarded-Proto` headers if present, in order
-		 * to reflect the client-originated address.
+		 * to reflect the webClient-originated address.
 		 */
 		var allowedMethods: String = "GET, HEAD, POST"
 			set(value) {

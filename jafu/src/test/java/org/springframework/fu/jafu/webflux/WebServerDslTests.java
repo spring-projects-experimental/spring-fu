@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package org.springframework.fu.jafu.web;
+package org.springframework.fu.jafu.webflux;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.fu.jafu.Jafu.webApplication;
-import static org.springframework.fu.jafu.mongo.MongoDsl.mongo;
-import static org.springframework.fu.jafu.web.WebFluxClientDsl.client;
-import static org.springframework.fu.jafu.web.WebFluxServerDsl.server;
+import static org.springframework.fu.jafu.Jafu.reactiveWebApplication;
+import static org.springframework.fu.jafu.mongo.ReactiveMongoDsl.reactiveMongo;
+import static org.springframework.fu.jafu.webflux.WebFluxClientDsl.webClient;
+import static org.springframework.fu.jafu.webflux.WebFluxServerDsl.webFlux;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 import static org.springframework.web.reactive.function.server.ServerResponse.noContent;
@@ -33,6 +33,7 @@ import reactor.test.StepVerifier;
 
 import org.springframework.boot.logging.LogLevel;
 import org.springframework.boot.web.embedded.tomcat.TomcatReactiveWebServerFactory;
+import org.springframework.fu.jafu.mongo.ReactiveMongoDsl;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -48,14 +49,14 @@ class WebServerDslTests {
 
 	@Test
 	void createAnApplicationWithAnEmptyServer() {
-		var app = webApplication(a -> a.enable(server(s -> s.port(0))));
+		var app = reactiveWebApplication(a -> a.enable(webFlux(s -> s.port(0))));
 		var context = app.run();
 		context.close();
 	}
 
 	@Test
 	void createAnApplicationWithAServerAndAFilter() {
-		var app = webApplication(a -> a.enable(server(s -> s.port(0).filter(MyFilter.class))));
+		var app = reactiveWebApplication(a -> a.enable(webFlux(s -> s.port(0).filter(MyFilter.class))));
 		var context = app.run();
 		var port = context.getEnvironment().getProperty("local.server.port");
 		var client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:" + port).build();
@@ -65,7 +66,7 @@ class WebServerDslTests {
 
 	@Test
 	void createAndRequestAnEndpoint() {
-		var app = webApplication(a -> a.enable(server(s -> s.port(0).router(r -> r.GET("/foo", request -> noContent().build())))));
+		var app = reactiveWebApplication(a -> a.enable(webFlux(s -> s.port(0).router(r -> r.GET("/foo", request -> noContent().build())))));
 
 		var context = app.run();
 		var port = context.getEnvironment().getProperty("local.server.port");
@@ -76,7 +77,7 @@ class WebServerDslTests {
 
 	@Test
 	void createAndRequestAnEndpointWithACustomizedEngine() {
-		var app = webApplication(a -> a.enable(server(s -> s.port(0).engine(new TomcatReactiveWebServerFactory()).router(r -> r.GET("/foo", request -> noContent().build())))));
+		var app = reactiveWebApplication(a -> a.enable(webFlux(s -> s.port(0).engine(new TomcatReactiveWebServerFactory()).router(r -> r.GET("/foo", request -> noContent().build())))));
 
 		var context = app.run();
 		var port = context.getEnvironment().getProperty("local.server.port");
@@ -87,9 +88,9 @@ class WebServerDslTests {
 
 	@Test
 	void createAWebClientAndRequestAnEndpoint() {
-		var app = webApplication(a ->
-				a.enable(server(s -> s.port(0).router(r -> r.GET("/", request -> noContent().build()))))
-				.enable(client()));
+		var app = reactiveWebApplication(a ->
+				a.enable(webFlux(s -> s.port(0).router(r -> r.GET("/", request -> noContent().build()))))
+				.enable(WebFluxClientDsl.webClient()));
 
 		var context = app.run();
 		var port = context.getEnvironment().getProperty("local.server.port");
@@ -102,7 +103,7 @@ class WebServerDslTests {
 
 	@Test
 	void declare2RouterBlocks() {
-		var app = webApplication(a -> a.enable(server(s -> s.port(0)
+		var app = reactiveWebApplication(a -> a.enable(webFlux(s -> s.port(0)
 				.router(r -> r.GET("/foo", request -> noContent().build()))
 				.router(r -> r.GET("/bar", request -> ok().build())))));
 		var context = app.run();
@@ -115,20 +116,20 @@ class WebServerDslTests {
 
 	@Test
 	void declare2ServerBlocks() {
-		var app = webApplication(a -> a
-				.enable(server(s -> s.port(0)))
-				.enable(server(s -> s.port(0))));
+		var app = reactiveWebApplication(a -> a
+				.enable(webFlux(s -> s.port(0)))
+				.enable(webFlux(s -> s.port(0))));
 		Assertions.assertThrows(IllegalStateException.class, app::run);
 	}
 
 	@Test
 	void checkThatConcurrentModificationExceptionIsNotThrown() {
-		var app = webApplication(a ->
-				a.enable(server(s -> s.port(0)
+		var app = reactiveWebApplication(a ->
+				a.enable(webFlux(s -> s.port(0)
 				.codecs(c -> c.string().jackson())
 				.router(r -> r.GET("/", request -> noContent().build()))))
 			.logging(l -> l.level(LogLevel.DEBUG))
-			.enable(mongo()));
+			.enable(ReactiveMongoDsl.reactiveMongo()));
 		var context = app.run();
 		var port = context.getEnvironment().getProperty("local.server.port");
 		var client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:" + port).build();
@@ -138,7 +139,7 @@ class WebServerDslTests {
 
 	@Test
 	void runAnApplication2Times() {
-		var app = webApplication(a -> a.enable(server(s -> s.port(0))));
+		var app = reactiveWebApplication(a -> a.enable(webFlux(s -> s.port(0))));
 		var context = app.run();
 		context.close();
 		context = app.run();

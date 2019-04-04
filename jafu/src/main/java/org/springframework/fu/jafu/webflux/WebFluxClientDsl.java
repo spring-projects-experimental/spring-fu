@@ -1,4 +1,4 @@
-package org.springframework.fu.jafu.web;
+package org.springframework.fu.jafu.webflux;
 
 import java.util.function.Consumer;
 
@@ -13,7 +13,7 @@ import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.fu.jafu.AbstractDsl;
 
 /**
- * Jafu DSL for WebFlux client.
+ * Jafu DSL for WebFlux webClient.
  *
  * Register a {@link org.springframework.web.reactive.function.client.WebClient.Builder} bean.
  *
@@ -37,20 +37,20 @@ public class WebFluxClientDsl extends AbstractDsl {
 	}
 
 	/**
-	 * Configure a WebFlux client builder with default properties.
+	 * Configure a WebFlux webClient builder with default properties.
 	 * @see org.springframework.fu.jafu.ConfigurationDsl#enable(ApplicationContextInitializer)
 	 * @see org.springframework.web.reactive.function.client.WebClient.Builder
 	 */
-	public static ApplicationContextInitializer<GenericApplicationContext> client() {
+	public static ApplicationContextInitializer<GenericApplicationContext> webClient() {
 		return new WebFluxClientDsl(webFluxClientDsl -> {});
 	}
 
-	public static ApplicationContextInitializer<GenericApplicationContext> client(Consumer<WebFluxClientDsl> dsl) {
+	public static ApplicationContextInitializer<GenericApplicationContext> webClient(Consumer<WebFluxClientDsl> dsl) {
 		return new WebFluxClientDsl(dsl);
 	}
 
 	/**
-	 * Configure a base URL for requests performed through the client.
+	 * Configure a base URL for requests performed through the webClient.
 	 */
 	public WebFluxClientDsl baseUrl(String baseUrl) {
 		this.baseUrl = baseUrl;
@@ -86,7 +86,7 @@ public class WebFluxClientDsl extends AbstractDsl {
 	}
 
 	/**
-	 * Jafu DSL for WebFlux client codecs.
+	 * Jafu DSL for WebFlux webClient codecs.
 	 */
 	static public class WebFluxClientCodecDsl extends AbstractDsl {
 
@@ -171,7 +171,7 @@ public class WebFluxClientDsl extends AbstractDsl {
 
 		/**
 		 * Register an `ObjectMapper` bean and configure a [Jackson](https://github.com/FasterXML/jackson)
-		 * JSON codec on WebFlux client via a [dedicated DSL][JacksonDsl].
+		 * JSON codec on WebFlux webClient via a [dedicated DSL][JacksonDsl].
 		 *
 		 * Required dependencies can be retrieve using `org.springframework.boot:spring-boot-starter-json`
 		 * (included by default in `spring-boot-starter-webflux`).

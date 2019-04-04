@@ -22,7 +22,7 @@ val dataConf = configuration { <1>
 
 val webConf = configuration { <1>
 	beans { } <2>
-	server { <6>
+	webFlux { <6>
 		engine = <7>
 		port = <8>
 		router { } <9>
@@ -33,7 +33,7 @@ val webConf = configuration { <1>
 		mustache() <14>
 		filter() <15>
 	}
-	client { <16>
+	webClient { <16>
 		baseUrl = <17>
 		codecs { } <18>
 	}
@@ -57,19 +57,19 @@ fun main() {
  ** 3 {kofu-kdoc-url}/kofu/org.springframework.fu.kofu.mongo/-mongo-dsl/index.html[mongo documentation]
  ** 4 {kofu-kdoc-url}/kofu/org.springframework.fu.kofu.r2dbc/r2dbc-h2.html[r2dbc-h2 documentation]
  ** 5 {kofu-kdoc-url}/kofu/org.springframework.fu.kofu.r2dbc/r2dbc-postgresql.html[r2dbc-postgresql documentation]
- * 6 {kofu-kdoc-url}/kofu/org.springframework.fu.kofu.web/-web-flux-server-dsl/index.html[WebFlux server documentation]
- ** 7 {kofu-kdoc-url}/kofu/org.springframework.fu.kofu.web/-web-flux-server-dsl/engine.html[engine documentation]
- ** 8 {kofu-kdoc-url}/kofu/org.springframework.fu.kofu.web/-web-flux-server-dsl/port.html[port documentation]
+ * 6 {kofu-kdoc-url}/kofu/org.springframework.fu.kofu.webflux/-web-flux-server-dsl/index.html[WebFlux server documentation]
+ ** 7 {kofu-kdoc-url}/kofu/org.springframework.fu.kofu.webflux/-web-flux-server-dsl/engine.html[engine documentation]
+ ** 8 {kofu-kdoc-url}/kofu/org.springframework.fu.kofu.webflux/-web-flux-server-dsl/port.html[port documentation]
  ** 9 {framework-kdoc-url}/spring-framework/org.springframework.web.reactive.function.server/-router-function-dsl/index.html[router documentation]
- ** 10 {kofu-kdoc-url}/kofu/org.springframework.fu.kofu.web/-web-flux-server-dsl/co-router.html[Coroutines router documentation]
- ** 11 {kofu-kdoc-url}/kofu/org.springframework.fu.kofu.web/-web-flux-server-dsl/include.html[Include router documentation]
- ** 12 {kofu-kdoc-url}/kofu/org.springframework.fu.kofu.web/cors.html[cors documentation]
- ** 13 {kofu-kdoc-url}/kofu/org.springframework.fu.kofu.web/-web-flux-server-dsl/-web-flux-server-codec-dsl/index.html[codecs documentation]
- ** 14 {kofu-kdoc-url}/kofu/build/dokka/kofu/org.springframework.fu.kofu.web/mustache.html[mustache documentation]
- ** 15 {kofu-kdoc-url}/kofu/org.springframework.fu.kofu.web/-web-flux-server-dsl/filter.html[filter documentation]
- * 16 {kofu-kdoc-url}/kofu/org.springframework.fu.kofu.web/-web-flux-client-dsl/index.html[WebFlux client documentation]
- ** 17 {kofu-kdoc-url}/kofu/org.springframework.fu.kofu.web/-web-flux-client-dsl/base-url.html[baseUrl documentation]
- ** 18 {kofu-kdoc-url}/kofu/org.springframework.fu.kofu.web/-web-flux-client-dsl/-web-flux-client-codec-dsl/index.html[codecs documentation]
+ ** 10 {kofu-kdoc-url}/kofu/org.springframework.fu.kofu.webflux/-web-flux-server-dsl/co-router.html[Coroutines router documentation]
+ ** 11 {kofu-kdoc-url}/kofu/org.springframework.fu.kofu.webflux/-web-flux-server-dsl/include.html[Include router documentation]
+ ** 12 {kofu-kdoc-url}/kofu/org.springframework.fu.kofu.webflux/cors.html[cors documentation]
+ ** 13 {kofu-kdoc-url}/kofu/org.springframework.fu.kofu.webflux/-web-flux-server-dsl/-web-flux-server-codec-dsl/index.html[codecs documentation]
+ ** 14 {kofu-kdoc-url}/kofu/build/dokka/kofu/org.springframework.fu.kofu.webflux/mustache.html[mustache documentation]
+ ** 15 {kofu-kdoc-url}/kofu/org.springframework.fu.kofu.webflux/-web-flux-server-dsl/filter.html[filter documentation]
+ * 16 {kofu-kdoc-url}/kofu/org.springframework.fu.kofu.webflux/-web-flux-client-dsl/index.html[WebFlux client documentation]
+ ** 17 {kofu-kdoc-url}/kofu/org.springframework.fu.kofu.webflux/-web-flux-client-dsl/base-url.html[baseUrl documentation]
+ ** 18 {kofu-kdoc-url}/kofu/org.springframework.fu.kofu.webflux/-web-flux-client-dsl/-web-flux-client-codec-dsl/index.html[codecs documentation]
  * 19 {kofu-kdoc-url}/kofu/org.springframework.fu.kofu/-application-dsl/index.html[application/webApplication documentation]
  ** 20 {kofu-kdoc-url}/kofu/org.springframework.fu.kofu/-logging-dsl/index.html[logging documentation]
  ** 21 {kofu-kdoc-url}/kofu/org.springframework.fu.kofu/-configuration-dsl/configuration-properties.html[configuration-properties documentation]
@@ -89,10 +89,10 @@ fun main() {
 ```kotlin
 package com.sample
 
-import org.springframework.fu.kofu.webApplication
+import org.springframework.fu.kofu.reactiveWebApplication
 
 val app = webApplication {
-	server {
+	webFlux {
 		router {
 			GET("/") { ok().syncBody("Hello world!") }
 		}

@@ -11,7 +11,7 @@ import org.springframework.context.support.GenericApplicationContext;
  *
  * @author Sebastien Deleuze
  * @see org.springframework.fu.jafu.Jafu#application
- * @see org.springframework.fu.jafu.Jafu#webApplication
+ * @see org.springframework.fu.jafu.Jafu#reactiveWebApplication
  */
 public class ApplicationDsl extends ConfigurationDsl {
 

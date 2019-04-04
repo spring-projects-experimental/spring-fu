@@ -1,12 +1,12 @@
 package org.springframework.fu.kofu.samples
 
-import org.springframework.fu.kofu.web.mustache
-import org.springframework.fu.kofu.web.server
-import org.springframework.fu.kofu.webApplication
+import org.springframework.fu.kofu.webflux.mustache
+import org.springframework.fu.kofu.webflux.webFlux
+import org.springframework.fu.kofu.reactiveWebApplication
 
 fun mustacheDsl() {
-	webApplication {
-		server {
+	reactiveWebApplication {
+		webFlux {
 			mustache()
 		}
 	}

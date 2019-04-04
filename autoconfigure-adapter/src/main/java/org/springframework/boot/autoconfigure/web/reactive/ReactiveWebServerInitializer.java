@@ -55,7 +55,7 @@ import org.springframework.web.server.WebExceptionHandler;
 import org.springframework.web.server.i18n.LocaleContextResolver;
 
 /**
- * {@link ApplicationContextInitializer} adapter for Reactive web server auto-configurations.
+ * {@link ApplicationContextInitializer} adapter for Reactive webflux server auto-configurations.
  */
 public class ReactiveWebServerInitializer implements ApplicationContextInitializer<GenericApplicationContext> {
 

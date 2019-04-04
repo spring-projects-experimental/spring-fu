@@ -13,7 +13,7 @@ import org.springframework.context.support.GenericApplicationContext;
 /**
  * Jafu application that can be run parameterized with Spring profiles and/or command line arguments.
  * @see Jafu#application(Consumer)
- * @see Jafu#webApplication(Consumer)
+ * @see Jafu#reactiveWebApplication(Consumer)
  */
 public abstract class JafuApplication {
 

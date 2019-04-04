@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.fu.kofu.web
+package org.springframework.fu.kofu.webflux
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect
 import com.fasterxml.jackson.annotation.JsonInclude

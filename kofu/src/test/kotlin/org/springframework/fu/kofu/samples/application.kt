@@ -22,12 +22,12 @@ import org.springframework.boot.logging.LogLevel
 import org.springframework.context.event.ContextStartedEvent
 import org.springframework.fu.kofu.application
 import org.springframework.fu.kofu.configuration
-import org.springframework.fu.kofu.mongo.mongodb
-import org.springframework.fu.kofu.web.client
-import org.springframework.fu.kofu.web.cors
-import org.springframework.fu.kofu.web.mustache
-import org.springframework.fu.kofu.web.server
-import org.springframework.fu.kofu.webApplication
+import org.springframework.fu.kofu.mongo.reactiveMongodb
+import org.springframework.fu.kofu.webflux.webClient
+import org.springframework.fu.kofu.webflux.cors
+import org.springframework.fu.kofu.webflux.mustache
+import org.springframework.fu.kofu.webflux.webFlux
+import org.springframework.fu.kofu.reactiveWebApplication
 import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse
 import org.springframework.web.reactive.function.server.ServerResponse.ok
@@ -78,7 +78,7 @@ private fun webApplicationDsl() {
 			bean<UserRepository>()
 			bean<ArticleRepository>()
 		}
-		mongodb {
+		reactiveMongodb {
 			uri = "mongodb://myserver.com/foo"
 		}
 		listener<ContextStartedEvent> {
@@ -93,7 +93,7 @@ private fun webApplicationDsl() {
 			bean<ApiHandler>()
 			bean(::routes)
 		}
-		server {
+		webFlux {
 			port = if (profiles.contains("test")) 8181 else 8080
 			cors {
 				"example.com" { }
@@ -104,7 +104,7 @@ private fun webApplicationDsl() {
 				jackson()
 			}
 		}
-		client {
+		webClient {
 			codecs {
 				string()
 				jackson()
@@ -112,7 +112,7 @@ private fun webApplicationDsl() {
 		}
 	}
 
-	val app = webApplication {
+	val app = reactiveWebApplication {
 		logging {
 			level = LogLevel.INFO
 			level("org.springframework", LogLevel.DEBUG)
@@ -122,7 +122,7 @@ private fun webApplicationDsl() {
 		enable(webConfiguration)
 	}
 
-	fun main(args: Array<String>) = app.run(profiles = "data, web")
+	fun main(args: Array<String>) = app.run(profiles = "data, webflux")
 }
 
 class Foo

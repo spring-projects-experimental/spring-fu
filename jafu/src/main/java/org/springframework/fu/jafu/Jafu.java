@@ -8,14 +8,14 @@ import org.springframework.boot.web.reactive.context.ReactiveWebServerApplicatio
 import org.springframework.context.support.GenericApplicationContext;
 
 /**
- * Provide {@link #application(Consumer)} and {@link #webApplication(Consumer)} to declare an application.
+ * Provide {@link #application(Consumer)} and {@link #reactiveWebApplication(Consumer)} to declare an application.
  */
 public abstract class Jafu {
 
 	/**
 	 * Declare an {@link ApplicationDsl application} that allows to configure a Spring Boot
-	 * application using Jafu DSL and functional bean registration. For web servers,
-	 * use {@link #webApplication} instead.
+	 * application using Jafu DSL and functional bean registration. For webflux servers,
+	 * use {@link #reactiveWebApplication} instead.
 	 */
 	public static JafuApplication application(Consumer<ApplicationDsl> dsl) {
 		return new JafuApplication(new ApplicationDsl(dsl)) {
@@ -29,11 +29,11 @@ public abstract class Jafu {
 	}
 
 	/**
-	 * Declare a {@link ApplicationDsl web application} that allows to configure a Spring Boot
-	 * application using Jafu DSL and functional bean registration. Requires a {@code server} child element.
+	 * Declare a {@link ApplicationDsl webflux server application} that allows to configure a Spring Boot
+	 * application using Jafu DSL and functional bean registration. Requires a {@code webFlux} child element.
 	 * @see #application(Consumer)
 	 */
-	public static JafuApplication webApplication(Consumer<ApplicationDsl> dsl) {
+	public static JafuApplication reactiveWebApplication(Consumer<ApplicationDsl> dsl) {
 		return new JafuApplication(new ApplicationDsl(dsl)) {
 
 			@Override

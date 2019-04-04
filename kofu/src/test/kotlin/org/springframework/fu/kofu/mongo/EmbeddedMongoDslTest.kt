@@ -35,7 +35,7 @@ class EmbeddedMongoModuleTest {
 			beans {
 				bean<TestRepository>()
 			}
-			mongodb {
+			reactiveMongodb {
 				uri = "mongodb://localhost:$port/test"
 				embedded()
 			}

@@ -15,7 +15,7 @@ import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.fu.jafu.AbstractDsl;
 
 /**
- * Jafu DSL for MongoDB configuration.
+ * Jafu DSL for Reactive MongoDB configuration.
  *
  * Enable and configure Reactive MongoDB support by registering a {@link org.springframework.data.mongodb.core.ReactiveMongoTemplate} bean.
  *
@@ -23,15 +23,15 @@ import org.springframework.fu.jafu.AbstractDsl;
  *
  * @author Sebastien Deleuze
  */
-public class MongoDsl extends AbstractDsl {
+public class ReactiveMongoDsl extends AbstractDsl {
 
-	private final Consumer<MongoDsl> dsl;
+	private final Consumer<ReactiveMongoDsl> dsl;
 
 	private final MongoProperties properties = new MongoProperties();
 
 	private boolean embedded = false;
 
-	MongoDsl(Consumer<MongoDsl> dsl) {
+	ReactiveMongoDsl(Consumer<ReactiveMongoDsl> dsl) {
 		this.dsl = dsl;
 	}
 
@@ -40,8 +40,8 @@ public class MongoDsl extends AbstractDsl {
 	 * @see org.springframework.fu.jafu.ConfigurationDsl#enable(ApplicationContextInitializer)
 	 * @see org.springframework.data.mongodb.core.ReactiveMongoTemplate
 	 */
-	public static ApplicationContextInitializer<GenericApplicationContext> mongo() {
-		return new MongoDsl(mongoDsl -> {});
+	public static ApplicationContextInitializer<GenericApplicationContext> reactiveMongo() {
+		return new ReactiveMongoDsl(mongoDsl -> {});
 	}
 
 	/**
@@ -49,35 +49,35 @@ public class MongoDsl extends AbstractDsl {
 	 * @see org.springframework.fu.jafu.ConfigurationDsl#enable(ApplicationContextInitializer)
 	 * @see org.springframework.data.mongodb.core.ReactiveMongoTemplate
 	 */
-	public static ApplicationContextInitializer<GenericApplicationContext> mongo(Consumer<MongoDsl> dsl) {
-		return new MongoDsl(dsl);
+	public static ApplicationContextInitializer<GenericApplicationContext> reactiveMongo(Consumer<ReactiveMongoDsl> dsl) {
+		return new ReactiveMongoDsl(dsl);
 	}
 
 	/**
 	 * Configure the database uri. By default set to `mongodb://localhost/test`.
 	 */
-	public MongoDsl uri(String uri) {
+	public ReactiveMongoDsl uri(String uri) {
 		properties.setUri(uri);
 		return this;
 	}
 
 	/**
-	 * Enable MongoDB embedded server with default properties.
+	 * Enable MongoDB embedded webFlux with default properties.
 	 *
 	 * Require {@code de.flapdoodle.embed:de.flapdoodle.embed.mongo} dependency.
 	 */
-	public MongoDsl embedded() {
+	public ReactiveMongoDsl embedded() {
 		new EmbeddedMongoDsl(properties, it -> {}).initialize(context);
 		embedded = true;
 		return this;
 	}
 
 	/**
-	 * Enable MongoDB embedded server with customized properties.
+	 * Enable MongoDB embedded webFlux with customized properties.
 	 *
 	 * Require {@code de.flapdoodle.embed:de.flapdoodle.embed.mongo} dependency.
 	 */
-	public MongoDsl embedded(Consumer<EmbeddedMongoDsl> dsl) {
+	public ReactiveMongoDsl embedded(Consumer<EmbeddedMongoDsl> dsl) {
 		new EmbeddedMongoDsl(properties, dsl).initialize(context);
 		embedded = true;
 		return this;

@@ -1,13 +1,13 @@
 package org.springframework.fu.kofu.samples
 
-import org.springframework.fu.kofu.web.server
-import org.springframework.fu.kofu.webApplication
+import org.springframework.fu.kofu.webflux.webFlux
+import org.springframework.fu.kofu.reactiveWebApplication
 import org.springframework.web.reactive.function.server.coRouter
 import org.springframework.web.reactive.function.server.router
 
 private fun router() {
-	webApplication {
-		server {
+	reactiveWebApplication {
+		webFlux {
 			router {
 				val htmlHandler = ref<HtmlHandler>()
 				val apiHandler = ref<ApiHandler>()
@@ -35,7 +35,7 @@ private fun includeRouter() {
 			DELETE("/{id}", apiHandler::delete)
 		}
 	}
-	webApplication {
+	reactiveWebApplication {
 		beans {
 			bean(::routes)
 		}
@@ -53,23 +53,23 @@ private fun customEngine() {
 			DELETE("/{id}", apiHandler::delete)
 		}
 	}
-	webApplication {
+	reactiveWebApplication {
 		beans {
 			bean(::routes)
 		}
-		server {
+		webFlux {
 			engine = jetty()
 		}
 	}
 }
 
 private fun coRouter() {
-	webApplication {
+	reactiveWebApplication {
 		beans {
 			bean<HtmlCoroutinesHandler>()
 			bean<ApiCoroutinesHandler>()
 		}
-		server {
+		webFlux {
 			coRouter {
 				val htmlHandler = ref<HtmlCoroutinesHandler>()
 				val apiHandler = ref<ApiCoroutinesHandler>()
@@ -97,12 +97,12 @@ private fun includeCoRouter() {
 			DELETE("/{id}", apiHandler::delete)
 		}
 	}
-	webApplication {
+	reactiveWebApplication {
 		beans {
 			bean<HtmlCoroutinesHandler>()
 			bean<ApiCoroutinesHandler>()
 			bean(::routes)
 		}
-		server()
+		webFlux()
 	}
 }

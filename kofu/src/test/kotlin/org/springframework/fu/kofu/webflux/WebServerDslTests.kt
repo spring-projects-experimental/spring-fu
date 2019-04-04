@@ -14,16 +14,15 @@
  * limitations under the License.
  */
 
-package org.springframework.fu.kofu.web
+package org.springframework.fu.kofu.webflux
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.getBean
 import org.springframework.boot.logging.LogLevel
-import org.springframework.core.env.get
-import org.springframework.fu.kofu.mongo.mongodb
-import org.springframework.fu.kofu.webApplication
+import org.springframework.fu.kofu.mongo.reactiveMongodb
+import org.springframework.fu.kofu.reactiveWebApplication
 import org.springframework.http.HttpStatus.NO_CONTENT
 import org.springframework.http.HttpStatus.UNAUTHORIZED
 import org.springframework.http.MediaType
@@ -43,8 +42,8 @@ class WebServerDslTests {
 
 	@Test
 	fun `Create an application with an empty server`() {
-		val app = webApplication {
-			server {
+		val app = reactiveWebApplication {
+			webFlux {
 				port = 0
 			}
 		}
@@ -55,8 +54,8 @@ class WebServerDslTests {
 
 	@Test
 	fun `Create an application with a server and a filter`() {
-		val app = webApplication {
-			server {
+		val app = reactiveWebApplication {
+			webFlux {
 				port = 0
 				filter<MyFilter>()
 			}
@@ -70,8 +69,8 @@ class WebServerDslTests {
 
 	@Test
 	fun `Create and request an endpoint`() {
-		val app = webApplication {
-			server {
+		val app = reactiveWebApplication {
+			webFlux {
 				port = 0
 				router {
 					GET("/foo") { noContent().build() }
@@ -87,8 +86,8 @@ class WebServerDslTests {
 
 	@Test
 	fun `Create and request an endpoint with a customized engine`() {
-		val app = webApplication {
-			server {
+		val app = reactiveWebApplication {
+			webFlux {
 				port = 0
 				router {
 					engine = tomcat()
@@ -105,14 +104,14 @@ class WebServerDslTests {
 
 	@Test
 	fun `Create a WebClient and request an endpoint`() {
-		val app = webApplication {
-			server {
+		val app = reactiveWebApplication {
+			webFlux {
 				port = 0
 				router {
 					GET("/") { noContent().build() }
 				}
 			}
-			client()
+			webClient()
 		}
 		with(app.run()) {
 			val client = getBean<WebClient.Builder>().build()
@@ -125,8 +124,8 @@ class WebServerDslTests {
 
 	@Test
 	fun `Declare 2 router blocks`() {
-		val app = webApplication {
-			server {
+		val app = reactiveWebApplication {
+			webFlux {
 				port = 0
 				router {
 					GET("/foo") { noContent().build() }
@@ -146,11 +145,11 @@ class WebServerDslTests {
 
 	@Test
 	fun `Declare 2 server blocks`() {
-		val app = webApplication {
-			server {
+		val app = reactiveWebApplication {
+			webFlux {
 				port = 0
 			}
-			server {
+			webFlux {
 				port = 0
 			}
 		}
@@ -162,8 +161,8 @@ class WebServerDslTests {
 
 	@Test
 	fun `Check that ConcurrentModificationException is not thrown`() {
-		val app = webApplication {
-			server {
+		val app = reactiveWebApplication {
+			webFlux {
 				port = 0
 				codecs {
 					string()
@@ -176,7 +175,7 @@ class WebServerDslTests {
 			logging {
 				level = LogLevel.DEBUG
 			}
-			mongodb {
+			reactiveMongodb {
 				embedded()
 			}
 		}
@@ -189,8 +188,8 @@ class WebServerDslTests {
 
 	@Test
 	fun `run an application 2 times`() {
-		val app = webApplication {
-			server {
+		val app = reactiveWebApplication {
+			webFlux {
 				port = 0
 			}
 		}

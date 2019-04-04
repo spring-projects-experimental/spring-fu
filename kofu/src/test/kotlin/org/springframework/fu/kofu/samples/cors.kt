@@ -1,12 +1,12 @@
 package org.springframework.fu.kofu.samples
 
-import org.springframework.fu.kofu.web.cors
-import org.springframework.fu.kofu.web.server
-import org.springframework.fu.kofu.webApplication
+import org.springframework.fu.kofu.webflux.cors
+import org.springframework.fu.kofu.webflux.webFlux
+import org.springframework.fu.kofu.reactiveWebApplication
 
 fun corsDsl() {
-	webApplication {
-		server {
+	reactiveWebApplication {
+		webFlux {
 			cors {
 				"/api/**" {
 					allowedOrigins = "first.example.com, second.example.com"

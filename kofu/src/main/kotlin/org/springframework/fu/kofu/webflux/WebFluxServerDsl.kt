@@ -1,4 +1,4 @@
-package org.springframework.fu.kofu.web
+package org.springframework.fu.kofu.webflux
 
 import org.springframework.beans.factory.ObjectProvider
 import org.springframework.beans.factory.getBeanProvider
@@ -22,10 +22,10 @@ import org.springframework.web.reactive.function.server.RouterFunctionDsl
 import org.springframework.web.server.WebFilter
 
 /**
- * Kofu DSL for WebFlux server.
+ * Kofu DSL for WebFlux webFlux.
  *
- * This DSL to be used in [org.springframework.fu.kofu.webApplication] configures a
- * [WebFlux server](https://docs.spring.io/spring/docs/current/spring-framework-reference/web-reactive.html#spring-webflux).
+ * This DSL to be used in [org.springframework.fu.kofu.reactiveWebApplication] configures a
+ * [WebFlux webFlux](https://docs.spring.io/spring/docs/current/spring-framework-reference/webflux-reactive.html#spring-webflux).
  *
  * When no codec is configured, `String` and `Resource` ones are configured by default.
  * When a `codecs { }` block is declared, no one is configured by default.
@@ -35,7 +35,7 @@ import org.springframework.web.server.WebFilter
  * Required dependencies can be retrieve using `org.springframework.boot:spring-boot-starter-webflux`.
  *
  * @sample org.springframework.fu.kofu.samples.router
- * @see org.springframework.fu.kofu.webApplication
+ * @see org.springframework.fu.kofu.reactiveWebApplication
  * @see WebFluxServerDsl.codecs
  * @see WebFluxServerDsl.cors
  * @see WebFluxServerDsl.mustache
@@ -52,7 +52,7 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit): Abst
     private var codecsConfigured: Boolean = false
 
     /**
-     * Define the listening port of the server.
+     * Define the listening port of the webFlux.
      */
     var port: Int = 8080
 
@@ -78,7 +78,7 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit): Abst
             ResourceCodecInitializer(false).initialize(context)
         }
         if (context.containsBeanDefinition("webHandler")) {
-            throw IllegalStateException("Only one server per application is supported")
+            throw IllegalStateException("Only one webFlux per application is supported")
         }
         ReactiveWebServerInitializer(serverProperties, resourceProperties, webFluxProperties, engine).initialize(context)
     }
@@ -92,7 +92,7 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit): Abst
     }
 
     /**
-     * Define a request filter for this server
+     * Define a request filter for this webFlux
      */
     inline fun <reified T: WebFilter> filter() {
         context.registerBean<T>(uniqueBeanName(T::class.java.name, context))
@@ -103,7 +103,7 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit): Abst
      * @sample org.springframework.fu.kofu.samples.router
      */
     fun router(routes: (RouterFunctionDsl.() -> Unit)) {
-        context.registerBean(uniqueBeanName(RouterFunctionDsl::class.java.name, context)) { RouterFunctionDsl(routes).invoke() }
+        context.registerBean(uniqueBeanName(RouterFunctionDsl::class.java.name, context)) { org.springframework.web.reactive.function.server.router(routes) }
     }
 
     /**
@@ -132,7 +132,7 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit): Abst
      * @sample org.springframework.fu.kofu.samples.coRouter
      */
     fun coRouter(routes: (CoRouterFunctionDsl.() -> Unit)) {
-        context.registerBean(uniqueBeanName(CoRouterFunctionDsl::class.java.name, context)) { CoRouterFunctionDsl(routes).invoke() }
+        context.registerBean(uniqueBeanName(CoRouterFunctionDsl::class.java.name, context)) { org.springframework.web.reactive.function.server.coRouter(routes) }
     }
 
     /**
@@ -232,7 +232,7 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit): Abst
 
         /**
          * Register an `ObjectMapper` bean and configure a [Jackson](https://github.com/FasterXML/jackson)
-         * JSON codec on WebFlux server via a [dedicated DSL][JacksonDsl].
+         * JSON codec on WebFlux webFlux via a [dedicated DSL][JacksonDsl].
          *
          * Required dependencies can be retrieve using `org.springframework.boot:spring-boot-starter-json`
          * (included by default in `spring-boot-starter-webflux`).
@@ -275,10 +275,10 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit): Abst
 }
 
 /**
- * Declare a WebFlux server.
+ * Declare a WebFlux webFlux.
  * @see WebFluxServerDsl
  */
-fun ConfigurationDsl.server(dsl: WebFluxServerDsl.() -> Unit =  {}) {
+fun ConfigurationDsl.webFlux(dsl: WebFluxServerDsl.() -> Unit =  {}) {
     WebFluxServerDsl(dsl).initialize(context)
 }
 

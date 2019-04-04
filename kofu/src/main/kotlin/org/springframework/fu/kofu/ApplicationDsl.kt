@@ -26,14 +26,14 @@ import org.springframework.context.support.GenericApplicationContext
  * @sample org.springframework.fu.kofu.samples.webApplicationDsl
  * @param dsl The `application { }` DSL
  * @see application
- * @see webApplication
+ * @see reactiveWebApplication
  * @author Sebastien Deleuze
  */
 open class ApplicationDsl internal constructor(private val dsl: ApplicationDsl.() -> Unit) : ConfigurationDsl({}) {
 
 	override fun initialize(context: GenericApplicationContext) {
 		super.initialize(context)
-        dsl()
+		dsl()
 		MessageSourceInitializer().initialize(context)
 	}
 

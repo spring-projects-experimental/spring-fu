@@ -1,17 +1,17 @@
 package org.springframework.fu.kofu.samples
 
-import org.springframework.fu.kofu.web.client
-import org.springframework.fu.kofu.web.server
-import org.springframework.fu.kofu.webApplication
+import org.springframework.fu.kofu.webflux.webClient
+import org.springframework.fu.kofu.webflux.webFlux
+import org.springframework.fu.kofu.reactiveWebApplication
 
 fun jacksonDsl() {
-	webApplication {
-		server {
+	reactiveWebApplication {
+		webFlux {
 			codecs {
 				jackson()
 			}
 		}
-		client {
+		webClient {
 			codecs {
 				jackson()
 			}

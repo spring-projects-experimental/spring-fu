@@ -8,7 +8,7 @@ import org.springframework.context.support.GenericApplicationContext
 /**
  * Declare an [application][ApplicationDsl] that allows to configure a Spring Boot
  * application using Kofu DSL and functional bean registration. For web servers,
- * use [webApplication] instead.
+ * use [reactiveWebApplication] instead.
  *
  * @sample org.springframework.fu.kofu.samples.applicationDsl
  * @param dsl The `application { }` DSL
@@ -24,15 +24,15 @@ fun application(dsl: ApplicationDsl.() -> Unit)
 }
 
 /**
- * Declare a [web application][ApplicationDsl] that allows to configure a Spring Boot
- * application using Kofu DSL and functional bean registration. Requires a {@code server} child element.
+ * Declare a [webflux server plication][ApplicationDsl] that allows to configure a Spring Boot
+ * application using Kofu DSL and functional bean registration. Requires a {@code webFlux} child element.
  *
  * @sample org.springframework.fu.kofu.samples.webApplicationDsl
  * @param dsl The `application { }` DSL
  * @see ApplicationDsl.logging
- * @see org.springframework.fu.kofu.web.server
+ * @see org.springframework.fu.kofu.webflux.webFlux
  */
-fun webApplication(dsl: ApplicationDsl.() -> Unit)
+fun reactiveWebApplication(dsl: ApplicationDsl.() -> Unit)
         = object: KofuApplication(ApplicationDsl(dsl)) {
     override fun initializeWebApplicationContext(app: SpringApplication) {
         app.webApplicationType = WebApplicationType.REACTIVE

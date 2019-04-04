@@ -14,37 +14,52 @@
  * limitations under the License.
  */
 
-package org.springframework.fu.kofu.web
+package org.springframework.fu.kofu.webflux
 
 import org.junit.jupiter.api.Test
-import org.springframework.fu.kofu.webApplication
+import org.springframework.fu.kofu.reactiveWebApplication
 import org.springframework.test.web.reactive.server.WebTestClient
-import org.springframework.test.web.reactive.server.expectBody
 
 /**
- * @author Sebastien Deleuze
+ * @author Ireneusz Kozłowski
  */
-class MustacheDslTests {
+class CorsDslTests {
 
 	@Test
-	fun `Create and request a Mustache view`() {
-		val app = webApplication {
-			server {
+	fun `Enable cors module on server, create and request a JSON endpoint`() {
+		val app = reactiveWebApplication {
+			webFlux {
 				port = 0
-				mustache()
 				router {
-					GET("/view") { ok().render("template", mapOf("name" to "world")) }
+					GET("/") { noContent().build() }
+				}
+				cors {
+					"/api" {
+						allowedOrigins = "first.example.com, second.example.com"
+						allowedMethods = "GET, PUT, POST, DELETE"
+					}
+					"/public" {
+						allowedOrigins = "**"
+						allowedMethods = "GET"
+					}
+					"fullConfig" {
+						allowedOrigins = "full.config.example.com"
+						allowedMethods = "GET"
+						allowedHeaders = "*"
+						exposedHeaders = "Content-Location"
+						allowCredentials = true
+						maxAge = 3600
+					}
 				}
 			}
 		}
 		with(app.run()) {
+			assert(containsBean("corsFilter"))
 			val client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:$localServerPort").build()
-			client.get().uri("/view").exchange()
-					.expectStatus().is2xxSuccessful
-					.expectBody<String>()
-					.isEqualTo("Hello world!")
+			client.get().uri("/").exchange().expectStatus().is2xxSuccessful
 			close()
 		}
 	}
-
 }
+
+

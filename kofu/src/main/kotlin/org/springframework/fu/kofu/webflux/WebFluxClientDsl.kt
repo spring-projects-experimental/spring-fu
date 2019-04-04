@@ -1,4 +1,4 @@
-package org.springframework.fu.kofu.web
+package org.springframework.fu.kofu.webflux
 
 import org.springframework.boot.autoconfigure.web.reactive.*
 import org.springframework.boot.autoconfigure.web.reactive.function.client.ReactiveWebClientBuilderInitializer
@@ -8,7 +8,7 @@ import org.springframework.fu.kofu.ConfigurationDsl
 import org.springframework.web.reactive.function.client.WebClient
 
 /**
- * Kofu DSL for WebFlux client.
+ * Kofu DSL for WebFlux webClient.
  *
  * Register a [WebClient.Builder] bean via a [dedicated DSL][WebFluxClientDsl].
  *
@@ -26,7 +26,7 @@ class WebFluxClientDsl(private val init: WebFluxClientDsl.() -> Unit) : Abstract
     private var codecsConfigured: Boolean = false
 
     /**
-     * Configure a base URL for requests performed through the client.
+     * Configure a base URL for requests performed through the webClient.
      */
     var baseUrl: String? = null
 
@@ -72,7 +72,7 @@ class WebFluxClientDsl(private val init: WebFluxClientDsl.() -> Unit) : Abstract
 
         /**
          * Register an `ObjectMapper` bean and configure a [Jackson](https://github.com/FasterXML/jackson)
-         * JSON codec on WebFlux client via a [dedicated DSL][JacksonDsl].
+         * JSON codec on WebFlux webClient via a [dedicated DSL][JacksonDsl].
          *
          * Required dependencies can be retrieve using `org.springframework.boot:spring-boot-starter-json`
          * (included by default in `spring-boot-starter-webflux`).
@@ -114,9 +114,9 @@ class WebFluxClientDsl(private val init: WebFluxClientDsl.() -> Unit) : Abstract
 }
 
 /**
- * Declare a WebFlux client.
+ * Declare a WebFlux webClient.
  * @see WebFluxClientDsl
  */
-fun ConfigurationDsl.client(dsl: WebFluxClientDsl.() -> Unit =  {}) {
+fun ConfigurationDsl.webClient(dsl: WebFluxClientDsl.() -> Unit =  {}) {
     WebFluxClientDsl(dsl).initialize(context)
 }

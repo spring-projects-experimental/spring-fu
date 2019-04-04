@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.fu.kofu.web
+package org.springframework.fu.kofu.webflux
 
 import org.springframework.boot.autoconfigure.mustache.MustacheInitializer
 import org.springframework.boot.autoconfigure.mustache.MustacheProperties

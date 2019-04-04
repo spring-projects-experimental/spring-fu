@@ -1,4 +1,4 @@
-package org.springframework.fu.jafu.web;
+package org.springframework.fu.jafu.webflux;
 
 import java.util.Locale;
 import java.util.TimeZone;
