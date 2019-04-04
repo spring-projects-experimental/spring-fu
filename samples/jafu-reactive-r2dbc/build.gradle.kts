@@ -17,6 +17,7 @@ dependencies {
 	implementation("org.springframework.data:spring-data-r2dbc:1.0.0.BUILD-SNAPSHOT")
 	implementation("io.r2dbc:r2dbc-spi:1.0.0.M7")
 	implementation("io.r2dbc:r2dbc-h2:1.0.0.M7")
+	implementation("com.h2database:h2:1.4.197") // See https://github.com/r2dbc/r2dbc-h2/issues/51
 
 	testImplementation("org.junit.jupiter:junit-jupiter-api")
 	testImplementation("org.springframework:spring-test")
