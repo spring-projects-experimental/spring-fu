@@ -16,14 +16,17 @@
 
 package com.sample
 
+import kotlinx.coroutines.FlowPreview
 import org.springframework.fu.kofu.reactiveWebApplication
 
+@FlowPreview
 val app = reactiveWebApplication {
 	configurationProperties<SampleProperties>("sample")
 	enable(dataConfig)
 	enable(webConfig)
 }
 
+@FlowPreview
 fun main() {
 	app.run()
 }
