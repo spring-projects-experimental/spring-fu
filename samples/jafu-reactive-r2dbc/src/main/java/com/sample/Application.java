@@ -1,9 +1,9 @@
 package com.sample;
 
-import static org.springframework.fu.jafu.Jafu.*;
-
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.fu.jafu.JafuApplication;
+
+import static org.springframework.fu.jafu.Jafu.reactiveWebApplication;
 
 public abstract class Application {
 

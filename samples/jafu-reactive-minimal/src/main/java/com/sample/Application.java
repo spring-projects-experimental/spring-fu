@@ -1,9 +1,9 @@
 package com.sample;
 
+import org.springframework.fu.jafu.JafuApplication;
+
 import static org.springframework.fu.jafu.Jafu.reactiveWebApplication;
 import static org.springframework.fu.jafu.webflux.WebFluxServerDsl.webFlux;
-
-import org.springframework.fu.jafu.JafuApplication;
 
 public class Application {
 

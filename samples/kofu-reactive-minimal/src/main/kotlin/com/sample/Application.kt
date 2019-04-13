@@ -1,7 +1,7 @@
 package com.sample
 
-import org.springframework.fu.kofu.webflux.webFlux
 import org.springframework.fu.kofu.reactiveWebApplication
+import org.springframework.fu.kofu.webflux.webFlux
 import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse.ok
 

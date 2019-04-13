@@ -2,9 +2,12 @@ package com.sample
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-
 import org.springframework.core.io.ClassPathResource
-import org.springframework.data.mongodb.core.*
+import org.springframework.data.mongodb.core.ReactiveMongoOperations
+import org.springframework.data.mongodb.core.count
+import org.springframework.data.mongodb.core.findAll
+import org.springframework.data.mongodb.core.findById
+import org.springframework.data.mongodb.core.remove
 
 class UserRepository(
 		private val mongo: ReactiveMongoOperations,

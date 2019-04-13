@@ -4,10 +4,20 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import kotlinx.coroutines.reactive.awaitSingle
 import org.springframework.core.io.ClassPathResource
-import org.springframework.data.mongodb.core.*
-import org.springframework.data.mongodb.core.query.Criteria.*
-import org.springframework.data.mongodb.core.query.Query.*
+import org.springframework.data.mongodb.core.ReactiveFluentMongoOperations
+import org.springframework.data.mongodb.core.allAndAwait
+import org.springframework.data.mongodb.core.asType
+import org.springframework.data.mongodb.core.awaitCount
+import org.springframework.data.mongodb.core.awaitOne
+import org.springframework.data.mongodb.core.findReplaceAndAwait
+import org.springframework.data.mongodb.core.insert
+import org.springframework.data.mongodb.core.oneAndAwait
+import org.springframework.data.mongodb.core.query
+import org.springframework.data.mongodb.core.query.Criteria.where
+import org.springframework.data.mongodb.core.query.Query.query
 import org.springframework.data.mongodb.core.query.isEqualTo
+import org.springframework.data.mongodb.core.remove
+import org.springframework.data.mongodb.core.update
 
 class UserRepository(
 		private val mongo: ReactiveFluentMongoOperations,

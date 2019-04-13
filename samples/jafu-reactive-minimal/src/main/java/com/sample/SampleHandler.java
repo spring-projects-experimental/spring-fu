@@ -1,11 +1,11 @@
 package com.sample;
 
-import static org.springframework.web.reactive.function.server.ServerResponse.*;
-
 import reactor.core.publisher.Mono;
 
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
+
+import static org.springframework.web.reactive.function.server.ServerResponse.ok;
 
 public class SampleHandler {
 
