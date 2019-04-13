@@ -24,11 +24,12 @@ fun application(dsl: ApplicationDsl.() -> Unit)
 }
 
 /**
- * Declare a [webflux server plication][ApplicationDsl] that allows to configure a Spring Boot
- * application using Kofu DSL and functional bean registration. Requires a {@code webFlux} child element.
+ * Declare a [webflux server application][ApplicationDsl] that allows to configure a Spring
+ * Boot application using Kofu DSL and functional bean registration. Requires a
+ * {@code webFlux} child element.
  *
  * @sample org.springframework.fu.kofu.samples.webApplicationDsl
- * @param dsl The `application { }` DSL
+ * @param dsl The `reactiveWebApplication { }` DSL
  * @see ApplicationDsl.logging
  * @see org.springframework.fu.kofu.webflux.webFlux
  */
