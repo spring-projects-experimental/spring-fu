@@ -15,8 +15,8 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("de.flapdoodle.embed:de.flapdoodle.embed.mongo")
-	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.1")
-	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.1.1")
+	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.2.0")
+	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.2.0")
 
 	testImplementation("org.junit.jupiter:junit-jupiter-api")
 	testImplementation("org.springframework:spring-test")
@@ -26,6 +26,7 @@ dependencies {
 repositories {
 	mavenLocal()
 	mavenCentral()
+	jcenter()
 	maven("https://repo.spring.io/milestone")
 	maven("https://repo.spring.io/snapshot")
 }
