@@ -13,8 +13,8 @@ public class UserRepository {
 		this.client = client;
 	}
 
-	public Mono<Integer> count() {
-		return client.execute().sql("SELECT COUNT(*) FROM users").as(Integer.class).fetch().one();
+	public Mono<Long> count() {
+		return client.execute().sql("SELECT COUNT(*) FROM users").as(Long.class).fetch().one();
 	}
 
 	public Flux<User> findAll() {
@@ -22,7 +22,7 @@ public class UserRepository {
 	}
 
 	public Mono<User> findOne(String id) {
-		return client.execute().sql("SELECT * FROM users WHERE login = $1").bind(1, id).as(User.class).fetch().one();
+		return client.execute().sql("SELECT * FROM users WHERE login = $1").bind(0, id).as(User.class).fetch().one();
 	}
 
 	public Mono<Void> deleteAll() {
