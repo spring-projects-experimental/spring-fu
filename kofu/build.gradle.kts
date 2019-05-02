@@ -43,10 +43,10 @@ tasks.withType<DokkaTask> {
 	outputFormat = "html"
 	samples = listOf("src/test/kotlin/org/springframework/fu/kofu/samples")
 	externalDocumentationLink {
-		url = URL("https://docs.spring.io/spring-framework/docs/5.1.x/javadoc-api/")
+		url = URL("https://docs.spring.io/spring-framework/docs/5.2.0.BUILD-SNAPSHOT/javadoc-api/")
 	}
 	externalDocumentationLink {
-		url = URL("https://docs.spring.io/spring-framework/docs/5.1.x/kdoc-api/spring-framework/")
+		url = URL("https://docs.spring.io/spring-framework/docs/5.2.0.BUILD-SNAPSHOT/kdoc-api/spring-framework/")
 	}
 }
 

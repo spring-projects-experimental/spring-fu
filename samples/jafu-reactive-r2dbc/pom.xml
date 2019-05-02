@@ -13,7 +13,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.2.0.M2</version>
+		<version>2.2.0.BUILD-SNAPSHOT</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
@@ -47,21 +47,14 @@
 
 		<dependency>
 			<groupId>io.r2dbc</groupId>
-			<artifactId>r2dbc-spi</artifactId>
-			<version>1.0.0.M7</version>
+			<artifactId>r2dbc-bom</artifactId>
+			<version>Arabba-BUILD-SNAPSHOT</version>
+			<type>pom</type>
 		</dependency>
 
 		<dependency>
 			<groupId>io.r2dbc</groupId>
 			<artifactId>r2dbc-h2</artifactId>
-			<version>1.0.0.M7</version>
-		</dependency>
-
-		<!-- // See https://github.com/r2dbc/r2dbc-h2/issues/51 -->
-		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<version>1.4.197</version>
 		</dependency>
 
 		<dependency>

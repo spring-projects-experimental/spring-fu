@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
 	id("org.jetbrains.kotlin.jvm") version "1.3.21"
 	id("io.spring.dependency-management") version "1.0.7.RELEASE"
-	id("org.springframework.boot") version "2.2.0.M2"
+	id("org.springframework.boot") version "2.2.0.BUILD-SNAPSHOT"
 }
 
 dependencies {
@@ -13,8 +13,8 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-mustache")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.springframework.data:spring-data-r2dbc:1.0.0.BUILD-SNAPSHOT")
-	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.2.0")
-	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.2.0")
+	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.2.1")
+	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.2.1")
 	implementation("io.r2dbc:r2dbc-h2")
 
 	testImplementation("org.junit.jupiter:junit-jupiter-api")
