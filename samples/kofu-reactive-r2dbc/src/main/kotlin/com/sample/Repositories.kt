@@ -13,7 +13,7 @@ class UserRepository(private val client: DatabaseClient) {
 			client.select().from("users").asType<User>().fetch().all()
 
 	fun findOne(id: String) =
-			client.execute().sql("SELECT * FROM users WHERE login = \$1").bind(0, id).asType<User>().fetch().one()
+			client.execute().sql("SELECT * FROM users WHERE login = :login").bind("login", id).asType<User>().fetch().one()
 
 	fun deleteAll() =
 			client.execute().sql("DELETE FROM users").fetch().one().then()

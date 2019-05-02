@@ -17,6 +17,9 @@ class UserHandler(
 		ok().contentType(MediaType.APPLICATION_JSON_UTF8)
 				.bodyAndAwait(repository.findAll())
 
+	suspend fun userApi(request: ServerRequest) =
+			ok().contentType(MediaType.APPLICATION_JSON_UTF8)
+					.bodyAndAwait(repository.findOne(request.pathVariable("login")))
 
 	suspend fun listView(request: ServerRequest) =
 		ok().renderAndAwait("users", mapOf("users" to repository.findAll()))

@@ -22,7 +22,7 @@ public class UserRepository {
 	}
 
 	public Mono<User> findOne(String id) {
-		return client.execute().sql("SELECT * FROM users WHERE login = $1").bind(0, id).as(User.class).fetch().one();
+		return client.execute().sql("SELECT * FROM users WHERE login = :login").bind("login", id).as(User.class).fetch().one();
 	}
 
 	public Mono<Void> deleteAll() {

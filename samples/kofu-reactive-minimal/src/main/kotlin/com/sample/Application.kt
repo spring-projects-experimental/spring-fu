@@ -30,6 +30,7 @@ class SampleService {
 	fun generateMessage() = "Hello world!"
 }
 
+@Suppress("UNUSED_PARAMETER")
 class SampleHandler(private val sampleService: SampleService) {
 	fun hello(request: ServerRequest)= ok().syncBody(sampleService.generateMessage())
 	fun json(request: ServerRequest) = ok().syncBody(Sample(sampleService.generateMessage()))

@@ -27,10 +27,17 @@ class IntegrationTests {
 	}
 
 	@Test
-	fun `Request HTTP API endpoint`() {
+	fun `Request HTTP API endpoint for listing all users`() {
 		client.get().uri("/api/user").exchange()
-			.expectStatus().is2xxSuccessful
-			.expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+				.expectStatus().is2xxSuccessful
+				.expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+	}
+
+	@Test
+	fun `Request HTTP API endpoint for getting one specified user`() {
+		client.get().uri("/api/user/blozel").exchange()
+				.expectStatus().is2xxSuccessful
+				.expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
 	}
 
 	@Test

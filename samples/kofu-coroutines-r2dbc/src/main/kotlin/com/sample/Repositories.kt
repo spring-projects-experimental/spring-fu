@@ -17,7 +17,7 @@ class UserRepository(private val client: DatabaseClient) {
 	fun findAll() = client.select().from("users").asType<User>().fetch().flow()
 
 	suspend fun findOne(id: String) =
-			client.execute().sql("SELECT * FROM users WHERE login = \$1").bind(0, id).asType<User>().fetch().awaitOne()
+			client.execute().sql("SELECT * FROM users WHERE login = :login").bind("login", id).asType<User>().fetch().awaitOne()
 
 	suspend fun deleteAll() =
 		client.execute().sql("DELETE FROM users").await()
