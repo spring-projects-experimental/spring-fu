@@ -29,7 +29,7 @@ class IntegrationTests {
 	fun `Request HTTP API endpoint`() {
 		client.get().uri("/api/user").exchange()
 				.expectStatus().is2xxSuccessful
-				.expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+				.expectHeader().contentType(MediaType.APPLICATION_JSON_VALUE)
 	}
 
 	@Test

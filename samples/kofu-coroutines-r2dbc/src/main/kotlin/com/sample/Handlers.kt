@@ -14,11 +14,11 @@ class UserHandler(
 		private val configuration: SampleProperties) {
 
 	suspend fun listApi(request: ServerRequest) =
-		ok().contentType(MediaType.APPLICATION_JSON_UTF8)
+		ok().contentType(MediaType.APPLICATION_JSON)
 				.bodyAndAwait(repository.findAll())
 
 	suspend fun userApi(request: ServerRequest) =
-			ok().contentType(MediaType.APPLICATION_JSON_UTF8)
+			ok().contentType(MediaType.APPLICATION_JSON)
 					.bodyAndAwait(repository.findOne(request.pathVariable("login")))
 
 	suspend fun listView(request: ServerRequest) =

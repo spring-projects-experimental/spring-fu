@@ -25,8 +25,8 @@ import org.springframework.boot.WebApplicationType
 import org.springframework.fu.kofu.application
 import org.springframework.http.HttpHeaders.CONTENT_TYPE
 import org.springframework.http.HttpStatus
-import org.springframework.http.MediaType.APPLICATION_JSON_UTF8
-import org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE
+import org.springframework.http.MediaType.APPLICATION_JSON
+import org.springframework.http.MediaType.APPLICATION_JSON_VALUE
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.test.web.reactive.server.expectBody
 import org.springframework.web.reactive.function.client.WebClient
@@ -47,7 +47,7 @@ class JacksonDslTests {
 				}
 				router {
 					GET("/user") {
-						ok().header(CONTENT_TYPE, APPLICATION_JSON_UTF8_VALUE).syncBody(User("Brian"))
+						ok().header(CONTENT_TYPE, APPLICATION_JSON_VALUE).syncBody(User("Brian"))
 					}
 				}
 			}
@@ -56,7 +56,7 @@ class JacksonDslTests {
 			val client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:$localServerPort").build()
 			client.get().uri("/user").exchange()
 					.expectStatus().is2xxSuccessful
-					.expectHeader().contentType(APPLICATION_JSON_UTF8_VALUE)
+					.expectHeader().contentType(APPLICATION_JSON_VALUE)
 					.expectBody<User>()
 					.isEqualTo(User("Brian"))
 			close()
@@ -73,7 +73,7 @@ class JacksonDslTests {
 				}
 				router {
 					GET("/user") {
-						ok().header(CONTENT_TYPE, APPLICATION_JSON_UTF8_VALUE).syncBody(User("Brian"))
+						ok().header(CONTENT_TYPE, APPLICATION_JSON_VALUE).syncBody(User("Brian"))
 					}
 				}
 			}
@@ -89,7 +89,7 @@ class JacksonDslTests {
 			response.test()
 					.consumeNextWith {
 						assertEquals(HttpStatus.OK, it.statusCode())
-						assertEquals(APPLICATION_JSON_UTF8, it.headers().contentType().get())
+						assertEquals(APPLICATION_JSON, it.headers().contentType().get())
 					}
 					.verifyComplete()
 			val mappers = getBeanProvider<ObjectMapper>().toList()
@@ -105,7 +105,7 @@ class JacksonDslTests {
 				port = 0
 				router {
 					GET("/user") {
-						ok().header(CONTENT_TYPE, APPLICATION_JSON_UTF8_VALUE).syncBody(User("Brian"))
+						ok().header(CONTENT_TYPE, APPLICATION_JSON_VALUE).syncBody(User("Brian"))
 					}
 				}
 			}

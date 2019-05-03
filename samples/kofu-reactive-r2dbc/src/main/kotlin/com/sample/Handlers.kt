@@ -14,12 +14,12 @@ class UserHandler(
 
 	fun listApi(request: ServerRequest) = ServerResponse
 			.ok()
-			.contentType(MediaType.APPLICATION_JSON_UTF8)
+			.contentType(MediaType.APPLICATION_JSON)
 			.body(repository.findAll())
 
 	fun userApi(request: ServerRequest) = ServerResponse
 			.ok()
-			.contentType(MediaType.APPLICATION_JSON_UTF8)
+			.contentType(MediaType.APPLICATION_JSON)
 			.body(repository.findOne(request.pathVariable("login")))
 
 	fun listView(request: ServerRequest) = ServerResponse

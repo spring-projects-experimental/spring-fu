@@ -13,7 +13,7 @@ class UserHandler(
 ) {
 
 	suspend fun listApi(request: ServerRequest) =
-		ok().contentType(MediaType.APPLICATION_JSON_UTF8).bodyAndAwait(repository.findAll())
+		ok().contentType(MediaType.APPLICATION_JSON).bodyAndAwait(repository.findAll())
 
 
 	suspend fun listView(request: ServerRequest) =
