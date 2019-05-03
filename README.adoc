@@ -12,16 +12,17 @@ Its main incubating feature is *Kofu*, which provides any API to configure Sprin
 
 It has following characteristics:
 
- * Explicit configuration via Kotlin or Java DSL instead of annotations
+ * Explicit configuration via Kotlin DSL instead of auto-configuration
+ * Allows to define custom configuration slices (useful for more focused and efficient testing)
  * Minimal set of features enabled by default
- * No classpath scanning, no feature enabled based on classpath detection
- * Both declarative (via the DSL) and programmatic (code auto-complete, allow any kind of `if`, `for` statements)
- * Functional configuration based on pure lambdas
+ * https://docs.spring.io/spring/docs/5.2.0.BUILD-SNAPSHOT/spring-framework-reference/languages.html#kotlin-bean-definition-dsl[Functional configuration based on pure lambdas] instead of annotations
+ * Great discoverability via code auto-complete
+ * Both declarative and programmatic (allow any kind of `if`, `for` statements)
  * Minimal reflection usage, no CGLIB proxy, no annotation processing
  * Fast startup and low memory consumption
  * Lazy loading of beans enabled by default
  * WebMvc (WIP) and WebFlux support via https://docs.spring.io/spring/docs/5.2.0.BUILD-SNAPSHOT/spring-framework-reference/languages.html#router-dsl[router DSLs] instead of `@Controller`
- * Coroutines allows to leverage Spring reactive stack in a more imperative way
+ * https://docs.spring.io/spring/docs/5.2.0.BUILD-SNAPSHOT/spring-framework-reference/languages.html#coroutines[Coroutines] allows to leverage Spring reactive stack in a more imperative way
  * https://github.com/oracle/graal/tree/master/substratevm[GraalVM native image] friendly
 
 It is not intended to be used in production, but rather to incubate and get feedback and contributions
