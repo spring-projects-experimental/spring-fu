@@ -2,8 +2,7 @@ rootProject.name = "spring-fu-build"
 
 include(
 		"autoconfigure-adapter",
-		"kofu",
-		"jafu"
+		"kofu"
 )
 
 pluginManagement {

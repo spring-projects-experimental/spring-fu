@@ -76,32 +76,6 @@ allprojects {
 
 publishing {
 	publications {
-		create<MavenPublication>("jafu-reactive-minimal") {
-			groupId = "org.springframework.fu"
-			artifactId = "spring-fu-samples-jafu-reactive-minimal"
-			artifact(task<Zip>("jafuReactiveMinimalSampleZip") {
-				from("samples/jafu-reactive-minimal") {
-					exclude("build", "com.sample.application", "target", ".gradle", ".idea", "out", "*.iml")
-				}
-				destinationDir = file("$buildDir/dist")
-				into("jafu-reactive-minimal")
-				setExecutablePermissions()
-			})
-		}
-
-		create<MavenPublication>("jafu-reactive-r2dbc") {
-			groupId = "org.springframework.fu"
-			artifactId = "spring-fu-samples-jafu-reactive-r2dbc"
-			artifact(task<Zip>("jafuReactiveR2dbcSampleZip") {
-				from("samples/jafu-reactive-r2dbc") {
-					exclude("build", "target", ".gradle", ".idea", "out", "*.iml")
-				}
-				destinationDir = file("$buildDir/dist")
-				into("jafu-reactive-r2dbc")
-				setExecutablePermissions()
-			})
-		}
-
 		create<MavenPublication>("kofu-coroutines-mongodb") {
 			groupId = "org.springframework.fu"
 			artifactId = "spring-fu-samples-kofu-coroutines-mongodb"
