@@ -1,11 +1,12 @@
 package org.springframework.fu.kofu.samples
 
+import org.springframework.boot.WebApplicationType
+import org.springframework.fu.kofu.application
 import org.springframework.fu.kofu.webflux.cors
 import org.springframework.fu.kofu.webflux.webFlux
-import org.springframework.fu.kofu.reactiveWebApplication
 
 fun corsDsl() {
-	reactiveWebApplication {
+	application(WebApplicationType.REACTIVE) {
 		webFlux {
 			cors {
 				"/api/**" {

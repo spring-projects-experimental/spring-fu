@@ -1,12 +1,14 @@
 package org.springframework.fu.kofu.samples
 
+import org.springframework.boot.WebApplicationType
+import org.springframework.context.support.beans
+import org.springframework.fu.kofu.application
 import org.springframework.fu.kofu.webflux.webFlux
-import org.springframework.fu.kofu.reactiveWebApplication
 import org.springframework.web.reactive.function.server.coRouter
 import org.springframework.web.reactive.function.server.router
 
 private fun router() {
-	reactiveWebApplication {
+	application(WebApplicationType.REACTIVE) {
 		webFlux {
 			router {
 				val htmlHandler = ref<HtmlHandler>()
@@ -35,7 +37,7 @@ private fun includeRouter() {
 			DELETE("/{id}", apiHandler::delete)
 		}
 	}
-	reactiveWebApplication {
+	application(WebApplicationType.REACTIVE) {
 		beans {
 			bean(::routes)
 		}
@@ -53,7 +55,7 @@ private fun customEngine() {
 			DELETE("/{id}", apiHandler::delete)
 		}
 	}
-	reactiveWebApplication {
+	application(WebApplicationType.REACTIVE) {
 		beans {
 			bean(::routes)
 		}
@@ -64,7 +66,7 @@ private fun customEngine() {
 }
 
 private fun coRouter() {
-	reactiveWebApplication {
+	application(WebApplicationType.REACTIVE) {
 		beans {
 			bean<HtmlCoroutinesHandler>()
 			bean<ApiCoroutinesHandler>()
@@ -97,7 +99,7 @@ private fun includeCoRouter() {
 			DELETE("/{id}", apiHandler::delete)
 		}
 	}
-	reactiveWebApplication {
+	application(WebApplicationType.NONE) {
 		beans {
 			bean<HtmlCoroutinesHandler>()
 			bean<ApiCoroutinesHandler>()

@@ -1,6 +1,6 @@
 :spring-fu-version: 0.0.5
 :kofu-kdoc-url: http://repo.spring.io/milestone/org/springframework/fu/spring-fu-kofu/{spring-fu-version}/spring-fu-kofu-{spring-fu-version}-javadoc.jar!
-:framework-kdoc-url: https://docs.spring.io/spring-framework/docs/5.1.x/kdoc-api
+:framework-kdoc-url: https://docs.spring.io/spring-framework/docs/5.2.0.BUILD-SNAPSHOT/kdoc-api
 
 = Spring Fu
 
@@ -57,7 +57,7 @@ val webConf = configuration { <1>
 	}
 }
 
-val app = webApplication { <19>
+val app = application(WebApplicationType.REACTIVE) { <19>
 	logging { } <20>
 	configurationProperties<SampleProperties>() <21>
 	listener<SampleEvent> { } <22>
@@ -88,7 +88,7 @@ fun main() {
  * 16 {kofu-kdoc-url}/kofu/org.springframework.fu.kofu.webflux/-web-flux-client-dsl/index.html[WebFlux client documentation]
  ** 17 {kofu-kdoc-url}/kofu/org.springframework.fu.kofu.webflux/-web-flux-client-dsl/base-url.html[baseUrl documentation]
  ** 18 {kofu-kdoc-url}/kofu/org.springframework.fu.kofu.webflux/-web-flux-client-dsl/-web-flux-client-codec-dsl/index.html[codecs documentation]
- * 19 {kofu-kdoc-url}/kofu/org.springframework.fu.kofu/-application-dsl/index.html[application/webApplication documentation]
+ * 19 {kofu-kdoc-url}/kofu/org.springframework.fu.kofu/-application-dsl/index.html[application/application documentation]
  ** 20 {kofu-kdoc-url}/kofu/org.springframework.fu.kofu/-logging-dsl/index.html[logging documentation]
  ** 21 {kofu-kdoc-url}/kofu/org.springframework.fu.kofu/-configuration-dsl/configuration-properties.html[configuration-properties documentation]
  ** 22 {kofu-kdoc-url}/kofu/org.springframework.fu.kofu/-configuration-dsl/listener.html[listener-properties documentation]
@@ -98,7 +98,7 @@ fun main() {
 
 == Getting started
 
-* Create a Spring `2.1.x` project on https://start.spring.io/#!language=kotlin[start.spring.io] with the "Reactive web" starter
+* Create a Spring `2.2.x` project on https://start.spring.io/#!language=kotlin[start.spring.io] with the "Reactive web" starter
 * Add the Spring milestone repository `https://repo.spring.io/milestone`
 * Add the `org.springframework.fu:spring-fu-kofu:{spring-fu-version}` dependency
 * Use latest Kotlin `1.3.x`
@@ -107,9 +107,9 @@ fun main() {
 ```kotlin
 package com.sample
 
-import org.springframework.fu.kofu.reactiveWebApplication
+import org.springframework.fu.kofu.application
 
-val app = webApplication {
+val app = application(WebApplicationType.REACTIVE) {
 	webFlux {
 		router {
 			GET("/") { ok().syncBody("Hello world!") }

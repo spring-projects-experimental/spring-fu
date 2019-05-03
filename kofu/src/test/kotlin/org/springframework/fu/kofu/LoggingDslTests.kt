@@ -19,6 +19,7 @@ package org.springframework.fu.kofu
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.support.DefaultListableBeanFactory
+import org.springframework.boot.WebApplicationType
 import org.springframework.boot.logging.LogLevel
 import org.springframework.boot.logging.LoggingSystem
 
@@ -31,7 +32,7 @@ internal class LoggingDslTests {
 
 	@Test
 	fun `Change default ROOT Log level`() {
-		application {
+		application(WebApplicationType.NONE) {
 			logging {
 				level = LogLevel.DEBUG
 			}
@@ -44,7 +45,7 @@ internal class LoggingDslTests {
 	@Test
 	fun `Change package Log level`() {
 		val packageName = "org.springframework"
-		application {
+		application(WebApplicationType.NONE) {
 			logging {
 				level(packageName, LogLevel.DEBUG)
 			}
@@ -58,7 +59,7 @@ internal class LoggingDslTests {
 	fun `Change class Log level`() {
 		val loggingSystem = LoggingSystem.get(LoggingDslTests::class.java.classLoader)
 		loggingSystem.setLogLevel("ROOT", LogLevel.INFO)
-		application {
+		application(WebApplicationType.NONE) {
 			logging {
 				level<DefaultListableBeanFactory>(LogLevel.DEBUG)
 			}

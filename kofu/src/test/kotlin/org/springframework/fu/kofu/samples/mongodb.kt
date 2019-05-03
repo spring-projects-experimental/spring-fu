@@ -1,10 +1,11 @@
 package org.springframework.fu.kofu.samples
 
+import org.springframework.boot.WebApplicationType
 import org.springframework.fu.kofu.application
 import org.springframework.fu.kofu.mongo.reactiveMongodb
 
 fun mongo() {
-	application {
+	application(WebApplicationType.NONE) {
 		reactiveMongodb {
 			uri = "mongodb://myserver.com/foo"
 		}
@@ -12,7 +13,7 @@ fun mongo() {
 }
 
 fun mongoEmbedded() {
-	application {
+	application(WebApplicationType.NONE) {
 		reactiveMongodb {
 			uri = "mongodb://myserver.com/foo"
 			embedded()

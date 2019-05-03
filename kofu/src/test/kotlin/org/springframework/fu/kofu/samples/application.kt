@@ -18,6 +18,7 @@
 
 package org.springframework.fu.kofu.samples
 
+import org.springframework.boot.WebApplicationType
 import org.springframework.boot.logging.LogLevel
 import org.springframework.context.event.ContextStartedEvent
 import org.springframework.fu.kofu.application
@@ -27,7 +28,6 @@ import org.springframework.fu.kofu.webflux.webClient
 import org.springframework.fu.kofu.webflux.cors
 import org.springframework.fu.kofu.webflux.mustache
 import org.springframework.fu.kofu.webflux.webFlux
-import org.springframework.fu.kofu.reactiveWebApplication
 import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse
 import org.springframework.web.reactive.function.server.ServerResponse.ok
@@ -37,7 +37,7 @@ import reactor.core.publisher.Mono
 import reactor.core.publisher.toMono
 
 private fun applicationDsl() {
-	val app = application {
+	val app = application(WebApplicationType.NONE) {
 		beans {
 			bean<Foo>()
 		}
@@ -53,7 +53,7 @@ private fun applicationDslWithConfiguration() {
 			bean<Foo>()
 		}
 	}
-	val app = application {
+	val app = application(WebApplicationType.NONE) {
 		enable(conf)
 		configurationProperties<City>("city")
 	}
@@ -112,7 +112,7 @@ private fun webApplicationDsl() {
 		}
 	}
 
-	val app = reactiveWebApplication {
+	val app = application(WebApplicationType.REACTIVE) {
 		logging {
 			level = LogLevel.INFO
 			level("org.springframework", LogLevel.DEBUG)

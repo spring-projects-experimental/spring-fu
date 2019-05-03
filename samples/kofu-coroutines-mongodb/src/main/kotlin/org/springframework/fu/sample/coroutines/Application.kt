@@ -1,8 +1,9 @@
 package org.springframework.fu.sample.coroutines
 
-import org.springframework.fu.kofu.reactiveWebApplication
+import org.springframework.boot.WebApplicationType
+import org.springframework.fu.kofu.application
 
-val app = reactiveWebApplication {
+val app = application(WebApplicationType.REACTIVE)  {
 	enable(dataConfig)
 	enable(webConfig)
 	configurationProperties<SampleProperties>("sample")

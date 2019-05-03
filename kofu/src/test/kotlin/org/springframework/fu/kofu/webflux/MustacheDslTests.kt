@@ -17,7 +17,8 @@
 package org.springframework.fu.kofu.webflux
 
 import org.junit.jupiter.api.Test
-import org.springframework.fu.kofu.reactiveWebApplication
+import org.springframework.boot.WebApplicationType
+import org.springframework.fu.kofu.application
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.test.web.reactive.server.expectBody
 
@@ -28,7 +29,7 @@ class MustacheDslTests {
 
 	@Test
 	fun `Create and request a Mustache view`() {
-		val app = reactiveWebApplication {
+		val app = application(WebApplicationType.REACTIVE) {
 			webFlux {
 				port = 0
 				mustache()

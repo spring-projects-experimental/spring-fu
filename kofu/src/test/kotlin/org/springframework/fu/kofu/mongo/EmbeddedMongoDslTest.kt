@@ -19,6 +19,7 @@ package org.springframework.fu.kofu.mongo
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.getBean
+import org.springframework.boot.WebApplicationType
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate
 import org.springframework.data.mongodb.core.findById
@@ -31,7 +32,7 @@ class EmbeddedMongoModuleTest {
 	@Test
 	fun `enable mongodb embedded module`() {
 		val port = SocketUtils.findAvailableTcpPort()
-		val app = application {
+		val app = application(WebApplicationType.NONE) {
 			beans {
 				bean<TestRepository>()
 			}

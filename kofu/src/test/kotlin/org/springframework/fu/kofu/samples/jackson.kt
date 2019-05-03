@@ -1,11 +1,12 @@
 package org.springframework.fu.kofu.samples
 
+import org.springframework.boot.WebApplicationType
+import org.springframework.fu.kofu.application
 import org.springframework.fu.kofu.webflux.webClient
 import org.springframework.fu.kofu.webflux.webFlux
-import org.springframework.fu.kofu.reactiveWebApplication
 
 fun jacksonDsl() {
-	reactiveWebApplication {
+	application(WebApplicationType.REACTIVE) {
 		webFlux {
 			codecs {
 				jackson()

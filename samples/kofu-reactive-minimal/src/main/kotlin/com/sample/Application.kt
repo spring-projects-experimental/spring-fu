@@ -1,11 +1,12 @@
 package com.sample
 
-import org.springframework.fu.kofu.reactiveWebApplication
+import org.springframework.boot.WebApplicationType
+import org.springframework.fu.kofu.application
 import org.springframework.fu.kofu.webflux.webFlux
 import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse.ok
 
-val app = reactiveWebApplication {
+val app = application(WebApplicationType.REACTIVE) {
 	beans {
 		bean<SampleService>()
 		bean<SampleHandler>()

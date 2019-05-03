@@ -21,7 +21,8 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.getBean
 import org.springframework.beans.factory.getBeanProvider
-import org.springframework.fu.kofu.reactiveWebApplication
+import org.springframework.boot.WebApplicationType
+import org.springframework.fu.kofu.application
 import org.springframework.http.HttpHeaders.CONTENT_TYPE
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType.APPLICATION_JSON_UTF8
@@ -38,7 +39,7 @@ class JacksonDslTests {
 
 	@Test
 	fun `Enable jackson module on server, create and request a JSON endpoint`() {
-		val app = reactiveWebApplication {
+		val app = application(WebApplicationType.REACTIVE) {
 			webFlux {
 				port = 0
 				codecs {
@@ -64,7 +65,7 @@ class JacksonDslTests {
 
 	@Test
 	fun `Enable jackson module on client and server, create and request a JSON endpoint`() {
-		val app = reactiveWebApplication {
+		val app = application(WebApplicationType.REACTIVE) {
 			webFlux {
 				port = 0
 				codecs {
@@ -99,7 +100,7 @@ class JacksonDslTests {
 
 	@Test
 	fun `No Jackson codec on server when not declared`() {
-		val app = reactiveWebApplication {
+		val app = application((WebApplicationType.REACTIVE)) {
 			webFlux {
 				port = 0
 				router {

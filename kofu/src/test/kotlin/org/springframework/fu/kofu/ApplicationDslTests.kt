@@ -22,6 +22,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.getBean
+import org.springframework.boot.WebApplicationType
 import org.springframework.boot.web.reactive.context.ReactiveWebServerApplicationContext
 import org.springframework.context.MessageSource
 import java.util.*
@@ -33,7 +34,7 @@ class ApplicationDslTests {
 
 	@Test
 	fun `Create an empty application and check message source`() {
-		val app = application { }
+		val app = application(WebApplicationType.NONE) { }
 		with(app.run()) {
 			assertFalse(this is ReactiveWebServerApplicationContext)
 			val messageSource = getBean<MessageSource>()
@@ -44,7 +45,7 @@ class ApplicationDslTests {
 
 	@Test
 	fun `Create an application with a custom bean`() {
-		val app = application {
+		val app = application(WebApplicationType.NONE) {
 			beans {
 				bean<Foo>(isPrimary = true)
 			}
@@ -63,7 +64,7 @@ class ApplicationDslTests {
 				bean<Foo>()
 			}
 		}
-		val app = application {
+		val app = application(WebApplicationType.NONE) {
 			enable(beanConfig)
 		}
 		with(app.run()) {
@@ -75,7 +76,7 @@ class ApplicationDslTests {
 
 	@Test
 	fun `Application properties`() {
-		val app = application {
+		val app = application(WebApplicationType.NONE) {
 			configurationProperties<City>("city")
 		}
 		with(app.run()) {
@@ -86,7 +87,7 @@ class ApplicationDslTests {
 
 	@Test
 	fun `Mock a bean of an existing application`() {
-		val app = application {
+		val app = application(WebApplicationType.NONE) {
 			beans {
 				bean { Bar("original") }
 			}

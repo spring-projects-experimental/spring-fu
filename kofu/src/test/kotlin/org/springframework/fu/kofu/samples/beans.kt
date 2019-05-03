@@ -1,9 +1,10 @@
 package org.springframework.fu.kofu.samples
 
+import org.springframework.boot.WebApplicationType
 import org.springframework.fu.kofu.application
 
 private fun beansDsl() {
-	application {
+	application(WebApplicationType.NONE) {
 		beans {
 			bean<UserRepository>()
 			bean<ArticleRepository>()

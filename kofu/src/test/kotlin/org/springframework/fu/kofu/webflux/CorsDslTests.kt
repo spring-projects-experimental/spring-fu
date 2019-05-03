@@ -17,7 +17,8 @@
 package org.springframework.fu.kofu.webflux
 
 import org.junit.jupiter.api.Test
-import org.springframework.fu.kofu.reactiveWebApplication
+import org.springframework.boot.WebApplicationType
+import org.springframework.fu.kofu.application
 import org.springframework.test.web.reactive.server.WebTestClient
 
 /**
@@ -27,7 +28,7 @@ class CorsDslTests {
 
 	@Test
 	fun `Enable cors module on server, create and request a JSON endpoint`() {
-		val app = reactiveWebApplication {
+		val app = application(WebApplicationType.REACTIVE) {
 			webFlux {
 				port = 0
 				router {
