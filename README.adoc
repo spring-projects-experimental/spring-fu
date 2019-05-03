@@ -31,14 +31,14 @@ Spring projects like Framework, Boot and Data.
 An overview of Kofu DSL is provided bellow with the related {kofu-kdoc-url}/kofu/index.html[API documentation].
 
 ```kotlin
-val dataConf = configuration { <1>
+val dataConfig = configuration { <1>
 	beans { } <2>
 	mongodb { } <3>
 	r2dbcH2 { } <4>
 	r2dbcPostgresql {} <5>
 }
 
-val webConf = configuration { <1>
+val webConfig = configuration { <1>
 	beans { } <2>
 	webFlux { <6>
 		engine = <7>
@@ -62,8 +62,8 @@ val app = application(WebApplicationType.REACTIVE) { <19>
 	configurationProperties<SampleProperties>() <21>
 	listener<SampleEvent> { } <22>
 	profile("sample"){ } <23>
-	enable(dataConf) <24>
-	enable(webConf) <24>
+	enable(dataConfig) <24>
+	enable(webConfig) <24>
 }
 
 fun main() {
