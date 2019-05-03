@@ -21,7 +21,7 @@ It has following characteristics:
  * Minimal reflection usage, no CGLIB proxy, no annotation processing
  * Fast startup and low memory consumption
  * Lazy loading of beans enabled by default
- * WebMvc (WIP) and WebFlux support via https://docs.spring.io/spring/docs/5.2.0.BUILD-SNAPSHOT/spring-framework-reference/languages.html#router-dsl[router DSLs] instead of `@Controller`
+ * Spring MVC (WIP) and WebFlux support via https://docs.spring.io/spring/docs/5.2.0.BUILD-SNAPSHOT/spring-framework-reference/languages.html#router-dsl[router DSLs] instead of `@Controller`
  * https://docs.spring.io/spring/docs/5.2.0.BUILD-SNAPSHOT/spring-framework-reference/languages.html#coroutines[Coroutines] allows to leverage Spring reactive stack in a more imperative way
  * https://github.com/oracle/graal/tree/master/substratevm[GraalVM native image] friendly
 
