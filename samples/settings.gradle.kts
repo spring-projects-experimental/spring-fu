@@ -5,6 +5,7 @@ include(
 		"kofu-coroutines-minimal",
 		"kofu-coroutines-r2dbc",
 		"kofu-reactive-minimal",
+		"kofu-reactive-validation",
 		"kofu-reactive-mongodb",
 		"kofu-reactive-r2dbc"
 )

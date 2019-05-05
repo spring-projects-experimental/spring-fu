@@ -1,0 +1,228 @@
+[
+	{
+		"name": "org.springframework.boot.env.PropertiesPropertySourceLoader",
+		"allDeclaredConstructors": true
+	},
+	{
+		"name": "org.springframework.boot.env.YamlPropertySourceLoader",
+		"allDeclaredConstructors": true
+	},
+	{
+		"name": "org.springframework.boot.context.event.EventPublishingRunListener",
+		"allDeclaredConstructors": true
+	},
+	{
+		"name": "org.springframework.boot.diagnostics.FailureAnalyzers",
+		"allDeclaredConstructors": true
+	},
+	{
+		"name": "org.springframework.boot.context.ConfigurationWarningsApplicationContextInitializer",
+		"allDeclaredConstructors": true
+	},
+	{
+		"name": "org.springframework.boot.context.ContextIdApplicationContextInitializer",
+		"allDeclaredConstructors": true
+	},
+	{
+		"name": "org.springframework.boot.context.config.DelegatingApplicationContextInitializer",
+		"allDeclaredConstructors": true
+	},
+	{
+		"name": "org.springframework.boot.ClearCachesApplicationListener",
+		"allDeclaredConstructors": true
+	},
+	{
+		"name": "org.springframework.boot.builder.ParentContextCloserApplicationListener",
+		"allDeclaredConstructors": true
+	},
+	{
+		"name": "org.springframework.boot.context.FileEncodingApplicationListener",
+		"allDeclaredConstructors": true
+	},
+	{
+		"name": "org.springframework.boot.context.config.AnsiOutputApplicationListener",
+		"allDeclaredConstructors": true
+	},
+	{
+		"name": "org.springframework.boot.context.config.ConfigFileApplicationListener",
+		"allDeclaredConstructors": true
+	},
+	{
+		"name": "org.springframework.boot.context.config.DelegatingApplicationListener",
+		"allDeclaredConstructors": true
+	},
+	{
+		"name": "org.springframework.boot.context.logging.ClasspathLoggingApplicationListener",
+		"allDeclaredConstructors": true
+	},
+	{
+		"name": "org.springframework.boot.context.logging.LoggingApplicationListener",
+		"allDeclaredConstructors": true
+	},
+	{
+		"name": "org.springframework.boot.cloud.CloudFoundryVcapEnvironmentPostProcessor",
+		"allDeclaredConstructors": true
+	},
+	{
+		"name": "org.springframework.boot.env.SpringApplicationJsonEnvironmentPostProcessor",
+		"allDeclaredConstructors": true
+	},
+	{
+		"name": "org.springframework.boot.env.SystemEnvironmentPropertySourceEnvironmentPostProcessor",
+		"allDeclaredConstructors": true
+	},
+	{
+		"name": "org.springframework.boot.diagnostics.analyzer.BeanCurrentlyInCreationFailureAnalyzer",
+		"allDeclaredConstructors": true
+	},
+	{
+		"name": "org.springframework.boot.diagnostics.analyzer.BeanDefinitionOverrideFailureAnalyzer",
+		"allDeclaredConstructors": true
+	},
+	{
+		"name": "org.springframework.boot.diagnostics.analyzer.BeanNotOfRequiredTypeFailureAnalyzer",
+		"allDeclaredConstructors": true
+	},
+	{
+		"name": "org.springframework.boot.diagnostics.analyzer.BindFailureAnalyzer",
+		"allDeclaredConstructors": true
+	},
+	{
+		"name": "org.springframework.boot.diagnostics.analyzer.BindValidationFailureAnalyzer",
+		"allDeclaredConstructors": true
+	},
+	{
+		"name": "org.springframework.boot.diagnostics.analyzer.UnboundConfigurationPropertyFailureAnalyzer",
+		"allDeclaredConstructors": true
+	},
+	{
+		"name": "org.springframework.boot.diagnostics.analyzer.ConnectorStartFailureAnalyzer",
+		"allDeclaredConstructors": true
+	},
+	{
+		"name": "org.springframework.boot.diagnostics.analyzer.NoSuchMethodFailureAnalyzer",
+		"allDeclaredConstructors": true
+	},
+	{
+		"name": "org.springframework.boot.diagnostics.analyzer.NoUniqueBeanDefinitionFailureAnalyzer",
+		"allDeclaredConstructors": true
+	},
+	{
+		"name": "org.springframework.boot.diagnostics.analyzer.PortInUseFailureAnalyzer",
+		"allDeclaredConstructors": true
+	},
+	{
+		"name": "org.springframework.boot.diagnostics.analyzer.ValidationExceptionFailureAnalyzer",
+		"methods": [
+			{
+				"name": "<init>",
+				"parameterTypes": []
+			}
+		]
+	},
+	{
+		"name": "org.springframework.boot.diagnostics.analyzer.InvalidConfigurationPropertyNameFailureAnalyzer",
+		"allDeclaredConstructors": true
+	},
+	{
+		"name": "org.springframework.boot.diagnostics.analyzer.InvalidConfigurationPropertyValueFailureAnalyzer",
+		"allDeclaredConstructors": true
+	},
+	{
+		"name": "org.springframework.boot.diagnostics.LoggingFailureAnalysisReporter",
+		"allDeclaredConstructors": true
+	},
+	{
+		"name": "org.springframework.boot.autoconfigure.SharedMetadataReaderFactoryContextInitializer",
+		"allDeclaredConstructors": true
+	},
+	{
+		"name": "org.springframework.boot.autoconfigure.SharedMetadataReaderFactoryContextInitializer$SharedMetadataReaderFactoryBean",
+		"allDeclaredConstructors": true
+	},
+	{
+		"name": "org.springframework.boot.autoconfigure.logging.ConditionEvaluationReportLoggingListener",
+		"allDeclaredConstructors": true
+	},
+	{
+		"name": "org.springframework.boot.autoconfigure.BackgroundPreinitializer",
+		"allDeclaredConstructors": true
+	},
+	{
+		"name": "org.springframework.boot.autoconfigure.condition.ConditionEvaluationReportAutoConfigurationImportListener",
+		"allDeclaredConstructors": true
+	},
+	{
+		"name": "org.springframework.boot.autoconfigure.condition.OnClassCondition",
+		"allDeclaredConstructors": true
+	},
+	{
+		"name": "org.springframework.boot.autoconfigure.context.MessageSourceAutoConfiguration",
+		"allDeclaredConstructors": true
+	},
+	{
+		"name": "org.springframework.boot.autoconfigure.context.PropertyPlaceholderAutoConfiguration",
+		"allDeclaredConstructors": true
+	},
+	{
+		"name": "org.springframework.boot.web.context.ServerPortInfoApplicationContextInitializer",
+		"allDeclaredConstructors": true
+	},
+	{
+		"name": "org.springframework.boot.liquibase.LiquibaseServiceLocatorApplicationListener",
+		"allDeclaredConstructors": true
+	},
+	{
+		"name": "org.springframework.boot.autoconfigure.freemarker.FreeMarkerTemplateAvailabilityProvider",
+		"allDeclaredConstructors": true
+	},
+	{
+		"name": "org.springframework.boot.autoconfigure.mustache.MustacheTemplateAvailabilityProvider",
+		"allDeclaredConstructors": true
+	},
+	{
+		"name": "org.springframework.boot.autoconfigure.groovy.template.GroovyTemplateAvailabilityProvider",
+		"allDeclaredConstructors": true
+	},
+	{
+		"name": "org.springframework.boot.autoconfigure.thymeleaf.ThymeleafTemplateAvailabilityProvider",
+		"allDeclaredConstructors": true
+	},
+	{
+		"name": "org.springframework.boot.autoconfigure.web.servlet.JspTemplateAvailabilityProvider",
+		"allDeclaredConstructors": true
+	},
+	{
+		"name": "org.springframework.boot.web.reactive.context.ReactiveWebServerApplicationContext",
+		"methods": [
+			{ "name": "<init>", "parameterTypes": [] }
+		]
+	},
+	{
+		"name": "org.springframework.boot.logging.java.JavaLoggingSystem",
+		"allDeclaredConstructors" : true,
+		"allPublicConstructors" : true,
+		"allPublicFields": true,
+		"allPublicMethods": true,
+		"allDeclaredMethods": true,
+		"allDeclaredFields": true
+	},
+	{
+		"name": "java.util.logging.ConsoleHandler",
+		"allDeclaredConstructors" : true,
+		"allPublicConstructors" : true,
+		"allPublicFields": true,
+		"allPublicMethods": true,
+		"allDeclaredMethods": true,
+		"allDeclaredFields": true
+	},
+	{
+		"name": "java.util.logging.LogManager",
+		"allDeclaredConstructors" : true,
+		"allPublicConstructors" : true,
+		"allPublicFields": true,
+		"allPublicMethods": true,
+		"allDeclaredMethods": true,
+		"allDeclaredFields": true
+	}
+]
