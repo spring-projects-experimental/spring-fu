@@ -19,6 +19,11 @@ Its main incubating feature is *Kofu* (for Kotlin and functional), which provide
  ** WebMvc.fn (functional variant Spring MVC)
  ** WebFlux.fn with Reactor declarative-style API (`Mono` and `Flux`)
  ** WebFlux.fn with Coroutines imperative-style API (https://spring.io/blog/2019/04/12/going-reactive-with-spring-coroutines-and-kotlin-flow[using suspending functions and Kotlin `Flow`])
+ * Persistence via Spring Data functional APIs like:
+ ** https://spring.io/projects/spring-data-r2dbc[Spring Data R2DBC `DatabaseClient`]
+ ** Spring Data JDBC https://github.com/spring-projects/spring-data-jdbc/blob/master/spring-data-jdbc/src/main/java/org/springframework/data/jdbc/core/JdbcAggregateOperations.java[`JdbcAggregateOperations`]
+ ** Spring Data NoSQL similar APIs for MongoDB, Redis and Cassandra
+ * Configuration via Spring Security `security { }` DSL (WIP)
  * https://github.com/oracle/graal/tree/master/substratevm[GraalVM native image] friendly
  * Fast startup and low memory consumption
 
