@@ -4,11 +4,9 @@
 
 image::https://ci.spring.io/api/v1/teams/spring-fu/pipelines/spring-fu/badge["Build Status", link="https://ci.spring.io/teams/spring-fu/pipelines/spring-fu"]
 
-Spring Fu is an incubator for features related to https://kotlinlang.org/[Kotlin], explicit configuration and runtime efficiency.
-
 = Kofu configuration for Spring Boot
 
-Its main incubating feature is *Kofu* (for Kotlin and functional), which provides any API to configure Spring Boot applications programmatically with following characteristics:
+Spring Fu is an incubator for *Kofu* (for Kotlin and functional), which provides any API to configure Spring Boot applications programmatically with following characteristics:
 
  * Explicit configuration via a Kotlin DSL instead of auto-configuration
  * Leverages Spring Framework 5.x https://docs.spring.io/spring/docs/5.2.0.BUILD-SNAPSHOT/spring-framework-reference/languages.html#kotlin-bean-definition-dsl[Functional bean configuration] instead of annotations
