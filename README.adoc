@@ -1,37 +1,87 @@
-:spring-fu-version: 0.0.5
-:kofu-kdoc-url: http://repo.spring.io/milestone/org/springframework/fu/spring-fu-kofu/{spring-fu-version}/spring-fu-kofu-{spring-fu-version}-javadoc.jar!
+:spring-fu-version: 0.1.BUILD-SNAPSHOT
+:kofu-kdoc-url: http://repo.spring.io/snapshot/org/springframework/fu/spring-fu-kofu/{spring-fu-version}/spring-fu-kofu-{spring-fu-version}-javadoc.jar!
 :framework-kdoc-url: https://docs.spring.io/spring-framework/docs/5.2.0.BUILD-SNAPSHOT/kdoc-api
-
-= Spring Fu
 
 image::https://ci.spring.io/api/v1/teams/spring-fu/pipelines/spring-fu/badge["Build Status", link="https://ci.spring.io/teams/spring-fu/pipelines/spring-fu"]
 
 Spring Fu is an incubator for features related to https://kotlinlang.org/[Kotlin], explicit configuration and runtime efficiency.
 
-Its main incubating feature is *Kofu*, which provides any API to configure Spring Boot applications in an explicit way. Instead of leveraging auto-configuration and annotations, Kofu provides a nice `application { }` DSL to configure Spring Boot explicitly and efficiently with great discoverability via auto-complete in the IDE.
+= Kofu configuration for Spring Boot
 
-It has following characteristics:
+Its main incubating feature is *Kofu* (for Kotlin and functional), which provides any API to configure Spring Boot applications programmatically with following characteristics:
 
- * Explicit configuration via Kotlin DSL instead of auto-configuration
+ * Explicit configuration via a Kotlin DSL instead of auto-configuration
+ * Leverages Spring Framework 5.x https://docs.spring.io/spring/docs/5.2.0.BUILD-SNAPSHOT/spring-framework-reference/languages.html#kotlin-bean-definition-dsl[Functional bean configuration] instead of annotations
  * Allows to define custom configuration slices (useful for more focused and efficient testing)
- * Minimal set of features enabled by default
- * https://docs.spring.io/spring/docs/5.2.0.BUILD-SNAPSHOT/spring-framework-reference/languages.html#kotlin-bean-definition-dsl[Functional configuration based on pure lambdas] instead of annotations
  * Great discoverability via code auto-complete
- * Both declarative and programmatic (allow any kind of `if`, `for` statements)
- * Minimal reflection usage, no CGLIB proxy, no annotation processing
- * Fast startup and low memory consumption
- * Lazy loading of beans enabled by default
- * Spring MVC (WIP) and WebFlux support via https://docs.spring.io/spring/docs/5.2.0.BUILD-SNAPSHOT/spring-framework-reference/languages.html#router-dsl[router DSLs] instead of `@Controller`
- * https://docs.spring.io/spring/docs/5.2.0.BUILD-SNAPSHOT/spring-framework-reference/languages.html#coroutines[Coroutines] allows to leverage Spring reactive stack in a more imperative way
+ * https://docs.spring.io/spring/docs/5.2.0.BUILD-SNAPSHOT/spring-framework-reference/languages.html#router-dsl[Web functional routing] instead of `@Controller` available in 3 flavors:
+ Expose the same Web functional routing programming model in 3 flavors:
+ ** WebMvc.fn (functional variant Spring MVC)
+ ** WebFlux.fn with Reactor declarative-style API (`Mono` and `Flux`)
+ ** WebFlux.fn with Coroutines imperative-style API (https://spring.io/blog/2019/04/12/going-reactive-with-spring-coroutines-and-kotlin-flow[using suspending functions and Kotlin `Flow`])
  * https://github.com/oracle/graal/tree/master/substratevm[GraalVM native image] friendly
+ * Fast startup and low memory consumption
 
-It is not intended to be used in production, but rather to incubate and get feedback and contributions
-from the community in order to reach a point where its features can be integrated as part of existing
-Spring projects like Framework, Boot and Data.
+It is not intended to be used in production yet, but rather to incubate and get feedback and contributions
+from the community in order to hopefully reach a point where it can be integrated as part of Spring Boot.
+
+== Dependencies
+
+Kofu is technically just a dependency you add to your Spring Boot project.
+
+```kotlin
+dependencies {
+	implementation("org.springframework.fu:spring-fu-kofu:0.x")
+
+	implementation("org.springframework.boot:spring-boot-starter-web")
+	testImplementation("org.springframework.boot:spring-boot-starter-webflux")
+}
+```
+
+== Minimal application
+
+Here is a minimal sample application that is leveraging WebMvc.fn:
+
+```kotlin
+val app = application(WebApplicationType.SERVLET) {
+	beans {
+		bean<SampleService>()
+	}
+	webMvc {
+		port = if (profiles.contains("test")) 8181 else 8080
+		router {
+			val service = ref<SampleService>()
+			GET("/") {
+				ok().body(service.generateMessage())
+			}
+			GET("/api") {
+				ok().body(Sample(service.generateMessage()))
+			}
+		}
+	}
+}
+
+data class Sample(val message: String)
+
+class SampleService {
+	fun generateMessage() = "Hello world!"
+}
+
+fun main() {
+	app.run()
+}
+```
+
+To use WebFlux.fn instead
+
+ * Use `WebApplicationType.REACTIVE` instead of `WebApplicationType.SERVLET`
+ * Use `webFlux { }` instead of `webMvc { }`
+ * Use `spring-boot-starter-webflux` starter instead of `spring-boot-starter-web`
+ * Use `coRouter { }` instead of `router { }` if you want to use Coroutines instead of Reactor API
 
 == API reference
 
-An overview of Kofu DSL is provided bellow with the related {kofu-kdoc-url}/kofu/index.html[API documentation].
+An overview of Kofu is provided bellow with the related {kofu-kdoc-url}/kofu/index.html[API documentation].
 
 ```kotlin
 val dataConfig = configuration { <1>
@@ -41,9 +91,8 @@ val dataConfig = configuration { <1>
 	r2dbcPostgresql {} <5>
 }
 
-val webConfig = configuration { <1>
+val serverConfig = configuration { <1>
 	beans { } <2>
-	// webMvc { } is also supported for Spring MVC
 	webFlux { <6>
 		engine = <7>
 		port = <8>
@@ -55,6 +104,9 @@ val webConfig = configuration { <1>
 		mustache() <14>
 		filter() <15>
 	}
+}
+
+val clientConfig = configuration {
 	webClient { <16>
 		baseUrl = <17>
 		codecs { } <18>
@@ -67,7 +119,8 @@ val app = application(WebApplicationType.REACTIVE) { <19>
 	listener<SampleEvent> { } <22>
 	profile("sample"){ } <23>
 	enable(dataConfig) <24>
-	enable(webConfig) <24>
+	enable(serverConfig) <24>
+	enable(clientConfig) <24>
 }
 
 fun main() {
@@ -102,8 +155,7 @@ fun main() {
 
 == Getting started
 
-* Create a Spring `2.2.x` project on https://start.spring.io/#!language=kotlin[start.spring.io] with the "Reactive web" starter
-* Add the Spring milestone repository `https://repo.spring.io/milestone`
+* Create a Spring `2.2.0 (SNAPSHOT)` project on https://start.spring.io/#!language=kotlin[start.spring.io] with the "Web" or "Reactive web" starter
 * Add the `org.springframework.fu:spring-fu-kofu:{spring-fu-version}` dependency
 * Use latest Kotlin `1.3.x`
 * Modify the generated `DemoApplication.kt` file as following:
@@ -113,12 +165,8 @@ package com.sample
 
 import org.springframework.fu.kofu.application
 
-val app = application(WebApplicationType.REACTIVE) {
-	webFlux {
-		coRouter {
-			GET("/") { ok().body("Hello world!") }
-		}
-	}
+val app = application(...) {
+	...
 }
 
 fun main() {
@@ -131,7 +179,7 @@ fun main() {
 === kofu-reactive-minimal
 
 https://github.com/spring-projects/spring-fu/tree/master/samples/kofu-reactive-minimal[Browse source] |
-http://repo.spring.io/milestone/org/springframework/fu/spring-fu-samples-kofu-reactive-minimal/{spring-fu-version}/spring-fu-samples-kofu-reactive-minimal-{spring-fu-version}.zip[Download]
+http://repo.spring.io/snapshot/org/springframework/fu/spring-fu-samples-kofu-reactive-minimal/{spring-fu-version}/spring-fu-samples-kofu-reactive-minimal-{spring-fu-version}.zip[Download]
 
 This is a sample project for a Spring Boot Reactive web application with Kofu configuration which provides a
 `http://localhost:8080/` endpoint that displays "Hello world!" and an `http://localhost:8080/api` with a JSON
@@ -143,14 +191,14 @@ You can run compile and run it as a https://github.com/oracle/graal/tree/master/
 === kofu-reactive-mongodb
 
 https://github.com/spring-projects/spring-fu/tree/master/samples/kofu-reactive-mongodb[Browse source] |
-http://repo.spring.io/milestone/org/springframework/fu/spring-fu-samples-kofu-reactive-mongodb/{spring-fu-version}/spring-fu-samples-kofu-reactive-mongodb-{spring-fu-version}.zip[Download]
+http://repo.spring.io/snapshot/org/springframework/fu/spring-fu-samples-kofu-reactive-mongodb/{spring-fu-version}/spring-fu-samples-kofu-reactive-mongodb-{spring-fu-version}.zip[Download]
 
 This is a sample project for a Spring Boot Reactive web application with Kofu configuration and a Reactive MongoDB backend.
 
 === kofu-reactive-r2dbc
 
 https://github.com/spring-projects/spring-fu/tree/master/samples/kofu-reactive-r2dbc[Browse source] |
-http://repo.spring.io/milestone/org/springframework/fu/spring-fu-samples-kofu-reactive-r2dbc/{spring-fu-version}/spring-fu-samples-kofu-reactive-r2dbc-{spring-fu-version}.zip[Download]
+http://repo.spring.io/snapshot/org/springframework/fu/spring-fu-samples-kofu-reactive-r2dbc/{spring-fu-version}/spring-fu-samples-kofu-reactive-r2dbc-{spring-fu-version}.zip[Download]
 
 This is a sample project for a Spring Boot Reactive web application with Kofu configuration and a R2DBC backend.
 
@@ -164,14 +212,14 @@ This is a sample project for a Spring Boot Reactive web application with Kofu co
 === kofu-coroutines-mongodb
 
 https://github.com/spring-projects/spring-fu/tree/master/samples/kofu-coroutines-mongodb[Browse source] |
-http://repo.spring.io/milestone/org/springframework/fu/spring-fu-samples-kofu-coroutines-mongodb/{spring-fu-version}/spring-fu-samples-kofu-coroutines-mongodb-{spring-fu-version}.zip[Download]
+http://repo.spring.io/snapshot/org/springframework/fu/spring-fu-samples-kofu-coroutines-mongodb/{spring-fu-version}/spring-fu-samples-kofu-coroutines-mongodb-{spring-fu-version}.zip[Download]
 
 This is a sample project for a Spring Boot Coroutines web application with Kofu configuration and a Reactive MongoDB backend.
 
 === kofu-coroutines-r2dbc
 
 https://github.com/spring-projects/spring-fu/tree/master/samples/kofu-coroutines-r2dbc[Browse source] |
-http://repo.spring.io/milestone/org/springframework/fu/spring-fu-samples-kofu-coroutines-r2dbc/{spring-fu-version}/spring-fu-samples-kofu-coroutines-r2dbc-{spring-fu-version}.zip[Download]
+http://repo.spring.io/snapshot/org/springframework/fu/spring-fu-samples-kofu-coroutines-r2dbc/{spring-fu-version}/spring-fu-samples-kofu-coroutines-r2dbc-{spring-fu-version}.zip[Download]
 
 This is a sample project for a Spring Boot Coroutines web application with Kofu configuration and a R2DBC backend.
 
@@ -181,6 +229,14 @@ https://github.com/spring-projects/spring-fu/tree/master/samples/kofu-coroutines
 http://repo.spring.io/milestone/org/springframework/fu/spring-fu-samples-kofu-coroutines-validation/{spring-fu-version}/spring-fu-samples-kofu-coroutines-validation-{spring-fu-version}.zip[Download]
 
 This is a sample project for a Spring Boot Coroutines web application with Kofu configuration and validation using https://github.com/making/yavi[YAVI].
+=== kofu-servlet-minimal
+
+https://github.com/spring-projects/spring-fu/tree/master/samples/kofu-servlet-minimal[Browse source] |
+http://repo.spring.io/snapshot/org/springframework/fu/spring-fu-samples-kofu-servlet-minimal/{spring-fu-version}/spring-fu-samples-kofu-servlet-minimal-{spring-fu-version}.zip[Download]
+
+This is a sample project for a Spring Boot web application based on WebMvc.fn (functional variant of Spring MVC) with Kofu configuration which provides a
+`http://localhost:8080/` endpoint that displays "Hello world!" and an `http://localhost:8080/api` with a JSON
+endpoint.
 
 == Credits
 
