@@ -28,19 +28,6 @@ Spring Fu is an incubator for *Kofu* (*Ko* for Kotlin, *fu* for functional), whi
 It is not intended to be used in production yet, but rather to incubate and get feedback and contributions
 from the community in order to hopefully reach a point where it can be integrated as part of Spring Boot.
 
-== Dependencies
-
-Kofu is technically just a dependency you add to your Spring Boot project.
-
-```kotlin
-dependencies {
-	implementation("org.springframework.fu:spring-fu-kofu:0.x")
-
-	implementation("org.springframework.boot:spring-boot-starter-web")
-	testImplementation("org.springframework.boot:spring-boot-starter-webflux")
-}
-```
-
 == Minimal application
 
 Here is a minimal sample application that is leveraging WebMvc.fn:
@@ -81,6 +68,19 @@ To use WebFlux.fn instead
  * Use `webFlux { }` instead of `webMvc { }`
  * Use `spring-boot-starter-webflux` starter instead of `spring-boot-starter-web`
  * Use `coRouter { }` instead of `router { }` if you want to use Coroutines instead of Reactor API
+
+== Dependencies
+
+Kofu is technically just a dependency you add to your Spring Boot project.
+
+```kotlin
+dependencies {
+	implementation("org.springframework.fu:spring-fu-kofu:0.x")
+
+	implementation("org.springframework.boot:spring-boot-starter-web")
+	testImplementation("org.springframework.boot:spring-boot-starter-webflux")
+}
+```
 
 == API reference
 
