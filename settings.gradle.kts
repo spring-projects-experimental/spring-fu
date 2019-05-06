@@ -2,6 +2,7 @@ rootProject.name = "spring-fu-build"
 
 include(
 		"autoconfigure-adapter",
+		"security-adapter",
 		"kofu"
 )
 

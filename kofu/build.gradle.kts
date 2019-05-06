@@ -8,14 +8,19 @@ plugins {
 	id("java-library")
 }
 
+ext["spring-security.version"] = "5.2.0.BUILD-SNAPSHOT"
+ext["spring-security-config.version"] = "5.2.0.BUILD-SNAPSHOT"
+
 dependencies {
 	api("org.springframework.boot:spring-boot")
 	api("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
 	implementation(project(":autoconfigure-adapter"))
+	implementation(project(":security-adapter"))
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 
 	compileOnly("org.springframework:spring-webflux")
+	compileOnly("org.springframework.boot:spring-boot-starter-security")
 	compileOnly("de.flapdoodle.embed:de.flapdoodle.embed.mongo")
 	compileOnly("org.springframework.data:spring-data-mongodb")
 	compileOnly("org.mongodb:mongodb-driver-reactivestreams")
@@ -33,6 +38,7 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-starter-mustache")
 	testImplementation("org.springframework.boot:spring-boot-starter-json")
 	testImplementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")
+	testImplementation("org.springframework.boot:spring-boot-starter-security")
 	testImplementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	testRuntimeOnly("de.flapdoodle.embed:de.flapdoodle.embed.mongo")
 	testImplementation("io.mockk:mockk:1.9")
