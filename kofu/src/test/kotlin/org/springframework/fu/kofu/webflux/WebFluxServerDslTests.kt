@@ -23,6 +23,7 @@ import org.springframework.beans.factory.getBean
 import org.springframework.boot.WebApplicationType
 import org.springframework.boot.logging.LogLevel
 import org.springframework.fu.kofu.application
+import org.springframework.fu.kofu.localServerPort
 import org.springframework.fu.kofu.mongo.reactiveMongodb
 import org.springframework.http.HttpStatus.NO_CONTENT
 import org.springframework.http.HttpStatus.UNAUTHORIZED
@@ -39,7 +40,7 @@ import reactor.test.test
  * @author Alexey Nesterov
  * @author Sebastien Deleuze
  */
-class WebServerDslTests {
+class WebFluxServerDslTests {
 
 	@Test
 	fun `Create an application with an empty server`() {

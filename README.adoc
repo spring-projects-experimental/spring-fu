@@ -43,6 +43,7 @@ val dataConfig = configuration { <1>
 
 val webConfig = configuration { <1>
 	beans { } <2>
+	// webMvc { } is also supported for Spring MVC
 	webFlux { <6>
 		engine = <7>
 		port = <8>
@@ -114,8 +115,8 @@ import org.springframework.fu.kofu.application
 
 val app = application(WebApplicationType.REACTIVE) {
 	webFlux {
-		router {
-			GET("/") { ok().syncBody("Hello world!") }
+		coRouter {
+			GET("/") { ok().body("Hello world!") }
 		}
 	}
 }

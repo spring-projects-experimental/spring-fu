@@ -23,6 +23,7 @@ import org.springframework.beans.factory.getBean
 import org.springframework.beans.factory.getBeanProvider
 import org.springframework.boot.WebApplicationType
 import org.springframework.fu.kofu.application
+import org.springframework.fu.kofu.localServerPort
 import org.springframework.http.HttpHeaders.CONTENT_TYPE
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType.APPLICATION_JSON

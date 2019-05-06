@@ -14,54 +14,46 @@
  * limitations under the License.
  */
 
-package org.springframework.fu.kofu.webflux
+package org.springframework.fu.kofu.webmvc
 
 import org.junit.jupiter.api.Test
 import org.springframework.boot.WebApplicationType
 import org.springframework.fu.kofu.application
 import org.springframework.fu.kofu.localServerPort
+import org.springframework.http.MediaType
 import org.springframework.test.web.reactive.server.WebTestClient
 
 /**
- * @author Ireneusz Kozłowski
+ * @author Sebastien Deleuze
  */
-class CorsDslTests {
+class WebMvcServerDslTests {
 
 	@Test
-	fun `Enable cors module on server, create and request a JSON endpoint`() {
-		val app = application(WebApplicationType.REACTIVE) {
-			webFlux {
+	fun `Create an application with an empty server`() {
+		val app = application(WebApplicationType.SERVLET) {
+			webMvc {
+				port = 0
+			}
+		}
+		with(app.run()){
+			close()
+		}
+	}
+
+	@Test
+	fun `Create and request an endpoint`() {
+		val app = application(WebApplicationType.SERVLET) {
+			webMvc {
 				port = 0
 				router {
-					GET("/") { noContent().build() }
-				}
-				cors {
-					"/api" {
-						allowedOrigins = "first.example.com, second.example.com"
-						allowedMethods = "GET, PUT, POST, DELETE"
-					}
-					"/public" {
-						allowedOrigins = "**"
-						allowedMethods = "GET"
-					}
-					"fullConfig" {
-						allowedOrigins = "full.config.example.com"
-						allowedMethods = "GET"
-						allowedHeaders = "*"
-						exposedHeaders = "Content-Location"
-						allowCredentials = true
-						maxAge = 3600
-					}
+					GET("/foo") { noContent().build() }
 				}
 			}
 		}
 		with(app.run()) {
-			assert(containsBean("corsFilter"))
 			val client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:$localServerPort").build()
-			client.get().uri("/").exchange().expectStatus().is2xxSuccessful
+			client.get().uri("/foo").accept(MediaType.TEXT_PLAIN).exchange().expectStatus().is2xxSuccessful
 			close()
 		}
 	}
 }
-
-

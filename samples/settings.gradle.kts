@@ -6,7 +6,8 @@ include(
 		"kofu-coroutines-r2dbc",
 		"kofu-reactive-minimal",
 		"kofu-reactive-mongodb",
-		"kofu-reactive-r2dbc"
+		"kofu-reactive-r2dbc",
+		"kofu-servlet-minimal"
 )
 
 pluginManagement {
