@@ -1,0 +1,7 @@
+[
+  {
+    "name": "com.sample.User",
+    "allDeclaredConstructors" : true,
+    "allDeclaredMethods": true
+  }
+]

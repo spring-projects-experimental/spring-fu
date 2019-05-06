@@ -205,6 +205,13 @@ http://repo.spring.io/snapshot/org/springframework/fu/spring-fu-samples-kofu-rea
 
 This is a sample project for a Spring Boot Reactive web application with Kofu configuration and a R2DBC backend.
 
+=== kofu-reactive-validation
+
+https://github.com/spring-projects/spring-fu/tree/master/samples/kofu-reactive-validation[Browse source] |
+http://repo.spring.io/milestone/org/springframework/fu/spring-fu-samples-kofu-reactive-validation/{spring-fu-version}/spring-fu-samples-kofu-reactive-validation-{spring-fu-version}.zip[Download]
+
+This is a sample project for a Spring Boot Reactive web application with Kofu configuration and validation using https://github.com/making/yavi[YAVI].
+
 === kofu-coroutines-mongodb
 
 https://github.com/spring-projects/spring-fu/tree/master/samples/kofu-coroutines-mongodb[Browse source] |
@@ -219,6 +226,12 @@ http://repo.spring.io/snapshot/org/springframework/fu/spring-fu-samples-kofu-cor
 
 This is a sample project for a Spring Boot Coroutines web application with Kofu configuration and a R2DBC backend.
 
+=== kofu-coroutines-validation
+
+https://github.com/spring-projects/spring-fu/tree/master/samples/kofu-coroutines-validation[Browse source] |
+http://repo.spring.io/milestone/org/springframework/fu/spring-fu-samples-kofu-coroutines-validation/{spring-fu-version}/spring-fu-samples-kofu-coroutines-validation-{spring-fu-version}.zip[Download]
+
+This is a sample project for a Spring Boot Coroutines web application with Kofu configuration and validation using https://github.com/making/yavi[YAVI].
 === kofu-servlet-minimal
 
 https://github.com/spring-projects/spring-fu/tree/master/samples/kofu-servlet-minimal[Browse source] |
