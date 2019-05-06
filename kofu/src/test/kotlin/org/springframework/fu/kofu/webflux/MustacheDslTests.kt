@@ -19,6 +19,7 @@ package org.springframework.fu.kofu.webflux
 import org.junit.jupiter.api.Test
 import org.springframework.boot.WebApplicationType
 import org.springframework.fu.kofu.application
+import org.springframework.fu.kofu.localServerPort
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.test.web.reactive.server.expectBody
 

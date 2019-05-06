@@ -12,6 +12,8 @@ dependencies {
 	api("org.springframework.boot:spring-boot")
 	api("org.springframework.boot:spring-boot-autoconfigure")
 
+	compileOnly("org.springframework:spring-webmvc")
+	compileOnly("javax.servlet:javax.servlet-api")
 	compileOnly("org.springframework:spring-webflux")
 	compileOnly("de.flapdoodle.embed:de.flapdoodle.embed.mongo")
 	compileOnly("org.springframework.data:spring-data-mongodb")
