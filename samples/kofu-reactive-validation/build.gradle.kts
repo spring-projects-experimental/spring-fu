@@ -11,7 +11,7 @@ dependencies {
 
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-	implementation("am.ik.yavi:yavi:0.1.0")
+	implementation("am.ik.yavi:yavi:0.2.0")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test") {
 		exclude(module = "junit")
