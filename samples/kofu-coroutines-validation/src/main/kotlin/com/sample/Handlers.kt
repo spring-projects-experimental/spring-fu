@@ -1,12 +1,13 @@
 package com.sample
 
+import am.ik.yavi.fn.awaitFold
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.reactive.awaitSingle
 import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse
 import org.springframework.web.reactive.function.server.ServerResponse.badRequest
 import org.springframework.web.reactive.function.server.ServerResponse.ok
 import org.springframework.web.reactive.function.server.awaitBody
+import org.springframework.web.reactive.function.server.bodyAndAwait
 
 @FlowPreview
 @Suppress("UNUSED_PARAMETER")
@@ -16,6 +17,5 @@ class UserHandler {
             request.awaitBody<User>()
                     .validate()
                     .leftMap { mapOf("details" to it.details()) }
-                    .fold(badRequest()::syncBody, ok()::syncBody)
-                    .awaitSingle()
+                    .awaitFold({ badRequest().bodyAndAwait(it) }, { ok().bodyAndAwait(it) })
 }

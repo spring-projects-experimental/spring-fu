@@ -13,7 +13,7 @@ dependencies {
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.2.1")
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.2.1")
-	implementation("am.ik.yavi:yavi:0.2.0")
+	implementation("am.ik.yavi:yavi:0.2.1")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test") {
 		exclude(module = "junit")
