@@ -140,6 +140,19 @@ publishing {
 				setExecutablePermissions()
 			})
 		}
+
+		create<MavenPublication>("kofu-servlet-minimal") {
+			groupId = "org.springframework.fu"
+			artifactId = "spring-fu-samples-kofu-servlet-minimal"
+			artifact(task<Zip>("kofuServletMinimalSampleZip") {
+				from("samples/kofu-servlet-minimal") {
+					exclude("build", ".gradle", ".idea", "out", "*.iml")
+				}
+				destinationDir = file("$buildDir/dist")
+				into("kofu-servlet-minimal")
+				setExecutablePermissions()
+			})
+		}
 	}
 }
 
