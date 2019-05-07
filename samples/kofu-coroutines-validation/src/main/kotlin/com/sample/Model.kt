@@ -12,15 +12,15 @@ data class User(
 ) {
     companion object {
         val validator = ValidatorBuilder.of<User>()
-                .konstraint(User::login, {
+                .konstraint(User::login) {
                     notNull().greaterThanOrEqual(4).lessThanOrEqual(8)
-                })
-                .konstraint(User::firstname, {
+                }
+                .konstraint(User::firstname) {
                     notBlank().lessThanOrEqual(32)
-                })
-                .konstraint(User::lastname, {
+                }
+                .konstraint(User::lastname) {
                     notBlank().lessThanOrEqual(32)
-                })
+                }
                 .build()
     }
 
