@@ -17,5 +17,5 @@ class UserHandler {
             request.awaitBody<User>()
                     .validate()
                     .leftMap { mapOf("details" to it.details()) }
-                    .awaitFold({ badRequest().bodyAndAwait(it) }, { ok().bodyAndAwait(it) })
+                    .awaitFold(badRequest()::bodyAndAwait, ok()::bodyAndAwait)
 }
