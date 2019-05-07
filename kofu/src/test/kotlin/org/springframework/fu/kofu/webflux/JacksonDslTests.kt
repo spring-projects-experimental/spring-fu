@@ -31,7 +31,7 @@ import org.springframework.http.MediaType.APPLICATION_JSON_VALUE
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.test.web.reactive.server.expectBody
 import org.springframework.web.reactive.function.client.WebClient
-import reactor.test.test
+import reactor.kotlin.test.test
 
 /**
  * @author Sebastien Deleuze

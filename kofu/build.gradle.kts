@@ -22,6 +22,7 @@ dependencies {
 	compileOnly("org.mongodb:mongodb-driver-reactivestreams")
 	compileOnly("com.fasterxml.jackson.core:jackson-databind")
 	compileOnly("com.samskivert:jmustache")
+	compileOnly("io.projectreactor.kotlin:reactor-kotlin-extensions:1.0.0.BUILD-SNAPSHOT")
 
 	testImplementation("org.junit.jupiter:junit-jupiter-api")
 	testImplementation("org.springframework:spring-test")
@@ -38,6 +39,7 @@ dependencies {
 	testImplementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	testRuntimeOnly("de.flapdoodle.embed:de.flapdoodle.embed.mongo")
 	testImplementation("io.mockk:mockk:1.9")
+	testImplementation("io.projectreactor.kotlin:reactor-kotlin-extensions:1.0.0.BUILD-SNAPSHOT")
 }
 
 tasks.withType<DokkaTask> {
