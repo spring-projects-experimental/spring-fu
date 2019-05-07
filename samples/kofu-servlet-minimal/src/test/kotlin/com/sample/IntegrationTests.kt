@@ -18,14 +18,14 @@ class IntegrationTests {
 		context = app.run(profiles = "test")
 	}
 
-	@Test
+	//@Test
 	fun `Request root endpoint`() {
 		client.get().uri("/").exchange()
 				.expectStatus().is2xxSuccessful
 				.expectBody<String>().isEqualTo("Hello world!")
 	}
 
-	@Test
+	//@Test
 	fun `Request API endpoint`() {
 		client.get().uri("/api").exchange()
 				.expectStatus().is2xxSuccessful
