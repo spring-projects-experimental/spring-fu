@@ -179,6 +179,19 @@ publishing {
 				setExecutablePermissions()
 			})
 		}
+
+		create<MavenPublication>("kofu-servlet-validation") {
+			groupId = "org.springframework.fu"
+			artifactId = "spring-fu-samples-kofu-servlet-validation"
+			artifact(task<Zip>("kofuServletValidationSampleZip") {
+				from("samples/kofu-servlet-validation") {
+					exclude("build", ".gradle", ".idea", "out", "*.iml")
+				}
+				destinationDir = file("$buildDir/dist")
+				into("kofu-servlet-validation")
+				setExecutablePermissions()
+			})
+		}
 	}
 }
 

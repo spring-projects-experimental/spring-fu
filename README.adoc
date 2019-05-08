@@ -242,6 +242,13 @@ This is a sample project for a Spring Boot web application based on WebMvc.fn (f
 `http://localhost:8080/` endpoint that displays "Hello world!" and an `http://localhost:8080/api` with a JSON
 endpoint.
 
+=== kofu-servlet-validation
+
+https://github.com/spring-projects/spring-fu/tree/master/samples/kofu-servlet-validation[Browse source] |
+http://repo.spring.io/milestone/org/springframework/fu/spring-fu-samples-kofu-servlet-validation/{spring-fu-version}/spring-fu-samples-kofu-servlet-validation-{spring-fu-version}.zip[Download]
+
+This is a sample project for a Spring Boot web application based on WebMvc.fn (functional variant of Spring MVC) with Kofu configuration and validation using https://github.com/making/yavi[YAVI].
+
 == Credits
 
 In addition to the whole Spring and Reactor teams, special credits to:
