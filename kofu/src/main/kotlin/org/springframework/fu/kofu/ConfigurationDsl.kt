@@ -58,7 +58,7 @@ open class ConfigurationDsl(private val dsl: ConfigurationDsl.() -> Unit): Abstr
 	 * @sample org.springframework.fu.kofu.samples.loggingDsl
 	 */
 	fun logging(dsl: LoggingDsl.() -> Unit) {
-		LoggingDsl().dsl()
+		LoggingDsl(dsl).initialize(context)
 	}
 
 	/**
