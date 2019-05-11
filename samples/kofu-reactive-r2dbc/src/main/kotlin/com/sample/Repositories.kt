@@ -1,8 +1,8 @@
 package com.sample
 
-import org.springframework.data.r2dbc.function.DatabaseClient
-import org.springframework.data.r2dbc.function.asType
-import org.springframework.data.r2dbc.function.into
+import org.springframework.data.r2dbc.core.DatabaseClient
+import org.springframework.data.r2dbc.core.asType
+import org.springframework.data.r2dbc.core.into
 
 class UserRepository(private val client: DatabaseClient) {
 

@@ -9,7 +9,8 @@ import org.springframework.fu.kofu.ConfigurationDsl
 /**
  * Kofu DSL for R2DBC H2 configuration.
  *
- * Enable and [configure][H2R2dbcDsl] R2DBC support by registering a [org.springframework.data.r2dbc.function.DatabaseClient].
+ * Enable and [configure][H2R2dbcDsl] R2DBC support by registering a [org.springframework.data.r2dbc.core.DatabaseClient]
+ * bean.
  *
  * Required dependencies are `io.r2dbc:r2dbc-h2` and `org.springframework.data:spring-data-r2dbc`.
 

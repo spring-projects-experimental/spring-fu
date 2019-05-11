@@ -9,8 +9,7 @@ import org.springframework.fu.kofu.ConfigurationDsl
 /**
  * Kofu DSL for R2DBC Postgresql configuration.
  *
- * Enable and configure R2DBC support by registering a [org.springframework.data.r2dbc.function.DatabaseClient]
- * (or a [org.springframework.data.r2dbc.function.CoDatabaseClient] for Coroutines) bean.
+ * Enable and configure R2DBC support by registering a [org.springframework.data.r2dbc.core.DatabaseClient] bean.
  *
  * Required dependencies are `io.r2dbc:r2dbc-postgresql` and `org.springframework.data:spring-data-r2dbc`.
  *
@@ -18,12 +17,6 @@ import org.springframework.fu.kofu.ConfigurationDsl
  * @author Sebastien Deleuze
  */
 class PostgresqlR2dbcDsl(private val init: PostgresqlR2dbcDsl.() -> Unit) : AbstractDsl() {
-
-    /**
-     * Enable coroutines support when set to `true` (register a [org.springframework.data.r2dbc.function.CoDatabaseClient] bean
-     * instead of a [org.springframework.data.r2dbc.function.DatabaseClient] one). By default, set to `false`.
-     */
-    var coroutines: Boolean = false
 
     /**
      * Configure the host, by default set to `localhost`.
@@ -60,7 +53,6 @@ class PostgresqlR2dbcDsl(private val init: PostgresqlR2dbcDsl.() -> Unit) : Abst
         properties.database = database
         properties.username = username
         properties.password = password
-        properties.coroutines = coroutines
 
         PostgresqlDatabaseClientInitializer(properties).initialize(context)
     }
