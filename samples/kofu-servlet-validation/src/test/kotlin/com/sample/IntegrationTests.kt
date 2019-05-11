@@ -19,7 +19,7 @@ class IntegrationTests {
         context = app.run(profiles = "test")
     }
 
-    //@Test
+    @Test
     fun `Create a user successfully`() {
         client.post().uri("/api/user")
                 .syncBody(User("demo", "John", "Doe"))
@@ -28,7 +28,7 @@ class IntegrationTests {
                 .expectBody<User>().isEqualTo(User("demo", "John", "Doe"))
     }
 
-    //@Test
+    @Test
     fun `Empty fields request should fail`() {
         client.post().uri("/api/user")
                 .syncBody(User("", "", ""))

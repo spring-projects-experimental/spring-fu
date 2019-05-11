@@ -11,10 +11,11 @@ import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.boot.web.embedded.tomcat.TomcatConnectorCustomizer;
 import org.springframework.boot.web.embedded.tomcat.TomcatContextCustomizer;
 import org.springframework.boot.web.embedded.tomcat.TomcatProtocolHandlerCustomizer;
+import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
+import org.springframework.boot.web.server.WebServerFactoryCustomizerBeanPostProcessor;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.filter.OrderedFormContentFilter;
 import org.springframework.boot.web.servlet.filter.OrderedHiddenHttpMethodFilter;
-import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.core.ResolvableType;
@@ -68,9 +69,10 @@ public class ServletWebServerInitializer implements ApplicationContextInitialize
 
 	@Override
 	public void initialize(GenericApplicationContext context) {
+		context.registerBean("webServerFactoryCustomizerBeanPostProcessor", WebServerFactoryCustomizerBeanPostProcessor.class);
 		context.registerBean(WebMvcProperties.class, () -> this.webMvcProperties);
 		context.registerBean(ServletWebServerFactoryAutoConfiguration.BeanPostProcessorsRegistrar.class, ServletWebServerFactoryAutoConfiguration.BeanPostProcessorsRegistrar::new);
-		context.registerBean(ServletWebServerFactory.class, () -> new ServletWebServerFactoryConfiguration.EmbeddedTomcat().tomcatServletWebServerFactory(
+		context.registerBean(TomcatServletWebServerFactory.class, () -> new ServletWebServerFactoryConfiguration.EmbeddedTomcat().tomcatServletWebServerFactory(
 				context.getBeanProvider(TomcatConnectorCustomizer.class),
 				context.getBeanProvider(TomcatContextCustomizer.class),
 				context.getBeanProvider(ResolvableType.forClass(TomcatProtocolHandlerCustomizer.class))));
