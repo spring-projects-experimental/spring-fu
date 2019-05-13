@@ -154,6 +154,19 @@ publishing {
 			})
 		}
 
+		create<MavenPublication>("kofu-reactive-cassandra") {
+			groupId = "org.springframework.fu"
+			artifactId = "spring-fu-samples-kofu-reactive-cassandra"
+			artifact(task<Zip>("kofuReactiveCassandraSampleZip") {
+				from("samples/kofu-reactive-cassandra") {
+					exclude("build", ".gradle", ".idea", "out", "*.iml")
+				}
+				destinationDir = file("$buildDir/dist")
+				into("kofu-reactive-cassandra")
+				setExecutablePermissions()
+			})
+		}
+
 		create<MavenPublication>("kofu-reactive-validation") {
 			groupId = "org.springframework.fu"
 			artifactId = "spring-fu-samples-kofu-reactive-validation"
