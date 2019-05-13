@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.fu.kofu.webflux
+package org.springframework.fu.kofu.webmvc
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect
 import com.fasterxml.jackson.annotation.JsonInclude
@@ -27,6 +27,7 @@ import com.fasterxml.jackson.databind.SerializationFeature
 import org.springframework.boot.autoconfigure.jackson.JacksonInitializer
 import org.springframework.boot.autoconfigure.web.reactive.JacksonJsonCodecInitializer
 import org.springframework.boot.autoconfigure.jackson.JacksonProperties
+import org.springframework.boot.autoconfigure.web.servlet.JacksonJsonConverterInitializer
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.fu.kofu.AbstractDsl
 import java.util.*
@@ -40,7 +41,7 @@ import kotlin.reflect.KClass
  *
  * @author Sebastien Deleuze
  */
-class JacksonDsl(private val isClientCodec: Boolean, private val init: JacksonDsl.() -> Unit): AbstractDsl() {
+class JacksonDsl(private val init: JacksonDsl.() -> Unit): AbstractDsl() {
 
 	private val properties = JacksonProperties()
 
@@ -66,7 +67,7 @@ class JacksonDsl(private val isClientCodec: Boolean, private val init: JacksonDs
 			properties.serialization[SerializationFeature.INDENT_OUTPUT] = indentOutput
 		}
 		JacksonInitializer(properties).initialize(context)
-		JacksonJsonCodecInitializer(isClientCodec).initialize(context)
+		JacksonJsonConverterInitializer().initialize(context)
 	}
 
 	/**

@@ -6,13 +6,17 @@ import org.springframework.beans.factory.support.BeanDefinitionReaderUtils
 import org.springframework.boot.autoconfigure.http.HttpProperties
 import org.springframework.boot.autoconfigure.web.ResourceProperties
 import org.springframework.boot.autoconfigure.web.ServerProperties
+import org.springframework.boot.autoconfigure.web.servlet.FormConverterInitializer
+import org.springframework.boot.autoconfigure.web.servlet.ResourceConverterInitializer
+import org.springframework.boot.autoconfigure.web.servlet.AtomConverterInitializer
+import org.springframework.boot.autoconfigure.web.servlet.RssConverterInitializer
 import org.springframework.boot.autoconfigure.web.servlet.ServletWebServerInitializer
+import org.springframework.boot.autoconfigure.web.servlet.StringConverterInitializer
 import org.springframework.boot.autoconfigure.web.servlet.WebMvcProperties
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.registerBean
 import org.springframework.fu.kofu.AbstractDsl
 import org.springframework.fu.kofu.ConfigurationDsl
-import org.springframework.fu.kofu.webflux.WebFluxServerDsl
 import org.springframework.web.servlet.function.RouterFunctionDsl
 
 /**
@@ -37,6 +41,8 @@ open class WebMvcServerDsl(private val init: WebMvcServerDsl.() -> Unit): Abstra
 
 	private val resourceProperties = ResourceProperties()
 
+	private var convertersConfigured: Boolean = false
+
 	/**
 	 * Define the listening port of Spring MVC.
 	 */
@@ -46,6 +52,10 @@ open class WebMvcServerDsl(private val init: WebMvcServerDsl.() -> Unit): Abstra
 		super.initialize(context)
 		init()
 		serverProperties.port = port
+		if (!convertersConfigured) {
+			StringConverterInitializer().initialize(context)
+			ResourceConverterInitializer().initialize(context)
+		}
 		ServletWebServerInitializer(serverProperties, httpProperties, webMvcProperties, resourceProperties).initialize(context)
 	}
 
@@ -55,6 +65,14 @@ open class WebMvcServerDsl(private val init: WebMvcServerDsl.() -> Unit): Abstra
 	 */
 	fun router(routes: (RouterFunctionDsl.() -> Unit)) {
 		context.registerBean(BeanDefinitionReaderUtils.uniqueBeanName(RouterFunctionDsl::class.java.name, context)) { org.springframework.web.servlet.function.router(routes) }
+	}
+
+	/**
+	 * Configure converters via a [dedicated DSL][WebMvcConverterDsl].
+	 */
+	fun converters(init: WebMvcConverterDsl.() -> Unit =  {}) {
+		WebMvcConverterDsl(init).initialize(context)
+		convertersConfigured = true
 	}
 
 	/**
@@ -77,6 +95,60 @@ open class WebMvcServerDsl(private val init: WebMvcServerDsl.() -> Unit): Abstra
 	 * @see org.springframework.beans.factory.BeanFactory.getBeanProvider
 	 */
 	inline fun <reified T : Any> RouterFunctionDsl.provider() : ObjectProvider<T> = context.getBeanProvider()
+
+	class WebMvcConverterDsl(private val init: WebMvcConverterDsl.() -> Unit) : AbstractDsl() {
+
+		override fun initialize(context: GenericApplicationContext) {
+			super.initialize(context)
+			init()
+		}
+
+		/**
+		 * Enable [org.springframework.core.codec.CharSequenceEncoder] and [org.springframework.core.codec.StringDecoder]
+		 */
+		fun string() {
+			StringConverterInitializer().initialize(context)
+		}
+
+		/**
+		 * Enable [org.springframework.http.converter.ResourceHttpMessageConverter] and [org.springframework.http.converter.ResourceRegionHttpMessageConverter]
+		 */
+		fun resource() {
+			ResourceConverterInitializer().initialize(context)
+		}
+
+		/**
+		 * Register an `ObjectMapper` bean and configure a [Jackson](https://github.com/FasterXML/jackson)
+		 * JSON converter on WebMvc server via a [dedicated DSL][JacksonDsl].
+		 *
+		 * Required dependencies can be retrieve using `org.springframework.boot:spring-boot-starter-json`
+		 * (included by default in `spring-boot-starter-webflux`).
+		 */
+		fun jackson(dsl: JacksonDsl.() -> Unit = {}) {
+			JacksonDsl(dsl).initialize(context)
+		}
+
+		/**
+		 * Enable [org.springframework.http.converter.support.AllEncompassingFormHttpMessageConverter]
+		 */
+		fun form() {
+			FormConverterInitializer().initialize(context)
+		}
+
+		/**
+		 * Enable [org.springframework.boot.autoconfigure.web.servlet.AtomFeedHttpMessageConverter]
+		 */
+		fun atom() {
+			AtomConverterInitializer().initialize(context)
+		}
+
+		/**
+		 * Enable [org.springframework.boot.autoconfigure.web.servlet.RssConverterInitializer]
+		 */
+		fun rss() {
+			RssConverterInitializer().initialize(context)
+		}
+	}
 }
 
 /**

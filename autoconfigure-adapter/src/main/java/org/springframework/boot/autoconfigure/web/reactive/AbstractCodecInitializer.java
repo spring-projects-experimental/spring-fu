@@ -20,20 +20,10 @@ public abstract class AbstractCodecInitializer implements ApplicationContextInit
 	@Override
 	public void initialize(GenericApplicationContext context) {
 		if (isClientCodec) {
-			context.registerBean(BeanDefinitionReaderUtils.uniqueBeanName(WebClientCodecCustomizer.class.getName(), context), WebClientCodecCustomizer.class, () -> new WebClientCodecCustomizer(Arrays.asList(new CodecCustomizer() {
-				@Override
-				public void customize(CodecConfigurer configurer) {
-					register(context, configurer);
-				}
-			})));
+			context.registerBean(BeanDefinitionReaderUtils.uniqueBeanName(WebClientCodecCustomizer.class.getName(), context), WebClientCodecCustomizer.class, () -> new WebClientCodecCustomizer(Arrays.asList((CodecCustomizer) configurer -> register(context, configurer))));
 		}
 		else {
-			context.registerBean(BeanDefinitionReaderUtils.uniqueBeanName(WebClientCodecCustomizer.class.getName(), context), CodecCustomizer.class, () -> new CodecCustomizer() {
-				@Override
-				public void customize(CodecConfigurer configurer) {
-					register(context, configurer);
-				}
-			});
+			context.registerBean(BeanDefinitionReaderUtils.uniqueBeanName(CodecCustomizer.class.getName(), context), CodecCustomizer.class, () -> configurer -> register(context, configurer));
 		}
 	}
 

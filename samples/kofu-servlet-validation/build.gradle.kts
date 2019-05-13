@@ -14,9 +14,7 @@ dependencies {
 	implementation("am.ik.yavi:yavi:0.2.2")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-webflux")
-	testImplementation("org.springframework.boot:spring-boot-starter-test") {
-		exclude(module = "junit")
-	}
+	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.junit.jupiter:junit-jupiter-api")
 	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
 }

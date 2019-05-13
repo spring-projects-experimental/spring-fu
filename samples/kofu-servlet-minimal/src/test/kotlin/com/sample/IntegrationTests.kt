@@ -4,6 +4,8 @@ import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.springframework.context.ConfigurableApplicationContext
+import org.springframework.http.HttpHeaders
+import org.springframework.http.MediaType
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.test.web.reactive.server.expectBody
 
@@ -20,7 +22,7 @@ class IntegrationTests {
 
 	@Test
 	fun `Request root endpoint`() {
-		client.get().uri("/").exchange()
+		client.get().uri("/").header(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN_VALUE).exchange()
 				.expectStatus().is2xxSuccessful
 				.expectBody<String>().isEqualTo("Hello world!")
 	}

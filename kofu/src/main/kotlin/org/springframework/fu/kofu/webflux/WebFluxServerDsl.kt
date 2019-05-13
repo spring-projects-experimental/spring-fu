@@ -232,7 +232,7 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit): Abst
 
         /**
          * Register an `ObjectMapper` bean and configure a [Jackson](https://github.com/FasterXML/jackson)
-         * JSON codec on WebFlux webFlux via a [dedicated DSL][JacksonDsl].
+         * JSON codec on WebFlux server via a [dedicated DSL][JacksonDsl].
          *
          * Required dependencies can be retrieve using `org.springframework.boot:spring-boot-starter-json`
          * (included by default in `spring-boot-starter-webflux`).

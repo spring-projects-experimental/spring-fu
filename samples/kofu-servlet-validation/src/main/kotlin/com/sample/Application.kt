@@ -11,6 +11,9 @@ val app = application(WebApplicationType.SERVLET) {
     }
     webMvc {
         port = if (profiles.contains("test")) 8181 else 8080
+		converters {
+			jackson()
+		}
     }
 }
 

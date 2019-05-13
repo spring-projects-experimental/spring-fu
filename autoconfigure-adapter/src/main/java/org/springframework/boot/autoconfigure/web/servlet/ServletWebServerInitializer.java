@@ -1,9 +1,13 @@
 package org.springframework.boot.autoconfigure.web.servlet;
 
+import java.io.IOException;
+import java.util.List;
 import java.util.function.Supplier;
 
 import javax.servlet.MultipartConfigElement;
 
+import org.springframework.beans.factory.ListableBeanFactory;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
 import org.springframework.boot.autoconfigure.http.HttpProperties;
 import org.springframework.boot.autoconfigure.web.ResourceProperties;
@@ -14,12 +18,17 @@ import org.springframework.boot.web.embedded.tomcat.TomcatProtocolHandlerCustomi
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.boot.web.server.WebServerFactoryCustomizerBeanPostProcessor;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
-import org.springframework.boot.web.servlet.filter.OrderedFormContentFilter;
 import org.springframework.boot.web.servlet.filter.OrderedHiddenHttpMethodFilter;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.core.ResolvableType;
 import org.springframework.format.support.FormattingConversionService;
+import org.springframework.http.HttpInputMessage;
+import org.springframework.http.HttpOutputMessage;
+import org.springframework.http.MediaType;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.util.PathMatcher;
 import org.springframework.validation.Validator;
 import org.springframework.web.accept.ContentNegotiationManager;
@@ -45,8 +54,13 @@ import org.springframework.web.servlet.view.ContentNegotiatingViewResolver;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.util.UrlPathHelper;
 
-import static org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration.*;
-import static org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration.WebMvcAutoConfigurationAdapter.*;
+import static org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration.EnableWebMvcConfiguration;
+import static org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration.ResourceChainCustomizerConfiguration;
+import static org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration.ResourceChainResourceHandlerRegistrationCustomizer;
+import static org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration.ResourceHandlerRegistrationCustomizer;
+import static org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration.WebMvcAutoConfigurationAdapter;
+import static org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration.WebMvcAutoConfigurationAdapter.FaviconConfiguration;
+import static org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration.WebMvcAutoConfigurationAdapter.FaviconRequestHandler;
 
 public class ServletWebServerInitializer implements ApplicationContextInitializer<GenericApplicationContext> {
 
@@ -87,7 +101,7 @@ public class ServletWebServerInitializer implements ApplicationContextInitialize
 
 		WebMvcAutoConfiguration webMvcConfiguration = new WebMvcAutoConfiguration();
 		context.registerBean(OrderedHiddenHttpMethodFilter.class, webMvcConfiguration::hiddenHttpMethodFilter);
-		context.registerBean(OrderedFormContentFilter.class, webMvcConfiguration::formContentFilter);
+		//context.registerBean(OrderedFormContentFilter.class, webMvcConfiguration::formContentFilter);
 
 		Supplier<WebMvcAutoConfigurationAdapter> webMvcConfigurationAdapter = new Supplier<WebMvcAutoConfigurationAdapter>() {
 
@@ -121,7 +135,7 @@ public class ServletWebServerInitializer implements ApplicationContextInitialize
 			@Override
 			public EnableWebMvcConfiguration get() {
 				if (configuration == null) {
-					configuration = new EnableWebMvcConfiguration(context.getBeanProvider(WebMvcProperties.class), context.getBeanProvider(WebMvcRegistrations.class), context);
+					configuration = new EnableWebMvcConfigurationWrapper(context.getBeanProvider(WebMvcProperties.class), context.getBeanProvider(WebMvcRegistrations.class), context);
 					configuration.setApplicationContext(context);
 					configuration.setServletContext(((WebApplicationContext) context).getServletContext());
 				}
@@ -149,5 +163,46 @@ public class ServletWebServerInitializer implements ApplicationContextInitialize
 		context.registerBean(HandlerExceptionResolver.class, () -> enableWebMvcConfiguration.get().handlerExceptionResolver(context.getBean(ContentNegotiationManager.class)));
 		context.registerBean(ViewResolver.class, () -> enableWebMvcConfiguration.get().mvcViewResolver(context.getBean(ContentNegotiationManager.class)));
 		context.registerBean(HandlerMappingIntrospector.class, () -> enableWebMvcConfiguration.get().mvcHandlerMappingIntrospector(), bd -> bd.setLazyInit(true));
+	}
+
+	private class EnableWebMvcConfigurationWrapper extends EnableWebMvcConfiguration {
+
+		public EnableWebMvcConfigurationWrapper(ObjectProvider<WebMvcProperties> mvcPropertiesProvider, ObjectProvider<WebMvcRegistrations> mvcRegistrationsProvider, ListableBeanFactory beanFactory) {
+			super(mvcPropertiesProvider, mvcRegistrationsProvider, beanFactory);
+		}
+
+		@Override
+		protected void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+			getApplicationContext().getBeanProvider(HttpMessageConverter.class).orderedStream().forEach(converters::add);
+		}
+	}
+
+	private class NoOpValidatorHttpMessageConverter implements HttpMessageConverter<Object> {
+
+
+		@Override
+		public boolean canRead(Class<?> clazz, MediaType mediaType) {
+			return false;
+		}
+
+		@Override
+		public boolean canWrite(Class<?> clazz, MediaType mediaType) {
+			return false;
+		}
+
+		@Override
+		public List<MediaType> getSupportedMediaTypes() {
+			return null;
+		}
+
+		@Override
+		public Object read(Class<?> clazz, HttpInputMessage inputMessage) throws IOException, HttpMessageNotReadableException {
+			return null;
+		}
+
+		@Override
+		public void write(Object o, MediaType contentType, HttpOutputMessage outputMessage) throws IOException, HttpMessageNotWritableException {
+
+		}
 	}
 }

@@ -19,7 +19,15 @@ val app = application(WebApplicationType.SERVLET) {
 			GET("/", handler::hello)
 			GET("/api", handler::json)
 		}
+		converters {
+			string()
+			jackson()
+		}
 	}
+}
+
+fun main() {
+	app.run()
 }
 
 data class Sample(val message: String)
@@ -34,6 +42,3 @@ class SampleHandler(private val sampleService: SampleService) {
 	fun json(request: ServerRequest) = ok().body(Sample(sampleService.generateMessage()))
 }
 
-fun main() {
-	app.run()
-}
