@@ -34,6 +34,9 @@ Here is a minimal sample application that is leveraging WebMvc.fn:
 
 ```kotlin
 val app = application(WebApplicationType.SERVLET) {
+	logging {
+		level = LogLevel.DEBUG
+	}
 	beans {
 		bean<SampleService>()
 	}
@@ -46,6 +49,12 @@ val app = application(WebApplicationType.SERVLET) {
 			}
 			GET("/api") {
 				ok().body(Sample(service.generateMessage()))
+			}
+		}
+		converters {
+			string()
+			jackson {
+				indentOutput = true
 			}
 		}
 	}
