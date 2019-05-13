@@ -14,7 +14,9 @@ dependencies {
 	implementation("org.springframework.data:spring-data-r2dbc:1.0.0.BUILD-SNAPSHOT")
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.2.1")
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.2.1")
-	implementation("io.r2dbc:r2dbc-h2")
+	implementation("io.r2dbc:r2dbc-h2") {
+		exclude(module = "reactor-netty")
+	}
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
