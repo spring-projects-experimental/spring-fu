@@ -8,18 +8,13 @@ plugins {
 
 dependencies {
 	implementation("org.springframework.fu:spring-fu-kofu:0.1.BUILD-SNAPSHOT")
-
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.2.1")
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.2.1")
 	implementation("am.ik.yavi:yavi:0.2.1")
 
-	testImplementation("org.springframework.boot:spring-boot-starter-test") {
-		exclude(module = "junit")
-	}
-	testImplementation("org.junit.jupiter:junit-jupiter-api")
-	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+	testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
 repositories {

@@ -8,7 +8,6 @@ plugins {
 
 dependencies {
 	implementation("org.springframework.fu:spring-fu-kofu:0.1.BUILD-SNAPSHOT")
-
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
 	implementation("org.springframework.boot:spring-boot-starter-mustache")
 	implementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")
@@ -17,9 +16,7 @@ dependencies {
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.2.1")
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.2.1")
 
-	testImplementation("org.junit.jupiter:junit-jupiter-api")
-	testImplementation("org.springframework:spring-test")
-	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+	testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
 repositories {

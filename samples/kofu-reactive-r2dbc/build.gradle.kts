@@ -9,7 +9,6 @@ plugins {
 
 dependencies {
 	implementation("org.springframework.fu:spring-fu-kofu:0.1.BUILD-SNAPSHOT")
-
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
 	implementation("org.springframework.boot:spring-boot-starter-mustache")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
@@ -17,10 +16,7 @@ dependencies {
 	implementation("io.r2dbc:r2dbc-h2")
 	implementation("com.h2database:h2")
 
-	testImplementation("org.junit.jupiter:junit-jupiter-api")
-	testImplementation("org.springframework:spring-test")
-	testImplementation("io.projectreactor:reactor-test")
-	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+	testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
 dependencyManagement {

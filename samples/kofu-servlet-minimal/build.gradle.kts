@@ -8,13 +8,10 @@ plugins {
 
 dependencies {
 	implementation("org.springframework.fu:spring-fu-kofu:0.1.BUILD-SNAPSHOT")
-
 	implementation("org.springframework.boot:spring-boot-starter-web")
 
-	testImplementation("org.springframework.boot:spring-boot-starter-webflux")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
-	testImplementation("org.junit.jupiter:junit-jupiter-api")
-	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+	testImplementation("org.springframework.boot:spring-boot-starter-webflux")
 }
 
 repositories {
