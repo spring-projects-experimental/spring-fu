@@ -18,6 +18,8 @@ package org.springframework.fu.kofu
 
 import org.springframework.boot.logging.LogLevel
 import org.springframework.boot.logging.LoggingSystem
+import org.springframework.context.support.GenericApplicationContext
+import org.springframework.fu.kofu.webmvc.WebMvcServerDsl
 
 /**
  * Kofu DSL for logging configuration.
@@ -26,7 +28,7 @@ import org.springframework.boot.logging.LoggingSystem
  * @author Sebastien Deleuze
  */
 @KofuMarker
-class LoggingDsl {
+class LoggingDsl(private val init: LoggingDsl.() -> Unit) : AbstractDsl() {
 
 	@PublishedApi
 	internal val loggingSystem: LoggingSystem = LoggingSystem.get(LoggingDsl::class.java.classLoader)
@@ -59,5 +61,10 @@ class LoggingDsl {
 		T::class.qualifiedName?.let {
 			loggingSystem.setLogLevel(it, level)
 		}
+	}
+
+	override fun initialize(context: GenericApplicationContext) {
+		super.initialize(context)
+		init()
 	}
 }

@@ -25,7 +25,7 @@ import com.fasterxml.jackson.databind.MapperFeature
 import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.databind.SerializationFeature
 import org.springframework.boot.autoconfigure.jackson.JacksonInitializer
-import org.springframework.boot.autoconfigure.jackson.JacksonJsonCodecInitializer
+import org.springframework.boot.autoconfigure.web.reactive.JacksonJsonCodecInitializer
 import org.springframework.boot.autoconfigure.jackson.JacksonProperties
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.fu.kofu.AbstractDsl

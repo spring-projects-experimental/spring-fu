@@ -1,0 +1,59 @@
+/*
+ * Copyright 2002-2018 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.springframework.fu.kofu.webmvc
+
+import org.junit.jupiter.api.Test
+import org.springframework.boot.WebApplicationType
+import org.springframework.fu.kofu.application
+import org.springframework.fu.kofu.localServerPort
+import org.springframework.http.MediaType
+import org.springframework.test.web.reactive.server.WebTestClient
+
+/**
+ * @author Sebastien Deleuze
+ */
+class WebMvcServerDslTests {
+
+	@Test
+	fun `Create an application with an empty server`() {
+		val app = application(WebApplicationType.SERVLET) {
+			webMvc {
+				port = 0
+			}
+		}
+		with(app.run()){
+			close()
+		}
+	}
+
+	@Test
+	fun `Create and request an endpoint`() {
+		val app = application(WebApplicationType.SERVLET) {
+			webMvc {
+				port = 0
+				router {
+					GET("/foo") { noContent().build() }
+				}
+			}
+		}
+		with(app.run()) {
+			val client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:$localServerPort").build()
+			client.get().uri("/foo").accept(MediaType.TEXT_PLAIN).exchange().expectStatus().is2xxSuccessful
+			close()
+		}
+	}
+}

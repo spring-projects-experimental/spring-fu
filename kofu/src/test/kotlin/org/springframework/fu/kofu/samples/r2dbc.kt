@@ -19,13 +19,3 @@ fun r2dbcH2() {
 		r2dbcH2()
 	}
 }
-
-fun r2dbcPostgresqlCoroutines() {
-	application(WebApplicationType.NONE) {
-		r2dbcPostgresql {
-			host = "dbserver"
-			port = 1234
-			coroutines = true
-		}
-	}
-}

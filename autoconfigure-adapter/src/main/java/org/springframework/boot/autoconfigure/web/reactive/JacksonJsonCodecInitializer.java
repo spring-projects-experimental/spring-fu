@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.boot.autoconfigure.jackson;
+package org.springframework.boot.autoconfigure.web.reactive;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 

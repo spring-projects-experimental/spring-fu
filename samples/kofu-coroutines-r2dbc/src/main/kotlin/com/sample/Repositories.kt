@@ -1,12 +1,12 @@
 package com.sample
 
 import kotlinx.coroutines.FlowPreview
-import org.springframework.data.r2dbc.function.DatabaseClient
-import org.springframework.data.r2dbc.function.asType
-import org.springframework.data.r2dbc.function.await
-import org.springframework.data.r2dbc.function.awaitOne
-import org.springframework.data.r2dbc.function.flow
-import org.springframework.data.r2dbc.function.into
+import org.springframework.data.r2dbc.core.DatabaseClient
+import org.springframework.data.r2dbc.core.asType
+import org.springframework.data.r2dbc.core.await
+import org.springframework.data.r2dbc.core.awaitOne
+import org.springframework.data.r2dbc.core.flow
+import org.springframework.data.r2dbc.core.into
 
 class UserRepository(private val client: DatabaseClient) {
 

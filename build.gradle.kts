@@ -102,6 +102,19 @@ publishing {
 			})
 		}
 
+		create<MavenPublication>("kofu-coroutines-validation") {
+			groupId = "org.springframework.fu"
+			artifactId = "spring-fu-samples-kofu-coroutines-validation"
+			artifact(task<Zip>("kofuCoroutinesValidationSampleZip") {
+				from("samples/kofu-coroutines-validation") {
+					exclude("build", ".gradle", ".idea", "out", "*.iml")
+				}
+				destinationDir = file("$buildDir/dist")
+				into("kofu-coroutines-validation")
+				setExecutablePermissions()
+			})
+		}
+
 		create<MavenPublication>("kofu-reactive-minimal") {
 			groupId = "org.springframework.fu"
 			artifactId = "spring-fu-samples-kofu-reactive-minimal"
@@ -137,6 +150,45 @@ publishing {
 				}
 				destinationDir = file("$buildDir/dist")
 				into("kofu-reactive-r2dbc")
+				setExecutablePermissions()
+			})
+		}
+
+		create<MavenPublication>("kofu-reactive-validation") {
+			groupId = "org.springframework.fu"
+			artifactId = "spring-fu-samples-kofu-reactive-validation"
+			artifact(task<Zip>("kofuReactiveValidationSampleZip") {
+				from("samples/kofu-reactive-validation") {
+					exclude("build", ".gradle", ".idea", "out", "*.iml")
+				}
+				destinationDir = file("$buildDir/dist")
+				into("kofu-reactive-validation")
+				setExecutablePermissions()
+			})
+		}
+
+		create<MavenPublication>("kofu-servlet-minimal") {
+			groupId = "org.springframework.fu"
+			artifactId = "spring-fu-samples-kofu-servlet-minimal"
+			artifact(task<Zip>("kofuServletMinimalSampleZip") {
+				from("samples/kofu-servlet-minimal") {
+					exclude("build", ".gradle", ".idea", "out", "*.iml")
+				}
+				destinationDir = file("$buildDir/dist")
+				into("kofu-servlet-minimal")
+				setExecutablePermissions()
+			})
+		}
+
+		create<MavenPublication>("kofu-servlet-validation") {
+			groupId = "org.springframework.fu"
+			artifactId = "spring-fu-samples-kofu-servlet-validation"
+			artifact(task<Zip>("kofuServletValidationSampleZip") {
+				from("samples/kofu-servlet-validation") {
+					exclude("build", ".gradle", ".idea", "out", "*.iml")
+				}
+				destinationDir = file("$buildDir/dist")
+				into("kofu-servlet-validation")
 				setExecutablePermissions()
 			})
 		}

@@ -19,6 +19,7 @@ dependencies {
 	implementation(project(":security-adapter"))
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 
+	compileOnly("org.springframework:spring-webmvc")
 	compileOnly("org.springframework:spring-webflux")
 	compileOnly("org.springframework.boot:spring-boot-starter-security")
 	compileOnly("de.flapdoodle.embed:de.flapdoodle.embed.mongo")
@@ -26,11 +27,14 @@ dependencies {
 	compileOnly("org.mongodb:mongodb-driver-reactivestreams")
 	compileOnly("com.fasterxml.jackson.core:jackson-databind")
 	compileOnly("com.samskivert:jmustache")
+	compileOnly("io.projectreactor.kotlin:reactor-kotlin-extensions:1.0.0.BUILD-SNAPSHOT")
+	compileOnly("javax.servlet:javax.servlet-api")
 
 	testImplementation("org.junit.jupiter:junit-jupiter-api")
 	testImplementation("org.springframework:spring-test")
 	testImplementation("io.projectreactor:reactor-test")
 	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+	testImplementation("org.springframework.boot:spring-boot-starter-web")
 	testImplementation("org.springframework.boot:spring-boot-starter-webflux")
 	testImplementation("org.springframework.boot:spring-boot-starter-tomcat")
 	testImplementation("org.springframework.boot:spring-boot-starter-undertow")
@@ -42,6 +46,8 @@ dependencies {
 	testImplementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	testRuntimeOnly("de.flapdoodle.embed:de.flapdoodle.embed.mongo")
 	testImplementation("io.mockk:mockk:1.9")
+	testImplementation("io.projectreactor.kotlin:reactor-kotlin-extensions:1.0.0.BUILD-SNAPSHOT")
+	testImplementation("javax.servlet:javax.servlet-api")
 }
 
 tasks.withType<DokkaTask> {

@@ -12,8 +12,6 @@ public class PostgresqlR2dbcProperties {
 
 	private String password;
 
-	private boolean coroutines;
-
 	public String getHost() {
 		return host;
 	}
@@ -54,11 +52,4 @@ public class PostgresqlR2dbcProperties {
 		this.password = password;
 	}
 
-	public boolean getCoroutines() {
-		return coroutines;
-	}
-
-	public void setCoroutines(boolean coroutines) {
-		this.coroutines = coroutines;
-	}
 }

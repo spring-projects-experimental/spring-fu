@@ -34,7 +34,6 @@ import org.springframework.web.reactive.function.server.ServerResponse.ok
 import org.springframework.web.reactive.function.server.buildAndAwait
 import org.springframework.web.reactive.function.server.router
 import reactor.core.publisher.Mono
-import reactor.core.publisher.toMono
 
 private fun applicationDsl() {
 	val app = application(WebApplicationType.NONE) {
@@ -138,8 +137,8 @@ interface ArticleRepository {
 class HtmlHandler(private val userRepository: UserRepository,
 				  private val articleRepository: ArticleRepository) {
 
-	fun blog(request: ServerRequest) = ServerResponse.ok().build().toMono()
-	fun article(request: ServerRequest) = ServerResponse.ok().build().toMono()
+	fun blog(request: ServerRequest) = ServerResponse.ok().build()
+	fun article(request: ServerRequest) = ServerResponse.ok().build()
 }
 
 interface ApiHandler {

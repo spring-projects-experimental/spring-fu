@@ -22,10 +22,10 @@ import org.springframework.web.reactive.function.server.RouterFunctionDsl
 import org.springframework.web.server.WebFilter
 
 /**
- * Kofu DSL for WebFlux webFlux.
+ * Kofu DSL for WebFlux server.
  *
  * This DSL to be used in [org.springframework.fu.kofu.reactiveWebApplication] configures a
- * [WebFlux webFlux](https://docs.spring.io/spring/docs/current/spring-framework-reference/webflux-reactive.html#spring-webflux).
+ * [WebFlux server](https://docs.spring.io/spring/docs/current/spring-framework-reference/webflux-reactive.html#spring-webflux).
  *
  * When no codec is configured, `String` and `Resource` ones are configured by default.
  * When a `codecs { }` block is declared, no one is configured by default.
@@ -35,7 +35,7 @@ import org.springframework.web.server.WebFilter
  * Required dependencies can be retrieve using `org.springframework.boot:spring-boot-starter-webflux`.
  *
  * @sample org.springframework.fu.kofu.samples.router
- * @see org.springframework.fu.kofu.reactiveWebApplication
+ * @see org.springframework.fu.kofu.application
  * @see WebFluxServerDsl.codecs
  * @see WebFluxServerDsl.cors
  * @see WebFluxServerDsl.mustache
@@ -232,7 +232,7 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit): Abst
 
         /**
          * Register an `ObjectMapper` bean and configure a [Jackson](https://github.com/FasterXML/jackson)
-         * JSON codec on WebFlux webFlux via a [dedicated DSL][JacksonDsl].
+         * JSON codec on WebFlux server via a [dedicated DSL][JacksonDsl].
          *
          * Required dependencies can be retrieve using `org.springframework.boot:spring-boot-starter-json`
          * (included by default in `spring-boot-starter-webflux`).
@@ -275,15 +275,10 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit): Abst
 }
 
 /**
- * Declare a WebFlux webFlux.
+ * Declare a WebFlux server.
  * @see WebFluxServerDsl
  */
 fun ConfigurationDsl.webFlux(dsl: WebFluxServerDsl.() -> Unit =  {}) {
     WebFluxServerDsl(dsl).initialize(context)
 }
 
-/**
- * Shortcut for `environment["local.server.port"]`.
- */
-val ApplicationContext.localServerPort: String
-        get() = environment["local.server.port"]!!
