@@ -7,18 +7,17 @@ image::https://ci.spring.io/api/v1/teams/spring-fu/pipelines/spring-fu/badge["Bu
 Spring Fu is an incubator for *Kofu* (*Ko* for Kotlin, *fu* for functional), which provides a Kotlin API to configure Spring Boot applications programmatically with following characteristics:
 
  * Explicit configuration via a Kotlin DSL instead of auto-configuration
- * Leverages Spring Framework 5.x https://docs.spring.io/spring/docs/5.2.0.BUILD-SNAPSHOT/spring-framework-reference/languages.html#kotlin-bean-definition-dsl[Functional bean configuration] instead of annotations
+ * Leverages Spring Framework 5 https://docs.spring.io/spring/docs/5.2.0.BUILD-SNAPSHOT/spring-framework-reference/languages.html#kotlin-bean-definition-dsl[functional bean configuration] instead of annotations
  * Allows to define custom configuration slices (useful for more focused and efficient testing)
  * Great discoverability via code auto-complete
  * https://docs.spring.io/spring/docs/5.2.0.BUILD-SNAPSHOT/spring-framework-reference/languages.html#router-dsl[Web functional routing] instead of `@Controller` available in 3 flavors:
- Expose the same Web functional routing programming model in 3 flavors:
  ** WebMvc.fn (functional variant Spring MVC)
  ** WebFlux.fn with Reactor declarative-style API (`Mono` and `Flux`)
  ** WebFlux.fn with Coroutines imperative-style API (https://spring.io/blog/2019/04/12/going-reactive-with-spring-coroutines-and-kotlin-flow[using suspending functions and Kotlin `Flow`])
  * Persistence via Spring Data functional APIs like:
  ** https://spring.io/projects/spring-data-r2dbc[Spring Data R2DBC `DatabaseClient`]
  ** Spring Data JDBC https://github.com/spring-projects/spring-data-jdbc/blob/master/spring-data-jdbc/src/main/java/org/springframework/data/jdbc/core/JdbcAggregateOperations.java[`JdbcAggregateOperations`]
- ** Spring Data NoSQL similar APIs for MongoDB, Redis and Cassandra
+ ** Spring Data NoSQL `*Template` APIs for MongoDB, Redis and Cassandra
  * Configuration via Spring Security `security { }` DSL (WIP)
  * Fast startup and low memory consumption
 
