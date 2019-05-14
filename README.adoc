@@ -2,7 +2,7 @@
 :kofu-kdoc-url: http://repo.spring.io/snapshot/org/springframework/fu/spring-fu-kofu/{spring-fu-version}/spring-fu-kofu-{spring-fu-version}-javadoc.jar!
 :framework-kdoc-url: https://docs.spring.io/spring-framework/docs/5.2.0.BUILD-SNAPSHOT/kdoc-api
 
-image::https://ci.spring.io/api/v1/teams/spring-fu/pipelines/spring-fu/badge["Build Status", link="https://ci.spring.io/teams/spring-fu/pipelines/spring-fu"]
+image:https://ci.spring.io/api/v1/teams/spring-fu/pipelines/spring-fu/badge["Build Status", link="https://ci.spring.io/teams/spring-fu/pipelines/spring-fu"] image:https://img.shields.io/badge/API%20documentation-0.1-blue.svg["API documentation", link="http://repo.spring.io/snapshot/org/springframework/fu/spring-fu-kofu/{spring-fu-version}/spring-fu-kofu-{spring-fu-version}-javadoc.jar!/kofu/index.html"]
 
 Spring Fu is an incubator for *Kofu* (*Ko* for Kotlin, *fu* for functional), which provides a Kotlin API to configure Spring Boot applications programmatically with following characteristics:
 
