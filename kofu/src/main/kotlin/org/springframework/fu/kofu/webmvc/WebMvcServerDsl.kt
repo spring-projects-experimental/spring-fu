@@ -22,8 +22,9 @@ import org.springframework.web.servlet.function.RouterFunctionDsl
 /**
  * Kofu DSL for Spring MVC server.
  *
- * This DSL to be used in [org.springframework.fu.kofu.application] configures a Spring MVC server
- * with functional routing.
+ * This DSL to be used in [org.springframework.fu.kofu.application] and a
+ * [org.springframework.boot.WebApplicationType.SERVLET] parameter configures
+ * a Spring MVC server with functional routing.
  *
  * Required dependencies can be retrieve using `org.springframework.boot:spring-boot-starter-web`.
  *
@@ -104,7 +105,7 @@ open class WebMvcServerDsl(private val init: WebMvcServerDsl.() -> Unit): Abstra
 		}
 
 		/**
-		 * Enable [org.springframework.core.codec.CharSequenceEncoder] and [org.springframework.core.codec.StringDecoder]
+		 * Enable [org.springframework.http.converter.StringHttpMessageConverter]
 		 */
 		fun string() {
 			StringConverterInitializer().initialize(context)
@@ -136,14 +137,14 @@ open class WebMvcServerDsl(private val init: WebMvcServerDsl.() -> Unit): Abstra
 		}
 
 		/**
-		 * Enable [org.springframework.boot.autoconfigure.web.servlet.AtomFeedHttpMessageConverter]
+		 * Enable [org.springframework.http.converter.feed.AtomFeedHttpMessageConverter]
 		 */
 		fun atom() {
 			AtomConverterInitializer().initialize(context)
 		}
 
 		/**
-		 * Enable [org.springframework.boot.autoconfigure.web.servlet.RssConverterInitializer]
+		 * Enable [org.springframework.http.converter.feed.RssChannelHttpMessageConverter]
 		 */
 		fun rss() {
 			RssConverterInitializer().initialize(context)
@@ -153,7 +154,7 @@ open class WebMvcServerDsl(private val init: WebMvcServerDsl.() -> Unit): Abstra
 
 /**
  * Declare a Spring MVC server.
- * @see WebFluxServerDsl
+ * @see WebMvcServerDsl
  */
 fun ConfigurationDsl.webMvc(dsl: WebMvcServerDsl.() -> Unit =  {}) {
 	WebMvcServerDsl(dsl).initialize(context)

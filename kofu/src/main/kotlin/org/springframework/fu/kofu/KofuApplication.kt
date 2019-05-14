@@ -9,7 +9,6 @@ import org.springframework.context.support.GenericApplicationContext
 /**
  * Kofu application that can be run parameterized with Spring profiles and/or command line arguments.
  * @see application
- * @see reactiveWebApplication
  * @author Sebastien Deleuze
  */
 abstract class KofuApplication(private val initializer: ApplicationContextInitializer<GenericApplicationContext>) {

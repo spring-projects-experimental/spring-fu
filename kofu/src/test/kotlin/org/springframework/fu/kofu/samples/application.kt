@@ -60,7 +60,7 @@ private fun applicationDslWithConfiguration() {
 	fun main(args: Array<String>) = app.run()
 }
 
-private fun webApplicationDsl() {
+private fun webFluxApplicationDsl() {
 	fun routes(htmlHandler: HtmlHandler, apiHandler: ApiHandler) = router {
 		GET("/", htmlHandler::blog)
 		GET("/article/{id}", htmlHandler::article)
