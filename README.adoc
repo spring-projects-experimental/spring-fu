@@ -4,7 +4,7 @@
 
 image::https://ci.spring.io/api/v1/teams/spring-fu/pipelines/spring-fu/badge["Build Status", link="https://ci.spring.io/teams/spring-fu/pipelines/spring-fu"]
 
-Spring Fu is an incubator for *Kofu* (*Ko* for Kotlin, *fu* for functional), which provides any API to configure Spring Boot applications programmatically with following characteristics:
+Spring Fu is an incubator for *Kofu* (*Ko* for Kotlin, *fu* for functional), which provides a Kotlin API to configure Spring Boot applications programmatically with following characteristics:
 
  * Explicit configuration via a Kotlin DSL instead of auto-configuration
  * Leverages Spring Framework 5.x https://docs.spring.io/spring/docs/5.2.0.BUILD-SNAPSHOT/spring-framework-reference/languages.html#kotlin-bean-definition-dsl[Functional bean configuration] instead of annotations
@@ -25,7 +25,7 @@ Spring Fu is an incubator for *Kofu* (*Ko* for Kotlin, *fu* for functional), whi
 It is not intended to be used in production yet, but rather to incubate and get feedback and contributions
 from the community in order to hopefully reach a point where it can be integrated as part of Spring Boot.
 
-If you are interested in running Spring application as GraalVM native images see https://github.com/spring-projects/spring-framework/issues/22968[this related issue].
+If you are interested in running Spring application as GraalVM native images see https://github.com/spring-projects/spring-framework/issues/22968[this dedicated Spring Framework issue].
 
 == Minimal application
 
