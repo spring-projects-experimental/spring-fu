@@ -39,13 +39,14 @@ class SecurityDslTests {
 
         val username = "user"
         val password = "password"
+        val repoAuthenticationManager =
+            UserDetailsRepositoryReactiveAuthenticationManager(userDetailsService(username, password))
 
         val app = application(WebApplicationType.REACTIVE) {
             security {
-                authenticationManager =
-                    UserDetailsRepositoryReactiveAuthenticationManager(userDetailsService(username, password))
+                authenticationManager = repoAuthenticationManager
                 http {
-                    authenticationManager(this@security.authenticationManager as UserDetailsRepositoryReactiveAuthenticationManager)
+                    authenticationManager(repoAuthenticationManager)
                     headers()
                     logout()
                 }
