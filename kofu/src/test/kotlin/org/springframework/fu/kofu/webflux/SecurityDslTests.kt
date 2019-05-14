@@ -19,28 +19,36 @@ package org.springframework.fu.kofu.webflux
 import org.junit.jupiter.api.Test
 import org.springframework.boot.WebApplicationType
 import org.springframework.fu.kofu.application
+import org.springframework.fu.kofu.localServerPort
 import org.springframework.security.authentication.UserDetailsRepositoryReactiveAuthenticationManager
 import org.springframework.security.config.web.server.ServerHttpSecurity
 import org.springframework.security.core.userdetails.MapReactiveUserDetailsService
 import org.springframework.security.core.userdetails.User
 import org.springframework.test.web.reactive.server.WebTestClient
+import java.nio.charset.Charset
+import java.util.*
 
 
 /**
- * @author Sebastien Deleuze
+ * @author Jonas Bark
  */
 class SecurityDslTests {
 
     @Test
     fun `Check spring-security configuration DSL`() {
+
+        val username = "user"
+        val password = "password"
+
         val app = application(WebApplicationType.REACTIVE) {
             security {
-                authenticationManager = UserDetailsRepositoryReactiveAuthenticationManager(userDetailsService())
-                httpSecurity = ServerHttpSecurity
-                    .http()
-                    .authenticationManager(authenticationManager)
-                    .headers().and()
-                    .logout().and()
+                authenticationManager =
+                    UserDetailsRepositoryReactiveAuthenticationManager(userDetailsService(username, password))
+                http {
+                    authenticationManager(this@security.authenticationManager as UserDetailsRepositoryReactiveAuthenticationManager)
+                    headers()
+                    logout()
+                }
             }
             webFlux {
                 port = 0
@@ -55,17 +63,20 @@ class SecurityDslTests {
             client.get().uri("/view").exchange()
                 .expectStatus().isUnauthorized
 
-            client.get().uri("/view").header("Authorization", "Basic dXNlcjp1c2Vy").exchange()
+            val basicAuth =
+                Base64.getEncoder().encode("$username:$password".toByteArray())?.toString(Charset.defaultCharset())
+            client.get().uri("/view").header("Authorization", "Basic $basicAuth").exchange()
                 .expectStatus().is2xxSuccessful
 
             close()
         }
     }
 
-    private fun userDetailsService(): MapReactiveUserDetailsService {
+    private fun userDetailsService(username: String, password: String): MapReactiveUserDetailsService {
+        @Suppress("DEPRECATION")
         val user = User.withDefaultPasswordEncoder()
-            .username("user")
-            .password("user")
+            .username(username)
+            .password(password)
             .roles("USER")
             .build()
         return MapReactiveUserDetailsService(user)

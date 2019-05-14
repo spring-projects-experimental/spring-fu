@@ -33,22 +33,18 @@ import org.springframework.security.web.reactive.result.method.annotation.Curren
 public class SecurityInitializer implements ApplicationContextInitializer<GenericApplicationContext> {
 
 	private ReactiveAuthenticationManager authenticationManager;
-
 	private ReactiveUserDetailsService reactiveUserDetailsService;
-
 	private PasswordEncoder passwordEncoder;
-
 	private ReactiveUserDetailsPasswordService userDetailsPasswordService;
-
 	private ServerHttpSecurity httpSecurity;
 
 	/**
 	 * @see ServerHttpSecurityConfiguration
-	 * @param authenticationManager
-	 * @param reactiveUserDetailsService
-	 * @param passwordEncoder
-	 * @param userDetailsPasswordService
-	 * @param httpSecurity
+	 * @param authenticationManager {@link ServerHttpSecurityConfiguration}
+	 * @param reactiveUserDetailsService {@link ServerHttpSecurityConfiguration}
+	 * @param passwordEncoder {@link ServerHttpSecurityConfiguration}
+	 * @param userDetailsPasswordService {@link ServerHttpSecurityConfiguration}
+	 * @param httpSecurity {@link ServerHttpSecurityConfiguration}
 	 */
 	public SecurityInitializer(ReactiveAuthenticationManager authenticationManager, ReactiveUserDetailsService reactiveUserDetailsService, PasswordEncoder passwordEncoder, ReactiveUserDetailsPasswordService userDetailsPasswordService, ServerHttpSecurity httpSecurity) {
 		this.authenticationManager = authenticationManager;
@@ -75,8 +71,8 @@ public class SecurityInitializer implements ApplicationContextInitializer<Generi
 			configuration.setUserDetailsPasswordService(userDetailsPasswordService);
 		}
 
-		context.registerBean(AuthenticationPrincipalArgumentResolver.class, () -> configuration.authenticationPrincipalArgumentResolver());
-		context.registerBean(CurrentSecurityContextArgumentResolver.class, () -> configuration.reactiveCurrentSecurityContextArgumentResolver());
+		context.registerBean(AuthenticationPrincipalArgumentResolver.class, configuration::authenticationPrincipalArgumentResolver);
+		context.registerBean(CurrentSecurityContextArgumentResolver.class, configuration::reactiveCurrentSecurityContextArgumentResolver);
 		context.registerBean(
 				"org.springframework.security.config.annotation.web.reactive.HttpSecurityConfiguration.httpSecurity",
 				ServerHttpSecurity.class,

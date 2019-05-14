@@ -45,7 +45,7 @@ class SecurityDsl(private val init: SecurityDsl.() -> Unit) : AbstractDsl() {
 
     var userDetailsPasswordService: ReactiveUserDetailsPasswordService? = null
 
-    var httpSecurity: ServerHttpSecurity? = null
+    internal var httpSecurity: ServerHttpSecurity? = null
 
     override fun initialize(context: GenericApplicationContext) {
         super.initialize(context)
@@ -57,6 +57,26 @@ class SecurityDsl(private val init: SecurityDsl.() -> Unit) : AbstractDsl() {
             userDetailsPasswordService,
             httpSecurity
         ).initialize(context)
+    }
+
+
+    class HttpSecurityDsl(
+        private val init: ServerHttpSecurity.() -> Unit,
+        private val securityDsl: SecurityDsl
+    ) : AbstractDsl() {
+
+        private val httpSecurity: ServerHttpSecurity = ServerHttpSecurity.http()
+
+        override fun initialize(context: GenericApplicationContext) {
+            super.initialize(context)
+            httpSecurity.apply(init)
+            securityDsl.httpSecurity = httpSecurity
+        }
+
+    }
+
+    fun http(dsl: ServerHttpSecurity.() -> Unit = {}) {
+        HttpSecurityDsl(dsl, this).initialize(context)
     }
 }
 
@@ -71,3 +91,5 @@ class SecurityDsl(private val init: SecurityDsl.() -> Unit) : AbstractDsl() {
 fun ConfigurationDsl.security(dsl: SecurityDsl.() -> Unit = {}) {
     SecurityDsl(dsl).initialize(context)
 }
+
+
