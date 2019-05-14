@@ -35,7 +35,7 @@ import org.springframework.web.server.WebFilter
  *
  * Required dependencies can be retrieve using `org.springframework.boot:spring-boot-starter-webflux`.
  *
- * @sample org.springframework.fu.kofu.samples.router
+ * @sample org.springframework.fu.kofu.samples.webFluxCoRouter
  * @see org.springframework.fu.kofu.application
  * @see WebFluxServerDsl.codecs
  * @see WebFluxServerDsl.cors

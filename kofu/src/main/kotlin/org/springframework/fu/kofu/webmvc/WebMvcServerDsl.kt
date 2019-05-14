@@ -28,7 +28,7 @@ import org.springframework.web.servlet.function.RouterFunctionDsl
  *
  * Required dependencies can be retrieve using `org.springframework.boot:spring-boot-starter-web`.
  *
- * @sample org.springframework.fu.kofu.samples.router
+ * @sample org.springframework.fu.kofu.samples.webMvcRouter
  * @see org.springframework.fu.kofu.application
  * @author Sebastien Deleuze
  */
