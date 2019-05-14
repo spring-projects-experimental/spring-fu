@@ -17,7 +17,7 @@ Spring Fu is an incubator for *Kofu* (*Ko* for Kotlin, *fu* for functional), whi
  * Persistence via Spring Data functional APIs like:
  ** https://spring.io/projects/spring-data-r2dbc[Spring Data R2DBC `DatabaseClient`]
  ** Spring Data JDBC https://github.com/spring-projects/spring-data-jdbc/blob/master/spring-data-jdbc/src/main/java/org/springframework/data/jdbc/core/JdbcAggregateOperations.java[`JdbcAggregateOperations`]
- ** Spring Data NoSQL `*Template` APIs for MongoDB, Redis and Cassandra
+ ** Spring Data NoSQL `*Operations` APIs for MongoDB, Redis and Cassandra
  * Configuration via Spring Security `security { }` DSL (WIP)
  * Fast startup and low memory consumption
 
