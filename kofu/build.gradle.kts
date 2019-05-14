@@ -22,7 +22,7 @@ dependencies {
 	compileOnly("org.mongodb:mongodb-driver-reactivestreams")
 	compileOnly("com.fasterxml.jackson.core:jackson-databind")
 	compileOnly("com.samskivert:jmustache")
-	compileOnly("io.projectreactor.kotlin:reactor-kotlin-extensions:1.0.0.BUILD-SNAPSHOT")
+	compileOnly("io.projectreactor.kotlin:reactor-kotlin-extensions")
 	compileOnly("javax.servlet:javax.servlet-api")
 
 	testImplementation("org.junit.jupiter:junit-jupiter-api")
@@ -40,7 +40,7 @@ dependencies {
 	testImplementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	testRuntimeOnly("de.flapdoodle.embed:de.flapdoodle.embed.mongo")
 	testImplementation("io.mockk:mockk:1.9")
-	testImplementation("io.projectreactor.kotlin:reactor-kotlin-extensions:1.0.0.BUILD-SNAPSHOT")
+	testImplementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
 	testImplementation("javax.servlet:javax.servlet-api")
 }
 
