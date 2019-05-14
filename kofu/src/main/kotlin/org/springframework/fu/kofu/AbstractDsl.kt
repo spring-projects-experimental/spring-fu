@@ -26,12 +26,12 @@ internal annotation class KofuMarker
 /**
  * Kofu DSL base class.
  *
- * Make sure to invoke `super.initialize(context)` from [initialize] in inherited classes to get the context initialized.
+ * Make sure to invoke `super.initialize(context)` in inherited classes to get the context initialized.
  *
  * @author Sebastien Deleuze
  */
 @KofuMarker
-abstract class AbstractDsl : ApplicationContextInitializer<GenericApplicationContext> {
+abstract class AbstractDsl {
 
 	@PublishedApi
 	internal lateinit var context: GenericApplicationContext
@@ -58,8 +58,9 @@ abstract class AbstractDsl : ApplicationContextInitializer<GenericApplicationCon
 		}
 	}
 
-	override fun initialize(context: GenericApplicationContext) {
+	internal open fun initialize(context: GenericApplicationContext) {
 		this.context = context
 	}
 
+	internal fun toInitializer() = ApplicationContextInitializer<GenericApplicationContext> { initialize(it) }
 }

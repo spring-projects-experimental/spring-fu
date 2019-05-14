@@ -9,10 +9,9 @@ import org.springframework.context.support.GenericApplicationContext
 /**
  * Kofu application that can be run parameterized with Spring profiles and/or command line arguments.
  * @see application
- * @see reactiveWebApplication
  * @author Sebastien Deleuze
  */
-abstract class KofuApplication(private val initializer: ApplicationContextInitializer<GenericApplicationContext>) {
+abstract class KofuApplication(private val initializer: AbstractDsl) {
 
     private var customizer: (ApplicationDsl.() -> Unit)? = null
 
@@ -32,8 +31,8 @@ abstract class KofuApplication(private val initializer: ApplicationContextInitia
         if (!profiles.isEmpty()) {
             app.setAdditionalProfiles(*profiles.split(",").map { it.trim() }.toTypedArray())
         }
-        app.addInitializers(initializer)
-        if (customizer != null) app.addInitializers(ApplicationDsl(customizer!!))
+        app.addInitializers(initializer.toInitializer())
+        if (customizer != null) app.addInitializers(ApplicationDsl(customizer!!).toInitializer())
         System.setProperty("spring.backgroundpreinitializer.ignore", "true")
         System.setProperty("spring.main.lazy-initialization", "true")
         return app.run(*args)

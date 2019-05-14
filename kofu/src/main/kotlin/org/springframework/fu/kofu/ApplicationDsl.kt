@@ -23,10 +23,9 @@ import org.springframework.context.support.GenericApplicationContext
  * Kofu top level DSL for application which allows to configure a Spring Boot
  * application using Kofu and functional bean registration.
  *
- * @sample org.springframework.fu.kofu.samples.webApplicationDsl
+ * @sample org.springframework.fu.kofu.samples.webFluxApplicationDsl
  * @param dsl The `application { }` DSL
  * @see application
- * @see reactiveWebApplication
  * @author Sebastien Deleuze
  */
 open class ApplicationDsl internal constructor(private val dsl: ApplicationDsl.() -> Unit) : ConfigurationDsl({}) {

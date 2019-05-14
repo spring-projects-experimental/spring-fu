@@ -27,7 +27,7 @@ dependencies {
 	compileOnly("org.mongodb:mongodb-driver-reactivestreams")
 	compileOnly("com.fasterxml.jackson.core:jackson-databind")
 	compileOnly("com.samskivert:jmustache")
-	compileOnly("io.projectreactor.kotlin:reactor-kotlin-extensions:1.0.0.BUILD-SNAPSHOT")
+	compileOnly("io.projectreactor.kotlin:reactor-kotlin-extensions")
 	compileOnly("javax.servlet:javax.servlet-api")
 
 	testImplementation("org.junit.jupiter:junit-jupiter-api")
@@ -46,7 +46,7 @@ dependencies {
 	testImplementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	testRuntimeOnly("de.flapdoodle.embed:de.flapdoodle.embed.mongo")
 	testImplementation("io.mockk:mockk:1.9")
-	testImplementation("io.projectreactor.kotlin:reactor-kotlin-extensions:1.0.0.BUILD-SNAPSHOT")
+	testImplementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
 	testImplementation("javax.servlet:javax.servlet-api")
 }
 
@@ -55,10 +55,31 @@ tasks.withType<DokkaTask> {
 	outputFormat = "html"
 	samples = listOf("src/test/kotlin/org/springframework/fu/kofu/samples")
 	externalDocumentationLink {
-		url = URL("https://docs.spring.io/spring-framework/docs/5.2.0.BUILD-SNAPSHOT/javadoc-api/")
+		url = URL("https://docs.spring.io/spring-framework/docs/5.2.0.M2/javadoc-api/")
 	}
 	externalDocumentationLink {
-		url = URL("https://docs.spring.io/spring-framework/docs/5.2.0.BUILD-SNAPSHOT/kdoc-api/spring-framework/")
+		url = URL("https://docs.spring.io/spring-framework/docs/5.2.0.M2/kdoc-api/spring-framework/")
+	}
+	externalDocumentationLink {
+		url = URL("https://fasterxml.github.io/jackson-core/javadoc/2.9/")
+	}
+	externalDocumentationLink {
+		url = URL("https://fasterxml.github.io/jackson-annotations/javadoc/2.9/")
+	}
+	externalDocumentationLink {
+		url = URL("https://fasterxml.github.io/jackson-databind/javadoc/2.9/")
+	}
+	externalDocumentationLink {
+		url = URL("https://docs.spring.io/spring-data/mongodb/docs/2.2.x/api/")
+	}
+	externalDocumentationLink {
+		url = URL("https://docs.oracle.com/javase/8/docs/api/")
+	}
+	externalDocumentationLink {
+		url = URL("https://docs.spring.io/spring-boot/docs/2.2.x/api/")
+	}
+	externalDocumentationLink {
+		url = URL("https://docs.spring.io/spring-data/r2dbc/docs/1.0.x/api/")
 	}
 }
 

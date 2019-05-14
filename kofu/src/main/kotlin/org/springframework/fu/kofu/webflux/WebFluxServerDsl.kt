@@ -24,7 +24,8 @@ import org.springframework.web.server.WebFilter
 /**
  * Kofu DSL for WebFlux server.
  *
- * This DSL to be used in [org.springframework.fu.kofu.reactiveWebApplication] configures a
+ * This DSL to be used in [org.springframework.fu.kofu.application] and a
+ * [org.springframework.boot.WebApplicationType.REACTIVE] parameter configures a
  * [WebFlux server](https://docs.spring.io/spring/docs/current/spring-framework-reference/webflux-reactive.html#spring-webflux).
  *
  * When no codec is configured, `String` and `Resource` ones are configured by default.

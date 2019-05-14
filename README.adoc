@@ -4,29 +4,27 @@
 
 image::https://ci.spring.io/api/v1/teams/spring-fu/pipelines/spring-fu/badge["Build Status", link="https://ci.spring.io/teams/spring-fu/pipelines/spring-fu"]
 
-= Kofu configuration for Spring Boot
-
-Spring Fu is an incubator for *Kofu* (*Ko* for Kotlin, *fu* for functional), which provides any API to configure Spring Boot applications programmatically with following characteristics:
+Spring Fu is an incubator for *Kofu* (*Ko* for Kotlin, *fu* for functional), which provides a Kotlin API to configure Spring Boot applications programmatically with following characteristics:
 
  * Explicit configuration via a Kotlin DSL instead of auto-configuration
- * Leverages Spring Framework 5.x https://docs.spring.io/spring/docs/5.2.0.BUILD-SNAPSHOT/spring-framework-reference/languages.html#kotlin-bean-definition-dsl[Functional bean configuration] instead of annotations
+ * Leverages Spring Framework 5 https://docs.spring.io/spring/docs/5.2.0.BUILD-SNAPSHOT/spring-framework-reference/languages.html#kotlin-bean-definition-dsl[functional bean configuration] instead of annotations
  * Allows to define custom configuration slices (useful for more focused and efficient testing)
  * Great discoverability via code auto-complete
  * https://docs.spring.io/spring/docs/5.2.0.BUILD-SNAPSHOT/spring-framework-reference/languages.html#router-dsl[Web functional routing] instead of `@Controller` available in 3 flavors:
- Expose the same Web functional routing programming model in 3 flavors:
  ** WebMvc.fn (functional variant Spring MVC)
  ** WebFlux.fn with Reactor declarative-style API (`Mono` and `Flux`)
  ** WebFlux.fn with Coroutines imperative-style API (https://spring.io/blog/2019/04/12/going-reactive-with-spring-coroutines-and-kotlin-flow[using suspending functions and Kotlin `Flow`])
  * Persistence via Spring Data functional APIs like:
  ** https://spring.io/projects/spring-data-r2dbc[Spring Data R2DBC `DatabaseClient`]
  ** Spring Data JDBC https://github.com/spring-projects/spring-data-jdbc/blob/master/spring-data-jdbc/src/main/java/org/springframework/data/jdbc/core/JdbcAggregateOperations.java[`JdbcAggregateOperations`]
- ** Spring Data NoSQL similar APIs for MongoDB, Redis and Cassandra
+ ** Spring Data NoSQL `*Template` APIs for MongoDB, Redis and Cassandra
  * Configuration via Spring Security `security { }` DSL (WIP)
- * https://github.com/oracle/graal/tree/master/substratevm[GraalVM native image] friendly
  * Fast startup and low memory consumption
 
 It is not intended to be used in production yet, but rather to incubate and get feedback and contributions
 from the community in order to hopefully reach a point where it can be integrated as part of Spring Boot.
+
+If you are interested in running Spring application as GraalVM native images see https://github.com/spring-projects/spring-framework/issues/22968[this dedicated Spring Framework issue].
 
 == Minimal application
 
@@ -196,9 +194,6 @@ http://repo.spring.io/snapshot/org/springframework/fu/spring-fu-samples-kofu-rea
 This is a sample project for a Spring Boot Reactive web application with Kofu configuration which provides a
 `http://localhost:8080/` endpoint that displays "Hello world!" and an `http://localhost:8080/api` with a JSON
 endpoint.
-
-You can run compile and run it as a https://github.com/oracle/graal/tree/master/substratevm[Graal native image]
-(GraalVM 1.0 RC10+) by running `./build.sh` then `./com.sample.applicationkt`.
 
 === kofu-reactive-mongodb
 
