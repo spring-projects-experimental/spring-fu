@@ -1,5 +1,6 @@
 package com.sample
 
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -10,6 +11,7 @@ import org.springframework.boot.WebApplicationType
 import org.springframework.context.ConfigurableApplicationContext
 import org.springframework.fu.kofu.application
 
+@FlowPreview
 class UserRepositoryTests {
 
 	private val dataApp = application(WebApplicationType.NONE) {
