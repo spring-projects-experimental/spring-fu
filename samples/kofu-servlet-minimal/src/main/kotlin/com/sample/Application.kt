@@ -26,6 +26,7 @@ val app = application(WebApplicationType.SERVLET) {
 	}
 }
 
+
 fun main() {
 	app.run()
 }
