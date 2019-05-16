@@ -11,6 +11,7 @@ include(
 		"kofu-reactive-redis",
 		"kofu-reactive-cassandra",
 		"kofu-reactive-validation",
+		"kofu-servlet-graphql",
 		"kofu-servlet-minimal",
 		"kofu-servlet-validation"
 )

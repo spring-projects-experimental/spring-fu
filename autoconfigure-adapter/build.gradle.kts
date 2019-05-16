@@ -12,9 +12,12 @@ dependencies {
 	api("org.springframework.boot:spring-boot")
 	api("org.springframework.boot:spring-boot-autoconfigure")
 
-	compileOnly("org.springframework:spring-webmvc")
+	compileOnly("com.expedia:graphql-kotlin:0.4.1")
+	compileOnly("org.webjars:graphiql:0.11.11")
+	compileOnly("com.graphql-java:graphql-java:2019-05-20T06-48-36-6211b41")
 	compileOnly("javax.servlet:javax.servlet-api")
 	compileOnly("org.springframework:spring-webflux")
+	compileOnly("org.springframework:spring-webmvc")
 	compileOnly("de.flapdoodle.embed:de.flapdoodle.embed.mongo")
 	compileOnly("org.springframework.data:spring-data-mongodb")
 	compileOnly("org.mongodb:mongodb-driver-reactivestreams")

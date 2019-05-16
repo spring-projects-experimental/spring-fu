@@ -27,6 +27,7 @@ allprojects {
 			mavenBom("io.r2dbc:r2dbc-bom:$r2dbcVersion")
 		}
 		dependencies {
+			dependency("com.graphql-java:graphql-java:2019-06-12T04-51-56-e994f41")
 			dependency("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
 			dependency("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:$coroutinesVersion")
 			dependency("org.springframework.data:spring-data-r2dbc:$springDataR2dbcVersion")

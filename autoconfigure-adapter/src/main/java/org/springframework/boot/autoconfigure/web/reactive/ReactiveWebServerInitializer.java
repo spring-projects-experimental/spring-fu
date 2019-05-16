@@ -39,11 +39,13 @@ import org.springframework.http.codec.ServerCodecConfigurer;
 import org.springframework.http.server.reactive.HttpHandler;
 import org.springframework.validation.*;
 import org.springframework.web.reactive.DispatcherHandler;
+import org.springframework.web.reactive.HandlerMapping;
 import org.springframework.web.reactive.accept.RequestedContentTypeResolver;
 import org.springframework.web.reactive.config.WebFluxConfigurer;
 import org.springframework.web.reactive.function.server.support.HandlerFunctionAdapter;
 import org.springframework.web.reactive.function.server.support.RouterFunctionMapping;
 import org.springframework.web.reactive.function.server.support.ServerResponseResultHandler;
+import org.springframework.web.reactive.resource.ResourceUrlProvider;
 import org.springframework.web.reactive.result.SimpleHandlerAdapter;
 import org.springframework.web.reactive.result.method.HandlerMethodArgumentResolver;
 import org.springframework.web.reactive.result.method.annotation.RequestMappingHandlerAdapter;
@@ -107,6 +109,18 @@ public class ReactiveWebServerInitializer implements ApplicationContextInitializ
 		context.registerBean(WEB_HANDLER_BEAN_NAME, DispatcherHandler.class, () -> new DispatcherHandler());
 		context.registerBean(WebFluxConfig.class, () -> new WebFluxConfig(resourceProperties, webFluxProperties, context, context.getBeanProvider(HandlerMethodArgumentResolver.class), context.getBeanProvider(CodecCustomizer.class),
 			context.getBeanProvider(ResourceHandlerRegistrationCustomizer.class), context.getBeanProvider(ViewResolver.class)));
+
+
+		context.registerBean("resourceUrlProvider", ResourceUrlProvider.class, () -> fluxConfiguration(context).resourceUrlProvider());
+		context.registerBean("resourceHandlerMapping", HandlerMapping.class, () -> {
+			ResourceUrlProvider provider = context.getBean(ResourceUrlProvider.class);
+			return fluxConfiguration(context).resourceHandlerMapping(provider);
+		});
+
+	}
+
+	private static EnableWebFluxConfigurationWrapper fluxConfiguration(GenericApplicationContext context) {
+		return context.getBean("fuWebFluxConfiguration", EnableWebFluxConfigurationWrapper.class);
 	}
 
 	private class EnableWebFluxConfigurationWrapper extends EnableWebFluxConfiguration {

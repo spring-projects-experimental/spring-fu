@@ -15,6 +15,7 @@ dependencies {
 	implementation(project(":autoconfigure-adapter"))
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 
+	compileOnly("com.expedia:graphql-kotlin:0.4.1")
 	compileOnly("org.springframework:spring-webmvc")
 	compileOnly("org.springframework:spring-webflux")
 	compileOnly("de.flapdoodle.embed:de.flapdoodle.embed.mongo")
@@ -27,6 +28,10 @@ dependencies {
 	compileOnly("io.projectreactor.kotlin:reactor-kotlin-extensions")
 	compileOnly("javax.servlet:javax.servlet-api")
 
+	testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
+	testImplementation("com.expedia:graphql-kotlin:0.4.1")
+	testImplementation("com.jayway.jsonpath:json-path")
+	testImplementation("com.graphql-java:graphql-java")
 	testImplementation("org.junit.jupiter:junit-jupiter-api")
 	testImplementation("org.springframework:spring-test")
 	testImplementation("io.projectreactor:reactor-test")

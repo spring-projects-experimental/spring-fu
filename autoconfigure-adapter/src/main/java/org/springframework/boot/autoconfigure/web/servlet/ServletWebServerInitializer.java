@@ -1,7 +1,9 @@
 package org.springframework.boot.autoconfigure.web.servlet;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 import javax.servlet.MultipartConfigElement;
@@ -39,6 +41,7 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.ViewResolver;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.function.support.HandlerFunctionAdapter;
 import org.springframework.web.servlet.function.support.RouterFunctionMapping;
 import org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping;
@@ -117,6 +120,7 @@ public class ServletWebServerInitializer implements ApplicationContextInitialize
 				return configuration;
 			}
 		};
+		context.registerBean("webMvcConfigurationAdapter", WebMvcConfigurer.class, webMvcConfigurationAdapter::get);
 		context.registerBean(InternalResourceViewResolver.class, () -> webMvcConfigurationAdapter.get().defaultViewResolver());
 		context.registerBean(BeanNameViewResolver.class, () -> webMvcConfigurationAdapter.get().beanNameViewResolver());
 		context.registerBean("viewResolver", ContentNegotiatingViewResolver.class, () -> webMvcConfigurationAdapter.get().viewResolver(context));
@@ -138,6 +142,7 @@ public class ServletWebServerInitializer implements ApplicationContextInitialize
 					configuration = new EnableWebMvcConfigurationWrapper(context.getBeanProvider(WebMvcProperties.class), context.getBeanProvider(WebMvcRegistrations.class), context);
 					configuration.setApplicationContext(context);
 					configuration.setServletContext(((WebApplicationContext) context).getServletContext());
+					configuration.setConfigurers(new ArrayList<>(context.getBeansOfType(WebMvcConfigurer.class).values()));
 				}
 				return configuration;
 			}
@@ -151,17 +156,17 @@ public class ServletWebServerInitializer implements ApplicationContextInitialize
 		context.registerBean(ResourceChainResourceHandlerRegistrationCustomizer.class, () -> new ResourceChainCustomizerConfiguration().resourceHandlerRegistrationCustomizer());
 		context.registerBean(PathMatcher.class, () -> enableWebMvcConfiguration.get().mvcPathMatcher());
 		context.registerBean(UrlPathHelper.class, () -> enableWebMvcConfiguration.get().mvcUrlPathHelper());
-		context.registerBean(HandlerMapping.class, () ->  enableWebMvcConfiguration.get().viewControllerHandlerMapping(context.getBean(PathMatcher.class), context.getBean(UrlPathHelper.class), context.getBean(FormattingConversionService.class), context.getBean(ResourceUrlProvider.class)));
+		context.registerBean("viewControllerHandlerMapping", HandlerMapping.class, () ->  enableWebMvcConfiguration.get().viewControllerHandlerMapping(context.getBean(PathMatcher.class), context.getBean(UrlPathHelper.class), context.getBean(FormattingConversionService.class), context.getBean(ResourceUrlProvider.class)));
 		context.registerBean(BeanNameUrlHandlerMapping.class, () ->  enableWebMvcConfiguration.get().beanNameHandlerMapping(context.getBean(FormattingConversionService.class), context.getBean(ResourceUrlProvider.class)));
 		context.registerBean(RouterFunctionMapping.class, () ->  enableWebMvcConfiguration.get().routerFunctionMapping(context.getBean(FormattingConversionService.class), context.getBean(ResourceUrlProvider.class)));
-		context.registerBean(HandlerMapping.class, () -> enableWebMvcConfiguration.get().resourceHandlerMapping(context.getBean(UrlPathHelper.class), context.getBean(PathMatcher.class), context.getBean(ContentNegotiationManager.class), context.getBean(FormattingConversionService.class), context.getBean(ResourceUrlProvider.class)));
+		context.registerBean("resourceHandlerMapping", HandlerMapping.class, () -> enableWebMvcConfiguration.get().resourceHandlerMapping(context.getBean(UrlPathHelper.class), context.getBean(PathMatcher.class), context.getBean(ContentNegotiationManager.class), context.getBean(FormattingConversionService.class), context.getBean(ResourceUrlProvider.class)));
 		context.registerBean(ResourceUrlProvider.class, () -> enableWebMvcConfiguration.get().mvcResourceUrlProvider());
-		context.registerBean(HandlerMapping.class, () -> enableWebMvcConfiguration.get().defaultServletHandlerMapping());
+		context.registerBean("defaultServletHandlerMapping", HandlerMapping.class, () -> enableWebMvcConfiguration.get().defaultServletHandlerMapping());
 		context.registerBean(HandlerFunctionAdapter.class, () -> enableWebMvcConfiguration.get().handlerFunctionAdapter());
 		context.registerBean(HttpRequestHandlerAdapter.class, () -> enableWebMvcConfiguration.get().httpRequestHandlerAdapter());
 		context.registerBean(SimpleControllerHandlerAdapter.class, () -> enableWebMvcConfiguration.get().simpleControllerHandlerAdapter());
 		context.registerBean(HandlerExceptionResolver.class, () -> enableWebMvcConfiguration.get().handlerExceptionResolver(context.getBean(ContentNegotiationManager.class)));
-		context.registerBean(ViewResolver.class, () -> enableWebMvcConfiguration.get().mvcViewResolver(context.getBean(ContentNegotiationManager.class)));
+		context.registerBean("mvcViewResolver", ViewResolver.class, () -> enableWebMvcConfiguration.get().mvcViewResolver(context.getBean(ContentNegotiationManager.class)));
 		context.registerBean(HandlerMappingIntrospector.class, () -> enableWebMvcConfiguration.get().mvcHandlerMappingIntrospector(), bd -> bd.setLazyInit(true));
 	}
 
