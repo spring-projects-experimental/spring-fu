@@ -10,10 +10,10 @@ import org.springframework.context.support.GenericApplicationContext
  * Declare an [application][ApplicationDsl] that allows to configure a Spring Boot
  * application using Kofu DSL and functional bean registration.
  *
- * @sample org.springframework.fu.kofu.samples.applicationDsl
+ * @sample org.springframework.fu.kofu.samples.webFluxApplicationDsl
  * @param type The [WebApplicationType] of the application
  * @param dsl The `application { }` DSL
- * @see ApplicationDsl.logging
+ * @see ApplicationDsl
  * @author Sebastien Deleuze
  */
 fun application(type: WebApplicationType, dsl: ApplicationDsl.() -> Unit)

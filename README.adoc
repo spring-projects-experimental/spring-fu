@@ -1,8 +1,8 @@
-:spring-fu-version: 0.1.BUILD-SNAPSHOT
+:spring-fu-version: 0.1
 :kofu-kdoc-url: http://repo.spring.io/snapshot/org/springframework/fu/spring-fu-kofu/{spring-fu-version}/spring-fu-kofu-{spring-fu-version}-javadoc.jar!
 :framework-kdoc-url: https://docs.spring.io/spring-framework/docs/5.2.0.BUILD-SNAPSHOT/kdoc-api
 
-image::https://ci.spring.io/api/v1/teams/spring-fu/pipelines/spring-fu/badge["Build Status", link="https://ci.spring.io/teams/spring-fu/pipelines/spring-fu"]
+image:https://ci.spring.io/api/v1/teams/spring-fu/pipelines/spring-fu/badge["Build Status", link="https://ci.spring.io/teams/spring-fu/pipelines/spring-fu"] image:https://img.shields.io/badge/API%20documentation-0.1-blue.svg["API documentation", link="http://repo.spring.io/milestone/org/springframework/fu/spring-fu-kofu/{spring-fu-version}/spring-fu-kofu-{spring-fu-version}-javadoc.jar!/kofu/org.springframework.fu.kofu/-application-dsl.html"]
 
 Spring Fu is an incubator for *Kofu* (*Ko* for Kotlin, *fu* for functional), which provides a Kotlin API to configure Spring Boot applications programmatically with following characteristics:
 
@@ -17,7 +17,7 @@ Spring Fu is an incubator for *Kofu* (*Ko* for Kotlin, *fu* for functional), whi
  * Persistence via Spring Data functional APIs like:
  ** https://spring.io/projects/spring-data-r2dbc[Spring Data R2DBC `DatabaseClient`]
  ** Spring Data JDBC https://github.com/spring-projects/spring-data-jdbc/blob/master/spring-data-jdbc/src/main/java/org/springframework/data/jdbc/core/JdbcAggregateOperations.java[`JdbcAggregateOperations`]
- ** Spring Data NoSQL `*Template` APIs for MongoDB, Redis and Cassandra
+ ** Spring Data NoSQL `*Operations` APIs for MongoDB, Redis and Cassandra
  * Configuration via Spring Security `security { }` DSL (WIP)
  * Fast startup and low memory consumption
 
@@ -89,85 +89,10 @@ dependencies {
 }
 ```
 
-== API reference
-
-An overview of Kofu is provided bellow with the related {kofu-kdoc-url}/kofu/index.html[API documentation].
-
-```kotlin
-val dataConfig = configuration { <1>
-	beans { } <2>
-	mongodb { } <3>
-	r2dbcH2 { } <4>
-	r2dbcPostgresql {} <5>
-}
-
-val serverConfig = configuration { <1>
-	beans { } <2>
-	webFlux { <6>
-		engine = <7>
-		port = <8>
-		router { } <9>
-		include() <10>
-		coRouter { } <11>
-		cors { } <12>
-		codecs { } <13>
-		mustache() <14>
-		filter() <15>
-	}
-}
-
-val clientConfig = configuration {
-	webClient { <16>
-		baseUrl = <17>
-		codecs { } <18>
-	}
-}
-
-val app = application(WebApplicationType.REACTIVE) { <19>
-	logging { } <20>
-	configurationProperties<SampleProperties>() <21>
-	listener<SampleEvent> { } <22>
-	profile("sample"){ } <23>
-	enable(dataConfig) <24>
-	enable(serverConfig) <24>
-	enable(clientConfig) <24>
-}
-
-fun main() {
-	app.run() <25>
-}
-```
- * 1 {kofu-kdoc-url}/kofu/org.springframework.fu.kofu/-configuration-dsl/index.html[configuration documentation]
- ** 2 {framework-kdoc-url}/spring-framework/org.springframework.context.support/-bean-definition-dsl/index.html[beans documentation]
- ** 3 {kofu-kdoc-url}/kofu/org.springframework.fu.kofu.mongo/-mongo-dsl/index.html[mongo documentation]
- ** 4 {kofu-kdoc-url}/kofu/org.springframework.fu.kofu.r2dbc/r2dbc-h2.html[r2dbc-h2 documentation]
- ** 5 {kofu-kdoc-url}/kofu/org.springframework.fu.kofu.r2dbc/r2dbc-postgresql.html[r2dbc-postgresql documentation]
- * 6 {kofu-kdoc-url}/kofu/org.springframework.fu.kofu.webflux/-web-flux-server-dsl/index.html[WebFlux server documentation]
- ** 7 {kofu-kdoc-url}/kofu/org.springframework.fu.kofu.webflux/-web-flux-server-dsl/engine.html[engine documentation]
- ** 8 {kofu-kdoc-url}/kofu/org.springframework.fu.kofu.webflux/-web-flux-server-dsl/port.html[port documentation]
- ** 9 {framework-kdoc-url}/spring-framework/org.springframework.web.reactive.function.server/-router-function-dsl/index.html[router documentation]
- ** 10 {kofu-kdoc-url}/kofu/org.springframework.fu.kofu.webflux/-web-flux-server-dsl/co-router.html[Coroutines router documentation]
- ** 11 {kofu-kdoc-url}/kofu/org.springframework.fu.kofu.webflux/-web-flux-server-dsl/include.html[Include router documentation]
- ** 12 {kofu-kdoc-url}/kofu/org.springframework.fu.kofu.webflux/cors.html[cors documentation]
- ** 13 {kofu-kdoc-url}/kofu/org.springframework.fu.kofu.webflux/-web-flux-server-dsl/-web-flux-server-codec-dsl/index.html[codecs documentation]
- ** 14 {kofu-kdoc-url}/kofu/build/dokka/kofu/org.springframework.fu.kofu.webflux/mustache.html[mustache documentation]
- ** 15 {kofu-kdoc-url}/kofu/org.springframework.fu.kofu.webflux/-web-flux-server-dsl/filter.html[filter documentation]
- * 16 {kofu-kdoc-url}/kofu/org.springframework.fu.kofu.webflux/-web-flux-client-dsl/index.html[WebFlux client documentation]
- ** 17 {kofu-kdoc-url}/kofu/org.springframework.fu.kofu.webflux/-web-flux-client-dsl/base-url.html[baseUrl documentation]
- ** 18 {kofu-kdoc-url}/kofu/org.springframework.fu.kofu.webflux/-web-flux-client-dsl/-web-flux-client-codec-dsl/index.html[codecs documentation]
- * 19 {kofu-kdoc-url}/kofu/org.springframework.fu.kofu/-application-dsl/index.html[application/application documentation]
- ** 20 {kofu-kdoc-url}/kofu/org.springframework.fu.kofu/-logging-dsl/index.html[logging documentation]
- ** 21 {kofu-kdoc-url}/kofu/org.springframework.fu.kofu/-configuration-dsl/configuration-properties.html[configuration-properties documentation]
- ** 22 {kofu-kdoc-url}/kofu/org.springframework.fu.kofu/-configuration-dsl/listener.html[listener-properties documentation]
- ** 23 {kofu-kdoc-url}/kofu/org.springframework.fu.kofu/-configuration-dsl/profile.html[profile-properties documentation]
- ** 24 {kofu-kdoc-url}/kofu/org.springframework.fu.kofu/-configuration-dsl/enable.html[enable documentation]
- ** 25 {kofu-kdoc-url}/kofu/org.springframework.fu.kofu/-kofu-application/run.html[run documentation]
-
 == Getting started
 
-* Create a Spring `2.2.0 (SNAPSHOT)` project on https://start.spring.io/#!language=kotlin[start.spring.io] with the "Web" or "Reactive web" starter
+* Create a Spring `2.2.0.M3` project on https://start.spring.io/#!language=kotlin[start.spring.io] with the "Web" or "Reactive web" starter
 * Add the `org.springframework.fu:spring-fu-kofu:{spring-fu-version}` dependency
-* Use latest Kotlin `1.3.x`
 * Modify the generated `DemoApplication.kt` file as following:
 
 ```kotlin
@@ -184,74 +109,7 @@ fun main() {
 }
 ```
 
-== Samples
-
-=== kofu-reactive-minimal
-
-https://github.com/spring-projects/spring-fu/tree/master/samples/kofu-reactive-minimal[Browse source] |
-http://repo.spring.io/snapshot/org/springframework/fu/spring-fu-samples-kofu-reactive-minimal/{spring-fu-version}/spring-fu-samples-kofu-reactive-minimal-{spring-fu-version}.zip[Download]
-
-This is a sample project for a Spring Boot Reactive web application with Kofu configuration which provides a
-`http://localhost:8080/` endpoint that displays "Hello world!" and an `http://localhost:8080/api` with a JSON
-endpoint.
-
-=== kofu-reactive-mongodb
-
-https://github.com/spring-projects/spring-fu/tree/master/samples/kofu-reactive-mongodb[Browse source] |
-http://repo.spring.io/snapshot/org/springframework/fu/spring-fu-samples-kofu-reactive-mongodb/{spring-fu-version}/spring-fu-samples-kofu-reactive-mongodb-{spring-fu-version}.zip[Download]
-
-This is a sample project for a Spring Boot Reactive web application with Kofu configuration and a Reactive MongoDB backend.
-
-=== kofu-reactive-r2dbc
-
-https://github.com/spring-projects/spring-fu/tree/master/samples/kofu-reactive-r2dbc[Browse source] |
-http://repo.spring.io/snapshot/org/springframework/fu/spring-fu-samples-kofu-reactive-r2dbc/{spring-fu-version}/spring-fu-samples-kofu-reactive-r2dbc-{spring-fu-version}.zip[Download]
-
-This is a sample project for a Spring Boot Reactive web application with Kofu configuration and a R2DBC backend.
-
-=== kofu-reactive-validation
-
-https://github.com/spring-projects/spring-fu/tree/master/samples/kofu-reactive-validation[Browse source] |
-http://repo.spring.io/milestone/org/springframework/fu/spring-fu-samples-kofu-reactive-validation/{spring-fu-version}/spring-fu-samples-kofu-reactive-validation-{spring-fu-version}.zip[Download]
-
-This is a sample project for a Spring Boot Reactive web application with Kofu configuration and validation using https://github.com/making/yavi[YAVI].
-
-=== kofu-coroutines-mongodb
-
-https://github.com/spring-projects/spring-fu/tree/master/samples/kofu-coroutines-mongodb[Browse source] |
-http://repo.spring.io/snapshot/org/springframework/fu/spring-fu-samples-kofu-coroutines-mongodb/{spring-fu-version}/spring-fu-samples-kofu-coroutines-mongodb-{spring-fu-version}.zip[Download]
-
-This is a sample project for a Spring Boot Coroutines web application with Kofu configuration and a Reactive MongoDB backend.
-
-=== kofu-coroutines-r2dbc
-
-https://github.com/spring-projects/spring-fu/tree/master/samples/kofu-coroutines-r2dbc[Browse source] |
-http://repo.spring.io/snapshot/org/springframework/fu/spring-fu-samples-kofu-coroutines-r2dbc/{spring-fu-version}/spring-fu-samples-kofu-coroutines-r2dbc-{spring-fu-version}.zip[Download]
-
-This is a sample project for a Spring Boot Coroutines web application with Kofu configuration and a R2DBC backend.
-
-=== kofu-coroutines-validation
-
-https://github.com/spring-projects/spring-fu/tree/master/samples/kofu-coroutines-validation[Browse source] |
-http://repo.spring.io/milestone/org/springframework/fu/spring-fu-samples-kofu-coroutines-validation/{spring-fu-version}/spring-fu-samples-kofu-coroutines-validation-{spring-fu-version}.zip[Download]
-
-This is a sample project for a Spring Boot Coroutines web application with Kofu configuration and validation using https://github.com/making/yavi[YAVI].
-
-=== kofu-servlet-minimal
-
-https://github.com/spring-projects/spring-fu/tree/master/samples/kofu-servlet-minimal[Browse source] |
-http://repo.spring.io/snapshot/org/springframework/fu/spring-fu-samples-kofu-servlet-minimal/{spring-fu-version}/spring-fu-samples-kofu-servlet-minimal-{spring-fu-version}.zip[Download]
-
-This is a sample project for a Spring Boot web application based on WebMvc.fn (functional variant of Spring MVC) with Kofu configuration which provides a
-`http://localhost:8080/` endpoint that displays "Hello world!" and an `http://localhost:8080/api` with a JSON
-endpoint.
-
-=== kofu-servlet-validation
-
-https://github.com/spring-projects/spring-fu/tree/master/samples/kofu-servlet-validation[Browse source] |
-http://repo.spring.io/milestone/org/springframework/fu/spring-fu-samples-kofu-servlet-validation/{spring-fu-version}/spring-fu-samples-kofu-servlet-validation-{spring-fu-version}.zip[Download]
-
-This is a sample project for a Spring Boot web application based on WebMvc.fn (functional variant of Spring MVC) with Kofu configuration and validation using https://github.com/making/yavi[YAVI].
+See sample projects https://github.com/spring-projects/spring-fu/tree/master/samples[here].
 
 == Credits
 
