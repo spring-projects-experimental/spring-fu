@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test
 import org.springframework.context.ConfigurableApplicationContext
 import org.springframework.http.MediaType
 import org.springframework.test.web.reactive.server.WebTestClient
+import org.springframework.test.web.reactive.server.expectBodyList
+import org.springframework.test.web.reactive.server.expectBody
 
 @FlowPreview
 class IntegrationTests {
@@ -33,6 +35,8 @@ class IntegrationTests {
 		client.get().uri("/api/user").exchange()
 			.expectStatus().is2xxSuccessful
 			.expectHeader().contentType(MediaType.APPLICATION_JSON_VALUE)
+			.expectBodyList<User>()
+			.hasSize(3)
 	}
 
 	@Test
@@ -40,6 +44,7 @@ class IntegrationTests {
 		client.get().uri("/api/user/bclozel").exchange()
 				.expectStatus().is2xxSuccessful
 				.expectHeader().contentType(MediaType.APPLICATION_JSON_VALUE)
+				.expectBody<User>()
 	}
 
 	@Test
