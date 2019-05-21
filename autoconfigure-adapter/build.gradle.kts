@@ -24,6 +24,7 @@ dependencies {
 	compileOnly("io.r2dbc:r2dbc-postgresql")
 	compileOnly("io.r2dbc:r2dbc-h2")
 	compileOnly("io.r2dbc:r2dbc-mssql")
+	compileOnly("com.github.jasync-sql:jasync-r2dbc-mysql:0.9.53")
 }
 
 repositories {
