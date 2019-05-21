@@ -4,6 +4,7 @@ import org.springframework.boot.WebApplicationType
 import org.springframework.fu.kofu.application
 import org.springframework.fu.kofu.r2dbc.r2dbcH2
 import org.springframework.fu.kofu.r2dbc.r2dbcMssql
+import org.springframework.fu.kofu.r2dbc.r2dbcMysql
 import org.springframework.fu.kofu.r2dbc.r2dbcPostgresql
 
 fun r2dbcPostgresql() {
@@ -28,5 +29,12 @@ fun r2dbcMssql() {
 			host = "dbserver"
 			port = 1234
 		}
+	}
+}
+
+
+fun r2dbcMysql() {
+	application(WebApplicationType.NONE) {
+		r2dbcMysql("localhost")
 	}
 }
