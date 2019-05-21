@@ -25,19 +25,19 @@ class MssqlR2dbcDsl(private val init: MssqlR2dbcDsl.() -> Unit) : AbstractDsl() 
     var host: String = "localhost"
 
     /**
-     * Configure the port, by default set to `5432`.
+     * Configure the port, by default set to `1433`.
      */
-    var port: Int = 5432
+    var port: Int = 1433
 
     /**
-     * Configure the database, by default set to `postgres`.
+     * Configure the database, by default set to `master`.
      */
-    var database: String = "postgres"
+    var database: String = "master"
 
     /**
-     * Configure the username, by default set to `postgres`.
+     * Configure the username, by default set to `SA`.
      */
-    var username: String = "postgres"
+    var username: String = "SA"
 
     /**
      * Configure the password, empty by default.
