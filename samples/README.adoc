@@ -1,3 +1,4 @@
+:spring-fu-version: 0.1.BUILD-SNAPSHOT
 == Samples
 
 === kofu-reactive-minimal
