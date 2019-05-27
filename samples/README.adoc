@@ -1,9 +1,11 @@
+:spring-fu-version: 0.1
+
 == Samples
 
 === kofu-reactive-minimal
 
 https://github.com/spring-projects/spring-fu/tree/master/samples/kofu-reactive-minimal[Browse source] |
-http://repo.spring.io/snapshot/org/springframework/fu/spring-fu-samples-kofu-reactive-minimal/{spring-fu-version}/spring-fu-samples-kofu-reactive-minimal-{spring-fu-version}.zip[Download]
+http://repo.spring.io/milestone/org/springframework/fu/spring-fu-samples-kofu-reactive-minimal/{spring-fu-version}/spring-fu-samples-kofu-reactive-minimal-{spring-fu-version}.zip[Download]
 
 This is a sample project for a Spring Boot Reactive web application with Kofu configuration which provides a
 `http://localhost:8080/` endpoint that displays "Hello world!" and an `http://localhost:8080/api` with a JSON
@@ -12,14 +14,14 @@ endpoint.
 === kofu-reactive-mongodb
 
 https://github.com/spring-projects/spring-fu/tree/master/samples/kofu-reactive-mongodb[Browse source] |
-http://repo.spring.io/snapshot/org/springframework/fu/spring-fu-samples-kofu-reactive-mongodb/{spring-fu-version}/spring-fu-samples-kofu-reactive-mongodb-{spring-fu-version}.zip[Download]
+http://repo.spring.io/milestone/org/springframework/fu/spring-fu-samples-kofu-reactive-mongodb/{spring-fu-version}/spring-fu-samples-kofu-reactive-mongodb-{spring-fu-version}.zip[Download]
 
 This is a sample project for a Spring Boot Reactive web application with Kofu configuration and a Reactive MongoDB backend.
 
 === kofu-reactive-r2dbc
 
 https://github.com/spring-projects/spring-fu/tree/master/samples/kofu-reactive-r2dbc[Browse source] |
-http://repo.spring.io/snapshot/org/springframework/fu/spring-fu-samples-kofu-reactive-r2dbc/{spring-fu-version}/spring-fu-samples-kofu-reactive-r2dbc-{spring-fu-version}.zip[Download]
+http://repo.spring.io/milestone/org/springframework/fu/spring-fu-samples-kofu-reactive-r2dbc/{spring-fu-version}/spring-fu-samples-kofu-reactive-r2dbc-{spring-fu-version}.zip[Download]
 
 This is a sample project for a Spring Boot Reactive web application with Kofu configuration and a R2DBC backend.
 
@@ -33,14 +35,14 @@ This is a sample project for a Spring Boot Reactive web application with Kofu co
 === kofu-coroutines-mongodb
 
 https://github.com/spring-projects/spring-fu/tree/master/samples/kofu-coroutines-mongodb[Browse source] |
-http://repo.spring.io/snapshot/org/springframework/fu/spring-fu-samples-kofu-coroutines-mongodb/{spring-fu-version}/spring-fu-samples-kofu-coroutines-mongodb-{spring-fu-version}.zip[Download]
+http://repo.spring.io/milestone/org/springframework/fu/spring-fu-samples-kofu-coroutines-mongodb/{spring-fu-version}/spring-fu-samples-kofu-coroutines-mongodb-{spring-fu-version}.zip[Download]
 
 This is a sample project for a Spring Boot Coroutines web application with Kofu configuration and a Reactive MongoDB backend.
 
 === kofu-coroutines-r2dbc
 
 https://github.com/spring-projects/spring-fu/tree/master/samples/kofu-coroutines-r2dbc[Browse source] |
-http://repo.spring.io/snapshot/org/springframework/fu/spring-fu-samples-kofu-coroutines-r2dbc/{spring-fu-version}/spring-fu-samples-kofu-coroutines-r2dbc-{spring-fu-version}.zip[Download]
+http://repo.spring.io/milestone/org/springframework/fu/spring-fu-samples-kofu-coroutines-r2dbc/{spring-fu-version}/spring-fu-samples-kofu-coroutines-r2dbc-{spring-fu-version}.zip[Download]
 
 This is a sample project for a Spring Boot Coroutines web application with Kofu configuration and a R2DBC backend.
 
@@ -54,7 +56,7 @@ This is a sample project for a Spring Boot Coroutines web application with Kofu 
 === kofu-servlet-minimal
 
 https://github.com/spring-projects/spring-fu/tree/master/samples/kofu-servlet-minimal[Browse source] |
-http://repo.spring.io/snapshot/org/springframework/fu/spring-fu-samples-kofu-servlet-minimal/{spring-fu-version}/spring-fu-samples-kofu-servlet-minimal-{spring-fu-version}.zip[Download]
+http://repo.spring.io/milestone/org/springframework/fu/spring-fu-samples-kofu-servlet-minimal/{spring-fu-version}/spring-fu-samples-kofu-servlet-minimal-{spring-fu-version}.zip[Download]
 
 This is a sample project for a Spring Boot web application based on WebMvc.fn (functional variant of Spring MVC) with Kofu configuration which provides a
 `http://localhost:8080/` endpoint that displays "Hello world!" and an `http://localhost:8080/api` with a JSON
