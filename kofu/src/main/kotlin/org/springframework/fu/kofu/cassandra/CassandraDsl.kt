@@ -65,10 +65,14 @@ open class CassandraDsl(private val init: CassandraDsl.() -> Unit) : AbstractDsl
 		}
 
 	/**
-	 * Configure the cluster node addresses. The list can not be reassigned.
+	 * Configure the cluster node addresses.
 	 */
-	val contactPoints: MutableList<String>
+	var contactPoints: List<String>
 		get() = properties.contactPoints
+		set(value) {
+			properties.contactPoints.clear()
+			properties.contactPoints.addAll(value)
+		}
 
 	/**
 	 * Enable SSL support

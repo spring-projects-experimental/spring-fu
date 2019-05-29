@@ -17,7 +17,7 @@ fun cassandra() {
 			password = "password"
 			port = 9042
 			ssl = false
-			contactPoints.add("localhost")
+			contactPoints = listOf("localhost")
 			compression = ProtocolOptions.Compression.NONE
 			consistencyLevel = ConsistencyLevel.ANY
 			serialConsistencyLevel = ConsistencyLevel.SERIAL
@@ -38,7 +38,7 @@ fun reactiveCassandra() {
 			password = "password"
 			port = 9042
 			ssl = false
-			contactPoints.add("localhost")
+			contactPoints = listOf("localhost")
 			compression = ProtocolOptions.Compression.NONE
 			consistencyLevel = ConsistencyLevel.ANY
 			serialConsistencyLevel = ConsistencyLevel.SERIAL
