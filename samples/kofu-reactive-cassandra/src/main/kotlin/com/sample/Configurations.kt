@@ -17,7 +17,10 @@ val dataConfig = configuration {
 	}
 	reactiveCassandra {
 		keyspaceName = "Kofu"
-		port = env["port"]?.toInt() ?: ProtocolOptions.DEFAULT_PORT
+		port = env["cassandra.port"]?.toInt() ?: ProtocolOptions.DEFAULT_PORT
+		// TODO Improve this via a regular mutable property of immutable list
+		contactPoints.clear()
+		contactPoints.add(env["cassandra.host"] ?: "localhost")
 	}
 }
 

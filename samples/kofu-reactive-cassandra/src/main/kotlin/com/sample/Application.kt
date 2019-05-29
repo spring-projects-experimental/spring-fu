@@ -30,5 +30,5 @@ fun main() {
 	class KCassandraContainer : CassandraContainer<KCassandraContainer>() // https://github.com/testcontainers/testcontainers-java/issues/318
 	val cassandraContainer = KCassandraContainer().withInitScript("schema.cql")
 	cassandraContainer.start()
-	app.run(args = arrayOf("--port=${cassandraContainer.firstMappedPort}"))
+	app.run(args = arrayOf("--cassandra.port=${cassandraContainer.firstMappedPort}", "--cassandra.host=${cassandraContainer.containerIpAddress}"))
 }

@@ -21,7 +21,7 @@ class IntegrationTests {
 	@BeforeAll
 	fun beforeAll() {
 		cassandraContainer.start()
-		context = app.run(args = arrayOf("--port=${cassandraContainer.firstMappedPort}"), profiles = "test")
+		context = app.run(args = arrayOf("--cassandra.port=${cassandraContainer.firstMappedPort}", "--cassandra.host=${cassandraContainer.containerIpAddress}"), profiles = "test")
 	}
 
 	@Test
