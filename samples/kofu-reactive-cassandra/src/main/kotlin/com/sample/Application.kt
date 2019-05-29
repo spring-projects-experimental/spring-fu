@@ -18,6 +18,7 @@ package com.sample
 
 import org.springframework.boot.WebApplicationType
 import org.springframework.fu.kofu.application
+import org.testcontainers.containers.CassandraContainer
 
 val app = application(WebApplicationType.REACTIVE) {
 	configurationProperties<SampleProperties>("sample")
@@ -26,5 +27,8 @@ val app = application(WebApplicationType.REACTIVE) {
 }
 
 fun main() {
-	app.run()
+	class KCassandraContainer : CassandraContainer<KCassandraContainer>() // https://github.com/testcontainers/testcontainers-java/issues/318
+	val cassandraContainer = KCassandraContainer().withInitScript("schema.cql")
+	cassandraContainer.start()
+	app.run(args = arrayOf("--port=${cassandraContainer.firstMappedPort}"))
 }
