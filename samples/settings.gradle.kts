@@ -8,6 +8,7 @@ include(
 		"kofu-reactive-minimal",
 		"kofu-reactive-mongodb",
 		"kofu-reactive-r2dbc",
+		"kofu-reactive-redis",
 		"kofu-reactive-cassandra",
 		"kofu-reactive-validation",
 		"kofu-servlet-minimal",
