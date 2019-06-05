@@ -154,6 +154,19 @@ publishing {
 			})
 		}
 
+		create<MavenPublication>("kofu-reactive-redis") {
+			groupId = "org.springframework.fu"
+			artifactId = "spring-fu-samples-kofu-reactive-redis"
+			artifact(task<Zip>("kofuReactiveRedisSampleZip") {
+				from("samples/kofu-reactive-redis") {
+					exclude("build", ".gradle", ".idea", "out", "*.iml")
+				}
+				destinationDir = file("$buildDir/dist")
+				into("kofu-reactive-redis")
+				setExecutablePermissions()
+			})
+		}
+
 		create<MavenPublication>("kofu-reactive-cassandra") {
 			groupId = "org.springframework.fu"
 			artifactId = "spring-fu-samples-kofu-reactive-cassandra"
