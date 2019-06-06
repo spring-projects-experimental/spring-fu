@@ -41,10 +41,10 @@ public class FunctionalConfigurationPropertiesBinder {
 
 	public FunctionalConfigurationPropertiesBinder(ConfigurableApplicationContext context) {
 		this.context = context;
-		this.propertySources = new PropertySourcesDeducer(context).getPropertySources();
+		this.propertySources = new FunctionalPropertySourcesDeducer(context).getPropertySources();
 		this.binder = new Binder(ConfigurationPropertySources.from(propertySources),
         				new PropertySourcesPlaceholdersResolver(this.propertySources),
-        				new ConversionServiceDeducer(context).getConversionService(),
+        				null,
 				(registry) -> context.getBeanFactory().copyRegisteredEditorsTo(registry));
 	}
 

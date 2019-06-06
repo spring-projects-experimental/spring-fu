@@ -9,8 +9,7 @@ import org.springframework.data.cassandra.core.query.Query
 
 class UserRepository(
 		private val template: ReactiveCassandraTemplate,
-		private val objectMapper: ObjectMapper
-) {
+		private val objectMapper: ObjectMapper) {
 
 	fun count() = template.count<User>()
 

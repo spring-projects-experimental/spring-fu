@@ -20,15 +20,19 @@ import org.springframework.boot.WebApplicationType
 import org.springframework.fu.kofu.application
 import org.testcontainers.containers.CassandraContainer
 
-val app = application(WebApplicationType.REACTIVE) {
-	configurationProperties<SampleProperties>("sample")
-	enable(dataConfig)
-	enable(webConfig)
+fun app(properties: ApplicationProperties) = application(WebApplicationType.REACTIVE) {
+	with(configurationProperties(properties, prefix = "sample")) {
+		enable(dataConfig(cassandraHost, cassandraPort))
+		enable(webConfig(serverPort))
+	}
 }
 
 fun main() {
 	class KCassandraContainer : CassandraContainer<KCassandraContainer>() // https://github.com/testcontainers/testcontainers-java/issues/318
 	val cassandraContainer = KCassandraContainer().withInitScript("schema.cql")
 	cassandraContainer.start()
-	app.run(args = arrayOf("--cassandra.port=${cassandraContainer.firstMappedPort}", "--cassandra.host=${cassandraContainer.containerIpAddress}"))
+	val properties = ApplicationProperties(
+			cassandraHost = cassandraContainer.containerIpAddress,
+			cassandraPort = cassandraContainer.firstMappedPort)
+	app(properties).run()
 }

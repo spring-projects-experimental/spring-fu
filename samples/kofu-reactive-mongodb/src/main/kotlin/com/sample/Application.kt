@@ -20,7 +20,7 @@ import org.springframework.boot.WebApplicationType
 import org.springframework.fu.kofu.application
 
 val app = application(WebApplicationType.REACTIVE) {
-	configurationProperties<SampleProperties>("sample")
+	configurationProperties<SampleProperties>(prefix = "sample")
 	enable(dataConfig)
 	enable(webConfig)
 }

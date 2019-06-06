@@ -6,11 +6,12 @@ import org.springframework.fu.kofu.application
 fun configurationProperties() {
 	application(WebApplicationType.NONE) {
 
-		/** Will bind `sample.message` property typically defined in an `application.configurationProperties`
+		/** Bind `sample.message` property typically defined in an `application.properties`
 		 * or `application.yml` file to [SampleProperties.message]. Typically used by retrieving
 		 * a [SampleProperties] bean.
 		 */
-		configurationProperties<SampleProperties>(prefix = "sample")
+		val properties = configurationProperties<SampleProperties>(prefix = "sample")
+
 	}
 }
 

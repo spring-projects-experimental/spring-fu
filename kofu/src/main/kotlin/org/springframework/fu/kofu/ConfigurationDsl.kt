@@ -41,16 +41,17 @@ open class ConfigurationDsl(private val dsl: ConfigurationDsl.() -> Unit): Abstr
 	}
 
 	/**
-	 * Specify the class and the optional prefix of configuration properties, which is the same mechanism than regular
-	 * [Spring Boot configuration properties mechanism](https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html#boot-features-external-config-typesafe-configuration-properties),
-	 * without `@ConfigurationProperties` annotation.
+	 * Bind and return the specified configuration properties class. If you need a bean,
+	 * register it via the [beans] DSL.
 	 *
 	 * @sample org.springframework.fu.kofu.samples.configurationProperties
 	 */
-	inline fun <reified T : Any> configurationProperties(prefix: String = "") {
-		context.registerBean("${T::class.java.simpleName.toLowerCase()}ConfigurationProperties") {
-			FunctionalConfigurationPropertiesBinder(context).bind(prefix, Bindable.of(T::class.java)).get()
+	inline fun <reified T : Any> configurationProperties(properties: T? = null, prefix: String = ""): T {
+		val properties = properties ?: FunctionalConfigurationPropertiesBinder(context).bind(prefix, Bindable.of(T::class.java)).get()
+		context.registerBean<T>("${T::class.java.simpleName.toLowerCase()}ConfigurationProperties") {
+			properties
 		}
+		return properties
 	}
 
 	/**

@@ -77,12 +77,10 @@ class ApplicationDslTests {
 	@Test
 	fun `Application properties`() {
 		val app = application(WebApplicationType.NONE) {
-			configurationProperties<City>("city")
+			val properties = configurationProperties<City>(prefix = "city")
+			assertEquals(properties.name, "San Francisco")
 		}
-		with(app.run()) {
-			assertEquals(getBean<City>().name, "San Francisco")
-			close()
-		}
+		app.run().close()
 	}
 
 	@Test

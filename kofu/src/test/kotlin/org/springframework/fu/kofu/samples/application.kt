@@ -31,31 +31,37 @@ private fun applicationDsl() {
 		beans {
 			bean<Foo>()
 		}
-		configurationProperties<City>("city")
+
 	}
 
 	fun main(args: Array<String>) = app.run()
 }
 
 private fun applicationDslWithConfiguration() {
-	val conf = configuration {
+	fun conf(cityName: String) = configuration {
 		beans {
 			bean<Foo>()
+			bean {
+				Bar(cityName)
+			}
 		}
 	}
-	val app = application(WebApplicationType.NONE) {
-		logging {
-			level = LogLevel.WARN
+	fun app(properties: CityProperties? = null) = application(WebApplicationType.NONE) {
+		with(configurationProperties(properties, prefix = "city")) {
+			logging {
+				level = LogLevel.WARN
+			}
+			enable(conf(name))
 		}
-		configurationProperties<City>("city")
-		enable(conf)
 	}
 
-	fun main(args: Array<String>) = app.run()
+	fun main(args: Array<String>) = app().run()
 }
 class Foo
 
-class City(val name: String, val country: String)
+class Bar(value: String)
+
+class CityProperties(val name: String, val country: String)
 
 interface UserRepository {
 	fun init()

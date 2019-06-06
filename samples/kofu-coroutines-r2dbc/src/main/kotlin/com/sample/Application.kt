@@ -22,7 +22,7 @@ import org.springframework.fu.kofu.application
 
 @FlowPreview
 val app = application(WebApplicationType.REACTIVE) {
-	configurationProperties<SampleProperties>("sample")
+	configurationProperties<SampleProperties>(prefix = "sample")
 	enable(dataConfig)
 	enable(webConfig)
 }
