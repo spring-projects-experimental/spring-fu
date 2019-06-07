@@ -1,30 +1,51 @@
 package org.springframework.fu.kofu.redis
 
-import com.fasterxml.jackson.annotation.JsonCreator
-import com.fasterxml.jackson.annotation.JsonProperty
 import org.junit.Assert.assertEquals
-import org.junit.ClassRule
+import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.getBean
 import org.springframework.boot.WebApplicationType
 import org.springframework.data.redis.core.RedisTemplate
-import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer
 import org.springframework.fu.kofu.application
 import org.testcontainers.containers.GenericContainer
+import java.io.Serializable
 
 class RedisDslTest {
 
-	@ClassRule
-	@JvmField
-	val redis = object : GenericContainer<Nothing>("redis:5") {
+	private val redis = object : GenericContainer<Nothing>("redis:5") {
 		init {
 			withExposedPorts(6379)
-			start()
+		}
+	}
+
+	@BeforeAll
+	fun setup() {
+		redis.start()
+	}
+
+	@Test
+	fun `enable redis`() {
+		val app = application(WebApplicationType.NONE) {
+			beans {
+				bean<TestRepository>()
+			}
+			redis {
+				host = redis.containerIpAddress
+				port = redis.firstMappedPort
+			}
+		}
+
+		with(app.run()) {
+			val repository = getBean<TestRepository>()
+			repository.save(TestUser("1", "foo"))
+			assertEquals("foo", repository.findById("1")?.name)
+			close()
 		}
 	}
 
 	@Test
-	fun `enable redis with default jedis configuration`() {
+	fun `enable redis with jedis`() {
 		val app = application(WebApplicationType.NONE) {
 			beans {
 				bean<TestRepository>()
@@ -44,40 +65,16 @@ class RedisDslTest {
 		}
 	}
 
-	@Test
-	fun `enable redis with default lettuce configuration`() {
-		val app = application(WebApplicationType.NONE) {
-			beans {
-				bean<TestRepository>()
-			}
-			redis {
-				host = redis.containerIpAddress
-				port = redis.firstMappedPort
-				lettuce()
-			}
-		}
-
-		with(app.run()) {
-			val repository = getBean<TestRepository>()
-			repository.save(TestUser("1", "foo"))
-			assertEquals("foo", repository.findById("1")?.name)
-			close()
-		}
+	@AfterAll
+	fun tearDown() {
+		redis.stop()
 	}
 }
 
-class TestRepository(
-		private val redisTemplate: RedisTemplate<String, ByteArray>
-) {
-	init {
-		redisTemplate.hashValueSerializer = Jackson2JsonRedisSerializer(TestUser::class.java)
-	}
+class TestRepository(private val redisTemplate: RedisTemplate<String, TestUser>) {
 
-	fun findById(id: String) = redisTemplate.opsForHash<String, TestUser>().get("test", id)
-	fun save(user: TestUser) = redisTemplate.opsForHash<String, TestUser>().put("test", user.id, user)
+	fun findById(id: String) = redisTemplate.opsForValue().get(id)
+	fun save(user: TestUser) = redisTemplate.opsForValue().set(user.id, user)
 }
 
-data class TestUser @JsonCreator constructor(
-		@JsonProperty("id") val id: String,
-		@JsonProperty("name") val name: String
-)
+data class TestUser(val id: String, val name: String): Serializable

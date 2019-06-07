@@ -10,10 +10,9 @@ dependencies {
 	implementation("org.springframework.fu:spring-fu-kofu:0.2.BUILD-SNAPSHOT")
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
 	implementation("org.springframework.boot:spring-boot-starter-mustache")
-	implementation("org.springframework.data:spring-data-redis")
+	implementation("org.springframework.boot:spring-boot-starter-data-redis")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.testcontainers:testcontainers:1.11.3")
-	implementation("io.lettuce:lettuce-core")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
@@ -34,14 +33,4 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
-}
-
-configurations.all {
-	exclude(module = "jakarta.validation-api")
-	exclude(module = "hibernate-validator")
-	if (project.hasProperty("graal")) {
-		exclude(module = "netty-transport-native-epoll")
-		exclude(module = "netty-transport-native-unix-common")
-		exclude(module = "netty-codec-http2")
-	}
 }

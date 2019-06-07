@@ -7,10 +7,10 @@ import org.springframework.data.redis.core.ReactiveRedisTemplate
 
 
 class UserRepository(
-		private val template: ReactiveRedisTemplate<String, User>,
+		reactiveRedisTemplate: ReactiveRedisTemplate<String, User>,
 		private val objectMapper: ObjectMapper
 ) {
-	private val operations = template.opsForHash<String, User>()
+	private val operations = reactiveRedisTemplate.opsForHash<String, User>()
 
 	fun count() = operations.size(KEY)
 

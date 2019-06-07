@@ -24,10 +24,8 @@ public class LettuceRedisInitializer implements ApplicationContextInitializer<Ge
 
     @Override
     public void initialize(GenericApplicationContext context) {
-        if (redisProperties.getLettuce().getPool() != null) {
-            context.registerBean(RedisConnectionFactory.class, () -> getLettuceConnectionFactory(context));
-            context.registerBean(ReactiveRedisConnectionFactory.class, () -> getLettuceConnectionFactory(context));
-        }
+		context.registerBean(RedisConnectionFactory.class, () -> getLettuceConnectionFactory(context));
+		context.registerBean(ReactiveRedisConnectionFactory.class, () -> getLettuceConnectionFactory(context));
     }
 
     private LettuceConnectionFactory getLettuceConnectionFactory(GenericApplicationContext context) {
@@ -36,8 +34,7 @@ public class LettuceRedisInitializer implements ApplicationContextInitializer<Ge
         try {
             return configuration.redisConnectionFactory(context.getBeanProvider(LettuceClientConfigurationBuilderCustomizer.class), clientResources);
         } catch (UnknownHostException e) {
-            e.printStackTrace();
+            throw new IllegalStateException(e);
         }
-        return null;
     }
 }

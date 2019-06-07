@@ -1,12 +1,12 @@
 package com.sample
 
 import org.springframework.boot.context.event.ApplicationReadyEvent
-import org.springframework.core.env.get
 import org.springframework.fu.kofu.configuration
+import org.springframework.fu.kofu.redis.reactiveRedis
 import org.springframework.fu.kofu.webflux.mustache
 import org.springframework.fu.kofu.webflux.webFlux
 
-val dataConfig = configuration {
+fun dataConfig(redisHost: String, redisPort: Int) = configuration {
 	beans {
 		bean<UserRepository>()
 	}
@@ -14,19 +14,18 @@ val dataConfig = configuration {
 		ref<UserRepository>().init()
 	}
 	reactiveRedis {
-		host = env["redis.host"] ?: "localhost"
-		port = env["redis.port"] ?: 6379
-		lettuce()
+		host = redisHost
+		port = redisPort
 	}
 }
 
-val webConfig = configuration {
+fun webConfig(serverPort: Int) = configuration {
 	beans {
 		bean<UserHandler>()
 		bean(::routes)
 	}
 	webFlux {
-		port = if (profiles.contains("test")) 8181 else 8080
+		port = serverPort
 		mustache()
 		codecs {
 			string()

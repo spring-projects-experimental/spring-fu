@@ -19,9 +19,6 @@ interface LettuceRedisSupporter {
  * @author Waldemar Panas
  */
 class LettuceDsl(private val redisProperties: RedisProperties, private val init: LettuceDsl.() -> Unit) : AbstractDsl() {
-	init {
-		redisProperties.lettuce.pool = RedisProperties.Pool()
-	}
 
 	/**
 	 * Configure the shutdown timeout.

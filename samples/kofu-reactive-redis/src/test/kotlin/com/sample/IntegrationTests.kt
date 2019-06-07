@@ -8,6 +8,7 @@ import org.springframework.http.MediaType
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.test.web.reactive.server.expectBody
 import org.springframework.test.web.reactive.server.expectBodyList
+import org.testcontainers.containers.GenericContainer
 
 class IntegrationTests {
 
@@ -15,16 +16,25 @@ class IntegrationTests {
 
 	private lateinit var context: ConfigurableApplicationContext
 
+	private val redisContainer = object : GenericContainer<Nothing>("redis:5") {}
+
 	@BeforeAll
 	fun beforeAll() {
-		context = app.run(profiles = "test")
+		redisContainer.withExposedPorts(6379)
+		redisContainer.start()
+		val properties = ApplicationProperties(
+				redisPort = redisContainer.firstMappedPort,
+				redisHost = redisContainer.containerIpAddress,
+				serverPort = 8181
+		)
+		context = app(properties).run()
 	}
 
 	@Test
 	fun `Request root endpoint`() {
 		client.get().uri("/").exchange()
 				.expectStatus().is2xxSuccessful
-				.expectBody<String>().isEqualTo("Hello world!")
+				.expectHeader().contentType("text/html;charset=UTF-8")
 	}
 
 	@Test
@@ -36,15 +46,9 @@ class IntegrationTests {
 				.hasSize(3)
 	}
 
-	@Test
-	fun `Request API endpoint`() {
-		client.get().uri("/api").exchange()
-				.expectStatus().is2xxSuccessful
-				.expectBody<String>().isEqualTo("{\"message\":\"Hello world!\"}")
-	}
-
 	@AfterAll
 	fun afterAll() {
 		context.close()
+		redisContainer.stop()
 	}
 }

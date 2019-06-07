@@ -28,13 +28,10 @@ public class JedisRedisInitializer implements ApplicationContextInitializer<Gene
 
     private JedisConnectionFactory getJedisConnectionFactory(GenericApplicationContext context) {
         final JedisConnectionConfiguration configuration = new JedisConnectionConfiguration(redisProperties, context.getBeanProvider(RedisSentinelConfiguration.class), context.getBeanProvider(RedisClusterConfiguration.class));
-
         try {
             return configuration.redisConnectionFactory(context.getBeanProvider(JedisClientConfigurationBuilderCustomizer.class));
         } catch (UnknownHostException e) {
-            e.printStackTrace();
+            throw new IllegalStateException(e);
         }
-
-        return null;
     }
 }

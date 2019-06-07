@@ -1,12 +1,11 @@
 package org.springframework.fu.kofu.redis
 
 import org.junit.Assert
-import org.junit.ClassRule
+import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.getBean
 import org.springframework.boot.WebApplicationType
-import org.springframework.core.io.DefaultResourceLoader
-import org.springframework.core.io.ResourceLoader
 import org.springframework.data.redis.core.ReactiveRedisTemplate
 import org.springframework.fu.kofu.application
 import org.testcontainers.containers.GenericContainer
@@ -15,13 +14,15 @@ import java.time.Duration
 
 class ReactiveRedisDslTest {
 
-	@ClassRule
-	@JvmField
-	val redis = object : GenericContainer<Nothing>("redis:5") {
+	private val redis = object : GenericContainer<Nothing>("redis:5") {
 		init {
 			withExposedPorts(6379)
-			start()
 		}
+	}
+
+	@BeforeAll
+	fun setup() {
+		redis.start()
 	}
 
 	@Test
@@ -29,14 +30,10 @@ class ReactiveRedisDslTest {
 		val app = application(WebApplicationType.NONE) {
 			beans {
 				bean<ReactiveTestRepository>()
-				bean<ResourceLoader>(function = {
-					DefaultResourceLoader()
-				})
 			}
 			reactiveRedis {
 				host = redis.containerIpAddress
 				port = redis.firstMappedPort
-				lettuce()
 			}
 		}
 
@@ -47,13 +44,16 @@ class ReactiveRedisDslTest {
 			close()
 		}
 	}
+
+	@AfterAll
+	fun tearDown() {
+		redis.stop()
+	}
 }
 
-class ReactiveTestRepository(
-		private val reactiveRedisTemplate: ReactiveRedisTemplate<String, ByteArray>
-) {
-	fun findById(id: String) = reactiveRedisTemplate.opsForHash<String, ReactiveTestUser>().get("test", id)
-	fun save(user: ReactiveTestUser) = reactiveRedisTemplate.opsForHash<String, ReactiveTestUser>().put("test", user.id, user)
+class ReactiveTestRepository(private val reactiveRedisTemplate: ReactiveRedisTemplate<String, ReactiveTestUser>) {
+	fun findById(id: String) = reactiveRedisTemplate.opsForValue().get(id)
+	fun save(user: ReactiveTestUser) = reactiveRedisTemplate.opsForValue().set(user.id, user)
 }
 
-data class ReactiveTestUser(val id: String, val name: String) : Serializable
+data class ReactiveTestUser(val id: String, val name: String): Serializable

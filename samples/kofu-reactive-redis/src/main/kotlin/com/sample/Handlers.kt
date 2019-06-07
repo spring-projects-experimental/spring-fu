@@ -8,7 +8,7 @@ import org.springframework.web.reactive.function.server.body
 @Suppress("UNUSED_PARAMETER")
 class UserHandler(
 		private val repository: UserRepository,
-		private val configuration: SampleProperties
+		private val configuration: ApplicationProperties
 ) {
 
 	fun listApi(request: ServerRequest) = ServerResponse
