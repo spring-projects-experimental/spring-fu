@@ -8,9 +8,10 @@ plugins {
 
 dependencies {
 	implementation("com.expedia:graphql-kotlin:0.4.1") {
+		exclude("com.graphql-java", "graphql-java")
 		exclude("org.jetbrains.kotlinx")
 	}
-	implementation("com.graphql-java:graphql-java")
+	implementation("com.graphql-java:graphql-java:2019-06-12T04-51-56-e994f41")
 	implementation("org.webjars:graphiql:0.11.11")
 	implementation("org.springframework.fu:spring-fu-kofu:0.2.BUILD-SNAPSHOT")
 	implementation("org.springframework.boot:spring-boot-starter-webflux")

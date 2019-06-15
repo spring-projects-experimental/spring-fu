@@ -13,9 +13,12 @@ class MessageService {
 
     private val map = HashMap<Long, Message>()
 
-    private val processor = EmitterProcessor.create<Message>()
+    private var processor = EmitterProcessor.create<Message>()
 
     fun observeNewMessage(): Flux<Message> {
+        if(processor.isCancelled) {
+            processor = EmitterProcessor.create()
+        }
         return processor
     }
 

@@ -1,8 +1,8 @@
 package org.springframework.fu.kofu.graphql
 
 import org.springframework.boot.autoconfigure.graphql.GraphqlInitializer
-import org.springframework.boot.autoconfigure.web.reactive.GraphqlReactiveInitializer
 import org.springframework.boot.autoconfigure.graphql.properties.GraphqlProperties
+import org.springframework.boot.autoconfigure.web.reactive.GraphqlReactiveInitializer
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.registerBean
 import org.springframework.fu.kofu.AbstractDsl

@@ -3,6 +3,7 @@ package org.springframework.boot.autoconfigure.graphql.handler.invocation;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import graphql.ExecutionInput;
+import graphql.ExecutionResult;
 import graphql.GraphQL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,8 +11,6 @@ import org.springframework.boot.autoconfigure.graphql.handler.dto.GraphqlRequest
 import org.springframework.boot.autoconfigure.graphql.handler.dto.GraphqlResponse;
 import org.springframework.lang.NonNull;
 import org.springframework.util.Assert;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -31,16 +30,13 @@ public class GraphqlInvocation {
         this.objectMapper = objectMapper;
     }
 
-    public Flux<GraphqlResponse> invokeFlux(@NonNull GraphqlRequest request) {
+    public CompletableFuture<ExecutionResult> invokePublisher(@NonNull GraphqlRequest request) {
         Assert.notNull(request, "graphqlRequest must not be null");
         ExecutionInput executionInput = ExecutionInput.newExecutionInput(request.getQuery())
                 .operationName(request.getOperationName())
                 .variables(request.getVariables() != null ? request.getVariables() : new HashMap<>())
-                .context(builder -> builder.of("readonly", request.isReadonly()))
                 .build();
-        return Mono.fromCompletionStage(graphql.executeAsync(executionInput))
-                .flatMapMany(it -> it.getData() != null ? it.getData() : Flux.just(it))
-                .map(it -> objectMapper.convertValue(it, GraphqlResponse.class));
+        return graphql.executeAsync(executionInput);
     }
 
     public CompletableFuture<GraphqlResponse> invoke(@NonNull GraphqlRequest graphqlRequest) {

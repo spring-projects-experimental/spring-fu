@@ -12,9 +12,11 @@ dependencies {
 	api("org.springframework.boot:spring-boot")
 	api("org.springframework.boot:spring-boot-autoconfigure")
 
-	compileOnly("com.expedia:graphql-kotlin:0.4.1")
+	compileOnly("com.expedia:graphql-kotlin:0.4.1") {
+		exclude("com.graphql-java", "graphql-java")
+	}
 	compileOnly("org.webjars:graphiql:0.11.11")
-	compileOnly("com.graphql-java:graphql-java:2019-05-20T06-48-36-6211b41")
+	compileOnly("com.graphql-java:graphql-java")
 	compileOnly("javax.servlet:javax.servlet-api")
 	compileOnly("org.springframework:spring-webflux")
 	compileOnly("org.springframework:spring-webmvc")

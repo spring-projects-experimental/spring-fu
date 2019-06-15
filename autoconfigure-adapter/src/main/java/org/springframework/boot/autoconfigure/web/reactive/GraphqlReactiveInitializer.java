@@ -6,6 +6,8 @@ import org.springframework.boot.autoconfigure.graphql.properties.GraphqlProperti
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.lang.NonNull;
+import org.springframework.web.reactive.function.server.RequestPredicate;
+import org.springframework.web.reactive.function.server.RequestPredicates;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.RouterFunctions;
 
@@ -26,9 +28,13 @@ public class GraphqlReactiveInitializer implements ApplicationContextInitializer
         ctx.registerBean("gqlRouterFunction", RouterFunction.class, () -> {
             GraphqlReactiveHandler handler = ctx.getBean("gqlReactiveHandler", GraphqlReactiveHandler.class);
             return RouterFunctions.route()
-                    .GET(properties.getMapping(), handler::graphqlGet)
+                    .GET(properties.getMapping(), nonSocketRequest(), handler::graphqlGet)
                     .POST(properties.getMapping(), handler::graphqlPost)
                     .build();
         });
+    }
+
+    private static RequestPredicate nonSocketRequest() {
+        return RequestPredicates.headers(it -> it.header("connection").stream().noneMatch(value -> value.equalsIgnoreCase("upgrade")));
     }
 }

@@ -16,13 +16,17 @@ fun gqlAddMessage() = """
     }
 """
 
-fun graphqlQuery() = """
-    ${gqlFindAll()}
-    ${gqlAddMessage()}
+fun gqlObserveMessage() = """
     subscription newMessage {
         message: observeNewMessage {
             title
             content
         }
     }
+"""
+
+fun graphqlQuery() = """
+    ${gqlFindAll()}
+    ${gqlAddMessage()}
+    ${gqlObserveMessage()}
 """

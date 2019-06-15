@@ -15,6 +15,8 @@ class GqlSchemaDsl(private val context: GenericApplicationContext) {
 
     private val mutations = mutableListOf<TopLevelObject>()
 
+    private val subscriptions = mutableListOf<TopLevelObject>()
+
     var supportPackages: List<String> = emptyList()
 
     fun <T : Any> query(init: BeanSupplierContext.() -> T) {
@@ -25,8 +27,12 @@ class GqlSchemaDsl(private val context: GenericApplicationContext) {
         mutations += TopLevelObject(init(BeanSupplierContext(context)))
     }
 
+    fun <T : Any> subscription(init: BeanSupplierContext.() -> T) {
+        subscriptions += TopLevelObject(init(BeanSupplierContext(context)))
+    }
+
     internal fun build(): GraphQLSchema {
         val config = SchemaGeneratorConfig(supportPackages)
-        return toSchema(config, queries, mutations)
+        return toSchema(config, queries, mutations, subscriptions)
     }
 }
