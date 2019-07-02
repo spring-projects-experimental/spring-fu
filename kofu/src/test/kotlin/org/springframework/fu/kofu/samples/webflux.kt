@@ -175,7 +175,7 @@ private fun webFluxApplicationDsl() {
 			level = LogLevel.INFO
 			level("org.springframework", LogLevel.DEBUG)
 		}
-		val city = configurationProperties<CityProperties>(prefix = "city")
+		configurationProperties<CityProperties>(prefix = "city")
 		enable(dataConfiguration)
 		enable(webConfiguration)
 	}

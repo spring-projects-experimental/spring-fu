@@ -21,6 +21,8 @@ import org.springframework.boot.WebApplicationType
 import org.springframework.fu.kofu.application
 import org.springframework.fu.kofu.localServerPort
 import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpMethod
+import org.springframework.http.HttpMethod.*
 import org.springframework.test.web.reactive.server.WebTestClient
 
 /**
@@ -38,18 +40,18 @@ class CorsDslTests {
 				}
 				cors {
 					"/api" {
-						allowedOrigins = "first.example.com, second.example.com"
-						allowedMethods = "GET, PUT, POST, DELETE"
+						allowedOrigins = listOf("first.example.com", "second.example.com")
+						allowedMethods = listOf("GET", "PUT", "POST", "DELETE")
 					}
 					"/public" {
-						allowedOrigins = "**"
-						allowedMethods = "GET"
+						allowedOrigin = "*"
+						allowedMethod = "GET"
 					}
 					"fullConfig" {
-						allowedOrigins = "full.config.example.com"
-						allowedMethods = "GET"
-						allowedHeaders = "*"
-						exposedHeaders = "Content-Location"
+						allowedOrigin = "full.config.example.com"
+						allowedMethod = "GET"
+						allowedHeader = "*"
+						exposedHeader = "Content-Location"
 						allowCredentials = true
 						maxAge = 3600
 					}

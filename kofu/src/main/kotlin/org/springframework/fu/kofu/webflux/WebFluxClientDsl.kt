@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.web.reactive.function.client.React
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.fu.kofu.AbstractDsl
 import org.springframework.fu.kofu.ConfigurationDsl
+import org.springframework.fu.kofu.web.JacksonDsl
 import org.springframework.web.reactive.function.client.WebClient
 
 /**
@@ -80,7 +81,8 @@ class WebFluxClientDsl(private val init: WebFluxClientDsl.() -> Unit) : Abstract
          * @sample org.springframework.fu.kofu.samples.jacksonDsl
          */
         fun jackson(dsl: JacksonDsl.() -> Unit = {}) {
-            JacksonDsl(true, dsl).initialize(context)
+            JacksonDsl(dsl).initialize(context)
+			JacksonJsonCodecInitializer(true).initialize(context)
         }
 
         /**

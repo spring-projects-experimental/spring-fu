@@ -10,18 +10,18 @@ fun corsDsl() {
 		webFlux {
 			cors {
 				"/api/**" {
-					allowedOrigins = "first.example.com, second.example.com"
-					allowedMethods = "GET, PUT, POST, DELETE"
+					allowedOrigins = listOf("first.example.com", "second.example.com")
+					allowedMethods = listOf("GET", "PUT", "POST", "DELETE")
 				}
 				"/static/**" {
-					allowedOrigins = "full.config.example.com"
-					allowedMethods = "GET"
-					allowedHeaders = "*"
-					exposedHeaders = "Content-Location"
+					allowedOrigins = listOf("full.config.example.com")
+					allowedMethods = listOf("GET")
+					allowedHeaders = listOf("*")
+					exposedHeaders = listOf("Content-Location")
 					allowCredentials = true
 					maxAge = 3600
 				}
-				"/public/**"() // Enable CORS with permit default values
+				path("/public/**") // Enable CORS with permit default values
 			}
 		}
 	}

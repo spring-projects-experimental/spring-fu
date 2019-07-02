@@ -2,7 +2,6 @@ package org.springframework.fu.kofu
 
 import org.springframework.boot.context.properties.FunctionalConfigurationPropertiesBinder
 import org.springframework.boot.context.properties.bind.Bindable
-import org.springframework.context.ApplicationContextInitializer
 import org.springframework.context.ApplicationEvent
 import org.springframework.context.support.BeanDefinitionDsl
 import org.springframework.context.support.GenericApplicationContext
@@ -47,11 +46,11 @@ open class ConfigurationDsl(private val dsl: ConfigurationDsl.() -> Unit): Abstr
 	 * @sample org.springframework.fu.kofu.samples.configurationProperties
 	 */
 	inline fun <reified T : Any> configurationProperties(properties: T? = null, prefix: String = ""): T {
-		val properties = properties ?: FunctionalConfigurationPropertiesBinder(context).bind(prefix, Bindable.of(T::class.java)).get()
+		val bindedProperties = properties ?: FunctionalConfigurationPropertiesBinder(context).bind(prefix, Bindable.of(T::class.java)).get()
 		context.registerBean<T>("${T::class.java.simpleName.toLowerCase()}ConfigurationProperties") {
-			properties
+			bindedProperties
 		}
-		return properties
+		return bindedProperties
 	}
 
 	/**
@@ -65,7 +64,6 @@ open class ConfigurationDsl(private val dsl: ConfigurationDsl.() -> Unit): Abstr
 	/**
 	 * Declare application event Listeners in order to run tasks when `ApplicationEvent`
 	 * like `ApplicationReadyEvent` are emitted.
-     * TODO Update when SPR-17648 will be fixed
 	 * @sample org.springframework.fu.kofu.samples.listener
 	 */
 	inline fun <reified E : ApplicationEvent>listener(crossinline listener: BeanDefinitionContext.(E) -> Unit) {

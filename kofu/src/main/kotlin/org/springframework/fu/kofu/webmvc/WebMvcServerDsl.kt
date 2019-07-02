@@ -9,6 +9,7 @@ import org.springframework.boot.autoconfigure.web.ServerProperties
 import org.springframework.boot.autoconfigure.web.servlet.FormConverterInitializer
 import org.springframework.boot.autoconfigure.web.servlet.ResourceConverterInitializer
 import org.springframework.boot.autoconfigure.web.servlet.AtomConverterInitializer
+import org.springframework.boot.autoconfigure.web.servlet.JacksonJsonConverterInitializer
 import org.springframework.boot.autoconfigure.web.servlet.RssConverterInitializer
 import org.springframework.boot.autoconfigure.web.servlet.ServletWebServerInitializer
 import org.springframework.boot.autoconfigure.web.servlet.StringConverterInitializer
@@ -17,6 +18,7 @@ import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.registerBean
 import org.springframework.fu.kofu.AbstractDsl
 import org.springframework.fu.kofu.ConfigurationDsl
+import org.springframework.fu.kofu.web.JacksonDsl
 import org.springframework.web.servlet.function.RouterFunctionDsl
 
 /**
@@ -127,6 +129,7 @@ open class WebMvcServerDsl(private val init: WebMvcServerDsl.() -> Unit): Abstra
 		 */
 		fun jackson(dsl: JacksonDsl.() -> Unit = {}) {
 			JacksonDsl(dsl).initialize(context)
+			JacksonJsonConverterInitializer().initialize(context)
 		}
 
 		/**

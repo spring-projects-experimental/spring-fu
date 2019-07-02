@@ -109,7 +109,6 @@ class ClusterDsl(private val cluster: Cluster, private val init: ClusterDsl.() -
 		if (cluster.nodes == null) {
 			cluster.nodes = mutableListOf()
 		}
-
 		cluster.nodes.add("$host:$port")
 	}
 
@@ -117,7 +116,7 @@ class ClusterDsl(private val cluster: Cluster, private val init: ClusterDsl.() -
 	 * Configure the maximum number of redirects to follow when executing commands
 	 * across the cluster.
 	 */
-	var maxRedirects: Int
+	var maxRedirects: Int?
 		get() = cluster.maxRedirects
 		set(value) {
 			cluster.maxRedirects = value
@@ -152,7 +151,6 @@ class SentinelDsl(private val sentinel: Sentinel, private val init: SentinelDsl.
 		if (sentinel.nodes == null) {
 			sentinel.nodes = mutableListOf()
 		}
-
 		sentinel.nodes.add("$host:$port")
 	}
 

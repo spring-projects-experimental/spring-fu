@@ -38,12 +38,14 @@ class MustacheDsl(private val init: MustacheDsl.() -> Unit): AbstractDsl() {
 	/**
 	 * Prefix to apply to template names.
 	 */
-	var prefix: String = MustacheProperties.DEFAULT_PREFIX
+	var prefix: String
+		get() = properties.prefix
 		set(value) {
 			properties.prefix = value
 		}
 
-	var suffix: String = MustacheProperties.DEFAULT_SUFFIX
+	var suffix: String
+		get() = properties.suffix
 		set(value) {
 			properties.suffix = value
 		}

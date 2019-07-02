@@ -23,7 +23,7 @@ class LettuceDsl(private val redisProperties: RedisProperties, private val init:
 	/**
 	 * Configure the shutdown timeout.
 	 */
-	var shutdownTimeout: Duration?
+	var shutdownTimeout: Duration
 		get() = redisProperties.lettuce.shutdownTimeout
 		set(value) {
 			redisProperties.lettuce.shutdownTimeout = value

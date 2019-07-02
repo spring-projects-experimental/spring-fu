@@ -14,6 +14,7 @@ import java.time.Duration
  * Kofu DSL for Cassandra configuration.
  *
  * Enable and configure Cassandra support by registering [org.springframework.data.cassandra.core.CassandraTemplate]
+ *
  * @sample org.springframework.fu.kofu.samples.cassandra
  */
 open class CassandraDsl(private val init: CassandraDsl.() -> Unit) : AbstractDsl() {
@@ -86,7 +87,7 @@ open class CassandraDsl(private val init: CassandraDsl.() -> Unit) : AbstractDsl
 	/**
 	 * Configure the compression supported by the Cassandra binary protocol.
 	 */
-	var compression: ProtocolOptions.Compression?
+	var compression: ProtocolOptions.Compression
 		get() = properties.compression
 		set(value) {
 			properties.compression = value
@@ -150,7 +151,7 @@ open class CassandraDsl(private val init: CassandraDsl.() -> Unit) : AbstractDsl
 	/**
 	 * Retrieve the pool configuration.
 	 */
-	val pool: CassandraProperties.Pool?
+	val pool: CassandraProperties.Pool
 		get() = properties.pool
 
 	override fun initialize(context: GenericApplicationContext) {

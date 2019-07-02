@@ -11,12 +11,11 @@ import org.springframework.boot.web.embedded.netty.NettyReactiveWebServerFactory
 import org.springframework.boot.web.embedded.tomcat.TomcatReactiveWebServerFactory
 import org.springframework.boot.web.embedded.undertow.UndertowReactiveWebServerFactory
 import org.springframework.boot.web.reactive.server.ConfigurableReactiveWebServerFactory
-import org.springframework.context.ApplicationContext
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.registerBean
-import org.springframework.core.env.get
 import org.springframework.fu.kofu.AbstractDsl
 import org.springframework.fu.kofu.ConfigurationDsl
+import org.springframework.fu.kofu.web.JacksonDsl
 import org.springframework.web.reactive.function.server.CoRouterFunctionDsl
 import org.springframework.web.reactive.function.server.RouterFunctionDsl
 import org.springframework.web.server.WebFilter
@@ -241,7 +240,8 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit): Abst
          * @sample org.springframework.fu.kofu.samples.jacksonDsl
          */
         fun jackson(dsl: JacksonDsl.() -> Unit = {}) {
-            JacksonDsl(false, dsl).initialize(context)
+            JacksonDsl(dsl).initialize(context)
+			JacksonJsonCodecInitializer(false).initialize(context)
         }
 
         /**
@@ -282,4 +282,3 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit): Abst
 fun ConfigurationDsl.webFlux(dsl: WebFluxServerDsl.() -> Unit =  {}) {
     WebFluxServerDsl(dsl).initialize(context)
 }
-

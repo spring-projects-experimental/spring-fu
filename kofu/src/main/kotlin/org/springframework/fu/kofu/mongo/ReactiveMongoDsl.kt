@@ -57,7 +57,8 @@ open class ReactiveMongoDsl(
 	/**
 	 * Configure the database uri. By default set to `mongodb://localhost/test`.
 	 */
-	var uri: String? = MongoProperties.DEFAULT_URI
+	var uri: String
+		get() = MongoProperties.DEFAULT_URI
 		set(value) {
 			properties.uri = value
 		}

@@ -12,6 +12,7 @@ import org.springframework.fu.kofu.ConfigurationDsl
  * Enable and configure Reactive Cassandra support by registering [org.springframework.data.cassandra.core.ReactiveCassandraTemplate]
  *
  * Required dependencies can be retrieved using `org.springframework.boot:spring-boot-starter-data-cassandra-reactive`.
+ *
  * @sample org.springframework.fu.kofu.samples.reactiveCassandra
  */
 open class ReactiveCassandraDsl(private val initBlock: ReactiveCassandraDsl.() -> Unit) : CassandraDsl({}) {
