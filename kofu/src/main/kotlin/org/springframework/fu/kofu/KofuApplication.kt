@@ -19,21 +19,22 @@ abstract class KofuApplication(private val initializer: AbstractDsl) {
      * Run the current application
      * @param profiles [ApplicationContext] profiles separated by commas.
      * @param args the application arguments (usually passed from a Java main method)
+	 * @param lazy Configure if beans are created only when needed (`true` by default)
      * @return The application context of the application
      */
-    fun run(args: Array<String> = emptyArray(), profiles: String = ""): ConfigurableApplicationContext {
+    fun run(args: Array<String> = emptyArray(), profiles: String = "", lazy: Boolean = true): ConfigurableApplicationContext {
         val app = object: SpringApplication(KofuApplication::class.java) {
             override fun load(context: ApplicationContext?, sources: Array<out Any>?) {
                 // We don't want the annotation bean definition reader
             }
         }
         initializeWebApplicationContext(app)
-        if (!profiles.isEmpty()) {
+        if (profiles.isNotEmpty()) {
             app.setAdditionalProfiles(*profiles.split(",").map { it.trim() }.toTypedArray())
         }
         app.addInitializers(initializer.toInitializer())
         if (customizer != null) app.addInitializers(ApplicationDsl(customizer!!).toInitializer())
-        System.setProperty("spring.backgroundpreinitializer.ignore", "true")
+        System.setProperty("spring.backgroundpreinitializer.ignore", "$lazy")
         System.setProperty("spring.main.lazy-initialization", "true")
         return app.run(*args)
     }
