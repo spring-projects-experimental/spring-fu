@@ -27,6 +27,7 @@ import org.springframework.fu.kofu.localServerPort
 import org.springframework.fu.kofu.webflux.webClient
 import org.springframework.http.HttpHeaders.CONTENT_TYPE
 import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
 import org.springframework.http.MediaType.APPLICATION_JSON_VALUE
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.test.web.reactive.server.expectBody
@@ -57,8 +58,7 @@ class JacksonDslTests {
 			val client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:$localServerPort").build()
 			client.get().uri("/user").exchange()
 					.expectStatus().is2xxSuccessful
-					// TODO Use MediaType.APPLICATION_JSON when spring-projects/spring-framework#22954 will be fixed
-					.expectHeader().contentType("application/json;charset=UTF-8")
+					.expectHeader().contentType(MediaType.APPLICATION_JSON)
 					.expectBody<User>()
 					.isEqualTo(User("Brian"))
 			close()
@@ -91,8 +91,7 @@ class JacksonDslTests {
 			response.test()
 					.consumeNextWith {
 						assertEquals(HttpStatus.OK, it.statusCode())
-						// TODO Use MediaType.APPLICATION_JSON when spring-projects/spring-framework#22954 will be fixed
-						assertEquals("application/json;charset=UTF-8", it.headers().contentType().get().toString())
+						assertEquals(MediaType.APPLICATION_JSON_VALUE, it.headers().contentType().get().toString())
 					}
 					.verifyComplete()
 			val mappers = getBeanProvider<ObjectMapper>().toList()

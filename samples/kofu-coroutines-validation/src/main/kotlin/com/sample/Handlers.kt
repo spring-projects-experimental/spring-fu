@@ -17,5 +17,6 @@ class UserHandler {
             request.awaitBody<User>()
                     .validate()
                     .leftMap { mapOf("details" to it.details()) }
-                    .awaitFold(badRequest()::bodyAndAwait, ok()::bodyAndAwait)
+                    // TODO Fix reference ambiguity on Spring Framework side
+					.awaitFold({ badRequest().bodyAndAwait(it) }, { ok().bodyAndAwait(it) })
 }

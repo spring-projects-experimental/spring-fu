@@ -48,7 +48,7 @@ class JacksonDslTests {
 				}
 				router {
 					GET("/user") {
-						ok().header(CONTENT_TYPE, APPLICATION_JSON_VALUE).syncBody(User("Brian"))
+						ok().header(CONTENT_TYPE, APPLICATION_JSON_VALUE).body(User("Brian"))
 					}
 				}
 			}
@@ -74,7 +74,7 @@ class JacksonDslTests {
 				}
 				router {
 					GET("/user") {
-						ok().header(CONTENT_TYPE, APPLICATION_JSON_VALUE).syncBody(User("Brian"))
+						ok().header(CONTENT_TYPE, APPLICATION_JSON_VALUE).body(User("Brian"))
 					}
 				}
 			}
@@ -106,7 +106,7 @@ class JacksonDslTests {
 				port = 0
 				router {
 					GET("/user") {
-						ok().header(CONTENT_TYPE, APPLICATION_JSON_VALUE).syncBody(User("Brian"))
+						ok().header(CONTENT_TYPE, APPLICATION_JSON_VALUE).body(User("Brian"))
 					}
 				}
 			}

@@ -5,6 +5,7 @@ import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse
 import org.springframework.web.reactive.function.server.body
 import org.springframework.web.reactive.function.server.bodyAndAwait
+import org.springframework.web.reactive.function.server.bodyWithType
 
 @Suppress("UNUSED_PARAMETER")
 class UserHandler(
@@ -15,12 +16,12 @@ class UserHandler(
 	fun listApi(request: ServerRequest) = ServerResponse
 			.ok()
 			.contentType(MediaType.APPLICATION_JSON)
-			.body(repository.findAll())
+			.bodyWithType(repository.findAll())
 
 	fun userApi(request: ServerRequest) = ServerResponse
 			.ok()
 			.contentType(MediaType.APPLICATION_JSON)
-			.body(repository.findOne(request.pathVariable("login")))
+			.bodyWithType(repository.findOne(request.pathVariable("login")))
 
 	fun listView(request: ServerRequest) = ServerResponse
 			.ok()
@@ -29,6 +30,6 @@ class UserHandler(
 
 	fun conf(request: ServerRequest) = ServerResponse
 			.ok()
-			.syncBody(properties.message)
+			.body(properties.message)
 
 }

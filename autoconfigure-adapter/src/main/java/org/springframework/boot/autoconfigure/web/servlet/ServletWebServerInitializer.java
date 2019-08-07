@@ -43,7 +43,6 @@ import org.springframework.web.servlet.function.support.HandlerFunctionAdapter;
 import org.springframework.web.servlet.function.support.RouterFunctionMapping;
 import org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
-import org.springframework.web.servlet.handler.SimpleUrlHandlerMapping;
 import org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter;
 import org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
@@ -59,8 +58,6 @@ import static org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfi
 import static org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration.ResourceChainResourceHandlerRegistrationCustomizer;
 import static org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration.ResourceHandlerRegistrationCustomizer;
 import static org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration.WebMvcAutoConfigurationAdapter;
-import static org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration.WebMvcAutoConfigurationAdapter.FaviconConfiguration;
-import static org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration.WebMvcAutoConfigurationAdapter.FaviconRequestHandler;
 
 public class ServletWebServerInitializer implements ApplicationContextInitializer<GenericApplicationContext> {
 
@@ -111,7 +108,6 @@ public class ServletWebServerInitializer implements ApplicationContextInitialize
 			public WebMvcAutoConfigurationAdapter get() {
 				if (configuration == null) {
 					configuration = new WebMvcAutoConfigurationAdapter(resourceProperties, webMvcProperties, context, context.getBeanProvider(HttpMessageConverters.class), context.getBeanProvider(ResourceHandlerRegistrationCustomizer.class));
-					configuration.setResourceLoader(context);
 					return configuration;
 				}
 				return configuration;
@@ -121,12 +117,8 @@ public class ServletWebServerInitializer implements ApplicationContextInitialize
 		context.registerBean(BeanNameViewResolver.class, () -> webMvcConfigurationAdapter.get().beanNameViewResolver());
 		context.registerBean("viewResolver", ContentNegotiatingViewResolver.class, () -> webMvcConfigurationAdapter.get().viewResolver(context));
 		context.registerBean(LocaleResolver.class, () -> webMvcConfigurationAdapter.get().localeResolver());
-		context.registerBean(WelcomePageHandlerMapping.class, () -> webMvcConfigurationAdapter.get().welcomePageHandlerMapping(context));
 		context.registerBean(RequestContextFilter.class, WebMvcAutoConfigurationAdapter::requestContextFilter);
-		FaviconConfiguration faviconConfiguration = new FaviconConfiguration(resourceProperties);
-		faviconConfiguration.setResourceLoader(context);
-		context.registerBean(FaviconRequestHandler.class, faviconConfiguration::faviconRequestHandler);
-		context.registerBean(SimpleUrlHandlerMapping.class, () -> faviconConfiguration.faviconHandlerMapping(context.getBean(FaviconRequestHandler.class)));
+		// TODO Favicon management
 
 		Supplier<EnableWebMvcConfiguration> enableWebMvcConfiguration = new Supplier<EnableWebMvcConfiguration>() {
 
@@ -138,6 +130,7 @@ public class ServletWebServerInitializer implements ApplicationContextInitialize
 					configuration = new EnableWebMvcConfigurationWrapper(context.getBeanProvider(WebMvcProperties.class), context.getBeanProvider(WebMvcRegistrations.class), context);
 					configuration.setApplicationContext(context);
 					configuration.setServletContext(((WebApplicationContext) context).getServletContext());
+					configuration.setResourceLoader(context);
 				}
 				return configuration;
 			}
@@ -163,12 +156,13 @@ public class ServletWebServerInitializer implements ApplicationContextInitialize
 		context.registerBean(HandlerExceptionResolver.class, () -> enableWebMvcConfiguration.get().handlerExceptionResolver(context.getBean(ContentNegotiationManager.class)));
 		context.registerBean(ViewResolver.class, () -> enableWebMvcConfiguration.get().mvcViewResolver(context.getBean(ContentNegotiationManager.class)));
 		context.registerBean(HandlerMappingIntrospector.class, () -> enableWebMvcConfiguration.get().mvcHandlerMappingIntrospector(), bd -> bd.setLazyInit(true));
+		context.registerBean(WelcomePageHandlerMapping.class, () -> enableWebMvcConfiguration.get().welcomePageHandlerMapping(context, context.getBean(FormattingConversionService.class), context.getBean(ResourceUrlProvider.class)));
 	}
 
 	private class EnableWebMvcConfigurationWrapper extends EnableWebMvcConfiguration {
 
 		public EnableWebMvcConfigurationWrapper(ObjectProvider<WebMvcProperties> mvcPropertiesProvider, ObjectProvider<WebMvcRegistrations> mvcRegistrationsProvider, ListableBeanFactory beanFactory) {
-			super(mvcPropertiesProvider, mvcRegistrationsProvider, beanFactory);
+			super(resourceProperties, mvcPropertiesProvider, mvcRegistrationsProvider, beanFactory);
 		}
 
 		@Override

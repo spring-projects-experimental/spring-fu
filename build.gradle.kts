@@ -1,8 +1,8 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-	id("org.jetbrains.kotlin.jvm") version "1.3.31" apply false
-	id("org.springframework.boot") version "2.2.0.M3" apply false
+	id("org.jetbrains.kotlin.jvm") version "1.3.41" apply false
+	id("org.springframework.boot") version "2.2.0.M5" apply false
 	id("org.jetbrains.dokka") version "0.9.18" apply false
 	id("io.spring.dependency-management") version "1.0.7.RELEASE"
 	id("maven-publish")
@@ -19,7 +19,6 @@ allprojects {
 
 	dependencyManagement {
 		val bootVersion: String by project
-		val coroutinesVersion: String by project
 		val springDataR2dbcVersion: String by project
 		val r2dbcVersion: String by project
 		imports {
@@ -27,8 +26,6 @@ allprojects {
 			mavenBom("io.r2dbc:r2dbc-bom:$r2dbcVersion")
 		}
 		dependencies {
-			dependency("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
-			dependency("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:$coroutinesVersion")
 			dependency("org.springframework.data:spring-data-r2dbc:$springDataR2dbcVersion")
 		}
 	}

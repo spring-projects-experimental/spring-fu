@@ -1,5 +1,6 @@
 package com.sample
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.runBlocking
 import org.springframework.boot.context.event.ApplicationReadyEvent
@@ -21,6 +22,7 @@ val dataConfig = configuration {
 }
 
 @FlowPreview
+@ExperimentalCoroutinesApi
 val webConfig = configuration {
 	beans {
 		bean<UserHandler>()

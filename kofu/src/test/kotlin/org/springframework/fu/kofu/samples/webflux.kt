@@ -180,7 +180,7 @@ private fun webFluxApplicationDsl() {
 		enable(webConfiguration)
 	}
 
-	fun main(args: Array<String>) = app.run(profiles = "data, webflux")
+	fun main() = app.run(profiles = "data, webflux")
 }
 
 

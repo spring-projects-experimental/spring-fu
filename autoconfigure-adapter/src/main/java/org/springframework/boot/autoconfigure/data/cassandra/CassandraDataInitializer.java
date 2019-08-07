@@ -26,7 +26,7 @@ public class CassandraDataInitializer implements ApplicationContextInitializer<G
 
 	@Override
 	public void initialize(GenericApplicationContext context) {
-		Supplier<CassandraDataAutoConfiguration> configurationSupplier = () -> new CassandraDataAutoConfiguration(context.getBeanFactory(), properties, context.getBean(Cluster.class), context.getEnvironment());
+		Supplier<CassandraDataAutoConfiguration> configurationSupplier = () -> new CassandraDataAutoConfiguration(properties, context.getBean(Cluster.class));
 
 		context.registerBean(CassandraCustomConversions.class, () -> configurationSupplier.get().cassandraCustomConversions());
 		context.registerBean(CassandraMappingContext.class, () -> getCassandraMappingContext(context, configurationSupplier));
