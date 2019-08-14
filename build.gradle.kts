@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
 	id("org.jetbrains.kotlin.jvm") version "1.3.41" apply false
-	id("org.springframework.boot") version "2.2.0.M5" apply false
+	id("org.springframework.boot") apply false
 	id("org.jetbrains.dokka") version "0.9.18" apply false
 	id("io.spring.dependency-management") version "1.0.7.RELEASE"
 	id("maven-publish")
