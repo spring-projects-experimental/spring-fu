@@ -4,6 +4,6 @@ set -e
 
 export GRADLE_OPTS=-Dorg.gradle.native=false
 cd spring-fu
-./gradlew -q build publishToMavenLocal --stacktrace
+./gradlew -q build publishToMavenLocal -PisCI=true
 cd samples
-./gradlew -q build -x :kofu-reactive-cassandra:test --stacktrace
+./gradlew -q build -PisCI=true

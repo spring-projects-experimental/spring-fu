@@ -17,6 +17,12 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
+tasks.test {
+	if (project.hasProperty("isCI")) {
+		exclude("com/sample/IntegrationTests")
+	}
+}
+
 repositories {
 	mavenLocal()
 	mavenCentral()

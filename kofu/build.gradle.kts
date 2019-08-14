@@ -51,6 +51,13 @@ dependencies {
 	testImplementation("io.lettuce:lettuce-core")
 }
 
+tasks.test {
+	if (project.hasProperty("isCI")) {
+		exclude("org/springframework/fu/kofu/redis/ReactiveRedisDslTest")
+		exclude("org/springframework/fu/kofu/redis/RedisDslTest")
+	}
+}
+
 tasks.withType<DokkaTask> {
 	reportUndocumented = false
 	outputFormat = "html"
