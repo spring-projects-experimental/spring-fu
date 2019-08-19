@@ -17,12 +17,6 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
-tasks.withType<Test> {
-	if (project.hasProperty("isCI")) {
-		exclude("com/sample/IntegrationTests.class")
-	}
-}
-
 repositories {
 	mavenLocal()
 	mavenCentral()
@@ -39,6 +33,9 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+	if (project.hasProperty("isCI")) {
+		exclude("com/sample/IntegrationTests.class")
+	}
 }
 
 configurations.all {

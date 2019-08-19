@@ -16,10 +16,11 @@ class IntegrationTests {
 
 	private lateinit var context: ConfigurableApplicationContext
 
-	private val redisContainer = object : GenericContainer<Nothing>("redis:5") {}
+	private lateinit var redisContainer: GenericContainer<Nothing>
 
 	@BeforeAll
 	fun beforeAll() {
+		redisContainer = object : GenericContainer<Nothing>("redis:5") {}
 		redisContainer.withExposedPorts(6379)
 		redisContainer.start()
 		val properties = ApplicationProperties(
