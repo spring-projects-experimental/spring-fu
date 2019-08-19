@@ -27,7 +27,7 @@ import org.springframework.fu.kofu.application
 import org.springframework.util.SocketUtils
 import java.time.Duration
 
-class EmbeddedMongoModuleTest {
+class EmbeddedMongoModuleTests {
 
 	@Test
 	fun `enable mongodb embedded module`() {

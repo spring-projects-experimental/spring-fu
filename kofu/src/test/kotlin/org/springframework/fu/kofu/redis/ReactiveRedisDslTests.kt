@@ -12,7 +12,7 @@ import org.testcontainers.containers.GenericContainer
 import java.io.Serializable
 import java.time.Duration
 
-class ReactiveRedisDslTest {
+class ReactiveRedisDslTests {
 
 	private lateinit var redis: GenericContainer<Nothing>
 

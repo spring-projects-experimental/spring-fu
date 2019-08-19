@@ -53,8 +53,8 @@ dependencies {
 
 tasks.withType<Test> {
 	if (project.hasProperty("isCI")) {
-		exclude("org/springframework/fu/kofu/redis/ReactiveRedisDslTest.class")
-		exclude("org/springframework/fu/kofu/redis/RedisDslTest.class")
+		exclude("org/springframework/fu/kofu/redis/ReactiveRedisDslTests.class")
+		exclude("org/springframework/fu/kofu/redis/RedisDslTests.class")
 	}
 }
 

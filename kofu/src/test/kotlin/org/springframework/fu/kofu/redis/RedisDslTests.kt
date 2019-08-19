@@ -11,7 +11,7 @@ import org.springframework.fu.kofu.application
 import org.testcontainers.containers.GenericContainer
 import java.io.Serializable
 
-class RedisDslTest {
+class RedisDslTests {
 
 	private lateinit var redis: GenericContainer<Nothing>
 
