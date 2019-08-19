@@ -14,14 +14,15 @@ import java.time.Duration
 
 class ReactiveRedisDslTest {
 
-	private val redis = object : GenericContainer<Nothing>("redis:5") {
-		init {
-			withExposedPorts(6379)
-		}
-	}
+	private lateinit var redis: GenericContainer<Nothing>
 
 	@BeforeAll
 	fun setup() {
+		redis = object : GenericContainer<Nothing>("redis:5") {
+			init {
+				withExposedPorts(6379)
+			}
+		}
 		redis.start()
 	}
 
