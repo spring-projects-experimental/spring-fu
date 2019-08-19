@@ -17,9 +17,9 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
-tasks.test {
+tasks.withType<Test> {
 	if (project.hasProperty("isCI")) {
-		exclude("com/sample/IntegrationTests")
+		exclude("com/sample/IntegrationTests.class")
 	}
 }
 

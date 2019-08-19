@@ -51,10 +51,10 @@ dependencies {
 	testImplementation("io.lettuce:lettuce-core")
 }
 
-tasks.test {
+tasks.withType<Test> {
 	if (project.hasProperty("isCI")) {
-		exclude("org/springframework/fu/kofu/redis/ReactiveRedisDslTest")
-		exclude("org/springframework/fu/kofu/redis/RedisDslTest")
+		exclude("org/springframework/fu/kofu/redis/ReactiveRedisDslTest.class")
+		exclude("org/springframework/fu/kofu/redis/RedisDslTest.class")
 	}
 }
 
