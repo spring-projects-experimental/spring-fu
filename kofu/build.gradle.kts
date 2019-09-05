@@ -63,10 +63,10 @@ tasks.withType<DokkaTask> {
 	outputFormat = "html"
 	samples = listOf("src/test/kotlin/org/springframework/fu/kofu/samples")
 	externalDocumentationLink {
-		url = URL("https://docs.spring.io/spring-framework/docs/5.2.0.M2/javadoc-api/")
+		url = URL("https://docs.spring.io/spring-framework/docs/5.2.0.BUILD-SNAPSHOT/javadoc-api/")
 	}
 	externalDocumentationLink {
-		url = URL("https://docs.spring.io/spring-framework/docs/5.2.0.M2/kdoc-api/spring-framework/")
+		url = URL("https://docs.spring.io/spring-framework/docs/5.2.0.BUILD-SNAPSHOT/kdoc-api/spring-framework/")
 	}
 	externalDocumentationLink {
 		url = URL("https://fasterxml.github.io/jackson-core/javadoc/2.9/")
@@ -87,7 +87,10 @@ tasks.withType<DokkaTask> {
 		url = URL("https://docs.spring.io/spring-boot/docs/2.2.x/api/")
 	}
 	externalDocumentationLink {
-		url = URL("https://docs.spring.io/spring-data/r2dbc/docs/1.0.x/api/")
+		url = URL("https://docs.spring.io/spring-data/r2dbc/docs/1.0.x-SNAPSHOT/api/")
+	}
+	externalDocumentationLink {
+		url = URL("https://docs.spring.io/spring-data/cassandra/docs/2.2.x-SNAPSHOT/api/")
 	}
 }
 
