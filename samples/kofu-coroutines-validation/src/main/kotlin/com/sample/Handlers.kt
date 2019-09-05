@@ -17,6 +17,6 @@ class UserHandler {
             request.awaitBody<User>()
                     .validate()
                     .leftMap { mapOf("details" to it.details()) }
-                    // TODO Fix reference ambiguity on Spring Framework side
+					// TODO Fix reference ambiguity when Spring Framework 5.2 GA is available (https://github.com/spring-projects/spring-framework/commit/40a55b412d2caa0ea6e1bc3d641c3bd484c7740f)
 					.awaitFold({ badRequest().bodyAndAwait(it) }, { ok().bodyAndAwait(it) })
 }
