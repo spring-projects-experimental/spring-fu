@@ -1,3 +1,5 @@
+@file:Suppress("UNUSED_VARIABLE")
+
 package org.springframework.fu.kofu.samples
 
 import org.springframework.boot.WebApplicationType
