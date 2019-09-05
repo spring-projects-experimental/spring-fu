@@ -13,6 +13,6 @@ class UserHandler {
                     .flatMap { user ->
                         user.validate()
                                 .leftMap { mapOf("details" to it.details()) }
-                                .fold(badRequest()::body, ok()::body)
+                                .fold(badRequest()::bodyValue, ok()::bodyValue)
                     }
 }

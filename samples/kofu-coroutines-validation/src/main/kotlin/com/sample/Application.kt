@@ -1,11 +1,11 @@
 package com.sample
 
-import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.springframework.boot.WebApplicationType
 import org.springframework.fu.kofu.application
 import org.springframework.fu.kofu.webflux.webFlux
 
-@FlowPreview
+@ExperimentalCoroutinesApi
 val app = application(WebApplicationType.REACTIVE) {
     beans {
         bean<UserHandler>()
@@ -20,7 +20,7 @@ val app = application(WebApplicationType.REACTIVE) {
     }
 }
 
-@FlowPreview
+@ExperimentalCoroutinesApi
 fun main() {
     app.run()
 }

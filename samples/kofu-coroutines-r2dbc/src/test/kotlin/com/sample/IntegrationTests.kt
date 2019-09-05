@@ -1,6 +1,6 @@
 package com.sample
 
-import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
@@ -10,7 +10,7 @@ import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.test.web.reactive.server.expectBodyList
 import org.springframework.test.web.reactive.server.expectBody
 
-@FlowPreview
+@ExperimentalCoroutinesApi
 class IntegrationTests {
 
 	private val client = WebTestClient.bindToServer().baseUrl("http://localhost:8181").build()

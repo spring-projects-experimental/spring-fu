@@ -33,8 +33,8 @@ class SampleService {
 
 @Suppress("UNUSED_PARAMETER")
 class SampleHandler(private val sampleService: SampleService) {
-	fun hello(request: ServerRequest)= ok().body(sampleService.generateMessage())
-	fun json(request: ServerRequest) = ok().body(Sample(sampleService.generateMessage()))
+	fun hello(request: ServerRequest)= ok().bodyValue(sampleService.generateMessage())
+	fun json(request: ServerRequest) = ok().bodyValue(Sample(sampleService.generateMessage()))
 }
 
 fun main() {

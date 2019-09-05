@@ -1,6 +1,6 @@
 package com.sample
 
-import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeAll
@@ -9,7 +9,7 @@ import org.springframework.context.ConfigurableApplicationContext
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.test.web.reactive.server.expectBody
 
-@FlowPreview
+@ExperimentalCoroutinesApi
 class IntegrationTests {
 
     private val client = WebTestClient.bindToServer().baseUrl("http://localhost:8181").build()
@@ -24,7 +24,7 @@ class IntegrationTests {
     @Test
     fun `Create a user successfully`() {
         client.post().uri("/api/user")
-                .body(User("demo", "John", "Doe"))
+                .bodyValue(User("demo", "John", "Doe"))
                 .exchange()
                 .expectStatus().isOk
                 .expectBody<User>().isEqualTo(User("demo", "John", "Doe"))
@@ -33,7 +33,7 @@ class IntegrationTests {
     @Test
     fun `Empty fields request should fail`() {
         client.post().uri("/api/user")
-                .body(User("", "", ""))
+                .bodyValue(User("", "", ""))
                 .exchange()
                 .expectStatus().isBadRequest
                 .expectBody<Map<String, List<Map<String, String>>>>()

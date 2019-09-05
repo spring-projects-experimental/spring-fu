@@ -22,7 +22,7 @@ class IntegrationTests {
     @Test
     fun `Create a user successfully`() {
         client.post().uri("/api/user")
-                .body(User("demo", "John", "Doe"))
+                .bodyValue(User("demo", "John", "Doe"))
                 .exchange()
                 .expectStatus().isOk
                 .expectBody<User>().isEqualTo(User("demo", "John", "Doe"))
@@ -31,7 +31,7 @@ class IntegrationTests {
     @Test
     fun `Empty fields request should fail`() {
         client.post().uri("/api/user")
-                .body(User("", "", ""))
+                .bodyValue(User("", "", ""))
                 .exchange()
                 .expectStatus().isBadRequest
                 .expectBody<Map<String, List<Map<String, String>>>>()

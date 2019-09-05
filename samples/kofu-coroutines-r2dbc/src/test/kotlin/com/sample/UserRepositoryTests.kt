@@ -1,6 +1,6 @@
 package com.sample
 
-import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.AfterAll
@@ -12,7 +12,7 @@ import org.springframework.boot.WebApplicationType
 import org.springframework.context.ConfigurableApplicationContext
 import org.springframework.fu.kofu.application
 
-@FlowPreview
+@ExperimentalCoroutinesApi
 class UserRepositoryTests {
 
 	private val dataApp = application(WebApplicationType.NONE) {

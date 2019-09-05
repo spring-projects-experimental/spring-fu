@@ -1,9 +1,9 @@
 package com.sample
 
-import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.springframework.web.reactive.function.server.coRouter
 
-@FlowPreview
+@ExperimentalCoroutinesApi
 fun routes(userHandler: UserHandler) = coRouter {
     POST("/api/user", userHandler::createApi)
 }
