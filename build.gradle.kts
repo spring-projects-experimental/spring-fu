@@ -4,7 +4,7 @@ plugins {
 	id("org.jetbrains.kotlin.jvm") version "1.3.50" apply false
 	id("org.springframework.boot") apply false
 	id("org.jetbrains.dokka") version "0.9.18" apply false
-	id("io.spring.dependency-management") version "1.0.7.RELEASE"
+	id("io.spring.dependency-management") version "1.0.8.RELEASE"
 	id("maven-publish")
 }
 
