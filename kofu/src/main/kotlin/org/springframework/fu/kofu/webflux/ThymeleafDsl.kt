@@ -55,6 +55,8 @@ class ThymeleafDsl(private val init: ThymeleafDsl.() -> Unit) : AbstractDsl() {
  * Configure a [Thymeleaf](https://github.com/thymeleaf/thymeleaf) view resolver.
  *
  * Require `org.springframework.boot:spring-boot-starter-thymeleaf` dependency.
+ *
+ * @sample org.springframework.fu.kofu.samples.thymeleafDsl
  */
 fun WebFluxServerDsl.thymeleaf(dsl: ThymeleafDsl.() -> Unit = {}) {
     ThymeleafDsl(dsl).initialize(context)
