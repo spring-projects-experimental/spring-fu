@@ -24,6 +24,8 @@ dependencies {
 	compileOnly("io.lettuce:lettuce-core")
 	compileOnly("com.fasterxml.jackson.core:jackson-databind")
 	compileOnly("com.samskivert:jmustache")
+	compileOnly("org.thymeleaf:thymeleaf")
+	compileOnly("org.thymeleaf:thymeleaf-spring5")
 	compileOnly("org.springframework.data:spring-data-r2dbc")
 	compileOnly("io.r2dbc:r2dbc-postgresql")
 	compileOnly("io.r2dbc:r2dbc-h2")
