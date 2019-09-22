@@ -24,6 +24,7 @@ dependencies {
 	compileOnly("org.springframework.data:spring-data-redis")
 	compileOnly("com.fasterxml.jackson.core:jackson-databind")
 	compileOnly("com.samskivert:jmustache")
+	compileOnly("org.freemarker:freemarker")
 	compileOnly("io.projectreactor.kotlin:reactor-kotlin-extensions")
 	compileOnly("javax.servlet:javax.servlet-api")
 
@@ -37,6 +38,7 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-starter-undertow")
 	testImplementation("org.springframework.boot:spring-boot-starter-jetty")
 	testImplementation("org.springframework.boot:spring-boot-starter-mustache")
+	testImplementation("org.springframework.boot:spring-boot-starter-freemarker")
 	testImplementation("org.springframework.boot:spring-boot-starter-json")
 	testImplementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")
 	testImplementation("org.springframework.boot:spring-boot-starter-data-cassandra-reactive")
