@@ -20,7 +20,7 @@ dependencies {
 
 dependencyManagement {
 	imports {
-		mavenBom("io.r2dbc:r2dbc-bom:Arabba-M8")
+		mavenBom("io.r2dbc:r2dbc-bom:Arabba-BUILD-SNAPSHOT")
 	}
 }
 

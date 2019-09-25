@@ -1,5 +1,6 @@
 package org.springframework.fu.sample.coroutines
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
@@ -7,6 +8,7 @@ import org.springframework.context.ConfigurableApplicationContext
 import org.springframework.http.MediaType
 import org.springframework.test.web.reactive.server.WebTestClient
 
+@ExperimentalCoroutinesApi
 class IntegrationTests {
 
 	private val client = WebTestClient.bindToServer().baseUrl("http://localhost:8181").build()
