@@ -2,8 +2,6 @@ package org.springframework.fu.sample.coroutines
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.reactive.awaitSingle
 import org.springframework.core.io.ClassPathResource
 import org.springframework.data.mongodb.core.ReactiveFluentMongoOperations
 import org.springframework.data.mongodb.core.allAndAwait
@@ -28,7 +26,6 @@ class UserRepository(
 
 	suspend fun count() = mongo.query<User>().awaitCount()
 
-	@ExperimentalCoroutinesApi
 	fun findAll() = mongo.query<User>().flow()
 
 	suspend fun findOne(id: String) = mongo.query<User>().matching(query(where("id").isEqualTo(id))).awaitOne()
@@ -49,5 +46,4 @@ class UserRepository(
 		}
 
 	}
-
 }

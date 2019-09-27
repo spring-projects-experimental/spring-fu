@@ -1,6 +1,5 @@
 package com.sample
 
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.springframework.data.r2dbc.core.DatabaseClient
 import org.springframework.data.r2dbc.core.asType
 import org.springframework.data.r2dbc.core.await
@@ -13,7 +12,6 @@ class UserRepository(private val client: DatabaseClient) {
 	suspend fun count() =
 			client.execute("SELECT COUNT(*) FROM users").asType<Long>().fetch().awaitOne()
 
-	@ExperimentalCoroutinesApi
 	fun findAll() = client.select().from("users").asType<User>().fetch().flow()
 
 	suspend fun findOne(id: String) =

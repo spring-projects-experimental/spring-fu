@@ -1,6 +1,5 @@
 package org.springframework.fu.sample.coroutines
 
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.springframework.http.MediaType
 import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse.ok
@@ -14,17 +13,13 @@ class UserHandler(
 		private val configuration: SampleProperties
 ) {
 
-	@ExperimentalCoroutinesApi
 	suspend fun listApi(request: ServerRequest) =
 		ok().contentType(MediaType.APPLICATION_JSON).bodyAndAwait(repository.findAll())
 
 
-	@ExperimentalCoroutinesApi
 	suspend fun listView(request: ServerRequest) =
 		ok().renderAndAwait("users", mapOf("users" to repository.findAll()))
 
-
 	suspend fun conf(request: ServerRequest) =
 		ok().bodyValueAndAwait(configuration.message)
-
 }

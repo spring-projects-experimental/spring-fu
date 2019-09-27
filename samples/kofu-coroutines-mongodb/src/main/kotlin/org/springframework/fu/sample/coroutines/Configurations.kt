@@ -1,7 +1,6 @@
 package org.springframework.fu.sample.coroutines
 
 import de.flapdoodle.embed.mongo.distribution.Version
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import org.springframework.boot.context.event.ApplicationReadyEvent
 import org.springframework.fu.kofu.configuration
@@ -25,7 +24,6 @@ val dataConfig = configuration {
 	}
 }
 
-@ExperimentalCoroutinesApi
 val webConfig = configuration {
 	beans {
 		bean<UserHandler>()

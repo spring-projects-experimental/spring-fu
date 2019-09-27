@@ -1,6 +1,5 @@
 package com.sample
 
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import org.springframework.boot.context.event.ApplicationReadyEvent
 import org.springframework.fu.kofu.configuration
@@ -20,7 +19,6 @@ val dataConfig = configuration {
 	r2dbcH2()
 }
 
-@ExperimentalCoroutinesApi
 val webConfig = configuration {
 	beans {
 		bean<UserHandler>()
