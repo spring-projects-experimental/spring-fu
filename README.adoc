@@ -1,34 +1,32 @@
 :spring-fu-version: 0.1
-:kofu-kdoc-url: http://repo.spring.io/snapshot/org/springframework/fu/spring-fu-kofu/{spring-fu-version}/spring-fu-kofu-{spring-fu-version}-javadoc.jar!
+:kofu-kdoc-url: http://repo.spring.io/milestone/org/springframework/fu/spring-fu-kofu/{spring-fu-version}/spring-fu-kofu-{spring-fu-version}-javadoc.jar!
 :framework-kdoc-url: https://docs.spring.io/spring-framework/docs/5.2.0.BUILD-SNAPSHOT/kdoc-api
 
-image:https://ci.spring.io/api/v1/teams/spring-fu/pipelines/spring-fu/badge["Build Status", link="https://ci.spring.io/teams/spring-fu/pipelines/spring-fu"] image:https://img.shields.io/badge/API%20documentation-0.1-blue.svg["API documentation", link="http://repo.spring.io/milestone/org/springframework/fu/spring-fu-kofu/{spring-fu-version}/spring-fu-kofu-{spring-fu-version}-javadoc.jar!/kofu/org.springframework.fu.kofu/-application-dsl.html"]
+image:https://ci.spring.io/api/v1/teams/spring-fu/pipelines/spring-fu/badge["Build Status", link="https://ci.spring.io/teams/spring-fu/pipelines/spring-fu"] image:https://img.shields.io/badge/API%20documentation-0.1-blue.svg["API documentation", link="{kofu-kdoc-url}/kofu/org.springframework.fu.kofu/-application-dsl.html"]
 
-Spring Fu is an incubator for *Kofu* (*Ko* for Kotlin, *fu* for functional), which provides a Kotlin API to configure Spring Boot applications programmatically with following characteristics:
+Spring Fu is an incubator for *Kofu* (*Ko* for Kotlin, *fu* for functional), a set of
+Kotlin DSLs like {kofu-kdoc-url}/kofu/org.springframework.fu.kofu/-application-dsl.html[`application { }`]
+and {kofu-kdoc-url}/kofu/org.springframework.fu.kofu/-configuration-dsl/index.html[`configuration { }`]
+to configure Spring Boot  explicitly with code in a declarative way with great
+discoverability thanks to auto-complete.
 
- * Explicit configuration via a Kotlin DSL instead of auto-configuration
- * Leverages Spring Framework 5 https://docs.spring.io/spring/docs/5.2.0.BUILD-SNAPSHOT/spring-framework-reference/languages.html#kotlin-bean-definition-dsl[functional bean configuration] instead of annotations
- * Allows to define custom configuration slices (useful for more focused and efficient testing)
- * Great discoverability via code auto-complete
- * https://docs.spring.io/spring/docs/5.2.0.BUILD-SNAPSHOT/spring-framework-reference/languages.html#router-dsl[Web functional routing] instead of `@Controller` available in 3 flavors:
- ** WebMvc.fn (functional variant Spring MVC)
- ** WebFlux.fn with Reactor declarative-style API (`Mono` and `Flux`)
- ** WebFlux.fn with Coroutines imperative-style API (https://spring.io/blog/2019/04/12/going-reactive-with-spring-coroutines-and-kotlin-flow[using suspending functions and Kotlin `Flow`])
- * Persistence via Spring Data functional APIs like:
- ** https://spring.io/projects/spring-data-r2dbc[Spring Data R2DBC `DatabaseClient`]
- ** Spring Data JDBC https://github.com/spring-projects/spring-data-jdbc/blob/master/spring-data-jdbc/src/main/java/org/springframework/data/jdbc/core/JdbcAggregateOperations.java[`JdbcAggregateOperations`]
- ** Spring Data NoSQL `*Operations` APIs for MongoDB, Redis and Cassandra
- * Configuration via Spring Security `security { }` DSL (WIP)
- * Fast startup and low memory consumption
+It leverages other Spring Kotlin DSLs available in Spring like:
+
+ * https://docs.spring.io/spring/docs/current/spring-framework-reference/languages.html#kotlin-bean-definition-dsl[`beans { }` DSL] from Spring Framework
+ * https://docs.spring.io/spring/docs/current/spring-framework-reference/languages.html#router-dsl[`router { }` DSL] from Spring MVC or Spring WebFlux
+ * `security { }` DSL (https://github.com/eleftherias/spring-security/tree/gh-5558-kotlin-dsl[WIP]) from Spring Security
+
+It provides fast startup and low memory consumption.
 
 It is not intended to be used in production yet, but rather to incubate and get feedback and contributions
-from the community in order to hopefully reach a point where it can be integrated as part of Spring Boot.
+from the community in order to hopefully reach a point where it can be integrated as
+Spring Boot Kotlin DSL.
 
-If you are interested in running Spring application as GraalVM native images see https://github.com/spring-projects/spring-framework/issues/22968[this dedicated Spring Framework issue].
+If you are interested in running Spring application as GraalVM native images see the https://github.com/spring-projects-experimental/spring-graal-native-image[spring-graal-native-image] project.
 
-== Minimal application
+== Sample application
 
-Here is a minimal sample application that is leveraging WebMvc.fn:
+Here is a sample sample application that is leveraging Spring MVC:
 
 ```kotlin
 val app = application(WebApplicationType.SERVLET) {
@@ -82,7 +80,7 @@ Kofu is technically just a dependency you add to your Spring Boot project.
 
 ```kotlin
 dependencies {
-	implementation("org.springframework.fu:spring-fu-kofu:0.x")
+	implementation("org.springframework.fu:spring-fu-kofu:{spring-fu-version}")
 
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	testImplementation("org.springframework.boot:spring-boot-starter-webflux")
@@ -91,7 +89,9 @@ dependencies {
 
 == Getting started
 
-* Create a Spring `2.2.0.M3` project on https://start.spring.io/#!language=kotlin[start.spring.io] with the "Web" or "Reactive web" starter
+* Go to https://start.spring.io/#!type=gradle-project&language=kotlin[start.spring.io]
+* Select Spring Boot `2.2.0.x`
+* Select the "Web" or "Reactive web" starter
 * Add the `org.springframework.fu:spring-fu-kofu:{spring-fu-version}` dependency
 * Modify the generated `DemoApplication.kt` file as following:
 
