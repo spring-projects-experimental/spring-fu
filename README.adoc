@@ -4,11 +4,11 @@
 
 image:https://ci.spring.io/api/v1/teams/spring-fu/pipelines/spring-fu/badge["Build Status", link="https://ci.spring.io/teams/spring-fu/pipelines/spring-fu"] image:https://img.shields.io/badge/API%20documentation-0.1-blue.svg["API documentation", link="{kofu-kdoc-url}/kofu/org.springframework.fu.kofu/-application-dsl.html"]
 
-Spring Fu is an incubator for *Kofu* (*Ko* for Kotlin, *fu* for functional), a set of
+Spring Fu is an incubator for Kofu, a set of
 Kotlin DSLs like {kofu-kdoc-url}/kofu/org.springframework.fu.kofu/-application-dsl.html[`application { }`]
 and {kofu-kdoc-url}/kofu/org.springframework.fu.kofu/-configuration-dsl/index.html[`configuration { }`]
-to configure Spring Boot  explicitly with code in a declarative way with great
-discoverability thanks to auto-complete.
+designed to configure Spring Boot explicitly with code in a declarative way with great
+discoverability thanks to auto-complete. In Kofu, "Ko" stands for Kotlin, and "fu" for functional.
 
 It leverages other Spring Kotlin DSLs available in Spring like:
 
@@ -16,7 +16,7 @@ It leverages other Spring Kotlin DSLs available in Spring like:
  * https://docs.spring.io/spring/docs/current/spring-framework-reference/languages.html#router-dsl[`router { }` DSL] from Spring MVC or Spring WebFlux
  * `security { }` DSL (https://github.com/eleftherias/spring-security/tree/gh-5558-kotlin-dsl[WIP]) from Spring Security
 
-It provides fast startup and low memory consumption.
+It provides fast startup (40% faster than regular auto-configuration on a minimal Spring MVC app) and low memory consumption.
 
 It is not intended to be used in production yet, but rather to incubate and get feedback and contributions
 from the community in order to hopefully reach a point where it can be integrated as
