@@ -14,7 +14,7 @@ It leverages other Spring Kotlin DSLs available in Spring like:
 
  * https://docs.spring.io/spring/docs/current/spring-framework-reference/languages.html#kotlin-bean-definition-dsl[`beans { }` DSL] from Spring Framework
  * https://docs.spring.io/spring/docs/current/spring-framework-reference/languages.html#router-dsl[`router { }` DSL] from Spring MVC or Spring WebFlux
- * `security { }` DSL (https://github.com/eleftherias/spring-security/tree/gh-5558-kotlin-dsl[WIP]) from Spring Security
+ * https://github.com/spring-projects-experimental/spring-security-kotlin-dsl[`security { }` DSL] (https://github.com/eleftherias/spring-security/tree/gh-5558-kotlin-dsl[WIP]) from Spring Security
 
 It provides fast startup (40% faster than regular auto-configuration on a minimal Spring MVC app) and low memory consumption.
 
