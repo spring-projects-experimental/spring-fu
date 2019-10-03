@@ -111,6 +111,10 @@ fun main() {
 
 See sample projects https://github.com/spring-projects/spring-fu/tree/master/samples[here].
 
+You can now also benefits of
+https://docs.spring.io/spring/docs/current/spring-framework-reference/[Spring Framework reference documentation]
+which is now available with Kotlin code samples.
+
 == Credits
 
 In addition to the whole Spring and Reactor teams, special credits to:
