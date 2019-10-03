@@ -34,8 +34,8 @@ abstract class KofuApplication(private val initializer: AbstractDsl) {
         }
         app.addInitializers(initializer.toInitializer())
         if (customizer != null) app.addInitializers(ApplicationDsl(customizer!!).toInitializer())
-        System.setProperty("spring.backgroundpreinitializer.ignore", "$lazy")
-        System.setProperty("spring.main.lazy-initialization", "true")
+        System.setProperty("spring.backgroundpreinitializer.ignore", "true")
+        System.setProperty("spring.main.lazy-initialization", "$lazy")
         return app.run(*args)
     }
 
