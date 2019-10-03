@@ -80,7 +80,7 @@ Kofu is technically just a dependency you add to your Spring Boot project.
 
 ```kotlin
 dependencies {
-	implementation("org.springframework.fu:spring-fu-kofu:{spring-fu-version}")
+	implementation("org.springframework.fu:spring-fu-kofu:0.2")
 
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	testImplementation("org.springframework.boot:spring-boot-starter-webflux")
