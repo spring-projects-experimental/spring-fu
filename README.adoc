@@ -1,6 +1,6 @@
 :spring-fu-version: 0.1
 :kofu-kdoc-url: http://repo.spring.io/milestone/org/springframework/fu/spring-fu-kofu/{spring-fu-version}/spring-fu-kofu-{spring-fu-version}-javadoc.jar!
-:framework-kdoc-url: https://docs.spring.io/spring-framework/docs/5.2.0.BUILD-SNAPSHOT/kdoc-api
+:framework-kdoc-url: https://docs.spring.io/spring-framework/docs/current/kdoc-api
 
 image:https://ci.spring.io/api/v1/teams/spring-fu/pipelines/spring-fu/badge["Build Status", link="https://ci.spring.io/teams/spring-fu/pipelines/spring-fu"] image:https://img.shields.io/badge/API%20documentation-0.1-blue.svg["API documentation", link="{kofu-kdoc-url}/kofu/org.springframework.fu.kofu/-application-dsl.html"]
 
@@ -90,7 +90,7 @@ dependencies {
 == Getting started
 
 * Go to https://start.spring.io/#!type=gradle-project&language=kotlin[start.spring.io]
-* Select Spring Boot `2.2.0.x`
+* Select latest Spring Boot `2.2.0.x` release
 * Select the "Web" or "Reactive web" starter
 * Add the `org.springframework.fu:spring-fu-kofu:{spring-fu-version}` dependency
 * Modify the generated `DemoApplication.kt` file as following:
