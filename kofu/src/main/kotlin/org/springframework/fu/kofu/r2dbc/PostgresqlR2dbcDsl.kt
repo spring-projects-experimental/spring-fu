@@ -18,44 +18,44 @@ import org.springframework.fu.kofu.ConfigurationDsl
  */
 class PostgresqlR2dbcDsl(private val init: PostgresqlR2dbcDsl.() -> Unit) : AbstractDsl() {
 
-    /**
-     * Configure the host, by default set to `localhost`.
-     */
-    var host: String = "localhost"
+	/**
+	 * Configure the host, by default set to `localhost`.
+	 */
+	var host: String = "localhost"
 
-    /**
-     * Configure the port, by default set to `5432`.
-     */
-    var port: Int = 5432
+	/**
+	 * Configure the port, by default set to `5432`.
+	 */
+	var port: Int = 5432
 
-    /**
-     * Configure the database, by default set to `postgres`.
-     */
-    var database: String = "postgres"
+	/**
+	 * Configure the database, by default set to `postgres`.
+	 */
+	var database: String = "postgres"
 
-    /**
-     * Configure the username, by default set to `postgres`.
-     */
-    var username: String = "postgres"
+	/**
+	 * Configure the username, by default set to `postgres`.
+	 */
+	var username: String = "postgres"
 
-    /**
-     * Configure the password, empty by default.
-     */
-    var password: String = ""
+	/**
+	 * Configure the password, empty by default.
+	 */
+	var password: String = ""
 
-    override fun initialize(context: GenericApplicationContext) {
-        super.initialize(context)
-        init()
+	override fun initialize(context: GenericApplicationContext) {
+		super.initialize(context)
+		init()
 
-        val properties = PostgresqlR2dbcProperties()
-        properties.host = host
-        properties.port = port
-        properties.database = database
-        properties.username = username
-        properties.password = password
+		val properties = PostgresqlR2dbcProperties()
+		properties.host = host
+		properties.port = port
+		properties.database = database
+		properties.username = username
+		properties.password = password
 
-        PostgresqlDatabaseClientInitializer(properties).initialize(context)
-    }
+		PostgresqlDatabaseClientInitializer(properties).initialize(context)
+	}
 }
 
 /**
@@ -63,5 +63,5 @@ class PostgresqlR2dbcDsl(private val init: PostgresqlR2dbcDsl.() -> Unit) : Abst
  * @see PostgresqlR2dbcDsl
  */
 fun ConfigurationDsl.r2dbcPostgresql(dsl: PostgresqlR2dbcDsl.() -> Unit = {}) {
-    PostgresqlR2dbcDsl(dsl).initialize(context)
+	PostgresqlR2dbcDsl(dsl).initialize(context)
 }

@@ -17,22 +17,22 @@ import org.springframework.fu.kofu.ConfigurationDsl
  * @author Jonas Bark
  */
 class MysqlR2dbcDsl(
-    /**
-     * Configure the connection URL
-     */
-    private val url: String,
-    private val init: MysqlR2dbcDsl.() -> Unit
+	/**
+	 * Configure the connection URL
+	 */
+	private val url: String,
+	private val init: MysqlR2dbcDsl.() -> Unit
 ) : AbstractDsl() {
 
-    override fun initialize(context: GenericApplicationContext) {
-        super.initialize(context)
-        init()
+	override fun initialize(context: GenericApplicationContext) {
+		super.initialize(context)
+		init()
 
-        val properties = MysqlR2dbcProperties()
-        properties.url = url
+		val properties = MysqlR2dbcProperties()
+		properties.url = url
 
-        MysqlDatabaseClientInitializer(properties).initialize(context)
-    }
+		MysqlDatabaseClientInitializer(properties).initialize(context)
+	}
 }
 
 /**
@@ -40,5 +40,5 @@ class MysqlR2dbcDsl(
  * @see MssqlR2dbcDsl
  */
 fun ConfigurationDsl.r2dbcMysql(url: String, dsl: MysqlR2dbcDsl.() -> Unit = {}) {
-    MysqlR2dbcDsl(url, dsl).initialize(context)
+	MysqlR2dbcDsl(url, dsl).initialize(context)
 }

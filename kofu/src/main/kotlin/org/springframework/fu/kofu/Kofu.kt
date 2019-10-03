@@ -17,15 +17,15 @@ import org.springframework.context.support.GenericApplicationContext
  * @author Sebastien Deleuze
  */
 fun application(type: WebApplicationType, dsl: ApplicationDsl.() -> Unit)
-        = object: KofuApplication(ApplicationDsl(dsl)) {
-    override fun initializeWebApplicationContext(app: SpringApplication) {
-        app.webApplicationType = type
-        app.setApplicationContextClass(when(type) {
+		= object: KofuApplication(ApplicationDsl(dsl)) {
+	override fun initializeWebApplicationContext(app: SpringApplication) {
+		app.webApplicationType = type
+		app.setApplicationContextClass(when(type) {
 			WebApplicationType.NONE -> GenericApplicationContext::class.java
 			WebApplicationType.REACTIVE -> ReactiveWebServerApplicationContext::class.java
 			WebApplicationType.SERVLET -> ServletWebServerApplicationContext::class.java
 		})
-    }
+	}
 }
 
 /**
@@ -34,4 +34,4 @@ fun application(type: WebApplicationType, dsl: ApplicationDsl.() -> Unit)
  * @sample org.springframework.fu.kofu.samples.applicationDslWithConfiguration
  */
 fun configuration(dsl: ConfigurationDsl.() -> Unit)
-        = ConfigurationDsl(dsl)
+		= ConfigurationDsl(dsl)

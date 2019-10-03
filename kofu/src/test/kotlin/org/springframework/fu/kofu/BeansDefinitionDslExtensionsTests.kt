@@ -7,110 +7,110 @@ import org.springframework.context.support.beans
 
 class BeansDefinitionDslExtensionsTests {
 
-    @Test
-    fun `Create a bean from a callable reference with 1 parameter`() {
-        val beans = beans {
-            bean<A>()
-            bean(::fun1)
-        }
-        val context = GenericApplicationContext()
-        beans.initialize(context)
-        context.refresh()
-        context.getBean<Foo>()
-    }
+	@Test
+	fun `Create a bean from a callable reference with 1 parameter`() {
+		val beans = beans {
+			bean<A>()
+			bean(::fun1)
+		}
+		val context = GenericApplicationContext()
+		beans.initialize(context)
+		context.refresh()
+		context.getBean<Foo>()
+	}
 
-    @Test
-    fun `Create a bean from a callable reference with 2 parameters`() {
-        val beans = beans {
-            bean<A>()
-            bean<B>()
-            bean(::fun2)
-        }
-        val context = GenericApplicationContext()
-        beans.initialize(context)
-        context.refresh()
-        context.getBean<Foo>()
-    }
+	@Test
+	fun `Create a bean from a callable reference with 2 parameters`() {
+		val beans = beans {
+			bean<A>()
+			bean<B>()
+			bean(::fun2)
+		}
+		val context = GenericApplicationContext()
+		beans.initialize(context)
+		context.refresh()
+		context.getBean<Foo>()
+	}
 
-    @Test
-    fun `Create a bean from a callable reference with 3 parameters`() {
-        val beans = beans {
-            bean<A>()
-            bean<B>()
-            bean<C>()
-            bean(::fun3)
-        }
-        val context = GenericApplicationContext()
-        beans.initialize(context)
-        context.refresh()
-        context.getBean<Foo>()
-    }
+	@Test
+	fun `Create a bean from a callable reference with 3 parameters`() {
+		val beans = beans {
+			bean<A>()
+			bean<B>()
+			bean<C>()
+			bean(::fun3)
+		}
+		val context = GenericApplicationContext()
+		beans.initialize(context)
+		context.refresh()
+		context.getBean<Foo>()
+	}
 
-    @Test
-    fun `Create a bean from a callable reference with 4 parameters`() {
-        val beans = beans {
-            bean<A>()
-            bean<B>()
-            bean<C>()
-            bean<D>()
-            bean(::fun4)
-        }
-        val context = GenericApplicationContext()
-        beans.initialize(context)
-        context.refresh()
-        context.getBean<Foo>()
-    }
+	@Test
+	fun `Create a bean from a callable reference with 4 parameters`() {
+		val beans = beans {
+			bean<A>()
+			bean<B>()
+			bean<C>()
+			bean<D>()
+			bean(::fun4)
+		}
+		val context = GenericApplicationContext()
+		beans.initialize(context)
+		context.refresh()
+		context.getBean<Foo>()
+	}
 
-    @Test
-    fun `Create a bean from a callable reference with 5 parameters`() {
-        val beans = beans {
-            bean<A>()
-            bean<B>()
-            bean<C>()
-            bean<D>()
-            bean<E>()
-            bean(::fun5)
-        }
-        val context = GenericApplicationContext()
-        beans.initialize(context)
-        context.refresh()
-        context.getBean<Foo>()
-    }
+	@Test
+	fun `Create a bean from a callable reference with 5 parameters`() {
+		val beans = beans {
+			bean<A>()
+			bean<B>()
+			bean<C>()
+			bean<D>()
+			bean<E>()
+			bean(::fun5)
+		}
+		val context = GenericApplicationContext()
+		beans.initialize(context)
+		context.refresh()
+		context.getBean<Foo>()
+	}
 
-    @Test
-    fun `Create a bean from a callable reference with 6 parameters`() {
-        val beans = beans {
-            bean<A>()
-            bean<B>()
-            bean<C>()
-            bean<D>()
-            bean<E>()
-            bean<F>()
-            bean(::fun6)
-        }
-        val context = GenericApplicationContext()
-        beans.initialize(context)
-        context.refresh()
-        context.getBean<Foo>()
-    }
+	@Test
+	fun `Create a bean from a callable reference with 6 parameters`() {
+		val beans = beans {
+			bean<A>()
+			bean<B>()
+			bean<C>()
+			bean<D>()
+			bean<E>()
+			bean<F>()
+			bean(::fun6)
+		}
+		val context = GenericApplicationContext()
+		beans.initialize(context)
+		context.refresh()
+		context.getBean<Foo>()
+	}
 
-    @Test
-    fun `Create a bean from a callable reference with 7 parameters`() {
-        val beans = beans {
-            bean<A>()
-            bean<B>()
-            bean<C>()
-            bean<D>()
-            bean<E>()
-            bean<F>()
-            bean<G>()
-            bean(::fun7)
-        }
-        val context = GenericApplicationContext()
-        beans.initialize(context)
-        context.refresh()
-        context.getBean<Foo>()
-    }
+	@Test
+	fun `Create a bean from a callable reference with 7 parameters`() {
+		val beans = beans {
+			bean<A>()
+			bean<B>()
+			bean<C>()
+			bean<D>()
+			bean<E>()
+			bean<F>()
+			bean<G>()
+			bean(::fun7)
+		}
+		val context = GenericApplicationContext()
+		beans.initialize(context)
+		context.refresh()
+		context.getBean<Foo>()
+	}
 }
 
 class A
