@@ -12,16 +12,13 @@ import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
 import org.springframework.boot.autoconfigure.http.HttpProperties;
 import org.springframework.boot.autoconfigure.web.ResourceProperties;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
-import org.springframework.boot.web.embedded.tomcat.TomcatConnectorCustomizer;
-import org.springframework.boot.web.embedded.tomcat.TomcatContextCustomizer;
-import org.springframework.boot.web.embedded.tomcat.TomcatProtocolHandlerCustomizer;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.boot.web.server.WebServerFactoryCustomizerBeanPostProcessor;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.filter.OrderedHiddenHttpMethodFilter;
+import org.springframework.boot.web.servlet.server.ConfigurableServletWebServerFactory;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
-import org.springframework.core.ResolvableType;
 import org.springframework.format.support.FormattingConversionService;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpOutputMessage;
@@ -65,17 +62,19 @@ public class ServletWebServerInitializer implements ApplicationContextInitialize
 
 	private final HttpProperties httpProperties;
 
+	private final ConfigurableServletWebServerFactory serverFactory;
+
 	private final WebMvcProperties webMvcProperties;
 
 	private final ResourceProperties resourceProperties;
 
-
 	public ServletWebServerInitializer(ServerProperties serverProperties, HttpProperties httpProperties,
-			WebMvcProperties webMvcProperties, ResourceProperties resourceProperties) {
+			WebMvcProperties webMvcProperties, ResourceProperties resourceProperties, ConfigurableServletWebServerFactory serverFactory) {
 		this.serverProperties = serverProperties;
 		this.httpProperties = httpProperties;
 		this.webMvcProperties = webMvcProperties;
 		this.resourceProperties = resourceProperties;
+		this.serverFactory = serverFactory;
 	}
 
 	@Override
@@ -83,13 +82,12 @@ public class ServletWebServerInitializer implements ApplicationContextInitialize
 		context.registerBean("webServerFactoryCustomizerBeanPostProcessor", WebServerFactoryCustomizerBeanPostProcessor.class);
 		context.registerBean(WebMvcProperties.class, () -> this.webMvcProperties);
 		context.registerBean(ServletWebServerFactoryAutoConfiguration.BeanPostProcessorsRegistrar.class, ServletWebServerFactoryAutoConfiguration.BeanPostProcessorsRegistrar::new);
-		context.registerBean(TomcatServletWebServerFactory.class, () -> new ServletWebServerFactoryConfiguration.EmbeddedTomcat().tomcatServletWebServerFactory(
-				context.getBeanProvider(TomcatConnectorCustomizer.class),
-				context.getBeanProvider(TomcatContextCustomizer.class),
-				context.getBeanProvider(ResolvableType.forClass(TomcatProtocolHandlerCustomizer.class))));
+		context.registerBean(ConfigurableServletWebServerFactory.class, () -> serverFactory);
 		ServletWebServerFactoryAutoConfiguration servletWebServerFactoryConfiguration = new ServletWebServerFactoryAutoConfiguration();
 		context.registerBean(ServletWebServerFactoryCustomizer.class, () -> servletWebServerFactoryConfiguration.servletWebServerFactoryCustomizer(serverProperties));
-		context.registerBean(TomcatServletWebServerFactoryCustomizer.class, () -> servletWebServerFactoryConfiguration.tomcatServletWebServerFactoryCustomizer(serverProperties));
+		if (serverFactory instanceof TomcatServletWebServerFactory) {
+			context.registerBean(TomcatServletWebServerFactoryCustomizer.class, () -> servletWebServerFactoryConfiguration.tomcatServletWebServerFactoryCustomizer(serverProperties));
+		}
 		context.registerBean(FilterRegistrationBean.class, servletWebServerFactoryConfiguration::forwardedHeaderFilter);
 
 		DispatcherServletAutoConfiguration.DispatcherServletConfiguration dispatcherServletConfiguration = new DispatcherServletAutoConfiguration.DispatcherServletConfiguration();
