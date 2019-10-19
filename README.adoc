@@ -1,5 +1,4 @@
-:spring-fu-version: 
-.1
+:spring-fu-version: 0.2.1
 :kofu-kdoc-url: http://repo.spring.io/milestone/org/springframework/fu/spring-fu-kofu/{spring-fu-version}/spring-fu-kofu-{spring-fu-version}-javadoc.jar!
 :framework-kdoc-url: https://docs.spring.io/spring-framework/docs/current/kdoc-api
 
@@ -15,7 +14,7 @@ It leverages other Spring Kotlin DSLs available in Spring like:
 
  * https://docs.spring.io/spring/docs/current/spring-framework-reference/languages.html#kotlin-bean-definition-dsl[`beans { }` DSL] from Spring Framework
  * https://docs.spring.io/spring/docs/current/spring-framework-reference/languages.html#router-dsl[`router { }` DSL] from Spring MVC or Spring WebFlux
- * https://github.com/spring-projects-experimental/spring-security-kotlin-dsl[`security { }` DSL] (https://github.com/eleftherias/spring-security/tree/gh-5558-kotlin-dsl[WIP]) from Spring Security
+ * https://github.com/spring-projects-experimental/spring-security-kotlin-dsl[`security { }` DSL] (work in progress) from Spring Security
 
 It provides fast startup (40% faster than regular auto-configuration on a minimal Spring MVC app) and low memory consumption.
 
@@ -80,6 +79,11 @@ To use WebFlux.fn instead
 Kofu is technically just a dependency you add to your Spring Boot project.
 
 ```kotlin
+repositories {
+	mavenCentral()
+	maven("https://repo.spring.io/milestone")
+}
+
 dependencies {
 	implementation("org.springframework.fu:spring-fu-kofu:0.2.1")
 
