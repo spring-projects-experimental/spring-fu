@@ -1,8 +1,9 @@
-:spring-fu-version: 0.2
+:spring-fu-version: 
+.1
 :kofu-kdoc-url: http://repo.spring.io/milestone/org/springframework/fu/spring-fu-kofu/{spring-fu-version}/spring-fu-kofu-{spring-fu-version}-javadoc.jar!
 :framework-kdoc-url: https://docs.spring.io/spring-framework/docs/current/kdoc-api
 
-image:https://ci.spring.io/api/v1/teams/spring-fu/pipelines/spring-fu/badge["Build Status", link="https://ci.spring.io/teams/spring-fu/pipelines/spring-fu"] image:https://img.shields.io/badge/API%20documentation-0.2-blue.svg["API documentation", link="{kofu-kdoc-url}/kofu/org.springframework.fu.kofu/-application-dsl.html"]
+image:https://ci.spring.io/api/v1/teams/spring-fu/pipelines/spring-fu/badge["Build Status", link="https://ci.spring.io/teams/spring-fu/pipelines/spring-fu"] image:https://img.shields.io/badge/API%20documentation-0.2.1-blue.svg["API documentation", link="{kofu-kdoc-url}/kofu/org.springframework.fu.kofu/-application-dsl.html"]
 
 Spring Fu is an incubator for Kofu, a set of
 Kotlin DSLs like {kofu-kdoc-url}/kofu/org.springframework.fu.kofu/-application-dsl.html[`application { }`]
@@ -80,7 +81,7 @@ Kofu is technically just a dependency you add to your Spring Boot project.
 
 ```kotlin
 dependencies {
-	implementation("org.springframework.fu:spring-fu-kofu:0.2")
+	implementation("org.springframework.fu:spring-fu-kofu:0.2.1")
 
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	testImplementation("org.springframework.boot:spring-boot-starter-webflux")
