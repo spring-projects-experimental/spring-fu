@@ -55,7 +55,7 @@ open class WebMvcServerDsl(private val init: WebMvcServerDsl.() -> Unit): Abstra
 	override fun initialize(context: GenericApplicationContext) {
 		super.initialize(context)
 		init()
-		context.registerBean(BeanDefinitionReaderUtils.uniqueBeanName(org.springframework.web.reactive.function.server.RouterFunctionDsl::class.java.name, context)) {
+		context.registerBean(BeanDefinitionReaderUtils.uniqueBeanName(RouterFunctionDsl::class.java.name, context)) {
 			org.springframework.web.servlet.function.router {
 				resources("/**", ClassPathResource("static/"))
 			}
