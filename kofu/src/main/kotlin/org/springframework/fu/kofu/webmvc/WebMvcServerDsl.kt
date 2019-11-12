@@ -16,6 +16,7 @@ import org.springframework.boot.autoconfigure.web.servlet.StringConverterInitial
 import org.springframework.boot.autoconfigure.web.servlet.WebMvcProperties
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.registerBean
+import org.springframework.core.io.ClassPathResource
 import org.springframework.fu.kofu.AbstractDsl
 import org.springframework.fu.kofu.ConfigurationDsl
 import org.springframework.fu.kofu.web.JacksonDsl
@@ -54,6 +55,11 @@ open class WebMvcServerDsl(private val init: WebMvcServerDsl.() -> Unit): Abstra
 	override fun initialize(context: GenericApplicationContext) {
 		super.initialize(context)
 		init()
+		context.registerBean(BeanDefinitionReaderUtils.uniqueBeanName(org.springframework.web.reactive.function.server.RouterFunctionDsl::class.java.name, context)) {
+			org.springframework.web.servlet.function.router {
+				resources("/**", ClassPathResource("static/"))
+			}
+		}
 		serverProperties.port = port
 		if (!convertersConfigured) {
 			StringConverterInitializer().initialize(context)

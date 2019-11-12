@@ -29,6 +29,7 @@ import org.springframework.http.HttpStatus.NO_CONTENT
 import org.springframework.http.HttpStatus.UNAUTHORIZED
 import org.springframework.http.MediaType
 import org.springframework.test.web.reactive.server.WebTestClient
+import org.springframework.test.web.reactive.server.expectBody
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.server.ServerWebExchange
 import org.springframework.web.server.WebFilter
@@ -199,6 +200,19 @@ class WebFluxServerDslTests {
 		context.close()
 		context = app.run()
 		context.close()
+	}
+
+	@Test
+	fun `Request static file`() {
+		val app = application((WebApplicationType.REACTIVE)) {
+			webFlux {
+			}
+		}
+		with(app.run()) {
+			val client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:$localServerPort").build()
+			client.get().uri("/test.txt").exchange().expectBody<String>().isEqualTo("Test")
+			close()
+		}
 	}
 
 	class MyFilter : WebFilter {

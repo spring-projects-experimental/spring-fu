@@ -22,6 +22,7 @@ import org.springframework.fu.kofu.application
 import org.springframework.fu.kofu.localServerPort
 import org.springframework.http.MediaType
 import org.springframework.test.web.reactive.server.WebTestClient
+import org.springframework.test.web.reactive.server.expectBody
 
 /**
  * @author Sebastien Deleuze
@@ -53,6 +54,19 @@ class WebMvcServerDslTests {
 		with(app.run()) {
 			val client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:$localServerPort").build()
 			client.get().uri("/foo").accept(MediaType.TEXT_PLAIN).exchange().expectStatus().is2xxSuccessful
+			close()
+		}
+	}
+
+	@Test
+	fun `Request static file`() {
+		val app = application((WebApplicationType.SERVLET)) {
+			webMvc {
+			}
+		}
+		with(app.run()) {
+			val client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:$localServerPort").build()
+			client.get().uri("/test.txt").exchange().expectBody<String>().isEqualTo("Test")
 			close()
 		}
 	}
