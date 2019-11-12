@@ -75,15 +75,6 @@ class ApplicationDslTests {
 	}
 
 	@Test
-	fun `Application properties`() {
-		val app = application(WebApplicationType.NONE) {
-			val properties = configurationProperties<City>(prefix = "city")
-			assertEquals(properties.name, "San Francisco")
-		}
-		app.run().close()
-	}
-
-	@Test
 	fun `Mock a bean of an existing application`() {
 		val app = application(WebApplicationType.NONE) {
 			beans {
@@ -108,7 +99,5 @@ class ApplicationDslTests {
 
 	class Foo
 	class Bar(val value: String)
-
-	class City(val name: String, val country: String)
 
 }
