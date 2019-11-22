@@ -28,7 +28,7 @@ open class ConfigurationDsl(private val dsl: ConfigurationDsl.() -> Unit): Abstr
 	 * @sample org.springframework.fu.kofu.samples.beansDsl
 	 */
 	fun beans(dsl: BeanDefinitionDsl.() -> Unit) {
-		BeanDefinitionDsl(dsl).initialize(context)
+		org.springframework.context.support.beans(dsl).initialize(context)
 	}
 
 	/**
