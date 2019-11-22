@@ -37,7 +37,7 @@ open class ConfigurationDsl(private val dsl: ConfigurationDsl.() -> Unit): Abstr
 	 * @sample org.springframework.fu.kofu.samples.applicationDslWithConfiguration
 	 */
 	fun enable(configuration: AbstractDsl) {
-        configuration.initialize(context)
+		configuration.initialize(context)
 	}
 
 	/**
