@@ -3,7 +3,6 @@ package org.springframework.fu.kofu.webmvc
 import org.springframework.beans.factory.ObjectProvider
 import org.springframework.beans.factory.getBeanProvider
 import org.springframework.beans.factory.support.BeanDefinitionReaderUtils
-import org.springframework.boot.autoconfigure.http.HttpProperties
 import org.springframework.boot.autoconfigure.web.ResourceProperties
 import org.springframework.boot.autoconfigure.web.ServerProperties
 import org.springframework.boot.autoconfigure.web.servlet.FormConverterInitializer
@@ -39,8 +38,6 @@ open class WebMvcServerDsl(private val init: WebMvcServerDsl.() -> Unit): Abstra
 
 	private val serverProperties = ServerProperties()
 
-	private val httpProperties = HttpProperties()
-
 	private val webMvcProperties = WebMvcProperties()
 
 	private val resourceProperties = ResourceProperties()
@@ -65,7 +62,7 @@ open class WebMvcServerDsl(private val init: WebMvcServerDsl.() -> Unit): Abstra
 			StringConverterInitializer().initialize(context)
 			ResourceConverterInitializer().initialize(context)
 		}
-		ServletWebServerInitializer(serverProperties, httpProperties, webMvcProperties, resourceProperties).initialize(context)
+		ServletWebServerInitializer(serverProperties, webMvcProperties, resourceProperties).initialize(context)
 	}
 
 	/**

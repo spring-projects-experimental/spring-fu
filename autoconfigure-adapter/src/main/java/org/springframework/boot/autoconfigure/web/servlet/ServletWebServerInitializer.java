@@ -9,7 +9,6 @@ import javax.servlet.MultipartConfigElement;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
-import org.springframework.boot.autoconfigure.http.HttpProperties;
 import org.springframework.boot.autoconfigure.web.ResourceProperties;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.boot.web.embedded.tomcat.TomcatConnectorCustomizer;
@@ -63,17 +62,13 @@ public class ServletWebServerInitializer implements ApplicationContextInitialize
 
 	private final ServerProperties serverProperties;
 
-	private final HttpProperties httpProperties;
-
 	private final WebMvcProperties webMvcProperties;
 
 	private final ResourceProperties resourceProperties;
 
 
-	public ServletWebServerInitializer(ServerProperties serverProperties, HttpProperties httpProperties,
-			WebMvcProperties webMvcProperties, ResourceProperties resourceProperties) {
+	public ServletWebServerInitializer(ServerProperties serverProperties, WebMvcProperties webMvcProperties, ResourceProperties resourceProperties) {
 		this.serverProperties = serverProperties;
-		this.httpProperties = httpProperties;
 		this.webMvcProperties = webMvcProperties;
 		this.resourceProperties = resourceProperties;
 	}
@@ -93,7 +88,7 @@ public class ServletWebServerInitializer implements ApplicationContextInitialize
 		context.registerBean(FilterRegistrationBean.class, servletWebServerFactoryConfiguration::forwardedHeaderFilter);
 
 		DispatcherServletAutoConfiguration.DispatcherServletConfiguration dispatcherServletConfiguration = new DispatcherServletAutoConfiguration.DispatcherServletConfiguration();
-		context.registerBean(DispatcherServletAutoConfiguration.DEFAULT_DISPATCHER_SERVLET_BEAN_NAME, DispatcherServlet.class, () -> dispatcherServletConfiguration.dispatcherServlet(httpProperties, webMvcProperties));
+		context.registerBean(DispatcherServletAutoConfiguration.DEFAULT_DISPATCHER_SERVLET_BEAN_NAME, DispatcherServlet.class, () -> dispatcherServletConfiguration.dispatcherServlet(webMvcProperties));
 		context.registerBean(DispatcherServletAutoConfiguration.DEFAULT_DISPATCHER_SERVLET_REGISTRATION_BEAN_NAME, DispatcherServletRegistrationBean.class, () -> new DispatcherServletAutoConfiguration.DispatcherServletRegistrationConfiguration().dispatcherServletRegistration(context.getBean(DispatcherServletAutoConfiguration.DEFAULT_DISPATCHER_SERVLET_BEAN_NAME, DispatcherServlet.class), webMvcProperties, context.getBeanProvider(MultipartConfigElement.class)));
 
 		WebMvcAutoConfiguration webMvcConfiguration = new WebMvcAutoConfiguration();

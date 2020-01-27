@@ -1,6 +1,7 @@
 package org.springframework.boot.autoconfigure.data.cassandra;
 
-import com.datastax.driver.core.Session;
+import com.datastax.oss.driver.api.core.CqlSession;
+
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.data.cassandra.ReactiveSession;
@@ -17,7 +18,7 @@ public class CassandraReactiveDataInitializer implements ApplicationContextIniti
 	public void initialize(GenericApplicationContext context) {
 		CassandraReactiveDataAutoConfiguration configuration = new CassandraReactiveDataAutoConfiguration();
 
-		context.registerBean(ReactiveSession.class, () -> configuration.reactiveCassandraSession(context.getBean(Session.class)));
+		context.registerBean(ReactiveSession.class, () -> configuration.reactiveCassandraSession(context.getBean(CqlSession.class)));
 		context.registerBean(ReactiveSessionFactory.class, () -> configuration.reactiveCassandraSessionFactory(context.getBean(ReactiveSession.class)));
 		context.registerBean(ReactiveCassandraTemplate.class, () -> configuration.reactiveCassandraTemplate(context.getBean(ReactiveSession.class), context.getBean(CassandraConverter.class)));
 	}
