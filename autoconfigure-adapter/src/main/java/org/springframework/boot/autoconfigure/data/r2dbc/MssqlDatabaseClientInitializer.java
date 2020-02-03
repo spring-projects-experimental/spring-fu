@@ -2,6 +2,7 @@ package org.springframework.boot.autoconfigure.data.r2dbc;
 
 import io.r2dbc.mssql.MssqlConnectionConfiguration;
 import io.r2dbc.mssql.MssqlConnectionFactory;
+import io.r2dbc.spi.ConnectionFactory;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.data.r2dbc.core.DatabaseClient;
@@ -33,6 +34,7 @@ public class MssqlDatabaseClientInitializer implements ApplicationContextInitial
 
 		MssqlConnectionConfiguration configuration = builder.build();
 
-		context.registerBean(DatabaseClient.class, () -> DatabaseClient.builder().connectionFactory(new MssqlConnectionFactory(configuration)).build());
+		context.registerBean(ConnectionFactory.class, () -> new MssqlConnectionFactory(configuration));
+		context.registerBean(DatabaseClient.class, () -> DatabaseClient.builder().connectionFactory(context.getBean(ConnectionFactory.class)).build());
 	}
 }

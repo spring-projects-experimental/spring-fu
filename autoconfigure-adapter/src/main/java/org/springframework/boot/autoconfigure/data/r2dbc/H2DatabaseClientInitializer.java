@@ -2,6 +2,7 @@ package org.springframework.boot.autoconfigure.data.r2dbc;
 
 import io.r2dbc.h2.H2ConnectionConfiguration;
 import io.r2dbc.h2.H2ConnectionFactory;
+import io.r2dbc.spi.ConnectionFactory;
 
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
@@ -25,7 +26,7 @@ public class H2DatabaseClientInitializer implements ApplicationContextInitialize
 				.password(this.properties.getPassword())
 				.build();
 
-		context.registerBean(DatabaseClient.class, () -> DatabaseClient.builder().connectionFactory(new H2ConnectionFactory(configuration)).build());
-
+		context.registerBean(ConnectionFactory.class, () -> new H2ConnectionFactory(configuration));
+		context.registerBean(DatabaseClient.class, () -> DatabaseClient.builder().connectionFactory(context.getBean(ConnectionFactory.class)).build());
 	}
 }

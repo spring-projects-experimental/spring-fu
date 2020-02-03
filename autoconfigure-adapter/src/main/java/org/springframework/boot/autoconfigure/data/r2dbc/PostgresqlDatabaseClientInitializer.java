@@ -2,6 +2,7 @@ package org.springframework.boot.autoconfigure.data.r2dbc;
 
 import io.r2dbc.postgresql.PostgresqlConnectionConfiguration;
 import io.r2dbc.postgresql.PostgresqlConnectionFactory;
+import io.r2dbc.spi.ConnectionFactory;
 
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
@@ -27,6 +28,7 @@ public class PostgresqlDatabaseClientInitializer implements ApplicationContextIn
 				.password(this.properties.getPassword())
 				.build();
 
-		context.registerBean(DatabaseClient.class, () -> DatabaseClient.builder().connectionFactory(new PostgresqlConnectionFactory(configuration)).build());
+		context.registerBean(ConnectionFactory.class, () -> new PostgresqlConnectionFactory(configuration));
+		context.registerBean(DatabaseClient.class, () -> DatabaseClient.builder().connectionFactory(context.getBean(ConnectionFactory.class)).build());
 	}
 }

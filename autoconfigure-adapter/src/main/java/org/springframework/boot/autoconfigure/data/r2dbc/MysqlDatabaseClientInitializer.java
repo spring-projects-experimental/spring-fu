@@ -3,6 +3,7 @@ package org.springframework.boot.autoconfigure.data.r2dbc;
 import com.github.jasync.r2dbc.mysql.JasyncConnectionFactory;
 import com.github.jasync.sql.db.mysql.pool.MySQLConnectionFactory;
 import com.github.jasync.sql.db.mysql.util.URLParser;
+import io.r2dbc.spi.ConnectionFactory;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.data.r2dbc.core.DatabaseClient;
@@ -20,8 +21,8 @@ public class MysqlDatabaseClientInitializer implements ApplicationContextInitial
 	@Override
 	public void initialize(GenericApplicationContext context) {
 
-		JasyncConnectionFactory jasyncConnectionFactory = new JasyncConnectionFactory(new MySQLConnectionFactory(
-				URLParser.INSTANCE.parseOrDie(properties.getUrl(), StandardCharsets.UTF_8)));
-		context.registerBean(DatabaseClient.class, () -> DatabaseClient.builder().connectionFactory(jasyncConnectionFactory).build());
+		context.registerBean(ConnectionFactory.class, () -> new JasyncConnectionFactory(new MySQLConnectionFactory(
+				URLParser.INSTANCE.parseOrDie(properties.getUrl(), StandardCharsets.UTF_8))));
+		context.registerBean(DatabaseClient.class, () -> DatabaseClient.builder().connectionFactory(context.getBean(ConnectionFactory.class)).build());
 	}
 }
