@@ -34,7 +34,7 @@ class IntegrationTests {
                 .bodyValue(User("", "", ""))
                 .exchange()
                 .expectStatus().isBadRequest
-                .expectBody<Map<String, List<Map<String, String>>>>()
+                .expectBody<Map<String, List<Map<String, *>>>>()
                 .consumeWith { res ->
                     val details = res.responseBody!!.getValue("details")
                     Assertions.assertEquals(3, details.size)

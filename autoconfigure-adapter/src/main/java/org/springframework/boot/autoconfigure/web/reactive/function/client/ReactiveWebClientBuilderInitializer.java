@@ -39,7 +39,7 @@ public class ReactiveWebClientBuilderInitializer implements ApplicationContextIn
 
 	@Override
 	public void initialize(GenericApplicationContext context) {
-		context.registerBean(WebClient.Builder.class, () -> new WebClientAutoConfiguration(context.getBeanProvider(WebClientCustomizer.class)).webClientBuilder());
+		context.registerBean(WebClient.Builder.class, () -> new WebClientAutoConfiguration().webClientBuilder(context.getBeanProvider(WebClientCustomizer.class)));
 		context.registerBean(DefaultWebClientCodecCustomizer.class, () -> new DefaultWebClientCodecCustomizer(this.baseUrl, new ArrayList<>(context.getBeansOfType(CodecCustomizer.class).values())));
 	}
 

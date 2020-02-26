@@ -1,6 +1,6 @@
 package com.sample
 
-import com.datastax.driver.core.querybuilder.QueryBuilder
+import com.datastax.oss.driver.api.querybuilder.QueryBuilder
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import org.springframework.core.io.ClassPathResource
@@ -16,9 +16,7 @@ class UserRepository(
 	fun findAll() = template.select<User>(Query.empty())
 
 	fun findOne(id: String) = template.selectOne<User>(
-			QueryBuilder.select()
-					.from("users")
-					.where(QueryBuilder.eq("login", id))
+			QueryBuilder.selectFrom("users").all().whereColumn("login").isEqualTo(QueryBuilder.literal(id)).build()
 	)
 
 	fun deleteAll() = template.delete<User>().inTable("users").matching(Query.empty()).all()

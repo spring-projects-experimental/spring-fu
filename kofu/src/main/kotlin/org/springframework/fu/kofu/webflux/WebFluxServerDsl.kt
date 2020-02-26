@@ -13,6 +13,7 @@ import org.springframework.boot.web.embedded.undertow.UndertowReactiveWebServerF
 import org.springframework.boot.web.reactive.server.ConfigurableReactiveWebServerFactory
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.registerBean
+import org.springframework.core.io.ClassPathResource
 import org.springframework.fu.kofu.AbstractDsl
 import org.springframework.fu.kofu.ConfigurationDsl
 import org.springframework.fu.kofu.web.JacksonDsl
@@ -69,6 +70,11 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit): Abst
 	override fun initialize(context: GenericApplicationContext) {
 		super.initialize(context)
 		init()
+		context.registerBean(uniqueBeanName(RouterFunctionDsl::class.java.name, context)) {
+			org.springframework.web.reactive.function.server.router {
+				resources("/**", ClassPathResource("static/"))
+			}
+		}
 		if (engine == null) {
 			engine = netty()
 		}

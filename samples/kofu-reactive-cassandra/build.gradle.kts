@@ -3,11 +3,11 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
 	id("org.jetbrains.kotlin.jvm") version "1.3.50"
 	id("io.spring.dependency-management") version "1.0.8.RELEASE"
-	id("org.springframework.boot") version "2.2.0.RC1"
+	id("org.springframework.boot") version "2.3.0.M1"
 }
 
 dependencies {
-	implementation("org.springframework.fu:spring-fu-kofu:0.3.BUILD-SNAPSHOT")
+	implementation("org.springframework.fu:spring-fu-kofu:0.3.0.M1")
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
 	implementation("org.springframework.boot:spring-boot-starter-mustache")
 	implementation("org.springframework.boot:spring-boot-starter-data-cassandra-reactive")

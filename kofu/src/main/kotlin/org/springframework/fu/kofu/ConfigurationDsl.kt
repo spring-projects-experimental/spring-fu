@@ -1,5 +1,6 @@
 package org.springframework.fu.kofu
 
+import org.springframework.beans.BeanUtils
 import org.springframework.boot.context.properties.FunctionalConfigurationPropertiesBinder
 import org.springframework.boot.context.properties.bind.Bindable
 import org.springframework.context.ApplicationEvent
@@ -27,7 +28,7 @@ open class ConfigurationDsl(private val dsl: ConfigurationDsl.() -> Unit): Abstr
 	 * @sample org.springframework.fu.kofu.samples.beansDsl
 	 */
 	fun beans(dsl: BeanDefinitionDsl.() -> Unit) {
-		BeanDefinitionDsl(dsl).initialize(context)
+		org.springframework.context.support.beans(dsl).initialize(context)
 	}
 
 	/**
@@ -36,7 +37,7 @@ open class ConfigurationDsl(private val dsl: ConfigurationDsl.() -> Unit): Abstr
 	 * @sample org.springframework.fu.kofu.samples.applicationDslWithConfiguration
 	 */
 	fun enable(configuration: AbstractDsl) {
-        configuration.initialize(context)
+		configuration.initialize(context)
 	}
 
 	/**
@@ -46,7 +47,7 @@ open class ConfigurationDsl(private val dsl: ConfigurationDsl.() -> Unit): Abstr
 	 * @sample org.springframework.fu.kofu.samples.configurationProperties
 	 */
 	inline fun <reified T : Any> configurationProperties(properties: T? = null, prefix: String = ""): T {
-		val bindedProperties = properties ?: FunctionalConfigurationPropertiesBinder(context).bind(prefix, Bindable.of(T::class.java)).get()
+		val bindedProperties = properties ?: FunctionalConfigurationPropertiesBinder(context).bind(prefix, Bindable.of(T::class.java)).orElseGet { BeanUtils.instantiateClass(T::class.java) }
 		context.registerBean<T>("${T::class.java.simpleName.toLowerCase()}ConfigurationProperties") {
 			bindedProperties
 		}
