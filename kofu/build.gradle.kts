@@ -59,38 +59,40 @@ tasks.withType<Test> {
 }
 
 tasks.withType<DokkaTask> {
-	reportUndocumented = false
 	outputFormat = "html"
-	samples = listOf("src/test/kotlin/org/springframework/fu/kofu/samples")
-	externalDocumentationLink {
-		url = URL("https://docs.spring.io/spring-framework/docs/current/javadoc-api/")
-	}
-	externalDocumentationLink {
-		url = URL("https://docs.spring.io/spring-framework/docs/current/kdoc-api/spring-framework/")
-	}
-	externalDocumentationLink {
-		url = URL("https://fasterxml.github.io/jackson-core/javadoc/2.9/")
-	}
-	externalDocumentationLink {
-		url = URL("https://fasterxml.github.io/jackson-annotations/javadoc/2.9/")
-	}
-	externalDocumentationLink {
-		url = URL("https://fasterxml.github.io/jackson-databind/javadoc/2.9/")
-	}
-	externalDocumentationLink {
-		url = URL("https://docs.spring.io/spring-data/mongodb/docs/2.2.x/api/")
-	}
-	externalDocumentationLink {
-		url = URL("https://docs.oracle.com/javase/8/docs/api/")
-	}
-	externalDocumentationLink {
-		url = URL("https://docs.spring.io/spring-boot/docs/2.2.x/api/")
-	}
-	externalDocumentationLink {
-		url = URL("https://docs.spring.io/spring-data/r2dbc/docs/1.0.x/api/")
-	}
-	externalDocumentationLink {
-		url = URL("https://docs.spring.io/spring-data/cassandra/docs/current/api/")
+	configuration {
+		samples = listOf("src/test/kotlin/org/springframework/fu/kofu/samples")
+		reportUndocumented = false
+		externalDocumentationLink {
+			url = URL("https://docs.spring.io/spring-framework/docs/current/javadoc-api/")
+		}
+		externalDocumentationLink {
+			url = URL("https://docs.spring.io/spring-framework/docs/current/kdoc-api/spring-framework/")
+		}
+		externalDocumentationLink {
+			url = URL("https://fasterxml.github.io/jackson-core/javadoc/2.9/")
+		}
+		externalDocumentationLink {
+			url = URL("https://fasterxml.github.io/jackson-annotations/javadoc/2.9/")
+		}
+		externalDocumentationLink {
+			url = URL("https://fasterxml.github.io/jackson-databind/javadoc/2.9/")
+		}
+		externalDocumentationLink {
+			url = URL("https://docs.spring.io/spring-data/mongodb/docs/2.2.x/api/")
+		}
+		externalDocumentationLink {
+			url = URL("https://docs.oracle.com/javase/8/docs/api/")
+		}
+		externalDocumentationLink {
+			url = URL("https://docs.spring.io/spring-boot/docs/2.2.x/api/")
+		}
+		externalDocumentationLink {
+			url = URL("https://docs.spring.io/spring-data/r2dbc/docs/1.0.x/api/")
+		}
+		externalDocumentationLink {
+			url = URL("https://docs.spring.io/spring-data/cassandra/docs/current/api/")
+		}
 	}
 }
 

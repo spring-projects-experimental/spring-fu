@@ -1,7 +1,7 @@
 package com.sample
 
 import am.ik.yavi.builder.ValidatorBuilder
-import am.ik.yavi.builder.constraint
+import am.ik.yavi.builder.konstraint
 import am.ik.yavi.core.ConstraintViolations
 import am.ik.yavi.fn.Either
 
@@ -12,13 +12,13 @@ data class User(
 ) {
     companion object {
         val validator = ValidatorBuilder.of<User>()
-                .constraint(User::login) {
+                .konstraint(User::login) {
                     notNull().greaterThanOrEqual(4).lessThanOrEqual(8)
                 }
-                .constraint(User::firstname) {
+                .konstraint(User::firstname) {
                     notBlank().lessThanOrEqual(32)
                 }
-                .constraint(User::lastname) {
+                .konstraint(User::lastname) {
                     notBlank().lessThanOrEqual(32)
                 }
                 .build()
