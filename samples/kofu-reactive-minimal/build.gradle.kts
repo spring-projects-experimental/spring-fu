@@ -7,7 +7,7 @@ plugins {
 }
 
 dependencies {
-	implementation("org.springframework.fu:spring-fu-kofu:0.3.0.BUILD-SNAPSHOT")
+	implementation("org.springframework.fu:spring-fu-kofu:0.3.0.M2")
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
