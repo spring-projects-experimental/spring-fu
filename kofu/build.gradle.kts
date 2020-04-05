@@ -88,7 +88,7 @@ tasks.withType<DokkaTask> {
 			url = URL("https://docs.spring.io/spring-boot/docs/2.2.x/api/")
 		}
 		externalDocumentationLink {
-			url = URL("https://docs.spring.io/spring-data/r2dbc/docs/1.0.x/api/")
+			url = URL("https://docs.spring.io/spring-data/r2dbc/docs/1.1.x/api/")
 		}
 		externalDocumentationLink {
 			url = URL("https://docs.spring.io/spring-data/cassandra/docs/current/api/")

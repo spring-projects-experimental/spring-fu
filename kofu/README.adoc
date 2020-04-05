@@ -1,3 +1,7 @@
+:spring-fu-version: 0.2.2
+:kofu-kdoc-url: http://repo.spring.io/milestone/org/springframework/fu/spring-fu-kofu/{spring-fu-version}/spring-fu-kofu-{spring-fu-version}-javadoc.jar!
+:framework-kdoc-url: https://docs.spring.io/spring-framework/docs/current/kdoc-api
+
 = Kofu DSL for Spring Boot
 
 Kofu (for **Ko**tlin and **fu**nctional) is an alternative way of configuring explicitly your Spring Boot application,
@@ -5,6 +9,105 @@ different from regular auto-configuration, using a Kotlin DSL. It is based on Sp
 https://github.com/spring-projects/spring-fu/tree/master/autoconfigure-adapter[used via functional bean definitions]
 instead of JavaConfig.
 
-See documentation on the https://github.com/spring-projects/spring-fu[root README].
+It leverages other Spring Kotlin DSLs available in Spring like:
 
+* https://docs.spring.io/spring/docs/current/spring-framework-reference/languages.html#kotlin-bean-definition-dsl[`beans { }` DSL] from Spring Framework
+* https://docs.spring.io/spring/docs/current/spring-framework-reference/languages.html#router-dsl[`router { }` DSL] from Spring MVC or Spring WebFlux
+* https://github.com/spring-projects-experimental/spring-security-kotlin-dsl[`security { }` DSL] (work in progress) from Spring Security
+
+== Sample application
+
+Here is a sample sample application that is leveraging Spring MVC:
+
+```kotlin
+val app = application(WebApplicationType.SERVLET) {
+	logging {
+		level = LogLevel.DEBUG
+	}
+	beans {
+		bean<SampleService>()
+	}
+	webMvc {
+		port = if (profiles.contains("test")) 8181 else 8080
+		router {
+			val service = ref<SampleService>()
+			GET("/") {
+				ok().body(service.generateMessage())
+			}
+			GET("/api") {
+				ok().body(Sample(service.generateMessage()))
+			}
+		}
+		converters {
+			string()
+			jackson {
+				indentOutput = true
+			}
+		}
+	}
+}
+
+data class Sample(val message: String)
+
+class SampleService {
+	fun generateMessage() = "Hello world!"
+}
+
+fun main() {
+	app.run()
+}
+```
+
+To use WebFlux.fn instead
+
+* Use `WebApplicationType.REACTIVE` instead of `WebApplicationType.SERVLET`
+* Use `webFlux { }` instead of `webMvc { }`
+* Use `spring-boot-starter-webflux` starter instead of `spring-boot-starter-web`
+* Use `coRouter { }` instead of `router { }` if you want to use Coroutines instead of Reactor API
+
+== Dependencies
+
+Kofu is technically just a dependency you add to your Spring Boot project.
+
+```kotlin
+repositories {
+	mavenCentral()
+	maven("https://repo.spring.io/milestone")
+}
+
+dependencies {
+	implementation("org.springframework.fu:spring-fu-kofu:0.2.2")
+
+	implementation("org.springframework.boot:spring-boot-starter-web")
+	testImplementation("org.springframework.boot:spring-boot-starter-webflux")
+}
+```
+
+== Getting started
+
+* Go to https://start.spring.io/#!type=gradle-project&language=kotlin[start.spring.io]
+* Select latest Spring Boot `2.2.0.x` release
+* Select the "Web" or "Reactive web" starter
+* Add the `org.springframework.fu:spring-fu-kofu:{spring-fu-version}` dependency
+* Modify the generated `DemoApplication.kt` file as following:
+
+```kotlin
+package com.sample
+
+import org.springframework.fu.kofu.application
+
+val app = application(...) {
+	...
+}
+
+fun main() {
+	app.run()
+}
+```
+
+See sample projects https://github.com/spring-projects/spring-fu/tree/master/samples[here].
+
+You can now also benefits of
+https://docs.spring.io/spring/docs/current/spring-framework-reference/[Spring Framework reference documentation]
+which is now available with Kotlin code samples.
 

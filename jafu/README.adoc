@@ -1,0 +1,130 @@
+:spring-fu-version: 0.3.0.BUILD-SNAPSHOT
+:jafu-javadoc-url: http://repo.spring.io/milestone/org/springframework/fu/spring-fu-jafu/{spring-fu-version}/spring-fu-jafu-{spring-fu-version}-javadoc.jar!
+:framework-javadoc-url: https://docs.spring.io/spring-framework/docs/5.3.x/javadoc-api
+
+= Jafu DSL for Spring Boot
+
+Jafu (for **Ja**va and **fu**nctional) is an alternative way of configuring explicitly your Spring Boot application,
+different from regular auto-configuration, using a Java DSL. It is based on Spring Boot infrastructure, but
+https://github.com/spring-projects/spring-fu/tree/master/autoconfigure-adapter[used via functional bean definitions]
+instead of JavaConfig.
+
+== API reference
+
+An overview of Jafu DSL is provided bellow with the related {jafu-javadoc-url}/index.html[API documentation].
+Be aware that a few static imports will be needed.
+
+[source,java]
+----
+public class Application {
+
+	public static Consumer<ConfigurationDsl> dataConf = c -> { // <1>
+		c.beans(); // <2>
+		c.enable(mongo()); // <3>
+		c.enable(r2dbcH2()); // <4>
+		c.enable(r2dbcPostgresql()); // <5>
+	};
+
+
+	public static Consumer<ConfigurationDsl> webConf = conf -> { // <1>
+		conf.beans(); // <2>
+		conf.enable(server(s -> { // <6>
+			s.engine(); // <7>
+			s.port(); // <8>
+			s.router(); // <9>
+			s.include(); // <10>
+			s.codecs(); // <11>
+			s.mustache(); // <12>
+			s.filter(); // <13>
+		}));
+		conf.enable(client(c -> { // <14>
+			c.baseUrl(); // <15>
+			c.codecs(); // <16>
+		}));
+	};
+
+
+	public static JafuApplication app = application(WebApplicationType.REACTIVE, a -> { // <17>
+		a.logging(); // <18>
+		a.configurationProperties(); // <19>
+		a.listener(); // <20>
+		a.enable(dataConf); // <21>
+		a.enable(webConf); // <21>
+	});
+
+
+	public static void main (String[] args) {
+		app.run(args); // <22>
+	}
+}
+----
+ * 1 {jafu-javadoc-url}/org/springframework/fu/jafu/ConfigurationDsl.html[configuration documentation]
+ ** 2 {jafu-javadoc-url}/org/springframework/fu/jafu/BeanDsl.html[beans documentation]
+ ** 3 {jafu-javadoc-url}/org/springframework/fu/jafu/mongo/MongoDsl.html[mongo documentation]
+ ** 4 {jafu-javadoc-url}/org/springframework/fu/jafu/r2dbc/H2R2dbcDsl.html[r2dbc-h2 documentation]
+ ** 5 {jafu-javadoc-url}/org/springframework/fu/jafu/r2dbc/PostgresqlR2dbcDsl.html[r2dbc-postgresql documentation]
+ * 6 {jafu-javadoc-url}/org/springframework/fu/jafu/web/WebFluxServerDsl.html[WebFlux server documentation]
+ ** 7 {jafu-javadoc-url}/org/springframework/fu/jafu/web/WebFluxServerDsl.html#engine(org.springframework.boot.web.reactive.server.ConfigurableReactiveWebServerFactory)[engine documentation]
+ ** 8 {jafu-javadoc-url}/org/springframework/fu/jafu/web/WebFluxServerDsl.html#port(int)[port documentation]
+ ** 9 {framework-javadoc-url}https://docs.spring.io/spring-framework/docs/5.3.x/javadoc-api/org/springframework/web/reactive/function/server/RouterFunctions.Builder.html[router documentation]
+ ** 10 {jafu-javadoc-url}/org/springframework/fu/jafu/web/WebFluxServerDsl.html#include(org.springframework.web.reactive.function.server.RouterFunction)[Include router documentation]
+ ** 11 {jafu-javadoc-url}/org/springframework/fu/jafu/web/WebFluxServerDsl.WebFluxServerCodecDsl.html[codecs documentation]
+ ** 12 {jafu-javadoc-url}/org/springframework/fu/jafu/web/WebFluxServerDsl.html#mustache()[mustache documentation]
+ ** 13 {jafu-javadoc-url}/org/springframework/fu/jafu/web/WebFluxServerDsl.html#filter(org.springframework.web.server.WebFilter)[filter documentation]
+ * 14 {jafu-javadoc-url}/org/springframework/fu/jafu/web/WebFluxClientDsl.html[WebFlux client documentation]
+ ** 15 {jafu-javadoc-url}/org/springframework/fu/jafu/web/WebFluxClientDsl.html#baseUrl(java.lang.String)[baseUrl documentation]
+ ** 16 {jafu-javadoc-url}/org/springframework/fu/jafu/web/WebFluxClientDsl.WebFluxClientCodecDsl.html[codecs documentation]
+ * 17 {jafu-javadoc-url}/org/springframework/fu/jafu/Jafu.html[application/webApplication documentation]
+ ** 18 {jafu-javadoc-url}/org/springframework/fu/jafu/ConfigurationDsl.html#logging(java.util.function.Consumer)[logging documentation]
+ ** 19 {jafu-javadoc-url}/org/springframework/fu/jafu/ConfigurationDsl.html#configurationProperties(java.lang.Class)[configuration-properties documentation]
+ ** 20 {jafu-javadoc-url}/org/springframework/fu/jafu/ConfigurationDsl.html#listener(java.lang.Class,org.springframework.context.ApplicationListener)[listener-properties documentation]
+ ** 21 {jafu-javadoc-url}/org/springframework/fu/jafu/ConfigurationDsl.html#enable(org.springframework.context.ApplicationContextInitializer)[enable documentation]
+ ** 22 {jafu-javadoc-url}/org/springframework/fu/jafu/JafuApplication.html#run()[run documentation]
+
+== Getting started
+
+ * Create a Spring `2.3.0.M4` project on https://start.spring.io/[start.spring.io] with the "Reactive web" starter
+ * Add the Spring milestone repository `https://repo.spring.io/snapshot`
+ * Add the `org.springframework.fu:spring-fu-jafu:{spring-fu-version}` dependency
+ * Modify the generated `DemoApplication.java` file as following:
+
+```java
+package com.sample;
+
+import static org.springframework.fu.jafu.Jafu.application;
+import static org.springframework.fu.jafu.webflux.WebFluxServerDsl.webFlux;
+import static org.springframework.web.reactive.function.server.ServerResponse.*;
+
+import org.springframework.fu.jafu.JafuApplication;
+
+public class DemoApplication {
+
+	public static JafuApplication app = application(a ->
+			a.enable(server(s -> s.router(r ->
+				r.GET("/", request -> ok().bodyValue("Hello world!"))
+			)))
+	);
+
+	public static void main (String[] args) {
+		app.run(args);
+	}
+}
+```
+
+== Samples
+
+=== jafu-reactive-minimal
+
+https://github.com/spring-projects/spring-fu/tree/master/samples/jafu-reactive-minimal[Browse source] |
+http://repo.spring.io/milestone/org/springframework/fu/spring-fu-samples-jafu-reactive-minimal/{spring-fu-version}/spring-fu-samples-jafu-reactive-minimal-{spring-fu-version}.zip[Download]
+
+This is a sample project for a Spring Boot Reactive web application with Jafu configuration which provides a
+`http://localhost:8080/` endpoint that displays "Hello world!" and an `http://localhost:8080/api` with a JSON
+endpoint.
+
+=== jafu-reactive-r2dbc
+
+https://github.com/spring-projects/spring-fu/tree/master/samples/jafu-reactive-r2dbc[Browse source] |
+http://repo.spring.io/milestone/org/springframework/fu/spring-fu-samples-jafu-reactive-r2dbc/{spring-fu-version}/spring-fu-samples-jafu-reactive-r2dbc-{spring-fu-version}.zip[Download]
+
+This is a sample project for a Spring Boot Reactive web application with Jafu configuration and a R2DBC backend.

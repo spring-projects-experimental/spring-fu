@@ -1,124 +1,17 @@
-:spring-fu-version: 0.2.2
-:kofu-kdoc-url: http://repo.spring.io/milestone/org/springframework/fu/spring-fu-kofu/{spring-fu-version}/spring-fu-kofu-{spring-fu-version}-javadoc.jar!
-:framework-kdoc-url: https://docs.spring.io/spring-framework/docs/current/kdoc-api
-
 image:https://ci.spring.io/api/v1/teams/spring-fu/pipelines/spring-fu/badge["Build Status", link="https://ci.spring.io/teams/spring-fu/pipelines/spring-fu"] image:https://img.shields.io/badge/API%20documentation-0.2.2-blue.svg["API documentation", link="{kofu-kdoc-url}/kofu/org.springframework.fu.kofu/-application-dsl.html"]
 
-Spring Fu is an incubator for Kofu, a set of
-Kotlin DSLs like {kofu-kdoc-url}/kofu/org.springframework.fu.kofu/-application-dsl.html[`application { }`]
-and {kofu-kdoc-url}/kofu/org.springframework.fu.kofu/-configuration-dsl/index.html[`configuration { }`]
-designed to configure Spring Boot explicitly with code in a declarative way with great
-discoverability thanks to auto-complete. In Kofu, "Ko" stands for Kotlin, and "fu" for functional.
+Spring Fu is an incubator for https://github.com/spring-projects-experimental/spring-fu/tree/master/jafu[Jafu] (Java DSL)
+and https://github.com/spring-projects-experimental/spring-fu/tree/master/kofu[Kofu] (Kotlin DSL) designed to configure
+Spring Boot explicitly with code in a declarative way with great  discoverability thanks to auto-complete.
+It provides fast startup (40% faster than regular auto-configuration on a minimal Spring MVC app), low memory consumption
+and is a good fit with GraalVM native thanks to its (almost) reflection-less approach.
 
-It leverages other Spring Kotlin DSLs available in Spring like:
+If you are interested in running Spring application (including Jafu and Kofu ones) as GraalVM native images,
+see the https://github.com/spring-projects-experimental/spring-graal-native-image[spring-graal-native-image] project.
 
- * https://docs.spring.io/spring/docs/current/spring-framework-reference/languages.html#kotlin-bean-definition-dsl[`beans { }` DSL] from Spring Framework
- * https://docs.spring.io/spring/docs/current/spring-framework-reference/languages.html#router-dsl[`router { }` DSL] from Spring MVC or Spring WebFlux
- * https://github.com/spring-projects-experimental/spring-security-kotlin-dsl[`security { }` DSL] (work in progress) from Spring Security
-
-It provides fast startup (40% faster than regular auto-configuration on a minimal Spring MVC app) and low memory consumption.
-
-It is not intended to be used in production yet, but rather to incubate and get feedback and contributions
-from the community in order to hopefully reach a point where it can be integrated as
-Spring Boot Kotlin DSL.
-
-If you are interested in running Spring application as GraalVM native images see the https://github.com/spring-projects-experimental/spring-graal-native-image[spring-graal-native-image] project.
-
-== Sample application
-
-Here is a sample sample application that is leveraging Spring MVC:
-
-```kotlin
-val app = application(WebApplicationType.SERVLET) {
-	logging {
-		level = LogLevel.DEBUG
-	}
-	beans {
-		bean<SampleService>()
-	}
-	webMvc {
-		port = if (profiles.contains("test")) 8181 else 8080
-		router {
-			val service = ref<SampleService>()
-			GET("/") {
-				ok().body(service.generateMessage())
-			}
-			GET("/api") {
-				ok().body(Sample(service.generateMessage()))
-			}
-		}
-		converters {
-			string()
-			jackson {
-				indentOutput = true
-			}
-		}
-	}
-}
-
-data class Sample(val message: String)
-
-class SampleService {
-	fun generateMessage() = "Hello world!"
-}
-
-fun main() {
-	app.run()
-}
-```
-
-To use WebFlux.fn instead
-
- * Use `WebApplicationType.REACTIVE` instead of `WebApplicationType.SERVLET`
- * Use `webFlux { }` instead of `webMvc { }`
- * Use `spring-boot-starter-webflux` starter instead of `spring-boot-starter-web`
- * Use `coRouter { }` instead of `router { }` if you want to use Coroutines instead of Reactor API
-
-== Dependencies
-
-Kofu is technically just a dependency you add to your Spring Boot project.
-
-```kotlin
-repositories {
-	mavenCentral()
-	maven("https://repo.spring.io/milestone")
-}
-
-dependencies {
-	implementation("org.springframework.fu:spring-fu-kofu:0.2.2")
-
-	implementation("org.springframework.boot:spring-boot-starter-web")
-	testImplementation("org.springframework.boot:spring-boot-starter-webflux")
-}
-```
-
-== Getting started
-
-* Go to https://start.spring.io/#!type=gradle-project&language=kotlin[start.spring.io]
-* Select latest Spring Boot `2.2.0.x` release
-* Select the "Web" or "Reactive web" starter
-* Add the `org.springframework.fu:spring-fu-kofu:{spring-fu-version}` dependency
-* Modify the generated `DemoApplication.kt` file as following:
-
-```kotlin
-package com.sample
-
-import org.springframework.fu.kofu.application
-
-val app = application(...) {
-	...
-}
-
-fun main() {
-	app.run()
-}
-```
-
-See sample projects https://github.com/spring-projects/spring-fu/tree/master/samples[here].
-
-You can now also benefits of
-https://docs.spring.io/spring/docs/current/spring-framework-reference/[Spring Framework reference documentation]
-which is now available with Kotlin code samples.
+Spring Fu is not intended to be used in production yet, but rather to incubate and get feedback and contributions
+from the community in order to hopefully reach a point where it can be integrated as part of Spring Framework and Spring
+Boot.
 
 == Credits
 
