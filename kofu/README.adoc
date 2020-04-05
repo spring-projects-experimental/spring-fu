@@ -1,4 +1,4 @@
-:spring-fu-version: 0.3.0.M2
+:spring-fu-version: 0.3.0.BUILD-SNAPSHOT
 :kofu-kdoc-url: http://repo.spring.io/milestone/org/springframework/fu/spring-fu-kofu/{spring-fu-version}/spring-fu-kofu-{spring-fu-version}-javadoc.jar!
 :framework-kdoc-url: https://docs.spring.io/spring-framework/docs/current/kdoc-api
 
@@ -76,7 +76,7 @@ repositories {
 }
 
 dependencies {
-	implementation("org.springframework.fu:spring-fu-kofu:0.3.0.M2")
+	implementation("org.springframework.fu:spring-fu-kofu:0.3.0.BUILD-SNAPSHOT")
 
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	testImplementation("org.springframework.boot:spring-boot-starter-webflux")
