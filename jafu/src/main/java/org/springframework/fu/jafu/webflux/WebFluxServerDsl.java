@@ -7,6 +7,7 @@ import java.util.function.Supplier;
 
 import org.springframework.beans.factory.config.BeanDefinitionCustomizer;
 import org.springframework.beans.factory.support.BeanDefinitionReaderUtils;
+import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.web.ResourceProperties;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.boot.autoconfigure.web.reactive.FormCodecInitializer;
@@ -28,10 +29,11 @@ import org.springframework.web.reactive.function.server.RouterFunctions;
 import org.springframework.web.server.WebFilter;
 
 /**
- * Jafu DSL for WebFlux webFlux.
+ * Jafu DSL for WebFlux server.
  *
- * This DSL to be used with {@link org.springframework.fu.jafu.Jafu#reactiveWebApplication(java.util.function.Consumer)} configures a
- * <a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/web-reactive.html#spring-webflux"></a>WebFlux webFlux</a>.
+ * This DSL to be used with {@link org.springframework.fu.jafu.Jafu#application(WebApplicationType, java.util.function.Consumer)}
+ * using a {@link WebApplicationType#REACTIVE} parameter configures a
+ * <a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/web-reactive.html#spring-webflux"></a>WebFlux server</a>.
  *
  * When no codec is configured, {@code String} and {@code Resource} ones are configured by default.
  * When a {@code codecs} block is declared, the one specified are configured by default.
@@ -40,7 +42,7 @@ import org.springframework.web.server.WebFilter;
  *
  * Required dependencies can be retrieve using {@code org.springframework.boot:spring-boot-starter-webflux}.
  *
- * @see org.springframework.fu.jafu.Jafu#reactiveWebApplication(java.util.function.Consumer)
+ * @see org.springframework.fu.jafu.Jafu#application(WebApplicationType, java.util.function.Consumer)
  * @see WebFluxServerDsl#codecs(Consumer)
  * @see WebFluxServerDsl#mustache()
  * @author Sebastien Deleuze
@@ -167,7 +169,7 @@ public class WebFluxServerDsl extends AbstractDsl {
 	}
 
 	/**
-	 * Jafu DSL for WebFlux webFlux codecs.
+	 * Jafu DSL for WebFlux server codecs.
 	 */
 	static public class WebFluxServerCodecDsl extends AbstractDsl {
 
@@ -251,7 +253,7 @@ public class WebFluxServerDsl extends AbstractDsl {
 
 		/**
 		 * Register an `ObjectMapper` bean and configure a [Jackson](https://github.com/FasterXML/jackson)
-		 * JSON codec on WebFlux webFlux via a [dedicated DSL][JacksonDsl].
+		 * JSON codec on WebFlux server via a [dedicated DSL][JacksonDsl].
 		 *
 		 * Required dependencies can be retrieve using `org.springframework.boot:spring-boot-starter-json`
 		 * (included by default in `spring-boot-starter-webflux`).

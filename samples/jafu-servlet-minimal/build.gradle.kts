@@ -12,9 +12,10 @@ java {
 dependencies {
 	implementation("org.springframework.fu:spring-fu-jafu:0.3.0.BUILD-SNAPSHOT")
 
-	implementation("org.springframework.boot:spring-boot-starter-webflux")
+	implementation("org.springframework.boot:spring-boot-starter-web")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
+	testImplementation("org.springframework.boot:spring-boot-starter-webflux")
 }
 
 repositories {

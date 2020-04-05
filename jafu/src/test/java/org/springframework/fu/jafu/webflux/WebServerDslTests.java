@@ -16,16 +16,6 @@
 
 package org.springframework.fu.jafu.webflux;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.fu.jafu.Jafu.application;
-import static org.springframework.fu.jafu.mongo.ReactiveMongoDsl.reactiveMongo;
-import static org.springframework.fu.jafu.webflux.WebFluxClientDsl.webClient;
-import static org.springframework.fu.jafu.webflux.WebFluxServerDsl.webFlux;
-import static org.springframework.http.HttpStatus.NO_CONTENT;
-import static org.springframework.http.HttpStatus.UNAUTHORIZED;
-import static org.springframework.web.reactive.function.server.ServerResponse.noContent;
-import static org.springframework.web.reactive.function.server.ServerResponse.ok;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Mono;
@@ -41,6 +31,14 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.fu.jafu.Jafu.application;
+import static org.springframework.fu.jafu.webflux.WebFluxServerDsl.webFlux;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
+import static org.springframework.web.reactive.function.server.ServerResponse.noContent;
+import static org.springframework.web.reactive.function.server.ServerResponse.ok;
 
 /**
  * @author Sebastien Deleuze

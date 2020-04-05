@@ -22,7 +22,7 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 
 /**
- * {@link ApplicationContextInitializer} adapter for registering {@link String} codecs.
+ * {@link ApplicationContextInitializer} adapter for registering {@link String} converter.
  */
 public class StringConverterInitializer implements ApplicationContextInitializer<GenericApplicationContext> {
 

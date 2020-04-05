@@ -17,10 +17,7 @@ dependencies {
 	implementation("org.springframework.data:spring-data-r2dbc:1.1.0.RC1")
 	implementation("io.r2dbc:r2dbc-h2")
 
-	testImplementation("org.junit.jupiter:junit-jupiter-api")
-	testImplementation("org.springframework:spring-test")
-	testImplementation("io.projectreactor:reactor-test")
-	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+	testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
 dependencyManagement {
@@ -34,4 +31,8 @@ repositories {
 	mavenCentral()
 	maven("https://repo.spring.io/milestone")
 	maven("https://repo.spring.io/snapshot")
+}
+
+tasks.withType<Test> {
+	useJUnitPlatform()
 }

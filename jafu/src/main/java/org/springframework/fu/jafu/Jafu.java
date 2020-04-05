@@ -5,6 +5,7 @@ import java.util.function.Consumer;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.web.reactive.context.ReactiveWebServerApplicationContext;
+import org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext;
 import org.springframework.context.support.GenericApplicationContext;
 
 /**
@@ -30,7 +31,7 @@ public abstract class Jafu {
 						app.setApplicationContextClass(ReactiveWebServerApplicationContext.class);
 						break;
 					case SERVLET:
-						throw new UnsupportedOperationException("Not supported yet");
+						app.setApplicationContextClass(ServletWebServerApplicationContext.class);
 				}
 			}
 		};

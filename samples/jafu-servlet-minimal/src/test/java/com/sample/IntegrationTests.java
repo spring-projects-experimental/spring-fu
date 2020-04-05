@@ -5,7 +5,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 public class IntegrationTests {
@@ -15,20 +14,26 @@ public class IntegrationTests {
 	private ConfigurableApplicationContext context;
 
 	@BeforeAll
-	void beforeAll() {
+	public void beforeAll() {
 		context = Application.app.run("test");
 	}
 
 	@Test
-	void requestHttpApiEndpoint() {
+	public void requestRootEndpoint() {
 		client.get().uri("/").exchange()
 				.expectStatus().is2xxSuccessful()
-				.expectHeader().contentType(MediaType.APPLICATION_JSON_VALUE);
+				.expectBody(String.class).isEqualTo("Hello world!");
 	}
 
+	@Test
+	public void requestApiEndpoint() {
+		client.get().uri("/api").exchange()
+				.expectStatus().is2xxSuccessful()
+				.expectBody(String.class).isEqualTo("{\"message\":\"Hello world!\"}");
+	}
 
 	@AfterAll
 	void afterAll() {
-		context.stop();
+		context.close();
 	}
 }
