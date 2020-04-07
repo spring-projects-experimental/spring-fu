@@ -1,4 +1,4 @@
-image:https://ci.spring.io/api/v1/teams/spring-fu/pipelines/spring-fu/badge["Build Status", link="https://ci.spring.io/teams/spring-fu/pipelines/spring-fu"] image:https://img.shields.io/badge/Kotlin%20API%20documentation-0.2.2-blue.svg["Kotlin API documentation", link="{kofu-kdoc-url}/kofu/org.springframework.fu.kofu/-application-dsl.html"]
+image:https://ci.spring.io/api/v1/teams/spring-fu/pipelines/spring-fu/badge["Build Status", link="https://ci.spring.io/teams/spring-fu/pipelines/spring-fu"]
 
 Spring Fu is an incubator for https://github.com/spring-projects-experimental/spring-fu/tree/master/jafu[Jafu] (Java DSL)
 and https://github.com/spring-projects-experimental/spring-fu/tree/master/kofu[Kofu] (Kotlin DSL) designed to configure
