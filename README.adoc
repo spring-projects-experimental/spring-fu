@@ -9,6 +9,8 @@ and is a good fit with GraalVM native thanks to its (almost) reflection-less app
 If you are interested in running Spring application (including Jafu and Kofu ones) as GraalVM native images,
 see the https://github.com/spring-projects-experimental/spring-graal-native-image[spring-graal-native-image] project.
 
+== Status
+
 Spring Fu is not intended to be used in production yet, but rather to incubate and get feedback and contributions
 from the community in order to hopefully reach a point where it can be integrated as part of Spring Framework and Spring
 Boot.

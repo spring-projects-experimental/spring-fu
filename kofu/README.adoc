@@ -4,7 +4,7 @@
 
 image:https://img.shields.io/badge/Kofu%20API%20documentation-blue.svg["Kofu API documentation", link="{kofu-kdoc-url}/kofu/org.springframework.fu.kofu/-application-dsl.html"]
 
-= Kofu DSL for Spring Boot
+== Kofu DSL for Spring Boot
 
 Kofu (for **Ko**tlin and **fu**nctional) is an alternative way of configuring explicitly your Spring Boot application,
 different from regular auto-configuration, using a Kotlin DSL. It is based on Spring Boot infrastructure, but
@@ -17,7 +17,7 @@ It leverages other Spring Kotlin DSLs available in Spring like:
 * https://docs.spring.io/spring/docs/current/spring-framework-reference/languages.html#router-dsl[`router { }` DSL] from Spring MVC or Spring WebFlux
 * https://github.com/spring-projects-experimental/spring-security-kotlin-dsl[`security { }` DSL] (work in progress) from Spring Security
 
-== Sample application
+=== Sample application
 
 Here is a sample sample application that is leveraging Spring MVC:
 
@@ -67,7 +67,7 @@ To use WebFlux.fn instead
 * Use `spring-boot-starter-webflux` starter instead of `spring-boot-starter-web`
 * Use `coRouter { }` instead of `router { }` if you want to use Coroutines instead of Reactor API
 
-== Dependencies
+=== Dependencies
 
 Kofu is technically just a dependency you add to your Spring Boot project.
 
@@ -85,7 +85,7 @@ dependencies {
 }
 ```
 
-== Getting started
+=== Getting started
 
 * Go to https://start.spring.io/#!type=gradle-project&language=kotlin[start.spring.io]
 * Select Spring Boot `2.3.0.M4` release
@@ -110,6 +110,5 @@ fun main() {
 See also sample projects https://github.com/spring-projects/spring-fu/tree/master/samples[here].
 
 You can now also benefits of
-https://docs.spring.io/spring/docs/current/spring-framework-reference/[Spring Framework reference documentation]
+https://docs.spring.io/spring/docs/5.3.x/spring-framework-reference/[Spring Framework reference documentation]
 which is now available with Kotlin code samples.
-
