@@ -18,8 +18,8 @@ Be aware that a few static imports will be needed.
 
 === Getting started
 
- * Create a Spring `2.3.0.M4` project on https://start.spring.io/[start.spring.io] with the "Reactive web" starter
- * Add the Spring milestone repository `https://repo.spring.io/snapshot`
+ * Create a Spring `2.3.0.M4` project on https://start.spring.io/[start.spring.io]
+ * Select the "Web" starter
  * Add the `org.springframework.fu:spring-fu-jafu:{spring-fu-version}` dependency
  * Modify the generated `DemoApplication.java` file as following:
 
