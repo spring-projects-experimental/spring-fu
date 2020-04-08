@@ -26,24 +26,33 @@ Be aware that a few static imports will be needed.
 ```java
 package com.sample;
 
-import static org.springframework.fu.jafu.Jafu.application;
-import static org.springframework.fu.jafu.webmvc.WebMvcServerDsl.webMvc;
-import static org.springframework.web.servlet.function.ServerResponse..*;
-
+import org.springframework.boot.WebApplicationType;
 import org.springframework.fu.jafu.JafuApplication;
 
-public class DemoApplication {
+import static org.springframework.fu.jafu.Jafu.application;
+import static org.springframework.fu.jafu.webmvc.WebMvcServerDsl.webMvc;
 
-	public static JafuApplication app = application(WebApplicationType.SERVLET, a ->
-			a.enable(webMvc(s -> s.router(r ->
-				r.GET("/", request -> ok().body("Hello world!"))
-			)))
-	);
+public class Application {
+
+	public static JafuApplication app = application(WebApplicationType.SERVLET, a -> a.beans(b -> b
+			.bean(SampleHandler.class)
+			.bean(SampleService.class))
+			.enable(webMvc(s -> s
+					.port(s.profiles().contains("test") ? 8181 : 8080)
+					.router(router -> {
+						SampleHandler handler = s.ref(SampleHandler.class);
+						router
+								.GET("/", handler::hello)
+								.GET("/api", handler::json);
+					}).converters(c -> c
+							.string()
+							.jackson()))));
 
 	public static void main (String[] args) {
 		app.run(args);
 	}
 }
+
 ```
 
 See also sample projects https://github.com/spring-projects/spring-fu/tree/master/samples[here].
