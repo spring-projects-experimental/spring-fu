@@ -206,6 +206,7 @@ class WebFluxServerDslTests {
 	fun `Request static file`() {
 		val app = application((WebApplicationType.REACTIVE)) {
 			webFlux {
+				port = 0
 			}
 		}
 		with(app.run()) {

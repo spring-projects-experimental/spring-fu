@@ -62,6 +62,7 @@ class WebMvcServerDslTests {
 	fun `Request static file`() {
 		val app = application((WebApplicationType.SERVLET)) {
 			webMvc {
+				port = 0
 			}
 		}
 		with(app.run()) {
