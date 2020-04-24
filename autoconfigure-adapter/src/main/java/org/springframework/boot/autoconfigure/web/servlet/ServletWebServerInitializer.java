@@ -1,6 +1,5 @@
 package org.springframework.boot.autoconfigure.web.servlet;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -22,12 +21,7 @@ import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.core.ResolvableType;
 import org.springframework.format.support.FormattingConversionService;
-import org.springframework.http.HttpInputMessage;
-import org.springframework.http.HttpOutputMessage;
-import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.util.PathMatcher;
 import org.springframework.validation.Validator;
 import org.springframework.web.accept.ContentNegotiationManager;
@@ -44,8 +38,7 @@ import org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 import org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter;
 import org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter;
-import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
-import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
+import org.springframework.web.servlet.mvc.support.DefaultHandlerExceptionResolver;
 import org.springframework.web.servlet.resource.ResourceUrlProvider;
 import org.springframework.web.servlet.view.BeanNameViewResolver;
 import org.springframework.web.servlet.view.ContentNegotiatingViewResolver;
@@ -93,7 +86,6 @@ public class ServletWebServerInitializer implements ApplicationContextInitialize
 
 		WebMvcAutoConfiguration webMvcConfiguration = new WebMvcAutoConfiguration();
 		context.registerBean(OrderedHiddenHttpMethodFilter.class, webMvcConfiguration::hiddenHttpMethodFilter);
-		//context.registerBean(OrderedFormContentFilter.class, webMvcConfiguration::formContentFilter);
 
 		Supplier<WebMvcAutoConfigurationAdapter> webMvcConfigurationAdapter = new Supplier<WebMvcAutoConfigurationAdapter>() {
 
@@ -131,8 +123,6 @@ public class ServletWebServerInitializer implements ApplicationContextInitialize
 			}
 		};
 
-		context.registerBean(RequestMappingHandlerAdapter.class, () -> enableWebMvcConfiguration.get().requestMappingHandlerAdapter(context.getBean(ContentNegotiationManager.class), context.getBean(FormattingConversionService.class), context.getBean(Validator.class)));
-		context.registerBean(RequestMappingHandlerMapping.class, () -> enableWebMvcConfiguration.get().requestMappingHandlerMapping(context.getBean(ContentNegotiationManager.class), context.getBean(FormattingConversionService.class), context.getBean(ResourceUrlProvider.class)));
 		context.registerBean(FormattingConversionService.class, () -> enableWebMvcConfiguration.get().mvcConversionService());
 		context.registerBean(Validator.class, () -> enableWebMvcConfiguration.get().mvcValidator());
 		context.registerBean(ContentNegotiationManager.class, () -> enableWebMvcConfiguration.get().mvcContentNegotiationManager());
@@ -164,34 +154,11 @@ public class ServletWebServerInitializer implements ApplicationContextInitialize
 		protected void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
 			getApplicationContext().getBeanProvider(HttpMessageConverter.class).orderedStream().forEach(converters::add);
 		}
-	}
-
-	private class NoOpValidatorHttpMessageConverter implements HttpMessageConverter<Object> {
-
 
 		@Override
-		public boolean canRead(Class<?> clazz, MediaType mediaType) {
-			return false;
+		protected void configureHandlerExceptionResolvers(List<HandlerExceptionResolver> exceptionResolvers) {
+			exceptionResolvers.add(new DefaultHandlerExceptionResolver());
 		}
 
-		@Override
-		public boolean canWrite(Class<?> clazz, MediaType mediaType) {
-			return false;
-		}
-
-		@Override
-		public List<MediaType> getSupportedMediaTypes() {
-			return null;
-		}
-
-		@Override
-		public Object read(Class<?> clazz, HttpInputMessage inputMessage) throws IOException, HttpMessageNotReadableException {
-			return null;
-		}
-
-		@Override
-		public void write(Object o, MediaType contentType, HttpOutputMessage outputMessage) throws IOException, HttpMessageNotWritableException {
-
-		}
 	}
 }
