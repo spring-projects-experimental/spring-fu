@@ -17,7 +17,7 @@ class ApplicationDslTests {
 
 	@Test
 	void createAnEmptyApplicationAndCheckMessageSource() {
-		var app = application(WebApplicationType.NONE, it -> {});
+		var app = application(a -> {});
 		var context = app.run();
 		assertFalse(context instanceof ReactiveWebServerApplicationContext);
 		var messageSource = context.getBean(MessageSource.class);
@@ -27,7 +27,7 @@ class ApplicationDslTests {
 
 	@Test
 	void createAnApplicationWithACustomBean() {
-		var app = application(WebApplicationType.NONE, a -> a.beans(b -> b.bean(Foo.class)));
+		var app = application(a -> a.beans(b -> b.bean(Foo.class)));
 		var context = app.run();
 		context.getBean(MessageSource.class);
 		context.getBean(Foo.class);
@@ -37,7 +37,7 @@ class ApplicationDslTests {
 	@Test
 	void createAnApplicationWithAConfigurationImport() {
 		Consumer<ConfigurationDsl> conf = c -> c.beans(b -> b.bean(Foo.class));
-		var app = application(WebApplicationType.NONE, a -> a.enable(conf));
+		var app = application(a -> a.enable(conf));
 		var context = app.run();
 		context.getBean(MessageSource.class);
 		context.getBean(Foo.class);
@@ -46,7 +46,7 @@ class ApplicationDslTests {
 
 	@Test
 	void applicationProperties() {
-		var app = application(WebApplicationType.NONE, a -> a.configurationProperties(City.class, "city"));
+		var app = application(a -> a.configurationProperties(City.class, "city"));
 		var context = app.run();
 		assertEquals(context.getBean(City.class).name, "San Francisco");
 		context.close();
@@ -54,7 +54,7 @@ class ApplicationDslTests {
 
 	@Test
 	void replaceBeanOfExistingApplication() {
-		var app = application(WebApplicationType.NONE, a -> a.beans(b -> b.bean(Bar.class, () -> new Bar("original"))));
+		var app = application(a -> a.beans(b -> b.bean(Bar.class, () -> new Bar("original"))));
 		var context = app.customize(a -> a.beans(b -> b.bean(Bar.class, () -> new Bar("customized"), c -> c.setPrimary(true)))).run();
 		assertEquals("customized", context.getBean(Bar.class).value);
 		context.close();

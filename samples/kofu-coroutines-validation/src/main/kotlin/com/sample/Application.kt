@@ -2,9 +2,10 @@ package com.sample
 
 import org.springframework.boot.WebApplicationType
 import org.springframework.fu.kofu.application
+import org.springframework.fu.kofu.reactiveWebApplication
 import org.springframework.fu.kofu.webflux.webFlux
 
-val app = application(WebApplicationType.REACTIVE) {
+val app = reactiveWebApplication {
     beans {
         bean<UserHandler>()
         bean(::routes)

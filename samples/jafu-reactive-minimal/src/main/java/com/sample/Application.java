@@ -1,14 +1,13 @@
 package com.sample;
 
-import org.springframework.boot.WebApplicationType;
 import org.springframework.fu.jafu.JafuApplication;
 
-import static org.springframework.fu.jafu.Jafu.application;
+import static org.springframework.fu.jafu.Jafu.reactiveWebApplication;
 import static org.springframework.fu.jafu.webflux.WebFluxServerDsl.webFlux;
 
 public class Application {
 
-	public static JafuApplication app = application(WebApplicationType.REACTIVE, a -> a
+	public static JafuApplication app = reactiveWebApplication(a -> a
 			.beans(b -> b
 					.bean(SampleHandler.class)
 					.bean(SampleService.class))

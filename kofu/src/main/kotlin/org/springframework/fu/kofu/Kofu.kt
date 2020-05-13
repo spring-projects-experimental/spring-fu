@@ -1,32 +1,60 @@
 package org.springframework.fu.kofu
 
-import org.springframework.boot.SpringApplication
-import org.springframework.boot.WebApplicationType
 import org.springframework.boot.web.reactive.context.ReactiveWebServerApplicationContext
 import org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext
+import org.springframework.context.ConfigurableApplicationContext
 import org.springframework.context.support.GenericApplicationContext
 
 /**
- * Declare an [application][ApplicationDsl] that allows to configure a Spring Boot
+ * Declare a command-line [application][ApplicationDsl] (no server) that allows to configure a Spring Boot
  * application using Kofu DSL and functional bean registration.
  *
  * @sample org.springframework.fu.kofu.samples.webFluxApplicationDsl
- * @param type The [WebApplicationType] of the application
+ * @param dsl The `application { }` DSL
+ * @see ApplicationDsl
+ * @see webApplication
+ * @see reactiveWebApplication
+ * @author Sebastien Deleuze
+ */
+fun application(dsl: ApplicationDsl.() -> Unit)
+		= object: KofuApplication(ApplicationDsl(dsl)) {
+	override fun createContext(): ConfigurableApplicationContext {
+		return GenericApplicationContext()
+	}
+}
+
+/**
+ * Declare a Servlet-based web [application][ApplicationDsl] that allows to configure a Spring Boot
+ * application using Kofu DSL and functional bean registration.
+ *
+ * @sample org.springframework.fu.kofu.samples.webFluxApplicationDsl
  * @param dsl The `application { }` DSL
  * @see ApplicationDsl
  * @author Sebastien Deleuze
  */
-fun application(type: WebApplicationType, dsl: ApplicationDsl.() -> Unit)
+fun webApplication(dsl: ApplicationDsl.() -> Unit)
 		= object: KofuApplication(ApplicationDsl(dsl)) {
-	override fun initializeWebApplicationContext(app: SpringApplication) {
-		app.webApplicationType = type
-		app.setApplicationContextClass(when(type) {
-			WebApplicationType.NONE -> GenericApplicationContext::class.java
-			WebApplicationType.REACTIVE -> ReactiveWebServerApplicationContext::class.java
-			WebApplicationType.SERVLET -> ServletWebServerApplicationContext::class.java
-		})
+	override fun createContext(): ConfigurableApplicationContext {
+		return ServletWebServerApplicationContext()
 	}
 }
+
+/**
+ * Declare a Reactive-based web [application][ApplicationDsl] that allows to configure a Spring Boot
+ * application using Kofu DSL and functional bean registration.
+ *
+ * @sample org.springframework.fu.kofu.samples.webFluxApplicationDsl
+ * @param dsl The `application { }` DSL
+ * @see ApplicationDsl
+ * @author Sebastien Deleuze
+ */
+fun reactiveWebApplication(dsl: ApplicationDsl.() -> Unit)
+		= object: KofuApplication(ApplicationDsl(dsl)) {
+	override fun createContext(): ConfigurableApplicationContext {
+		return ReactiveWebServerApplicationContext()
+	}
+}
+
 
 /**
  * Define a configuration that can be imported in an application or used in tests.

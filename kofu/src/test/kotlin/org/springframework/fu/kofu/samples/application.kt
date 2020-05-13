@@ -18,13 +18,12 @@
 
 package org.springframework.fu.kofu.samples
 
-import org.springframework.boot.WebApplicationType
 import org.springframework.boot.logging.LogLevel
 import org.springframework.fu.kofu.application
 import org.springframework.fu.kofu.configuration
 
 private fun applicationDsl() {
-	val app = application(WebApplicationType.NONE) {
+	val app = application {
 		logging {
 			level = LogLevel.WARN
 		}
@@ -46,7 +45,7 @@ private fun applicationDslWithConfiguration() {
 			}
 		}
 	}
-	fun app(properties: CityProperties? = null) = application(WebApplicationType.NONE) {
+	fun app(properties: CityProperties? = null) = application {
 		with(configurationProperties(properties, prefix = "city")) {
 			logging {
 				level = LogLevel.WARN

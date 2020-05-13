@@ -21,9 +21,8 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.getBean
 import org.springframework.beans.factory.getBeanProvider
-import org.springframework.boot.WebApplicationType
-import org.springframework.fu.kofu.application
 import org.springframework.fu.kofu.localServerPort
+import org.springframework.fu.kofu.webApplication
 import org.springframework.fu.kofu.webflux.webClient
 import org.springframework.http.HttpHeaders.CONTENT_TYPE
 import org.springframework.http.HttpStatus
@@ -41,7 +40,7 @@ class JacksonDslTests {
 
 	@Test
 	fun `Enable jackson module on server, create and request a JSON endpoint`() {
-		val app = application(WebApplicationType.SERVLET) {
+		val app = webApplication {
 			webMvc {
 				port = 0
 				converters {
@@ -67,7 +66,7 @@ class JacksonDslTests {
 
 	@Test
 	fun `Enable jackson module on client and server, create and request a JSON endpoint`() {
-		val app = application(WebApplicationType.SERVLET) {
+		val app = webApplication {
 			webMvc {
 				port = 0
 				converters() {
@@ -102,7 +101,7 @@ class JacksonDslTests {
 
 	@Test
 	fun `No Jackson codec on server when not declared`() {
-		val app = application((WebApplicationType.SERVLET)) {
+		val app = webApplication {
 			webMvc {
 				port = 0
 				router {

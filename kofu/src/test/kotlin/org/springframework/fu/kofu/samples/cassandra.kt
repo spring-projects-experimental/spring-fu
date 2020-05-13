@@ -1,7 +1,6 @@
 package org.springframework.fu.kofu.samples
 
 import com.datastax.oss.driver.api.core.DefaultConsistencyLevel
-import org.springframework.boot.WebApplicationType
 import org.springframework.boot.autoconfigure.cassandra.CassandraProperties
 import org.springframework.fu.kofu.application
 import org.springframework.fu.kofu.cassandra.cassandra
@@ -9,7 +8,7 @@ import org.springframework.fu.kofu.cassandra.reactiveCassandra
 import java.time.Duration
 
 fun cassandra() {
-	application(WebApplicationType.NONE) {
+	application {
 		cassandra {
 			localDatacenter = "datacenter1"
 			keyspaceName = "keyspaceOne"
@@ -29,7 +28,7 @@ fun cassandra() {
 }
 
 fun reactiveCassandra() {
-	application(WebApplicationType.NONE) {
+	application {
 		reactiveCassandra {
 			localDatacenter = "datacenter1"
 			keyspaceName = "keyspaceOne"

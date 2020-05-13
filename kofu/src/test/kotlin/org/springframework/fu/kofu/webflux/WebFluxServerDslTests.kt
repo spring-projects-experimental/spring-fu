@@ -20,11 +20,10 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.getBean
-import org.springframework.boot.WebApplicationType
 import org.springframework.boot.logging.LogLevel
-import org.springframework.fu.kofu.application
 import org.springframework.fu.kofu.localServerPort
 import org.springframework.fu.kofu.mongo.reactiveMongodb
+import org.springframework.fu.kofu.reactiveWebApplication
 import org.springframework.http.HttpStatus.NO_CONTENT
 import org.springframework.http.HttpStatus.UNAUTHORIZED
 import org.springframework.http.MediaType
@@ -45,7 +44,7 @@ class WebFluxServerDslTests {
 
 	@Test
 	fun `Create an application with an empty server`() {
-		val app = application(WebApplicationType.REACTIVE) {
+		val app = reactiveWebApplication {
 			webFlux {
 				port = 0
 			}
@@ -57,7 +56,7 @@ class WebFluxServerDslTests {
 
 	@Test
 	fun `Create an application with a server and a filter`() {
-		val app = application(WebApplicationType.REACTIVE) {
+		val app = reactiveWebApplication {
 			webFlux {
 				port = 0
 				filter<MyFilter>()
@@ -72,7 +71,7 @@ class WebFluxServerDslTests {
 
 	@Test
 	fun `Create and request an endpoint`() {
-		val app = application((WebApplicationType.REACTIVE)) {
+		val app = reactiveWebApplication {
 			webFlux {
 				port = 0
 				router {
@@ -89,7 +88,7 @@ class WebFluxServerDslTests {
 
 	@Test
 	fun `Create and request an endpoint with a customized engine`() {
-		val app = application(WebApplicationType.REACTIVE) {
+		val app = reactiveWebApplication {
 			webFlux {
 				port = 0
 				router {
@@ -107,7 +106,7 @@ class WebFluxServerDslTests {
 
 	@Test
 	fun `Create a WebClient and request an endpoint`() {
-		val app = application(WebApplicationType.REACTIVE) {
+		val app = reactiveWebApplication {
 			webFlux {
 				port = 0
 				router {
@@ -127,7 +126,7 @@ class WebFluxServerDslTests {
 
 	@Test
 	fun `Declare 2 router blocks`() {
-		val app = application(WebApplicationType.REACTIVE) {
+		val app = reactiveWebApplication {
 			webFlux {
 				port = 0
 				router {
@@ -148,7 +147,7 @@ class WebFluxServerDslTests {
 
 	@Test
 	fun `Declare 2 server blocks`() {
-		val app = application(WebApplicationType.REACTIVE) {
+		val app = reactiveWebApplication {
 			webFlux {
 				port = 0
 			}
@@ -164,7 +163,7 @@ class WebFluxServerDslTests {
 
 	@Test
 	fun `Check that ConcurrentModificationException is not thrown`() {
-		val app = application(WebApplicationType.REACTIVE) {
+		val app = reactiveWebApplication {
 			webFlux {
 				port = 0
 				codecs {
@@ -191,7 +190,7 @@ class WebFluxServerDslTests {
 
 	@Test
 	fun `run an application 2 times`() {
-		val app = application(WebApplicationType.REACTIVE) {
+		val app = reactiveWebApplication {
 			webFlux {
 				port = 0
 			}
@@ -204,7 +203,7 @@ class WebFluxServerDslTests {
 
 	@Test
 	fun `Request static file`() {
-		val app = application((WebApplicationType.REACTIVE)) {
+		val app = reactiveWebApplication {
 			webFlux {
 				port = 0
 			}

@@ -1,14 +1,13 @@
 package com.sample;
 
-import org.springframework.boot.WebApplicationType;
 import org.springframework.fu.jafu.JafuApplication;
 
-import static org.springframework.fu.jafu.Jafu.application;
+import static org.springframework.fu.jafu.Jafu.webApplication;
 import static org.springframework.fu.jafu.webmvc.WebMvcServerDsl.webMvc;
 
 public class Application {
 
-	public static JafuApplication app = application(WebApplicationType.SERVLET, a -> a.beans(b -> b
+	public static JafuApplication app = webApplication(a -> a.beans(b -> b
 			.bean(SampleHandler.class)
 			.bean(SampleService.class))
 			.enable(webMvc(s -> s

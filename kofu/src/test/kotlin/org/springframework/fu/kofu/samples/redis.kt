@@ -1,10 +1,11 @@
-import org.springframework.boot.WebApplicationType
+package org.springframework.fu.kofu.samples
+
 import org.springframework.fu.kofu.application
 import org.springframework.fu.kofu.redis.redis
 import java.time.Duration
 
 fun jedis() {
-	application(WebApplicationType.NONE) {
+	application {
 		redis {
 			password = "password"
 			jedis {
@@ -24,7 +25,7 @@ fun jedis() {
 }
 
 fun lettuce() {
-	application(WebApplicationType.NONE) {
+	application {
 		redis {
 			host = "localhost"
 			port = 6789

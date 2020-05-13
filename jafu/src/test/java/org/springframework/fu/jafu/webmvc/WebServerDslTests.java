@@ -2,11 +2,10 @@ package org.springframework.fu.jafu.webmvc;
 
 import org.junit.jupiter.api.Test;
 
-import org.springframework.boot.WebApplicationType;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
-import static org.springframework.fu.jafu.Jafu.application;
+import static org.springframework.fu.jafu.Jafu.webApplication;
 import static org.springframework.fu.jafu.webmvc.WebMvcServerDsl.webMvc;
 import static org.springframework.web.servlet.function.ServerResponse.noContent;
 
@@ -14,14 +13,14 @@ public class WebServerDslTests {
 
 	@Test
 	public void emptyServer() {
-		var app = application(WebApplicationType.SERVLET, a -> a.enable(webMvc(s -> s.port(0))));
+		var app = webApplication(a -> a.enable(webMvc(s -> s.port(0))));
 		var context = app.run();
 		context.close();
 	}
 
 	@Test
 	void createAndRequestAnEndpoint() {
-		var app = application(WebApplicationType.SERVLET, a -> a.enable(
+		var app = webApplication(a -> a.enable(
 				webMvc(s -> s.port(0).router(r -> r.GET("/foo", request -> noContent().build())))));
 
 		var context = app.run();
@@ -33,7 +32,7 @@ public class WebServerDslTests {
 
 	@Test
 	void requestStaticFile() {
-		var app = application(WebApplicationType.SERVLET, a -> a.enable(
+		var app = webApplication(a -> a.enable(
 				webMvc(s -> s.port(0))));
 
 		var context = app.run();

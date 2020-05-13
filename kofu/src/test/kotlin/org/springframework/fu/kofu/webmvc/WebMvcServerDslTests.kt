@@ -17,9 +17,8 @@
 package org.springframework.fu.kofu.webmvc
 
 import org.junit.jupiter.api.Test
-import org.springframework.boot.WebApplicationType
-import org.springframework.fu.kofu.application
 import org.springframework.fu.kofu.localServerPort
+import org.springframework.fu.kofu.webApplication
 import org.springframework.http.MediaType
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.test.web.reactive.server.expectBody
@@ -31,7 +30,7 @@ class WebMvcServerDslTests {
 
 	@Test
 	fun `Create an application with an empty server`() {
-		val app = application(WebApplicationType.SERVLET) {
+		val app = webApplication {
 			webMvc {
 				port = 0
 			}
@@ -43,7 +42,7 @@ class WebMvcServerDslTests {
 
 	@Test
 	fun `Create and request an endpoint`() {
-		val app = application(WebApplicationType.SERVLET) {
+		val app = webApplication {
 			webMvc {
 				port = 0
 				router {
@@ -60,7 +59,7 @@ class WebMvcServerDslTests {
 
 	@Test
 	fun `Request static file`() {
-		val app = application((WebApplicationType.SERVLET)) {
+		val app = webApplication {
 			webMvc {
 				port = 0
 			}

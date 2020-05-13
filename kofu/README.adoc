@@ -19,10 +19,10 @@ It leverages other Spring Kotlin DSLs available in Spring like:
 
 === Sample application
 
-Here is a sample sample application that is leveraging Spring MVC:
+Here is a sample application that is leveraging Spring MVC:
 
 ```kotlin
-val app = application(WebApplicationType.SERVLET) {
+val app = webApplication {
 	logging {
 		level = LogLevel.DEBUG
 	}
@@ -62,7 +62,7 @@ fun main() {
 
 To use WebFlux.fn instead
 
-* Use `WebApplicationType.REACTIVE` instead of `WebApplicationType.SERVLET`
+* Use `reactiveWebApplication` instead of `webApplication`
 * Use `webFlux { }` instead of `webMvc { }`
 * Use `spring-boot-starter-webflux` starter instead of `spring-boot-starter-web`
 * Use `coRouter { }` instead of `router { }` if you want to use Coroutines instead of Reactor API

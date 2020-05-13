@@ -2,13 +2,14 @@ package org.springframework.fu.kofu
 
 import org.springframework.boot.SpringApplication
 import org.springframework.context.ApplicationContext
-import org.springframework.context.ApplicationContextInitializer
 import org.springframework.context.ConfigurableApplicationContext
-import org.springframework.context.support.GenericApplicationContext
 
 /**
  * Kofu application that can be run parameterized with Spring profiles and/or command line arguments.
+ *
  * @see application
+ * @see webApplication
+ * @see reactiveWebApplication
  * @author Sebastien Deleuze
  */
 abstract class KofuApplication(private val initializer: AbstractDsl) {
@@ -27,8 +28,11 @@ abstract class KofuApplication(private val initializer: AbstractDsl) {
 			override fun load(context: ApplicationContext?, sources: Array<out Any>?) {
 				// We don't want the annotation bean definition reader
 			}
+
+			override fun createApplicationContext(): ConfigurableApplicationContext {
+				return createContext()
+			}
 		}
-		initializeWebApplicationContext(app)
 		if (profiles.isNotEmpty()) {
 			app.setAdditionalProfiles(*profiles.split(",").map { it.trim() }.toTypedArray())
 		}
@@ -47,6 +51,6 @@ abstract class KofuApplication(private val initializer: AbstractDsl) {
 		this.customizer = customizer
 	}
 
-	protected abstract fun initializeWebApplicationContext(app: SpringApplication)
+	protected abstract fun createContext(): ConfigurableApplicationContext
 
 }

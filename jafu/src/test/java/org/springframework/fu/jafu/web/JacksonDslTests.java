@@ -1,7 +1,7 @@
 package org.springframework.fu.jafu.web;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.fu.jafu.Jafu.application;
+import static org.springframework.fu.jafu.Jafu.reactiveWebApplication;
 import static org.springframework.fu.jafu.webflux.WebFluxClientDsl.webClient;
 import static org.springframework.fu.jafu.webflux.WebFluxServerDsl.webFlux;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
@@ -16,7 +16,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import reactor.test.StepVerifier;
 
-import org.springframework.boot.WebApplicationType;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -25,7 +24,7 @@ public class JacksonDslTests {
 
 	@Test
 	void enableJacksonModuleOnServerCreateAndRequestAJSONEndpoint() {
-		var app = application(WebApplicationType.REACTIVE, a -> a.enable(webFlux(s -> s.port(0).codecs(c -> c.jackson()).router(r -> r.GET("/user", request -> ok().header(CONTENT_TYPE, APPLICATION_JSON_VALUE).bodyValue(new User("Brian")))))));
+		var app = reactiveWebApplication(a -> a.enable(webFlux(s -> s.port(0).codecs(c -> c.jackson()).router(r -> r.GET("/user", request -> ok().header(CONTENT_TYPE, APPLICATION_JSON_VALUE).bodyValue(new User("Brian")))))));
 
 		var context = app.run();
 		var port = context.getEnvironment().getProperty("local.server.port");
@@ -40,7 +39,7 @@ public class JacksonDslTests {
 
 	@Test
 	void enableJacksonModuleOnClientAndServerCreateAndRequestAJSONEndpoint() {
-		var app = application(WebApplicationType.REACTIVE, a ->
+		var app = reactiveWebApplication(a ->
 				a.enable(webFlux(s -> s.port(0).codecs(c -> c.jackson()).router(r -> r.GET("/user", request -> ok().header(CONTENT_TYPE, APPLICATION_JSON_VALUE).bodyValue(new User("Brian"))))))
 				.enable(webClient(c -> c.codecs(codecs -> codecs.jackson()))));
 		var context = app.run();
@@ -61,7 +60,7 @@ public class JacksonDslTests {
 
 	@Test
 	void noJacksonCodecOnServerWhenNotDeclared() {
-		var app = application(WebApplicationType.REACTIVE, a -> a.enable(webFlux(s -> s.port(0).router(r -> r.GET("/user", request -> ok().header(CONTENT_TYPE, APPLICATION_JSON_VALUE).bodyValue(new User("Brian")))))));
+		var app = reactiveWebApplication(a -> a.enable(webFlux(s -> s.port(0).router(r -> r.GET("/user", request -> ok().header(CONTENT_TYPE, APPLICATION_JSON_VALUE).bodyValue(new User("Brian")))))));
 		var context = app.run();
 		var port = context.getEnvironment().getProperty("local.server.port");
 		var client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:" + port).build();

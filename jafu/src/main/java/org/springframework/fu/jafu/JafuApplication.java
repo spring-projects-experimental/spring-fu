@@ -12,7 +12,10 @@ import org.springframework.context.support.GenericApplicationContext;
 
 /**
  * Jafu application that can be run parameterized with Spring profiles and/or command line arguments.
- * @see Jafu#application(org.springframework.boot.WebApplicationType, Consumer)
+ *
+ * @see Jafu#application(Consumer)
+ * @see Jafu#webApplication(Consumer)
+ * @see Jafu#reactiveWebApplication(Consumer)
  */
 public abstract class JafuApplication {
 
@@ -74,8 +77,12 @@ public abstract class JafuApplication {
 			protected void load(ApplicationContext context, Object[] sources) {
 				// We don't want the annotation bean definition reader
 			}
+
+			@Override
+			protected ConfigurableApplicationContext createApplicationContext() {
+				return createContext();
+			}
 		};
-		initializeWebApplicationContext(app);
 		if (!profiles.isEmpty()) {
 			app.setAdditionalProfiles(Arrays.stream(profiles.split(",")).map(it -> it.trim()).toArray(String[]::new));
 		}
@@ -94,6 +101,6 @@ public abstract class JafuApplication {
 		return this;
 	}
 
-	protected abstract void initializeWebApplicationContext(SpringApplication app);
+	protected abstract ConfigurableApplicationContext createContext();
 
 }
