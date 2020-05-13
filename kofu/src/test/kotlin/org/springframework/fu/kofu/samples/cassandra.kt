@@ -21,7 +21,7 @@ fun cassandra() {
 			consistencyLevel = DefaultConsistencyLevel.ALL as DefaultConsistencyLevel
 			serialConsistencyLevel = DefaultConsistencyLevel.ALL as DefaultConsistencyLevel
 			connectTimeout = Duration.ofSeconds(1)
-			pageSize = 5000
+			fetchSize = 5000
 			readTimeout = Duration.ofSeconds(2)
 		}
 	}
@@ -41,7 +41,7 @@ fun reactiveCassandra() {
 			consistencyLevel = DefaultConsistencyLevel.ANY as DefaultConsistencyLevel
 			serialConsistencyLevel = DefaultConsistencyLevel.SERIAL as DefaultConsistencyLevel
 			connectTimeout = Duration.ofSeconds(1)
-			pageSize = 5000
+			fetchSize = 5000
 			readTimeout = Duration.ofSeconds(2)
 		}
 	}

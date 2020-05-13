@@ -18,7 +18,7 @@ Be aware that a few static imports will be needed.
 
 === Getting started
 
- * Create a Spring `2.3.0.M4` project on https://start.spring.io/[start.spring.io]
+ * Create a Spring `2.3.0.RC1` project on https://start.spring.io/[start.spring.io]
  * Select the "Web" starter
  * Add the `org.springframework.fu:spring-fu-jafu:{spring-fu-version}` dependency
  * Modify the generated `DemoApplication.java` file as following:

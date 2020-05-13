@@ -112,12 +112,12 @@ open class CassandraDsl(private val init: CassandraDsl.() -> Unit) : AbstractDsl
 		}
 
 	/**
-	 * Configure the queries default page size.
+	 * Configure the queries default fetch size.
 	 */
-	var pageSize: Int
-		get() = properties.pageSize
+	var fetchSize: Int
+		get() = properties.fetchSize
 		set(value) {
-			properties.pageSize = value
+			properties.fetchSize = value
 		}
 
 	/**
