@@ -113,6 +113,7 @@ public class WebMvcServerDsl extends AbstractDsl {
 			RouterFunctions.route().resources("/**", new ClassPathResource("static/")).build()
 		);
 		serverProperties.setPort(port);
+		serverProperties.getServlet().setRegisterDefaultServlet(false);
 		if (!convertersConfigured) {
 			new StringConverterInitializer().initialize(context);
 			new ResourceConverterInitializer().initialize(context);

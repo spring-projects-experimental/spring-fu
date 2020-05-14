@@ -57,6 +57,7 @@ open class WebMvcServerDsl(private val init: WebMvcServerDsl.() -> Unit): Abstra
 				resources("/**", ClassPathResource("static/"))
 			}
 		}
+		serverProperties.servlet.isRegisterDefaultServlet = false
 		serverProperties.port = port
 		if (!convertersConfigured) {
 			StringConverterInitializer().initialize(context)
