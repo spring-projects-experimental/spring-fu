@@ -14,7 +14,7 @@ allprojects {
 		plugin("io.spring.dependency-management")
 	}
 
-	version = "0.3.0.SNAPSHOT"
+	version = "0.3.0-SNAPSHOT"
 	group = "org.springframework.fu"
 
 	dependencyManagement {
@@ -35,7 +35,7 @@ allprojects {
 						password = repoPassword
 					}
 					url = uri(
-							if (version.toString().endsWith(".BUILD-SNAPSHOT")) "https://repo.spring.io/libs-snapshot-local/"
+							if (version.toString().endsWith("-SNAPSHOT")) "https://repo.spring.io/libs-snapshot-local/"
 							else "https://repo.spring.io/libs-milestone-local/"
 					)
 
