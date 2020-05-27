@@ -4,10 +4,12 @@ Spring Fu is an incubator for https://github.com/spring-projects-experimental/sp
 and https://github.com/spring-projects-experimental/spring-fu/tree/master/kofu[Kofu] (Kotlin DSL) designed to configure
 Spring Boot explicitly with code in a declarative way with great  discoverability thanks to auto-complete.
 It provides fast startup (40% faster than regular auto-configuration on a minimal Spring MVC app), low memory consumption
-and is a good fit with GraalVM native thanks to its (almost) reflection-less approach.
+and is a good fit with https://www.graalvm.org/docs/reference-manual/native-image/[GraalVM native] thanks to its (almost) reflection-less approach.
 
-If you are interested in running Spring application (including Jafu and Kofu ones) as GraalVM native images,
-see the https://github.com/spring-projects-experimental/spring-graal-native-image[spring-graal-native-image] project.
+== Native images
+
+If you are interested in running Spring applications (including Jafu and Kofu ones) as GraalVM native images,
+see the https://github.com/spring-projects-experimental/spring-graalvm-native[spring-graalvm-native] project and its https://github.com/spring-projects-experimental/spring-graalvm-native/tree/master/spring-graalvm-native-samples/jafu[jafu] and https://github.com/spring-projects-experimental/spring-graalvm-native/tree/master/spring-graalvm-native-samples/jafu-webmvc[jafu-webmvc] samples.
 
 == Status
 

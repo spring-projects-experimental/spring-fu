@@ -88,8 +88,9 @@ dependencies {
 === Getting started
 
 * Go to https://start.spring.io/#!type=gradle-project&language=kotlin[start.spring.io]
-* Select Spring Boot `2.3.0.RC1` release
-* Select the "Web" or "Reactive web" starter
+* Select the latest Spring Boot `2.3.x.RELEASE` release
+* Add the Spring milestone repository `https://repo.spring.io/milestone`
+* Select the "Web" starter
 * Add the `org.springframework.fu:spring-fu-kofu:{spring-fu-version}` dependency
 * Modify the generated `DemoApplication.kt` file as following:
 
@@ -98,8 +99,11 @@ package com.sample
 
 import org.springframework.fu.kofu.application
 
-val app = application(...) {
+val app = webApplication {
 	...
+	webMvc {
+		...
+	}
 }
 
 fun main() {
