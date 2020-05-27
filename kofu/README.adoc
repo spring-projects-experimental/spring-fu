@@ -1,12 +1,12 @@
-:spring-fu-version: 0.3.0.M5
+:spring-fu-version: 0.3.0
 :kofu-kdoc-url: http://repo.spring.io/milestone/org/springframework/fu/spring-fu-kofu/{spring-fu-version}/spring-fu-kofu-{spring-fu-version}-javadoc.jar!
-:framework-kdoc-url: https://docs.spring.io/spring-framework/docs/5.3.x/kdoc-api
+:framework-kdoc-url: https://docs.spring.io/spring-framework/docs/5.2.x/kdoc-api
 
 image:https://img.shields.io/badge/Kofu%20documentation-blue.svg["Kofu documentation", link="{kofu-kdoc-url}/kofu/org.springframework.fu.kofu/-application-dsl.html"]
 
-== Kofu DSL for Spring Boot
+== KoFu DSL for Spring Boot
 
-Kofu (for **Ko**tlin and **fu**nctional) is an alternative way of configuring explicitly your Spring Boot application,
+KoFu (for **Ko**tlin and **Fu**nctional) is an alternative way of configuring explicitly your Spring Boot application,
 different from regular auto-configuration, using a Kotlin DSL. It is based on Spring Boot infrastructure, but
 https://github.com/spring-projects/spring-fu/tree/master/autoconfigure-adapter[used via functional bean definitions]
 instead of JavaConfig.
@@ -67,24 +67,6 @@ To use WebFlux.fn instead
 * Use `spring-boot-starter-webflux` starter instead of `spring-boot-starter-web`
 * Use `coRouter { }` instead of `router { }` if you want to use Coroutines instead of Reactor API
 
-=== Dependencies
-
-Kofu is technically just a dependency you add to your Spring Boot project.
-
-```kotlin
-repositories {
-	mavenCentral()
-	maven("https://repo.spring.io/milestone")
-}
-
-dependencies {
-	implementation("org.springframework.fu:spring-fu-kofu:0.3.0.M5")
-
-	implementation("org.springframework.boot:spring-boot-starter-web")
-	testImplementation("org.springframework.boot:spring-boot-starter-webflux")
-}
-```
-
 === Getting started
 
 * Go to https://start.spring.io/#!type=gradle-project&language=kotlin[start.spring.io]
@@ -114,5 +96,5 @@ fun main() {
 See also sample projects https://github.com/spring-projects/spring-fu/tree/master/samples[here].
 
 You can now also benefits of
-https://docs.spring.io/spring/docs/5.3.x/spring-framework-reference/[Spring Framework reference documentation]
+https://docs.spring.io/spring/docs/5.2.x/spring-framework-reference/[Spring Framework reference documentation]
 which is now available with Kotlin code samples.

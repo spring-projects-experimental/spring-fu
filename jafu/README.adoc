@@ -1,19 +1,19 @@
-:spring-fu-version: 0.3.0.M5
+:spring-fu-version: 0.3.0
 :jafu-javadoc-url: http://repo.spring.io/milestone/org/springframework/fu/spring-fu-jafu/{spring-fu-version}/spring-fu-jafu-{spring-fu-version}-javadoc.jar!
 :framework-javadoc-url: https://docs.spring.io/spring-framework/docs/5.3.x/javadoc-api
 
 image:https://img.shields.io/badge/Jafu%20documentation-blue.svg["Jafu documentation", link="{jafu-javadoc-url}/index.html"]
 
-== Jafu DSL for Spring Boot
+== JaFu DSL for Spring Boot
 
-Jafu (for **Ja**va and **fu**nctional) is an alternative way of configuring explicitly your Spring Boot application,
+JaFu (for **Ja**va and **Fu**nctional) is an alternative way of configuring explicitly your Spring Boot application,
 different from regular auto-configuration, using a Java DSL. It is based on Spring Boot infrastructure, but
 https://github.com/spring-projects/spring-fu/tree/master/autoconfigure-adapter[used via functional bean definitions]
 instead of JavaConfig.
 
 === API reference
 
-An overview of Jafu DSL is provided bellow with the related {jafu-javadoc-url}/index.html[API documentation].
+An overview of JaFu DSL is provided bellow with the related {jafu-javadoc-url}/index.html[API documentation].
 Be aware that a few static imports will be needed.
 
 === Getting started
