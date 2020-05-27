@@ -10,7 +10,7 @@ java {
 }
 
 dependencies {
-	implementation("org.springframework.fu:spring-fu-jafu:0.3.0-SNAPSHOT")
+	implementation("org.springframework.fu:spring-fu-jafu:0.3.0")
 
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
 
