@@ -58,7 +58,7 @@ abstract class AbstractDsl {
 		}
 	}
 
-	internal open fun initialize(context: GenericApplicationContext) {
+	open fun initialize(context: GenericApplicationContext) {
 		this.context = context
 	}
 
