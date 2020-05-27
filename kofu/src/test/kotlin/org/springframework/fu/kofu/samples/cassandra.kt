@@ -1,5 +1,6 @@
 package org.springframework.fu.kofu.samples
 
+import com.datastax.oss.driver.api.core.ConsistencyLevel
 import com.datastax.oss.driver.api.core.DefaultConsistencyLevel
 import org.springframework.boot.autoconfigure.cassandra.CassandraProperties
 import org.springframework.fu.kofu.application
@@ -18,11 +19,15 @@ fun cassandra() {
 			ssl = false
 			contactPoints = listOf("localhost")
 			compression = CassandraProperties.Compression.NONE
-			consistencyLevel = DefaultConsistencyLevel.ALL as DefaultConsistencyLevel
-			serialConsistencyLevel = DefaultConsistencyLevel.ALL as DefaultConsistencyLevel
-			connectTimeout = Duration.ofSeconds(1)
-			fetchSize = 5000
-			readTimeout = Duration.ofSeconds(2)
+			request {
+				consistency = DefaultConsistencyLevel.ALL as DefaultConsistencyLevel // Casting due to https://youtrack.jetbrains.com/issue/KT-35021
+				serialConsistency = ConsistencyLevel.ALL as DefaultConsistencyLevel // Casting due to https://youtrack.jetbrains.com/issue/KT-35021
+				timeout = Duration.ofSeconds(2)
+				pageSize = 5000
+			}
+			connection {
+				connectTimeout = Duration.ofSeconds(1)
+			}
 		}
 	}
 }
@@ -38,11 +43,15 @@ fun reactiveCassandra() {
 			ssl = false
 			contactPoints = listOf("localhost")
 			compression = CassandraProperties.Compression.NONE
-			consistencyLevel = DefaultConsistencyLevel.ANY as DefaultConsistencyLevel
-			serialConsistencyLevel = DefaultConsistencyLevel.SERIAL as DefaultConsistencyLevel
-			connectTimeout = Duration.ofSeconds(1)
-			fetchSize = 5000
-			readTimeout = Duration.ofSeconds(2)
+			request {
+				consistency = DefaultConsistencyLevel.ALL as DefaultConsistencyLevel // Casting due to https://youtrack.jetbrains.com/issue/KT-35021
+				serialConsistency = ConsistencyLevel.ALL as DefaultConsistencyLevel // Casting due to https://youtrack.jetbrains.com/issue/KT-35021
+				timeout = Duration.ofSeconds(2)
+				pageSize = 5000
+			}
+			connection {
+				connectTimeout = Duration.ofSeconds(1)
+			}
 		}
 	}
 }
