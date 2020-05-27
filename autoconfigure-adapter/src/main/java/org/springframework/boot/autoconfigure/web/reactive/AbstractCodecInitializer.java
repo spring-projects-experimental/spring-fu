@@ -11,7 +11,7 @@ import org.springframework.http.codec.CodecConfigurer;
 
 public abstract class AbstractCodecInitializer implements ApplicationContextInitializer<GenericApplicationContext> {
 
-	protected boolean isClientCodec;
+	protected final boolean isClientCodec;
 
 	public AbstractCodecInitializer(boolean isClientCodec) {
 		this.isClientCodec = isClientCodec;

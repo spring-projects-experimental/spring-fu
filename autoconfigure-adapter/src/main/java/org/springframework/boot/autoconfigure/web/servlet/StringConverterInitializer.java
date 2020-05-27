@@ -16,6 +16,8 @@
 
 package org.springframework.boot.autoconfigure.web.servlet;
 
+import java.util.function.Supplier;
+
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -28,6 +30,6 @@ public class StringConverterInitializer implements ApplicationContextInitializer
 
 	@Override
 	public void initialize(GenericApplicationContext context) {
-		context.registerBean("StringHttpMessageConverter", HttpMessageConverter.class, () -> new StringHttpMessageConverter());
+		context.registerBean("StringHttpMessageConverter", HttpMessageConverter.class, (Supplier<HttpMessageConverter>) StringHttpMessageConverter::new);
 	}
 }

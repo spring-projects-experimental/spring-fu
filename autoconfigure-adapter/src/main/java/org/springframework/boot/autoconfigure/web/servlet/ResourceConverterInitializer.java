@@ -1,5 +1,7 @@
 package org.springframework.boot.autoconfigure.web.servlet;
 
+import java.util.function.Supplier;
+
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -10,7 +12,7 @@ public class ResourceConverterInitializer implements ApplicationContextInitializ
 
 	@Override
 	public void initialize(GenericApplicationContext context) {
-		context.registerBean("resourceHttpMessageConverter", HttpMessageConverter.class, () -> new ResourceHttpMessageConverter());
-		context.registerBean("resourceRegionHttpMessageConverter", HttpMessageConverter.class, () -> new ResourceRegionHttpMessageConverter());
+		context.registerBean("resourceHttpMessageConverter", HttpMessageConverter.class, (Supplier<HttpMessageConverter>) ResourceHttpMessageConverter::new);
+		context.registerBean("resourceRegionHttpMessageConverter", HttpMessageConverter.class, ResourceRegionHttpMessageConverter::new);
 	}
 }

@@ -9,6 +9,6 @@ public class FormConverterInitializer implements ApplicationContextInitializer<G
 
 	@Override
 	public void initialize(GenericApplicationContext context) {
-		context.registerBean("allEncompassingFormHttpMessageConverter", HttpMessageConverter.class, () -> new AllEncompassingFormHttpMessageConverter());
+		context.registerBean("allEncompassingFormHttpMessageConverter", HttpMessageConverter.class, AllEncompassingFormHttpMessageConverter::new);
 	}
 }

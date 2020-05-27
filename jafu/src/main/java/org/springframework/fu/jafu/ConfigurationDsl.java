@@ -90,11 +90,12 @@ public class ConfigurationDsl extends AbstractDsl {
 	 * Declare application event Listeners in order to run tasks when {@link ApplicationEvent}
 	 * like {@link ApplicationReadyEvent} are emitted.
 	 */
-	public <E extends ApplicationEvent> ConfigurationDsl listener(Class<E> clazz, ApplicationListener listener) {
+	@SuppressWarnings("unchecked")
+	public <E extends ApplicationEvent> ConfigurationDsl listener(Class<E> clazz, ApplicationListener<E> listener) {
 		context.addApplicationListener(e -> {
 			// TODO Leverage SPR-16872 when it will be fixed
 			if (clazz.isAssignableFrom(e.getClass())) {
-				listener.onApplicationEvent(e);
+				listener.onApplicationEvent((E)e);
 			}
 		});
 		return this;

@@ -32,18 +32,16 @@ import org.springframework.core.env.PropertySources;
  */
 public class FunctionalConfigurationPropertiesBinder {
 
-	private ConfigurableApplicationContext context;
-
-	private final PropertySources propertySources;
+	private final ConfigurableApplicationContext context;
 
 	private final Binder binder;
 
 
 	public FunctionalConfigurationPropertiesBinder(ConfigurableApplicationContext context) {
+		PropertySources propertySources = new FunctionalPropertySourcesDeducer(context).getPropertySources();
 		this.context = context;
-		this.propertySources = new FunctionalPropertySourcesDeducer(context).getPropertySources();
 		this.binder = new Binder(ConfigurationPropertySources.from(propertySources),
-        				new PropertySourcesPlaceholdersResolver(this.propertySources),
+        				new PropertySourcesPlaceholdersResolver(propertySources),
         				null,
 				(registry) -> context.getBeanFactory().copyRegisteredEditorsTo(registry));
 	}

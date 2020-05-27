@@ -27,7 +27,7 @@ import org.springframework.web.reactive.result.view.ViewResolver;
  */
 public class MustacheReactiveWebInitializer implements ApplicationContextInitializer<GenericApplicationContext> {
 
-	private MustacheProperties properties;
+	private final MustacheProperties properties;
 
 	public MustacheReactiveWebInitializer(MustacheProperties properties) {
 		this.properties = properties;

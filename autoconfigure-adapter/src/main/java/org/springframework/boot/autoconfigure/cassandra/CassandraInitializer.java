@@ -12,7 +12,7 @@ import org.springframework.context.support.GenericApplicationContext;
  */
 public class CassandraInitializer implements ApplicationContextInitializer<GenericApplicationContext> {
 
-	private CassandraProperties properties;
+	private final CassandraProperties properties;
 
 	public CassandraInitializer(CassandraProperties properties) {
 		this.properties = properties;

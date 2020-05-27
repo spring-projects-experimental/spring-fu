@@ -27,9 +27,9 @@ import org.springframework.context.support.GenericApplicationContext;
 */
 public class MongoReactiveInitializer implements ApplicationContextInitializer<GenericApplicationContext> {
 
-	private MongoProperties properties;
+	private final MongoProperties properties;
 
-	private boolean embeddedServer;
+	private final boolean embeddedServer;
 
 	public MongoReactiveInitializer(MongoProperties properties, boolean embeddedServer) {
 		this.properties = properties;

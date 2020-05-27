@@ -27,7 +27,7 @@ import org.springframework.web.servlet.ViewResolver;
  */
 public class MustacheServletWebInitializer implements ApplicationContextInitializer<GenericApplicationContext> {
 
-	private MustacheProperties properties;
+	private final MustacheProperties properties;
 
 	public MustacheServletWebInitializer(MustacheProperties properties) {
 		this.properties = properties;

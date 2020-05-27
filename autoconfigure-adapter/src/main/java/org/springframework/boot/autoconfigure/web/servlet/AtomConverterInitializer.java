@@ -9,6 +9,6 @@ public class AtomConverterInitializer implements ApplicationContextInitializer<G
 
 	@Override
 	public void initialize(GenericApplicationContext context) {
-		context.registerBean("atomFeedHttpMessageConverter", HttpMessageConverter.class, () -> new AtomFeedHttpMessageConverter());
+		context.registerBean("atomFeedHttpMessageConverter", HttpMessageConverter.class, AtomFeedHttpMessageConverter::new);
 	}
 }

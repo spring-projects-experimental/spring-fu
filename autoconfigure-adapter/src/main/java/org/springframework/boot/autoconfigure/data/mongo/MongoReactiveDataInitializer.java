@@ -34,7 +34,7 @@ import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
  */
 public class MongoReactiveDataInitializer implements ApplicationContextInitializer<GenericApplicationContext> {
 
-	private MongoProperties properties;
+	private final MongoProperties properties;
 
 	public MongoReactiveDataInitializer(MongoProperties properties) {
 		this.properties = properties;

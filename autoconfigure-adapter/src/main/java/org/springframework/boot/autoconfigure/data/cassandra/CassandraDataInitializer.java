@@ -19,7 +19,7 @@ import com.datastax.oss.driver.api.core.CqlSession;
  */
 public class CassandraDataInitializer implements ApplicationContextInitializer<GenericApplicationContext> {
 
-	private CassandraProperties properties;
+	private final CassandraProperties properties;
 
 	public CassandraDataInitializer(CassandraProperties properties) {
 		this.properties = properties;
