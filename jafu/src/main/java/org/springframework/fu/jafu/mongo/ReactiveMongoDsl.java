@@ -4,7 +4,6 @@ import java.util.function.Consumer;
 
 import de.flapdoodle.embed.mongo.distribution.IFeatureAwareVersion;
 
-import org.springframework.boot.autoconfigure.data.mongo.MongoDataInitializer;
 import org.springframework.boot.autoconfigure.data.mongo.MongoReactiveDataInitializer;
 import org.springframework.boot.autoconfigure.mongo.MongoProperties;
 import org.springframework.boot.autoconfigure.mongo.MongoReactiveInitializer;
@@ -90,7 +89,6 @@ public class ReactiveMongoDsl extends AbstractDsl {
 		if (properties.getUri() == null) {
 			properties.setUri(MongoProperties.DEFAULT_URI);
 		}
-		new MongoDataInitializer(properties).initialize(context);
 		new MongoReactiveDataInitializer(properties).initialize(context);
 		new MongoReactiveInitializer(properties, embedded).initialize(context);
 	}

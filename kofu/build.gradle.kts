@@ -50,6 +50,7 @@ dependencies {
 	testCompile("org.testcontainers:testcontainers:1.11.3")
 	testImplementation("redis.clients:jedis")
 	testImplementation("io.lettuce:lettuce-core")
+	testImplementation("org.mongodb:mongodb-driver-legacy")
 }
 
 tasks.withType<Test> {

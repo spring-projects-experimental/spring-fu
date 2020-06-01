@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2018 the original author or authors.
+ * Copyright 2002-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,6 +42,17 @@ public class MongoReactiveDataInitializer implements ApplicationContextInitializ
 
 	@Override
 	public void initialize(GenericApplicationContext context) {
+		MongoDataConfiguration dataConfiguration = new MongoDataConfiguration();
+		context.registerBean(MongoCustomConversions.class, dataConfiguration::mongoCustomConversions);
+		context.registerBean(MongoMappingContext.class, () -> {
+			try {
+				return dataConfiguration.mongoMappingContext(context, properties, context.getBean(MongoCustomConversions.class));
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+			return null;
+		});
+
 		MongoReactiveDataAutoConfiguration configuration = new MongoReactiveDataAutoConfiguration();
 		context.registerBean(MappingMongoConverter.class, () -> configuration.mappingMongoConverter(context.getBean(MongoMappingContext.class), context.getBean(MongoCustomConversions.class)));
 		context.registerBean(SimpleReactiveMongoDatabaseFactory.class, () -> configuration.reactiveMongoDatabaseFactory(this.properties, context.getBean(MongoClient.class)));

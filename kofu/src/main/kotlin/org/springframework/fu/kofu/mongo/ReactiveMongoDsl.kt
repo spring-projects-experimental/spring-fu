@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,16 +16,9 @@
 
 package org.springframework.fu.kofu.mongo
 
-import de.flapdoodle.embed.mongo.distribution.IFeatureAwareVersion
-import de.flapdoodle.embed.mongo.distribution.Version
-import org.springframework.boot.autoconfigure.data.mongo.MongoDataInitializer
 import org.springframework.boot.autoconfigure.data.mongo.MongoReactiveDataInitializer
-import org.springframework.boot.autoconfigure.mongo.MongoProperties
 import org.springframework.boot.autoconfigure.mongo.MongoReactiveInitializer
-import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoInitializer
-import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoProperties
 import org.springframework.context.support.GenericApplicationContext
-import org.springframework.fu.kofu.AbstractDsl
 import org.springframework.fu.kofu.ConfigurationDsl
 
 /**
@@ -37,65 +30,19 @@ import org.springframework.fu.kofu.ConfigurationDsl
  *
  * @sample org.springframework.fu.kofu.samples.mongo
  * @author Sebastien Deleuze
+ * @author Eddú Meléndez
  */
 open class ReactiveMongoDsl(
 	private val init: ReactiveMongoDsl.() -> Unit
-) : AbstractDsl() {
-
-	private val properties = MongoProperties()
-
-	internal var embedded = false
+) : AbstractMongoDsl({}) {
 
 	override fun initialize(context: GenericApplicationContext) {
 		super.initialize(context)
 		init()
-		MongoDataInitializer(properties).initialize(context)
 		MongoReactiveDataInitializer(properties).initialize(context)
 		MongoReactiveInitializer(properties, embedded).initialize(context)
 	}
 
-	/**
-	 * Configure the database uri. By default set to `mongodb://localhost/test`.
-	 */
-	var uri: String
-		get() = MongoProperties.DEFAULT_URI
-		set(value) {
-			properties.uri = value
-		}
-
-	/**
-	 * Enable MongoDB embedded webFlux.
-	 *
-	 * Require `de.flapdoodle.embed:de.flapdoodle.embed.mongo` dependency.
-	 *
-	 * @sample org.springframework.fu.kofu.samples.mongoEmbedded
-	 */
-	fun embedded(dsl: EmbeddedMongoDsl.() -> Unit = {}) {
-		embedded = true
-		EmbeddedMongoDsl(properties, dsl).initialize(context)
-	}
-
-	/**
-	 * Kofu DSL for embedded MongoDB configuration.
-	 */
-	class EmbeddedMongoDsl(private val mongoProperties: MongoProperties, private val init: EmbeddedMongoDsl.() -> Unit) : AbstractDsl() {
-
-		private val embeddedMongoProperties = EmbeddedMongoProperties()
-
-		override fun initialize(context: GenericApplicationContext) {
-			super.initialize(context)
-			init()
-			EmbeddedMongoInitializer(mongoProperties, embeddedMongoProperties).initialize(context)
-		}
-
-		/**
-		 * Version of Mongo to use
-		 */
-		var version: IFeatureAwareVersion = Version.Main.PRODUCTION
-			set(value) {
-				embeddedMongoProperties.version = value.asInDownloadPath()
-			}
-	}
 }
 
 /**
