@@ -68,7 +68,7 @@ public class ServletWebServerInitializer implements ApplicationContextInitialize
 
 	@Override
 	public void initialize(GenericApplicationContext context) {
-		context.registerBean("webServerFactoryCustomizerBeanPostProcessor", WebServerFactoryCustomizerBeanPostProcessor.class);
+		context.registerBean("webServerFactoryCustomizerBeanPostProcessor", WebServerFactoryCustomizerBeanPostProcessor.class, WebServerFactoryCustomizerBeanPostProcessor::new);
 		context.registerBean(WebMvcProperties.class, () -> this.webMvcProperties);
 		context.registerBean(ServletWebServerFactoryAutoConfiguration.BeanPostProcessorsRegistrar.class, ServletWebServerFactoryAutoConfiguration.BeanPostProcessorsRegistrar::new);
 		context.registerBean(TomcatServletWebServerFactory.class, () -> new ServletWebServerFactoryConfiguration.EmbeddedTomcat().tomcatServletWebServerFactory(
