@@ -1,0 +1,17 @@
+[
+  {
+    "login": "smaldini",
+    "firstname": "Stéphane",
+    "lastname": "Maldini"
+  },
+  {
+    "login": "sdeleuze",
+    "firstname": "Sébastien",
+    "lastname": "Deleuze"
+  },
+  {
+    "login": "bclozel",
+    "firstname": "Brian",
+    "lastname": "Clozel"
+  }
+]
