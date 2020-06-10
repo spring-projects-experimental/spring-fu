@@ -4,9 +4,7 @@ import io.lettuce.core.resource.ClientResources;
 import io.lettuce.core.resource.DefaultClientResources;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
-import org.springframework.data.redis.connection.ReactiveRedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisClusterConfiguration;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisSentinelConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 
@@ -22,11 +20,10 @@ public class LettuceRedisInitializer implements ApplicationContextInitializer<Ge
 		this.redisProperties = redisProperties;
 	}
 
-	@Override
-	public void initialize(GenericApplicationContext context) {
-		context.registerBean(RedisConnectionFactory.class, () -> getLettuceConnectionFactory(context));
-		context.registerBean(ReactiveRedisConnectionFactory.class, () -> getLettuceConnectionFactory(context));
-	}
+    @Override
+    public void initialize(GenericApplicationContext context) {
+        context.registerBean(LettuceConnectionFactory.class, () -> getLettuceConnectionFactory(context));
+    }
 
 	private LettuceConnectionFactory getLettuceConnectionFactory(GenericApplicationContext context) {
 		final LettuceConnectionConfiguration configuration = new LettuceConnectionConfiguration(redisProperties, context.getBeanProvider(RedisSentinelConfiguration.class), context.getBeanProvider(RedisClusterConfiguration.class));
