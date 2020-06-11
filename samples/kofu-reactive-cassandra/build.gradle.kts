@@ -12,7 +12,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-mustache")
 	implementation("org.springframework.boot:spring-boot-starter-data-cassandra-reactive")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-	implementation("org.testcontainers:cassandra:1.11.2")
+	implementation("org.testcontainers:cassandra:1.14.3")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
