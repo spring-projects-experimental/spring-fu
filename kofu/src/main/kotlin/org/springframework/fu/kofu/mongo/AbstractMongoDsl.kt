@@ -28,9 +28,7 @@ import org.springframework.fu.kofu.AbstractDsl
 import org.springframework.fu.kofu.ConfigurationDsl
 
 /**
- * Kofu DSL for MongoDB configuration.
- *
- * Enable and configure Reactive MongoDB support by registering a [org.springframework.data.mongodb.core.MongoTemplate].
+ * Kofu DSL base MongoDB DSL
  *
  * @author Eddú Meléndez
  */
