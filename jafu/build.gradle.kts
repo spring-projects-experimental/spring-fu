@@ -36,6 +36,7 @@ dependencies {
 	compileOnly("org.springframework.data:spring-data-r2dbc")
 
 	testImplementation("org.junit.jupiter:junit-jupiter-api")
+	testImplementation("org.junit.jupiter:junit-jupiter-params")
 	testImplementation("org.springframework:spring-test")
 	testImplementation("io.projectreactor:reactor-test")
 	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
@@ -48,9 +49,14 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-starter-json")
 	testImplementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")
 	testImplementation("org.springframework.boot:spring-boot-starter-jdbc")
+	testImplementation("org.springframework.boot:spring-boot-starter-data-redis-reactive")
 	testImplementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	testRuntimeOnly("de.flapdoodle.embed:de.flapdoodle.embed.mongo")
 	testRuntimeOnly("com.h2database:h2")
+	testImplementation("org.testcontainers:testcontainers")
+	testImplementation("org.testcontainers:junit-jupiter")
+	testImplementation("redis.clients:jedis")
+	testImplementation("io.lettuce:lettuce-core")
 }
 
 publishing {
