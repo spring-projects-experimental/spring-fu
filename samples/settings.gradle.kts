@@ -1,6 +1,7 @@
 rootProject.name = "spring-fu-samples"
 
 include(
+		"jafu-cassandra",
 		"jafu-reactive-minimal",
 		"jafu-reactive-r2dbc",
 		"jafu-servlet-minimal",

@@ -1,13 +1,11 @@
 package org.springframework.fu.jafu;
 
-import java.util.function.Consumer;
-
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.web.reactive.context.ReactiveWebServerApplicationContext;
 import org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.GenericApplicationContext;
+
+import java.util.function.Consumer;
 
 /**
  * Provide entry points to declare an application.
