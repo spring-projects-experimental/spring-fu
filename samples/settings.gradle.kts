@@ -5,6 +5,7 @@ include(
 		"jafu-reactive-mongodb",
 		"jafu-reactive-r2dbc",
 		"jafu-servlet-minimal",
+		"jafu-servlet-cassandra",
 		"kofu-coroutines-mongodb",
 		"kofu-coroutines-minimal",
 		"kofu-coroutines-r2dbc",
