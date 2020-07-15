@@ -19,7 +19,7 @@ dependencies {
 	compileOnly("org.springframework:spring-webflux")
 	compileOnly("de.flapdoodle.embed:de.flapdoodle.embed.mongo")
 	compileOnly("org.springframework.data:spring-data-mongodb")
-	compileOnly("org.springframework.data:spring-data-r2dbc")
+	compileOnly("org.springframework:spring-r2dbc")
 	compileOnly("org.mongodb:mongodb-driver-reactivestreams")
 	compileOnly("org.springframework.data:spring-data-cassandra")
 	compileOnly("org.springframework.data:spring-data-redis")
@@ -50,6 +50,8 @@ dependencies {
 	testCompile("org.testcontainers:testcontainers:1.11.3")
 	testImplementation("redis.clients:jedis")
 	testImplementation("io.lettuce:lettuce-core")
+	testRuntimeOnly("io.r2dbc:r2dbc-h2")
+	testImplementation("org.springframework:spring-r2dbc")
 }
 
 tasks.withType<Test> {
