@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.r2dbc.EmbeddedDatabaseConnection;
 import org.springframework.boot.autoconfigure.r2dbc.R2dbcProperties;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
-import org.springframework.data.r2dbc.core.DatabaseClient;
+import org.springframework.r2dbc.core.DatabaseClient;
 
 import java.util.List;
 

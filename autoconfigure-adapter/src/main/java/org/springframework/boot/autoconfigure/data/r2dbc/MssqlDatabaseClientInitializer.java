@@ -4,7 +4,7 @@ import io.r2dbc.mssql.MssqlConnectionConfiguration;
 import io.r2dbc.mssql.MssqlConnectionFactory;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
-import org.springframework.data.r2dbc.core.DatabaseClient;
+import org.springframework.r2dbc.core.DatabaseClient;
 
 public class MssqlDatabaseClientInitializer implements ApplicationContextInitializer<GenericApplicationContext> {
 

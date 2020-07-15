@@ -5,7 +5,7 @@ import io.r2dbc.h2.H2ConnectionFactory;
 
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
-import org.springframework.data.r2dbc.core.DatabaseClient;
+import org.springframework.r2dbc.core.DatabaseClient;
 
 public class H2DatabaseClientInitializer implements ApplicationContextInitializer<GenericApplicationContext> {
 
