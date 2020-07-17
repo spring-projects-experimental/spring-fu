@@ -4,13 +4,14 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.getBean
 import org.springframework.fu.kofu.application
 import org.springframework.r2dbc.core.DatabaseClient
+import org.testcontainers.containers.GenericContainer
 import reactor.test.StepVerifier
 import java.io.Serializable
 
 class RedisDslTests {
 
 	@Test
-	fun `enable r2dbcH2 embedded`() {
+	fun `enable r2dbc H2 embedded`() {
 		val app = application {
 			r2dbc {
 				url = "r2dbc:h2:mem:///testdb"
@@ -32,6 +33,42 @@ class RedisDslTests {
 		}
 	}
 
+	@Test
+	fun `enable r2dbc Postgres`() {
+		val pg = object : GenericContainer<Nothing>("postgres:13") {
+			init {
+				withExposedPorts(5432)
+				withEnv("POSTGRES_USER", "jo")
+				withEnv("POSTGRES_PASSWORD", "pwd")
+				withEnv("POSTGRES_DB", "db")
+			}
+		}
+		pg.start()
+
+		val app = application {
+			r2dbc {
+				url = "r2dbc:postgresql://${pg.containerIpAddress}:${pg.firstMappedPort}/db"
+				username = "jo"
+				password = "pwd"
+			}
+			beans {
+				bean<TestRepository>()
+			}
+		}
+
+		with(app.run()) {
+			val repository = getBean<TestRepository>()
+
+			StepVerifier
+					.create(repository.createTable()
+							.flatMap { repository.save(TestUser("1", "foo")) }
+							.flatMap { repository.findById("1") })
+					.expectNext(TestUser("1", "foo"))
+			close()
+		}
+
+		pg.stop()
+	}
 }
 
 class TestRepository (private val dbClient: DatabaseClient) {
