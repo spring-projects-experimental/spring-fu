@@ -16,18 +16,20 @@
 
 package org.springframework.boot.autoconfigure.web.servlet;
 
+import java.util.function.Supplier;
+
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 
 /**
- * {@link ApplicationContextInitializer} adapter for registering {@link String} codecs.
+ * {@link ApplicationContextInitializer} adapter for registering {@link String} converter.
  */
 public class StringConverterInitializer implements ApplicationContextInitializer<GenericApplicationContext> {
 
 	@Override
 	public void initialize(GenericApplicationContext context) {
-		context.registerBean("StringHttpMessageConverter", HttpMessageConverter.class, () -> new StringHttpMessageConverter());
+		context.registerBean("StringHttpMessageConverter", HttpMessageConverter.class, (Supplier<HttpMessageConverter>) StringHttpMessageConverter::new);
 	}
 }

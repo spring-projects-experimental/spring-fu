@@ -1,10 +1,9 @@
 package com.sample
 
-import org.springframework.boot.WebApplicationType
-import org.springframework.fu.kofu.application
+import org.springframework.fu.kofu.webApplication
 import org.springframework.fu.kofu.webmvc.webMvc
 
-val app = application(WebApplicationType.SERVLET) {
+val app = webApplication {
     beans {
         bean<UserHandler>()
         bean(::routes)

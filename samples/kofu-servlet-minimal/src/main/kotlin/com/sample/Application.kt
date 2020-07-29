@@ -1,13 +1,12 @@
 package com.sample
 
-import org.springframework.boot.WebApplicationType
-import org.springframework.fu.kofu.application
+import org.springframework.fu.kofu.webApplication
 import org.springframework.fu.kofu.webmvc.webMvc
 import org.springframework.web.servlet.function.ServerRequest
 import org.springframework.web.servlet.function.ServerResponse.ok
 
 
-val app = application(WebApplicationType.SERVLET) {
+val app = webApplication {
 	beans {
 		bean<SampleService>()
 		bean<SampleHandler>()

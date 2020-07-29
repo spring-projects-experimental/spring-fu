@@ -16,8 +16,8 @@ fun dataConfig(cassandraHost: String,
 	}
 	reactiveCassandra {
 		keyspaceName = "Kofu"
-		port = cassandraPort
-		contactPoints = listOf(cassandraHost)
+		contactPoints = listOf("$cassandraHost:$cassandraPort")
+		localDatacenter = "datacenter1"
 	}
 }
 

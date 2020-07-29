@@ -26,7 +26,7 @@ dependencies {
 	compileOnly("com.samskivert:jmustache")
 	compileOnly("org.thymeleaf:thymeleaf")
 	compileOnly("org.thymeleaf:thymeleaf-spring5")
-	compileOnly("org.springframework.data:spring-data-r2dbc")
+	compileOnly("org.springframework:spring-r2dbc")
 	compileOnly("io.r2dbc:r2dbc-postgresql")
 	compileOnly("io.r2dbc:r2dbc-h2")
 	compileOnly("io.r2dbc:r2dbc-mssql")

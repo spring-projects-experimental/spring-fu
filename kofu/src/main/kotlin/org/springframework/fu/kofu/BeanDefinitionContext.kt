@@ -11,23 +11,23 @@ import org.springframework.context.support.GenericApplicationContext
  */
 open class BeanDefinitionContext(@PublishedApi internal val context: GenericApplicationContext) {
 
-    /**
-     * Get a reference to the bean by type or type + name with the syntax
-     * `ref<Foo>()` or `ref<Foo>("foo")`. When leveraging Kotlin type inference
-     * it could be as short as `ref()` or `ref("foo")`.
-     * @param name the name of the bean to retrieve
-     * @param T type the bean must match, can be an interface or superclass
-     */
-    inline fun <reified T : Any> ref(name: String? = null): T = when (name) {
-        null -> context.getBean(T::class.java)
-        else -> context.getBean(name, T::class.java)
-    }
+	/**
+	 * Get a reference to the bean by type or type + name with the syntax
+	 * `ref<Foo>()` or `ref<Foo>("foo")`. When leveraging Kotlin type inference
+	 * it could be as short as `ref()` or `ref("foo")`.
+	 * @param name the name of the bean to retrieve
+	 * @param T type the bean must match, can be an interface or superclass
+	 */
+	inline fun <reified T : Any> ref(name: String? = null): T = when (name) {
+		null -> context.getBean(T::class.java)
+		else -> context.getBean(name, T::class.java)
+	}
 
-    /**
-     * Return an provider for the specified bean, allowing for lazy on-demand retrieval
-     * of instances, including availability and uniqueness options.
-     * TODO Maybe provide direct access to [ObjectProvider] methods, expose [Sequence] instead of [java.util.stream.Stream], etc.
-     * @see org.springframework.beans.factory.BeanFactory.getBeanProvider
-     */
-    inline fun <reified T : Any> provider() : ObjectProvider<T> = context.getBeanProvider()
+	/**
+	 * Return an provider for the specified bean, allowing for lazy on-demand retrieval
+	 * of instances, including availability and uniqueness options.
+	 * TODO Maybe provide direct access to [ObjectProvider] methods, expose [Sequence] instead of [java.util.stream.Stream], etc.
+	 * @see org.springframework.beans.factory.BeanFactory.getBeanProvider
+	 */
+	inline fun <reified T : Any> provider() : ObjectProvider<T> = context.getBeanProvider()
 }

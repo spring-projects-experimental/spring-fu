@@ -5,7 +5,6 @@ import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.getBean
-import org.springframework.boot.WebApplicationType
 import org.springframework.data.redis.core.ReactiveRedisTemplate
 import org.springframework.fu.kofu.application
 import org.testcontainers.containers.GenericContainer
@@ -28,7 +27,7 @@ class ReactiveRedisDslTests {
 
 	@Test
 	fun `enable reactive redis with default lettuce configuration`() {
-		val app = application(WebApplicationType.NONE) {
+		val app = application {
 			beans {
 				bean<ReactiveTestRepository>()
 			}

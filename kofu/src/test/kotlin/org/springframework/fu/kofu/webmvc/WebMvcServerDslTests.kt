@@ -17,11 +17,11 @@
 package org.springframework.fu.kofu.webmvc
 
 import org.junit.jupiter.api.Test
-import org.springframework.boot.WebApplicationType
-import org.springframework.fu.kofu.application
 import org.springframework.fu.kofu.localServerPort
+import org.springframework.fu.kofu.webApplication
 import org.springframework.http.MediaType
 import org.springframework.test.web.reactive.server.WebTestClient
+import org.springframework.test.web.reactive.server.expectBody
 
 /**
  * @author Sebastien Deleuze
@@ -30,7 +30,7 @@ class WebMvcServerDslTests {
 
 	@Test
 	fun `Create an application with an empty server`() {
-		val app = application(WebApplicationType.SERVLET) {
+		val app = webApplication {
 			webMvc {
 				port = 0
 			}
@@ -42,7 +42,7 @@ class WebMvcServerDslTests {
 
 	@Test
 	fun `Create and request an endpoint`() {
-		val app = application(WebApplicationType.SERVLET) {
+		val app = webApplication {
 			webMvc {
 				port = 0
 				router {
@@ -53,6 +53,20 @@ class WebMvcServerDslTests {
 		with(app.run()) {
 			val client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:$localServerPort").build()
 			client.get().uri("/foo").accept(MediaType.TEXT_PLAIN).exchange().expectStatus().is2xxSuccessful
+			close()
+		}
+	}
+
+	@Test
+	fun `Request static file`() {
+		val app = webApplication {
+			webMvc {
+				port = 0
+			}
+		}
+		with(app.run()) {
+			val client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:$localServerPort").build()
+			client.get().uri("/test.txt").exchange().expectBody<String>().isEqualTo("Test")
 			close()
 		}
 	}

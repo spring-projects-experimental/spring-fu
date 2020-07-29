@@ -27,7 +27,7 @@ import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
  */
 public class MongoDataInitializer implements ApplicationContextInitializer<GenericApplicationContext> {
 
-	private MongoProperties properties;
+	private final MongoProperties properties;
 
 	public MongoDataInitializer(MongoProperties properties) {
 		this.properties = properties;
@@ -36,7 +36,7 @@ public class MongoDataInitializer implements ApplicationContextInitializer<Gener
 	@Override
 	public void initialize(GenericApplicationContext context) {
 		MongoDataConfiguration dataConfiguration = new MongoDataConfiguration();
-		context.registerBean(MongoCustomConversions.class, () -> dataConfiguration.mongoCustomConversions());
+		context.registerBean(MongoCustomConversions.class, dataConfiguration::mongoCustomConversions);
 		context.registerBean(MongoMappingContext.class, () -> {
 			try {
 				return dataConfiguration.mongoMappingContext(context, properties, context.getBean(MongoCustomConversions.class));

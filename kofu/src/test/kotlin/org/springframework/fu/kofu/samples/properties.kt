@@ -2,11 +2,10 @@
 
 package org.springframework.fu.kofu.samples
 
-import org.springframework.boot.WebApplicationType
 import org.springframework.fu.kofu.application
 
 fun configurationProperties() {
-	application(WebApplicationType.NONE) {
+	application {
 
 		/** Bind `sample.message` property typically defined in an `application.properties`
 		 * or `application.yml` file to [SampleProperties.message]. Typically used by retrieving

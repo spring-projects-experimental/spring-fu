@@ -9,6 +9,6 @@ public class RssConverterInitializer implements ApplicationContextInitializer<Ge
 
 	@Override
 	public void initialize(GenericApplicationContext context) {
-		context.registerBean("rssChannelHttpMessageConverter", HttpMessageConverter.class, () -> new RssChannelHttpMessageConverter());
+		context.registerBean("rssChannelHttpMessageConverter", HttpMessageConverter.class, RssChannelHttpMessageConverter::new);
 	}
 }

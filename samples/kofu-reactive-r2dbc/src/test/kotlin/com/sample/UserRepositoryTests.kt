@@ -5,13 +5,12 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.getBean
-import org.springframework.boot.WebApplicationType
 import org.springframework.context.ConfigurableApplicationContext
 import org.springframework.fu.kofu.application
 
 class UserRepositoryTests {
 
-	private val dataApp = application(WebApplicationType.NONE) {
+	private val dataApp = application {
 		enable(dataConfig)
 	}
 

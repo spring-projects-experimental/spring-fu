@@ -2,25 +2,20 @@
 
 package org.springframework.fu.kofu.samples
 
-import org.springframework.boot.WebApplicationType
 import org.springframework.boot.logging.LogLevel
 import org.springframework.context.event.ContextStartedEvent
-import org.springframework.fu.kofu.application
 import org.springframework.fu.kofu.configuration
 import org.springframework.fu.kofu.mongo.reactiveMongodb
+import org.springframework.fu.kofu.reactiveWebApplication
 import org.springframework.fu.kofu.webflux.cors
 import org.springframework.fu.kofu.webflux.mustache
 import org.springframework.fu.kofu.webflux.webClient
 import org.springframework.fu.kofu.webflux.webFlux
-import org.springframework.web.reactive.function.server.ServerRequest
-import org.springframework.web.reactive.function.server.ServerResponse
-import org.springframework.web.reactive.function.server.buildAndAwait
-import org.springframework.web.reactive.function.server.coRouter
-import org.springframework.web.reactive.function.server.router
+import org.springframework.web.reactive.function.server.*
 import reactor.core.publisher.Mono
 
 private fun webFluxRouter() {
-	application(WebApplicationType.REACTIVE) {
+	reactiveWebApplication {
 		webFlux {
 			router {
 				val htmlHandler = ref<ReactiveHtmlHandler>()
@@ -49,7 +44,7 @@ private fun webFluxIncludeRouter() {
 			DELETE("/{id}", apiHandler::delete)
 		}
 	}
-	application(WebApplicationType.REACTIVE) {
+	reactiveWebApplication {
 		beans {
 			bean(::routes)
 		}
@@ -67,7 +62,7 @@ private fun webFluxCustomEngine() {
 			DELETE("/{id}", apiHandler::delete)
 		}
 	}
-	application(WebApplicationType.REACTIVE) {
+	reactiveWebApplication {
 		beans {
 			bean(::routes)
 		}
@@ -78,7 +73,7 @@ private fun webFluxCustomEngine() {
 }
 
 private fun webFluxCoRouter() {
-	application(WebApplicationType.REACTIVE) {
+	reactiveWebApplication {
 		beans {
 			bean<CoHtmlHandler>()
 			bean<CoApiHandler>()
@@ -111,7 +106,7 @@ private fun webFluxIncludeCoRouter() {
 			DELETE("/{id}", apiHandler::delete)
 		}
 	}
-	application(WebApplicationType.NONE) {
+	reactiveWebApplication {
 		beans {
 			bean<CoHtmlHandler>()
 			bean<CoApiHandler>()
@@ -172,7 +167,7 @@ private fun webFluxApplicationDsl() {
 		}
 	}
 
-	val app = application(WebApplicationType.REACTIVE) {
+	val app = reactiveWebApplication {
 		logging {
 			level = LogLevel.INFO
 			level("org.springframework", LogLevel.DEBUG)

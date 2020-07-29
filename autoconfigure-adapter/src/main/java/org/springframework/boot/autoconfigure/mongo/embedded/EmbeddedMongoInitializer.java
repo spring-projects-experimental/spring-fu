@@ -28,9 +28,9 @@ import org.springframework.context.support.GenericApplicationContext;
 
 public class EmbeddedMongoInitializer implements ApplicationContextInitializer<GenericApplicationContext> {
 
-	private MongoProperties properties;
+	private final MongoProperties properties;
 
-	private EmbeddedMongoProperties embeddedProperties;
+	private final EmbeddedMongoProperties embeddedProperties;
 
 	public EmbeddedMongoInitializer(MongoProperties mongoProperties, EmbeddedMongoProperties embeddedProperties) {
 		this.properties = mongoProperties;

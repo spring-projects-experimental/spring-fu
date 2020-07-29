@@ -1,10 +1,10 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-	id("org.jetbrains.kotlin.jvm") version "1.3.50" apply false
+	id("org.jetbrains.kotlin.jvm") version "1.3.72" apply false
 	id("org.springframework.boot") apply false
-	id("org.jetbrains.dokka") version "0.9.18" apply false
-	id("io.spring.dependency-management") version "1.0.8.RELEASE"
+	id("org.jetbrains.dokka") version "0.10.1" apply false
+	id("io.spring.dependency-management") version "1.0.9.RELEASE"
 	id("maven-publish")
 }
 
@@ -14,19 +14,14 @@ allprojects {
 		plugin("io.spring.dependency-management")
 	}
 
-	version = "0.2.BUILD-SNAPSHOT"
+	version = "0.4.0-SNAPSHOT"
 	group = "org.springframework.fu"
 
 	dependencyManagement {
 		val bootVersion: String by project
-		val springDataR2dbcVersion: String by project
-		val r2dbcVersion: String by project
 		imports {
 			mavenBom("org.springframework.boot:spring-boot-dependencies:$bootVersion")
-			mavenBom("io.r2dbc:r2dbc-bom:$r2dbcVersion")
-		}
-		dependencies {
-			dependency("org.springframework.data:spring-data-r2dbc:$springDataR2dbcVersion")
+			mavenBom("org.testcontainers:testcontainers-bom:1.14.3")
 		}
 	}
 
@@ -41,7 +36,7 @@ allprojects {
 						password = repoPassword
 					}
 					url = uri(
-							if (version.toString().endsWith(".BUILD-SNAPSHOT")) "https://repo.spring.io/libs-snapshot-local/"
+							if (version.toString().endsWith("-SNAPSHOT")) "https://repo.spring.io/libs-snapshot-local/"
 							else "https://repo.spring.io/libs-milestone-local/"
 					)
 

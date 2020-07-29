@@ -29,7 +29,6 @@ import org.springframework.http.codec.protobuf.ProtobufEncoder;
  */
 public class ProtobufCodecInitializer extends AbstractCodecInitializer {
 
-
 	public ProtobufCodecInitializer(boolean isClientCodec) {
 		super(isClientCodec);
 	}

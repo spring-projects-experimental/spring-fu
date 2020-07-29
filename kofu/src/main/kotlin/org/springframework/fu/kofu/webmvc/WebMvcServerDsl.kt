@@ -3,7 +3,6 @@ package org.springframework.fu.kofu.webmvc
 import org.springframework.beans.factory.ObjectProvider
 import org.springframework.beans.factory.getBeanProvider
 import org.springframework.beans.factory.support.BeanDefinitionReaderUtils
-import org.springframework.boot.autoconfigure.http.HttpProperties
 import org.springframework.boot.autoconfigure.web.ResourceProperties
 import org.springframework.boot.autoconfigure.web.ServerProperties
 import org.springframework.boot.autoconfigure.web.servlet.FormConverterInitializer
@@ -16,6 +15,7 @@ import org.springframework.boot.autoconfigure.web.servlet.StringConverterInitial
 import org.springframework.boot.autoconfigure.web.servlet.WebMvcProperties
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.registerBean
+import org.springframework.core.io.ClassPathResource
 import org.springframework.fu.kofu.AbstractDsl
 import org.springframework.fu.kofu.ConfigurationDsl
 import org.springframework.fu.kofu.web.JacksonDsl
@@ -38,8 +38,6 @@ open class WebMvcServerDsl(private val init: WebMvcServerDsl.() -> Unit): Abstra
 
 	private val serverProperties = ServerProperties()
 
-	private val httpProperties = HttpProperties()
-
 	private val webMvcProperties = WebMvcProperties()
 
 	private val resourceProperties = ResourceProperties()
@@ -54,17 +52,23 @@ open class WebMvcServerDsl(private val init: WebMvcServerDsl.() -> Unit): Abstra
 	override fun initialize(context: GenericApplicationContext) {
 		super.initialize(context)
 		init()
+		context.registerBean(BeanDefinitionReaderUtils.uniqueBeanName(RouterFunctionDsl::class.java.name, context)) {
+			org.springframework.web.servlet.function.router {
+				resources("/**", ClassPathResource("static/"))
+			}
+		}
+		serverProperties.servlet.isRegisterDefaultServlet = false
 		serverProperties.port = port
 		if (!convertersConfigured) {
 			StringConverterInitializer().initialize(context)
 			ResourceConverterInitializer().initialize(context)
 		}
-		ServletWebServerInitializer(serverProperties, httpProperties, webMvcProperties, resourceProperties).initialize(context)
+		ServletWebServerInitializer(serverProperties, webMvcProperties, resourceProperties).initialize(context)
 	}
 
 	/**
 	 * Configure routes via a [dedicated DSL][RouterFunctionDsl].
-	 * @sample org.springframework.fu.kofu.samples.router
+	 * @sample org.springframework.fu.kofu.samples.webMvcRouter
 	 */
 	fun router(routes: (RouterFunctionDsl.() -> Unit)) {
 		context.registerBean(BeanDefinitionReaderUtils.uniqueBeanName(RouterFunctionDsl::class.java.name, context)) { org.springframework.web.servlet.function.router(routes) }

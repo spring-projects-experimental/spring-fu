@@ -2,15 +2,14 @@
 
 package org.springframework.fu.kofu.samples
 
-import org.springframework.boot.WebApplicationType
-import org.springframework.fu.kofu.application
+import org.springframework.fu.kofu.webApplication
 import org.springframework.fu.kofu.webmvc.webMvc
 import org.springframework.web.servlet.function.ServerRequest
 import org.springframework.web.servlet.function.ServerResponse
 import org.springframework.web.servlet.function.router
 
 private fun webMvcRouter() {
-	application(WebApplicationType.SERVLET) {
+	webApplication {
 		webMvc {
 			router {
 				val htmlHandler = ref<HtmlHandler>()
@@ -39,7 +38,7 @@ private fun webmvcIncludeRouter() {
 			DELETE("/{id}", apiHandler::delete)
 		}
 	}
-	application(WebApplicationType.SERVLET) {
+	webApplication {
 		beans {
 			bean(::routes)
 		}

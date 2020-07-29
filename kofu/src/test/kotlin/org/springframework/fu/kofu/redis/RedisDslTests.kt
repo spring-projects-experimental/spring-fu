@@ -5,7 +5,6 @@ import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.getBean
-import org.springframework.boot.WebApplicationType
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.fu.kofu.application
 import org.testcontainers.containers.GenericContainer
@@ -27,7 +26,7 @@ class RedisDslTests {
 
 	@Test
 	fun `enable redis`() {
-		val app = application(WebApplicationType.NONE) {
+		val app = application {
 			beans {
 				bean<TestRepository>()
 			}
@@ -47,7 +46,7 @@ class RedisDslTests {
 
 	@Test
 	fun `enable redis with jedis`() {
-		val app = application(WebApplicationType.NONE) {
+		val app = application {
 			beans {
 				bean<TestRepository>()
 			}

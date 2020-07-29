@@ -17,9 +17,8 @@
 package org.springframework.fu.kofu.webmvc
 
 import org.junit.jupiter.api.Test
-import org.springframework.boot.WebApplicationType
-import org.springframework.fu.kofu.application
 import org.springframework.fu.kofu.localServerPort
+import org.springframework.fu.kofu.webApplication
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.test.web.reactive.server.expectBody
 
@@ -30,7 +29,7 @@ class MustacheDslTests {
 
 	@Test
 	fun `Create and request a Mustache view`() {
-		val app = application(WebApplicationType.SERVLET) {
+		val app = webApplication {
 			webMvc {
 				port = 0
 				mustache()

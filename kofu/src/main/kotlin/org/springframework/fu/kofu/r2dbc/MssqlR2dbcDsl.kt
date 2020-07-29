@@ -19,62 +19,62 @@ import java.time.Duration
  */
 class MssqlR2dbcDsl(private val init: MssqlR2dbcDsl.() -> Unit) : AbstractDsl() {
 
-    /**
-     * Configure the host, by default set to `localhost`.
-     */
-    var host: String = "localhost"
+	/**
+	 * Configure the host, by default set to `localhost`.
+	 */
+	var host: String = "localhost"
 
-    /**
-     * Configure the port, by default set to `1433`.
-     */
-    var port: Int = 1433
+	/**
+	 * Configure the port, by default set to `1433`.
+	 */
+	var port: Int = 1433
 
-    /**
-     * Configure the database, by default set to `master`.
-     */
-    var database: String = "master"
+	/**
+	 * Configure the database, by default set to `master`.
+	 */
+	var database: String = "master"
 
-    /**
-     * Configure the username, by default set to `SA`.
-     */
-    var username: String = "SA"
+	/**
+	 * Configure the username, by default set to `SA`.
+	 */
+	var username: String = "SA"
 
-    /**
-     * Configure the password, empty by default.
-     */
-    var password: String = ""
+	/**
+	 * Configure the password, empty by default.
+	 */
+	var password: String = ""
 
-    /**
-     * Configure whether to prefer cursored execution.
-     */
-    var preferCursoredExecution: Boolean = false
+	/**
+	 * Configure whether to prefer cursored execution.
+	 */
+	var preferCursoredExecution: Boolean = false
 
-    /**
-     * Configure the connect timeout. Defaults to 30 seconds.
-     */
-    var connectTimeout: Duration = Duration.ofSeconds(30)
+	/**
+	 * Configure the connect timeout. Defaults to 30 seconds.
+	 */
+	var connectTimeout: Duration = Duration.ofSeconds(30)
 
-    /**
-     * Enable or disable SSL usage. This flag is also known as Use Encryption in other drivers.
-     */
-    var ssl: Boolean = false
+	/**
+	 * Enable or disable SSL usage. This flag is also known as Use Encryption in other drivers.
+	 */
+	var ssl: Boolean = false
 
-    override fun initialize(context: GenericApplicationContext) {
-        super.initialize(context)
-        init()
+	override fun initialize(context: GenericApplicationContext) {
+		super.initialize(context)
+		init()
 
-        val properties = MssqlR2dbcProperties()
-        properties.host = host
-        properties.port = port
-        properties.database = database
-        properties.username = username
-        properties.password = password
-        properties.isPreferCursoredExecution = preferCursoredExecution
-        properties.connectTimeout = connectTimeout
-        properties.isSsl = ssl
+		val properties = MssqlR2dbcProperties()
+		properties.host = host
+		properties.port = port
+		properties.database = database
+		properties.username = username
+		properties.password = password
+		properties.isPreferCursoredExecution = preferCursoredExecution
+		properties.connectTimeout = connectTimeout
+		properties.isSsl = ssl
 
-        MssqlDatabaseClientInitializer(properties).initialize(context)
-    }
+		MssqlDatabaseClientInitializer(properties).initialize(context)
+	}
 }
 
 /**
@@ -82,5 +82,5 @@ class MssqlR2dbcDsl(private val init: MssqlR2dbcDsl.() -> Unit) : AbstractDsl() 
  * @see MssqlR2dbcDsl
  */
 fun ConfigurationDsl.r2dbcMssql(dsl: MssqlR2dbcDsl.() -> Unit = {}) {
-    MssqlR2dbcDsl(dsl).initialize(context)
+	MssqlR2dbcDsl(dsl).initialize(context)
 }

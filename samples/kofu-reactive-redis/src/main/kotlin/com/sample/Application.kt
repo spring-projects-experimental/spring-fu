@@ -1,10 +1,9 @@
 package com.sample
 
-import org.springframework.boot.WebApplicationType
-import org.springframework.fu.kofu.application
+import org.springframework.fu.kofu.reactiveWebApplication
 import org.testcontainers.containers.GenericContainer
 
-fun app(properties: ApplicationProperties) = application(WebApplicationType.REACTIVE) {
+fun app(properties: ApplicationProperties) = reactiveWebApplication {
 	with(configurationProperties(properties)) {
 		enable(dataConfig(redisHost, redisPort))
 		enable(webConfig(serverPort))

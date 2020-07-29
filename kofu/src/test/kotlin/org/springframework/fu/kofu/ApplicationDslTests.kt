@@ -22,7 +22,6 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.getBean
-import org.springframework.boot.WebApplicationType
 import org.springframework.boot.web.reactive.context.ReactiveWebServerApplicationContext
 import org.springframework.context.MessageSource
 import java.util.*
@@ -34,7 +33,7 @@ class ApplicationDslTests {
 
 	@Test
 	fun `Create an empty application and check message source`() {
-		val app = application(WebApplicationType.NONE) { }
+		val app = application { }
 		with(app.run()) {
 			assertFalse(this is ReactiveWebServerApplicationContext)
 			val messageSource = getBean<MessageSource>()
@@ -45,7 +44,7 @@ class ApplicationDslTests {
 
 	@Test
 	fun `Create an application with a custom bean`() {
-		val app = application(WebApplicationType.NONE) {
+		val app = application {
 			beans {
 				bean<Foo>(isPrimary = true)
 			}
@@ -64,7 +63,7 @@ class ApplicationDslTests {
 				bean<Foo>()
 			}
 		}
-		val app = application(WebApplicationType.NONE) {
+		val app = application {
 			enable(beanConfig)
 		}
 		with(app.run()) {
@@ -75,17 +74,8 @@ class ApplicationDslTests {
 	}
 
 	@Test
-	fun `Application properties`() {
-		val app = application(WebApplicationType.NONE) {
-			val properties = configurationProperties<City>(prefix = "city")
-			assertEquals(properties.name, "San Francisco")
-		}
-		app.run().close()
-	}
-
-	@Test
 	fun `Mock a bean of an existing application`() {
-		val app = application(WebApplicationType.NONE) {
+		val app = application {
 			beans {
 				bean { Bar("original") }
 			}
@@ -108,7 +98,5 @@ class ApplicationDslTests {
 
 	class Foo
 	class Bar(val value: String)
-
-	class City(val name: String, val country: String)
 
 }

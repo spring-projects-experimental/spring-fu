@@ -1,21 +1,17 @@
 package com.sample
 
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.getBean
-import org.springframework.boot.WebApplicationType
 import org.springframework.context.ConfigurableApplicationContext
 import org.springframework.fu.kofu.application
 
-@ExperimentalCoroutinesApi
 class UserRepositoryTests {
 
-	private val dataApp = application(WebApplicationType.NONE) {
+	private val dataApp = application {
 		enable(dataConfig)
 	}
 
@@ -23,7 +19,7 @@ class UserRepositoryTests {
 
 	@BeforeAll
 	fun beforeAll() {
-		context = app.run(profiles = "test")
+		context = dataApp.run(profiles = "test")
 	}
 
 	@Test

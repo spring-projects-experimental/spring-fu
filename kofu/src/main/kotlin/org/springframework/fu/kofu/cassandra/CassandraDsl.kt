@@ -1,14 +1,12 @@
 package org.springframework.fu.kofu.cassandra
 
-import com.datastax.driver.core.ConsistencyLevel
-import com.datastax.driver.core.ProtocolOptions
 import org.springframework.boot.autoconfigure.cassandra.CassandraInitializer
 import org.springframework.boot.autoconfigure.cassandra.CassandraProperties
 import org.springframework.boot.autoconfigure.data.cassandra.CassandraDataInitializer
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.fu.kofu.AbstractDsl
 import org.springframework.fu.kofu.ConfigurationDsl
-import java.time.Duration
+import org.springframework.fu.kofu.webmvc.WebMvcServerDsl
 
 /**
  * Kofu DSL for Cassandra configuration.
@@ -21,6 +19,16 @@ open class CassandraDsl(private val init: CassandraDsl.() -> Unit) : AbstractDsl
 	protected val properties = CassandraProperties()
 
 	/**
+	 * Configure the local datacenter to use.
+	 */
+	var localDatacenter: String?
+		get() = properties.localDatacenter
+		set(value) {
+			properties.localDatacenter = value
+		}
+
+
+	/**
 	 * Configure the keyspace name to use.
 	 */
 	var keyspaceName: String?
@@ -30,21 +38,12 @@ open class CassandraDsl(private val init: CassandraDsl.() -> Unit) : AbstractDsl
 		}
 
 	/**
-	 * Configure the name of the Cassandra cluster.
+	 * Configure the session name.
 	 */
-	var clusterName: String?
-		get() = properties.clusterName
+	var sessionName: String?
+		get() = properties.sessionName
 		set(value) {
-			properties.clusterName = value
-		}
-
-	/**
-	 * Configure the port of the Cassandra server.
-	 */
-	var port: Int
-		get() = properties.port
-		set(value) {
-			properties.port = value
+			properties.sessionName = value
 		}
 
 	/**
@@ -87,72 +86,32 @@ open class CassandraDsl(private val init: CassandraDsl.() -> Unit) : AbstractDsl
 	/**
 	 * Configure the compression supported by the Cassandra binary protocol.
 	 */
-	var compression: ProtocolOptions.Compression
+	var compression: CassandraProperties.Compression
 		get() = properties.compression
 		set(value) {
 			properties.compression = value
 		}
 
 	/**
-	 * Configure the queries consistency level.
+	 * Configure the connection.
 	 */
-	var consistencyLevel: ConsistencyLevel?
-		get() = properties.consistencyLevel
-		set(value) {
-			properties.consistencyLevel = value
-		}
+	fun connection(dsl: CassandraProperties.Connection.() -> Unit =  {}) {
+		properties.connection.dsl()
+	}
 
 	/**
-	 * Configure the queries serial consistency level.
+	 * Configure the request.
 	 */
-	var serialConsistencyLevel: ConsistencyLevel?
-		get() = properties.serialConsistencyLevel
-		set(value) {
-			properties.serialConsistencyLevel = value
-		}
+	fun request(dsl: CassandraProperties.Request.() -> Unit =  {}) {
+		properties.request.dsl()
+	}
 
 	/**
-	 * Configure the queries default fetch size.
+	 * Configure the pool.
 	 */
-	var fetchSize: Int
-		get() = properties.fetchSize
-		set(value) {
-			properties.fetchSize = value
-		}
-
-	/**
-	 * Configure the socket option: connection time out.
-	 */
-	var connectTimeout: Duration?
-		get() = properties.connectTimeout
-		set(value) {
-			properties.connectTimeout = value
-		}
-
-	/**
-	 * Configure the socket option: read time out.
-	 */
-	var readTimeout: Duration?
-		get() = properties.readTimeout
-		set(value) {
-			properties.readTimeout = value
-		}
-
-	/**
-	 * Configure whether to enable JMX reporting. Default to false as Cassandra JMX reporting is not
-	 * compatible with Dropwizard Metrics.
-	 */
-	var jmxEnabled: Boolean
-		get() = properties.isJmxEnabled
-		set(value) {
-			properties.isJmxEnabled = value
-		}
-
-	/**
-	 * Retrieve the pool configuration.
-	 */
-	val pool: CassandraProperties.Pool
-		get() = properties.pool
+	fun pool(dsl: CassandraProperties.Pool.() -> Unit =  {}) {
+		properties.pool.dsl()
+	}
 
 	override fun initialize(context: GenericApplicationContext) {
 		super.initialize(context)

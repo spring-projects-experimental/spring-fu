@@ -1,0 +1,58 @@
+:spring-fu-version: 0.3.2
+:jafu-javadoc-url: http://repo.spring.io/milestone/org/springframework/fu/spring-fu-jafu/{spring-fu-version}/spring-fu-jafu-{spring-fu-version}-javadoc.jar!
+:framework-javadoc-url: https://docs.spring.io/spring-framework/docs/5.3.x/javadoc-api
+
+image:https://img.shields.io/badge/Jafu%20documentation-blue.svg["Jafu documentation", link="{jafu-javadoc-url}/index.html"]
+
+== JaFu DSL for Spring Boot
+
+JaFu (for **Ja**va and **Fu**nctional) is an alternative way of configuring explicitly your Spring Boot application,
+different from regular auto-configuration, using a Java DSL. It is based on Spring Boot infrastructure, but
+https://github.com/spring-projects/spring-fu/tree/master/autoconfigure-adapter[used via functional bean definitions]
+instead of JavaConfig.
+
+=== API reference
+
+An overview of JaFu DSL is provided bellow with the related {jafu-javadoc-url}/index.html[API documentation].
+Be aware that a few static imports will be needed.
+
+=== Getting started
+
+ * Create a Spring `2.3.x.RELEASE` project on https://start.spring.io/[start.spring.io]
+ * Add the Spring milestone repository `https://repo.spring.io/milestone`
+ * Select the "Web" starter
+ * Add the `org.springframework.fu:spring-fu-jafu:{spring-fu-version}` dependency
+ * Modify the generated `DemoApplication.java` file as following:
+
+```java
+package com.sample;
+
+import org.springframework.fu.jafu.JafuApplication;
+
+import static org.springframework.fu.jafu.Jafu.webApplication;
+import static org.springframework.fu.jafu.webmvc.WebMvcServerDsl.webMvc;
+
+public class Application {
+
+	public static JafuApplication app = webApplication(a -> a.beans(b -> b
+			.bean(SampleHandler.class)
+			.bean(SampleService.class))
+			.enable(webMvc(s -> s
+					.port(s.profiles().contains("test") ? 8181 : 8080)
+					.router(router -> {
+						SampleHandler handler = s.ref(SampleHandler.class);
+						router
+								.GET("/", handler::hello)
+								.GET("/api", handler::json);
+					}).converters(c -> c
+							.string()
+							.jackson()))));
+
+	public static void main (String[] args) {
+		app.run(args);
+	}
+}
+
+```
+
+See also sample projects https://github.com/spring-projects/spring-fu/tree/master/samples[here].

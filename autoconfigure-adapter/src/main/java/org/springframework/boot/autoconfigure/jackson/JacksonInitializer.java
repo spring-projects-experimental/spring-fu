@@ -33,7 +33,7 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
  */
 public class JacksonInitializer implements ApplicationContextInitializer<GenericApplicationContext> {
 
-	private JacksonProperties properties;
+	private final JacksonProperties properties;
 
 	public JacksonInitializer(JacksonProperties properties) {
 		this.properties = properties;

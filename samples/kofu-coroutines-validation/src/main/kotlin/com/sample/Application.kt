@@ -1,12 +1,11 @@
 package com.sample
 
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.springframework.boot.WebApplicationType
 import org.springframework.fu.kofu.application
+import org.springframework.fu.kofu.reactiveWebApplication
 import org.springframework.fu.kofu.webflux.webFlux
 
-@ExperimentalCoroutinesApi
-val app = application(WebApplicationType.REACTIVE) {
+val app = reactiveWebApplication {
     beans {
         bean<UserHandler>()
         bean(::routes)
@@ -20,7 +19,6 @@ val app = application(WebApplicationType.REACTIVE) {
     }
 }
 
-@ExperimentalCoroutinesApi
 fun main() {
     app.run()
 }
