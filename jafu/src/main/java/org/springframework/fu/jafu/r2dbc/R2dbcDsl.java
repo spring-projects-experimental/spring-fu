@@ -24,6 +24,8 @@ public class R2dbcDsl extends AbstractDsl {
 
     private final List<ConnectionFactoryOptionsBuilderCustomizer> optionsCustomizers = new ArrayList<>();
 
+    private boolean transactional = false;
+
     R2dbcDsl(Consumer<R2dbcDsl> dsl) {
         this.dsl = dsl;
     }
@@ -62,10 +64,15 @@ public class R2dbcDsl extends AbstractDsl {
         return this;
     }
 
+    public R2dbcDsl transactional(boolean transactional) {
+        this.transactional = transactional;
+        return this;
+    }
+
     @Override
     public void initialize(GenericApplicationContext context) {
         super.initialize(context);
         this.dsl.accept(this);
-        new R2dbcInitializer(properties, optionsCustomizers).initialize(context);
+        new R2dbcInitializer(properties, optionsCustomizers, transactional).initialize(context);
     }
 }

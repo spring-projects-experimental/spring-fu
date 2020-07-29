@@ -1,9 +1,12 @@
 package org.springframework.fu.kofu.r2dbc
 
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
+import org.springframework.beans.factory.NoSuchBeanDefinitionException
 import org.springframework.beans.factory.getBean
 import org.springframework.fu.kofu.application
 import org.springframework.r2dbc.core.DatabaseClient
+import org.springframework.transaction.reactive.TransactionalOperator
 import org.testcontainers.containers.GenericContainer
 import reactor.test.StepVerifier
 import java.io.Serializable
@@ -68,6 +71,33 @@ class RedisDslTests {
 		}
 
 		pg.stop()
+	}
+
+	@Test
+	fun `enable trasactional`() {
+		// Check that by default TransactionalOperator is not activated
+		assertThrows<NoSuchBeanDefinitionException> {
+			val app = application {
+				r2dbc {
+					url = "r2dbc:h2:mem:///testdb"
+				}
+			}
+
+			with(app.run()) {
+				getBean<TransactionalOperator>()
+			}
+		}
+
+		val app = application {
+			r2dbc {
+				url = "r2dbc:h2:mem:///testdb"
+				transactional = true
+			}
+		}
+
+		with(app.run()) {
+			getBean<TransactionalOperator>()
+		}
 	}
 }
 
