@@ -24,13 +24,15 @@ class R2dbcDsl(private val init: R2dbcDsl.() -> Unit) : AbstractDsl(){
 
     var optionsCustomizer: List<ConnectionFactoryOptionsBuilderCustomizer> = emptyList()
 
+    var transactional: Boolean = false
+
     override fun initialize(context: GenericApplicationContext) {
         super.initialize(context)
         init()
 
         val properties = r2dbcProperties()
 
-        R2dbcInitializer(properties, optionsCustomizer).initialize(context)
+        R2dbcInitializer(properties, optionsCustomizer, transactional).initialize(context)
     }
 
     fun r2dbcProperties() : R2dbcProperties =
