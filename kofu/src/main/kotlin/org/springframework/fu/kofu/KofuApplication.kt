@@ -16,9 +16,10 @@ import org.springframework.core.SpringProperties
 abstract class KofuApplication(private val initializer: AbstractDsl) {
 
 	init {
-			SpringProperties.setFlag("spring.xml.ignore");
-			SpringProperties.setFlag("spring.spel.ignore");
-			System.setProperty("org.graalvm.nativeimage.imagecode", "kofu");
+		SpringProperties.setFlag("spring.xml.ignore")
+		SpringProperties.setFlag("spring.spel.ignore")
+		SpringProperties.setProperty("server.servlet.register-default-servlet", "false")
+		System.setProperty("org.graalvm.nativeimage.imagecode", "kofu")
 	}
 
 	private var customizer: (ApplicationDsl.() -> Unit)? = null

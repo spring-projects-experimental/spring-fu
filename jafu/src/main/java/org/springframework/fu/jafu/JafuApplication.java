@@ -28,6 +28,7 @@ public abstract class JafuApplication {
 		this.initializer = initializer;
 		SpringProperties.setFlag("spring.xml.ignore");
 		SpringProperties.setFlag("spring.spel.ignore");
+		SpringProperties.setProperty("server.servlet.register-default-servlet", "false");
 		System.setProperty("org.graalvm.nativeimage.imagecode", "jafu");
 	}
 
