@@ -36,9 +36,10 @@ class PostgreSqlR2dbcDslTests {
 
 			StepVerifier
 					.create(repository.createTable()
-							.flatMap { repository.save(TestUser("1", "foo")) }
-							.flatMap { repository.findById("1") })
-					.expectNext(TestUser("1", "foo"))
+							.then(repository.save(user))
+							.then(repository.findById(user.id)))
+					.expectNext(user)
+					.verifyComplete()
 			close()
 		}
 
