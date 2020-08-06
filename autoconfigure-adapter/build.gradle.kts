@@ -15,6 +15,7 @@ dependencies {
 	compileOnly("org.springframework:spring-webmvc")
 	compileOnly("javax.servlet:javax.servlet-api")
 	compileOnly("org.springframework:spring-webflux")
+	compileOnly("org.springframework:spring-jdbc")
 	compileOnly("de.flapdoodle.embed:de.flapdoodle.embed.mongo")
 	compileOnly("org.springframework.data:spring-data-mongodb")
 	compileOnly("org.mongodb:mongodb-driver-reactivestreams")
@@ -30,7 +31,7 @@ dependencies {
 	compileOnly("io.r2dbc:r2dbc-postgresql")
 	compileOnly("io.r2dbc:r2dbc-h2")
 	compileOnly("io.r2dbc:r2dbc-mssql")
-	compileOnly("com.github.jasync-sql:jasync-r2dbc-mysql:0.9.53")
+	compileOnly("com.zaxxer:HikariCP")
 }
 
 repositories {
