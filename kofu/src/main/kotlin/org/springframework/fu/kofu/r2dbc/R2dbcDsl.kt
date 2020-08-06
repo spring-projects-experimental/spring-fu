@@ -8,7 +8,7 @@ import org.springframework.fu.kofu.AbstractDsl
 import org.springframework.fu.kofu.ConfigurationDsl
 import java.util.LinkedHashMap
 
-class R2dbcDsl(private val init: R2dbcDsl.() -> Unit) : AbstractDsl(){
+class R2dbcDsl(private val init: R2dbcDsl.() -> Unit) : AbstractDsl() {
 
     var name: String? = null
 
