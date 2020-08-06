@@ -56,3 +56,10 @@ public class Application {
 ```
 
 See also sample projects https://github.com/spring-projects/spring-fu/tree/master/samples[here].
+
+=== Differences with regular Boot applications
+
+- Spring optimizations for native applications are enabled by default
+- XML support is disabled by default
+- SpEL support is disabled by default
+- Devtools automatic restart does not work yet so just restart your applications (very fast with JaFu)

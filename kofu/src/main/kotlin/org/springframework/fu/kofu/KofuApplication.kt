@@ -19,6 +19,7 @@ abstract class KofuApplication(private val initializer: AbstractDsl) {
 		SpringProperties.setFlag("spring.xml.ignore")
 		SpringProperties.setFlag("spring.spel.ignore")
 		SpringProperties.setProperty("server.servlet.register-default-servlet", "false")
+		SpringProperties.setProperty("spring.devtools.restart.enabled", "false")
 		System.setProperty("org.graalvm.nativeimage.imagecode", "kofu")
 	}
 
