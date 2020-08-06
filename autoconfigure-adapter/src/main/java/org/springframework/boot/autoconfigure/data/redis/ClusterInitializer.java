@@ -1,6 +1,5 @@
 package org.springframework.boot.autoconfigure.data.redis;
 
-import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties.Cluster;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
@@ -23,7 +22,6 @@ public class ClusterInitializer implements ApplicationContextInitializer<Generic
         }
     }
 
-    @NotNull
     private RedisClusterConfiguration getRedisClusterConfiguration() {
         final RedisClusterConfiguration configuration = new RedisClusterConfiguration(cluster.getNodes());
         configuration.setMaxRedirects(cluster.getMaxRedirects());
