@@ -6,7 +6,7 @@ import am.ik.yavi.core.ConstraintViolations
 import am.ik.yavi.fn.Either
 
 data class User(
-        val login: String,
+        val login: String?,
         val firstname: String,
         val lastname: String
 ) {
