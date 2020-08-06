@@ -14,9 +14,8 @@ public class EmbeddedDataSourceConfigurationInitializer implements ApplicationCo
 
   @Override
   public void initialize(GenericApplicationContext context) {
-    if (context.getBeanFactory().getBeanNamesForType(EmbeddedDataSourceConfiguration.class).length==0) {
-      context.registerBean(EmbeddedDataSourceConfiguration.class, () -> new EmbeddedDataSourceConfiguration());
-      context.registerBean("dataSource", EmbeddedDatabase.class, () -> context.getBean(EmbeddedDataSourceConfiguration.class).dataSource(this.dataSourceProperties), def -> def.setDestroyMethodName("shutdown"));
+    if (context.getBeanFactory().getBeanNamesForType(EmbeddedDataSourceConfiguration.class).length == 0) {
+      context.registerBean("dataSource", EmbeddedDatabase.class, () -> new EmbeddedDataSourceConfiguration().dataSource(this.dataSourceProperties), def -> def.setDestroyMethodName("shutdown"));
     }
   }
 }

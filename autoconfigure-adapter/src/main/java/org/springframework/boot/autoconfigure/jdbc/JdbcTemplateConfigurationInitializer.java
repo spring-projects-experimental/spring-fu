@@ -16,9 +16,8 @@ public class JdbcTemplateConfigurationInitializer implements ApplicationContextI
 
   @Override
   public void initialize(GenericApplicationContext context) {
-    if (context.getBeanFactory().getBeanNamesForType(JdbcTemplateConfiguration.class).length==0) {
-      context.registerBean(JdbcTemplateConfiguration.class, () -> new JdbcTemplateConfiguration());
-      context.registerBean("jdbcTemplate", JdbcTemplate.class, () -> context.getBean(JdbcTemplateConfiguration.class).jdbcTemplate(context.getBean(DataSource.class), this.jdbcProperties));
+    if (context.getBeanFactory().getBeanNamesForType(JdbcTemplateConfiguration.class).length == 0) {
+      context.registerBean("JdbcTemplate", JdbcTemplate.class, () -> new JdbcTemplateConfiguration().jdbcTemplate(context.getBean(DataSource.class), jdbcProperties));
     }
   }
 }

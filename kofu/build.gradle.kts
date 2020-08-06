@@ -42,6 +42,7 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")
 	testImplementation("org.springframework.boot:spring-boot-starter-data-cassandra-reactive")
 	testImplementation("org.springframework.boot:spring-boot-starter-data-redis-reactive")
+	testImplementation("org.springframework.boot:spring-boot-starter-jdbc")
 	testImplementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	testRuntimeOnly("de.flapdoodle.embed:de.flapdoodle.embed.mongo")
 	testImplementation("io.mockk:mockk:1.9")
