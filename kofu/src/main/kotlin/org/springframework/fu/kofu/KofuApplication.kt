@@ -3,6 +3,7 @@ package org.springframework.fu.kofu
 import org.springframework.boot.SpringApplication
 import org.springframework.context.ApplicationContext
 import org.springframework.context.ConfigurableApplicationContext
+import org.springframework.core.SpringProperties
 
 /**
  * Kofu application that can be run parameterized with Spring profiles and/or command line arguments.
@@ -13,6 +14,12 @@ import org.springframework.context.ConfigurableApplicationContext
  * @author Sebastien Deleuze
  */
 abstract class KofuApplication(private val initializer: AbstractDsl) {
+
+	init {
+			SpringProperties.setFlag("spring.xml.ignore");
+			SpringProperties.setFlag("spring.spel.ignore");
+			System.setProperty("org.graalvm.nativeimage.imagecode", "kofu");
+	}
 
 	private var customizer: (ApplicationDsl.() -> Unit)? = null
 

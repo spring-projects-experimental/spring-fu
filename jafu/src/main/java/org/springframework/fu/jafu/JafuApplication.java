@@ -8,6 +8,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.GenericApplicationContext;
+import org.springframework.core.SpringProperties;
 
 
 /**
@@ -25,6 +26,9 @@ public abstract class JafuApplication {
 
 	protected JafuApplication(ApplicationContextInitializer<GenericApplicationContext> initializer) {
 		this.initializer = initializer;
+		SpringProperties.setFlag("spring.xml.ignore");
+		SpringProperties.setFlag("spring.spel.ignore");
+		System.setProperty("org.graalvm.nativeimage.imagecode", "jafu");
 	}
 
 	/**
