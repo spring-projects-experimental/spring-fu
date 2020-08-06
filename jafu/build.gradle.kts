@@ -53,20 +53,28 @@ dependencies {
 
 publishing {
 	publications {
-		create(project.name, MavenPublication::class.java) {
+		create<MavenPublication>(project.name) {
 			from(components["java"])
 			artifactId = "spring-fu-jafu"
 			val sourcesJar by tasks.creating(Jar::class) {
-				classifier = "sources"
+				archiveClassifier.set("sources")
 				from(sourceSets["main"].allSource)
 			}
 			artifact(sourcesJar)
 			val javadocJar by tasks.creating(Jar::class) {
 				dependsOn("javadoc")
-				classifier = "javadoc"
+				archiveClassifier.set("javadoc")
 				from(buildDir.resolve("docs/javadoc"))
 			}
 			artifact(javadocJar)
+			versionMapping {
+				usage("java-api") {
+					fromResolutionOf("runtimeClasspath")
+				}
+				usage("java-runtime") {
+					fromResolutionResult()
+				}
+			}
 		}
 	}
 }

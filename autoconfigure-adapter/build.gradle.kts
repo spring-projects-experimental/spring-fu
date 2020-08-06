@@ -39,14 +39,22 @@ repositories {
 
 publishing {
 	publications {
-		create(project.name, MavenPublication::class.java) {
+		create<MavenPublication>(project.name) {
 			from(components["java"])
 			artifactId = "spring-fu-autoconfigure-adapter"
 			val sourcesJar by tasks.creating(Jar::class) {
-				classifier = "sources"
+				archiveClassifier.set("sources")
 				from(sourceSets["main"].allSource)
 			}
 			artifact(sourcesJar)
+			versionMapping {
+				usage("java-api") {
+					fromResolutionOf("runtimeClasspath")
+				}
+				usage("java-runtime") {
+					fromResolutionResult()
+				}
+			}
 		}
 	}
 }

@@ -75,7 +75,7 @@ publishing {
 				from("samples/kofu-coroutines-mongodb") {
 					exclude("build", ".gradle", ".idea", "out", "*.iml")
 				}
-				destinationDir = file("$buildDir/dist")
+				destinationDirectory.set(file("$buildDir/dist"))
 				into("kofu-coroutines-mongodb")
 				setExecutablePermissions()
 			})
@@ -88,7 +88,7 @@ publishing {
 				from("samples/kofu-coroutines-r2dbc") {
 					exclude("build", ".gradle", ".idea", "out", "*.iml")
 				}
-				destinationDir = file("$buildDir/dist")
+				destinationDirectory.set(file("$buildDir/dist"))
 				into("kofu-coroutines-r2dbc")
 				setExecutablePermissions()
 			})
@@ -101,7 +101,7 @@ publishing {
 				from("samples/kofu-coroutines-validation") {
 					exclude("build", ".gradle", ".idea", "out", "*.iml")
 				}
-				destinationDir = file("$buildDir/dist")
+				destinationDirectory.set(file("$buildDir/dist"))
 				into("kofu-coroutines-validation")
 				setExecutablePermissions()
 			})
@@ -114,7 +114,7 @@ publishing {
 				from("samples/kofu-reactive-minimal") {
 					exclude("build", "com.sample.applicationkt", ".gradle", ".idea", "out", "*.iml")
 				}
-				destinationDir = file("$buildDir/dist")
+				destinationDirectory.set(file("$buildDir/dist"))
 				into("kofu-reactive-minimal")
 				setExecutablePermissions()
 			})
@@ -127,7 +127,7 @@ publishing {
 				from("samples/kofu-reactive-mongodb") {
 					exclude("build", ".gradle", ".idea", "out", "*.iml")
 				}
-				destinationDir = file("$buildDir/dist")
+				destinationDirectory.set(file("$buildDir/dist"))
 				into("kofu-reactive-mongodb")
 				setExecutablePermissions()
 			})
@@ -140,7 +140,7 @@ publishing {
 				from("samples/kofu-reactive-r2dbc") {
 					exclude("build", ".gradle", ".idea", "out", "*.iml")
 				}
-				destinationDir = file("$buildDir/dist")
+				destinationDirectory.set(file("$buildDir/dist"))
 				into("kofu-reactive-r2dbc")
 				setExecutablePermissions()
 			})
@@ -153,7 +153,7 @@ publishing {
 				from("samples/kofu-reactive-redis") {
 					exclude("build", ".gradle", ".idea", "out", "*.iml")
 				}
-				destinationDir = file("$buildDir/dist")
+				destinationDirectory.set(file("$buildDir/dist"))
 				into("kofu-reactive-redis")
 				setExecutablePermissions()
 			})
@@ -166,7 +166,7 @@ publishing {
 				from("samples/kofu-reactive-cassandra") {
 					exclude("build", ".gradle", ".idea", "out", "*.iml")
 				}
-				destinationDir = file("$buildDir/dist")
+				destinationDirectory.set(file("$buildDir/dist"))
 				into("kofu-reactive-cassandra")
 				setExecutablePermissions()
 			})
@@ -179,7 +179,7 @@ publishing {
 				from("samples/kofu-reactive-validation") {
 					exclude("build", ".gradle", ".idea", "out", "*.iml")
 				}
-				destinationDir = file("$buildDir/dist")
+				destinationDirectory.set(file("$buildDir/dist"))
 				into("kofu-reactive-validation")
 				setExecutablePermissions()
 			})
@@ -192,7 +192,7 @@ publishing {
 				from("samples/kofu-servlet-minimal") {
 					exclude("build", ".gradle", ".idea", "out", "*.iml")
 				}
-				destinationDir = file("$buildDir/dist")
+				destinationDirectory.set(file("$buildDir/dist"))
 				into("kofu-servlet-minimal")
 				setExecutablePermissions()
 			})
@@ -205,7 +205,7 @@ publishing {
 				from("samples/kofu-servlet-validation") {
 					exclude("build", ".gradle", ".idea", "out", "*.iml")
 				}
-				destinationDir = file("$buildDir/dist")
+				destinationDirectory.set(file("$buildDir/dist"))
 				into("kofu-servlet-validation")
 				setExecutablePermissions()
 			})

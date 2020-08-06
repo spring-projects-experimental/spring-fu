@@ -103,11 +103,11 @@ tasks.withType<DokkaTask> {
 
 publishing {
 	publications {
-		create(project.name, MavenPublication::class.java) {
+		create<MavenPublication>(project.name) {
 			from(components["java"])
 			artifactId = "spring-fu-kofu"
 			val sourcesJar by tasks.creating(Jar::class) {
-				classifier = "sources"
+				archiveClassifier.set("sources")
 				from(sourceSets["main"].allSource)
 				from(sourceSets["test"].allSource.apply {
 					include("org/springframework/boot/kofu/samples/**")
@@ -116,10 +116,18 @@ publishing {
 			artifact(sourcesJar)
 			val dokkaJar by tasks.creating(Jar::class) {
 				dependsOn("dokka")
-				classifier = "javadoc"
+				archiveClassifier.set("javadoc")
 				from(buildDir.resolve("dokka"))
 			}
 			artifact(dokkaJar)
+			versionMapping {
+				usage("java-api") {
+					fromResolutionOf("runtimeClasspath")
+				}
+				usage("java-runtime") {
+					fromResolutionResult()
+				}
+			}
 		}
 	}
 }
