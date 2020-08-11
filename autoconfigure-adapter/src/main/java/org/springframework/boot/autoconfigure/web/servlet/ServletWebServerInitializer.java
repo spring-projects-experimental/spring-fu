@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import javax.servlet.MultipartConfigElement;
+import javax.servlet.ServletRegistration;
 
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.ObjectProvider;
@@ -16,6 +17,7 @@ import org.springframework.boot.web.embedded.tomcat.TomcatProtocolHandlerCustomi
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.boot.web.server.WebServerFactoryCustomizerBeanPostProcessor;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.boot.web.servlet.filter.OrderedHiddenHttpMethodFilter;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
@@ -96,7 +98,7 @@ public class ServletWebServerInitializer implements ApplicationContextInitialize
 			@Override
 			public WebMvcAutoConfigurationAdapter get() {
 				if (configuration == null) {
-					configuration = new WebMvcAutoConfigurationAdapter(resourceProperties, webMvcProperties, context, context.getBeanProvider(HttpMessageConverters.class), context.getBeanProvider(ResourceHandlerRegistrationCustomizer.class), context.getBeanProvider(DispatcherServletPath.class));
+					configuration = new WebMvcAutoConfigurationAdapter(resourceProperties, webMvcProperties, context, context.getBeanProvider(HttpMessageConverters.class), context.getBeanProvider(ResourceHandlerRegistrationCustomizer.class), context.getBeanProvider(DispatcherServletPath.class), context.getBeanProvider(ResolvableType.forClass(ServletRegistrationBean.class)));
 					return configuration;
 				}
 				return configuration;
