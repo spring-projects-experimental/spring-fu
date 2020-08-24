@@ -1,12 +1,13 @@
 package org.springframework.fu.kofu.r2dbc
 
-import org.springframework.boot.autoconfigure.data.r2dbc.R2dbcInitializer
+import org.springframework.boot.autoconfigure.data.r2dbc.R2dbcDataInitializer
 import org.springframework.boot.autoconfigure.r2dbc.ConnectionFactoryOptionsBuilderCustomizer
+import org.springframework.boot.autoconfigure.r2dbc.R2dbcInitializer
 import org.springframework.boot.autoconfigure.r2dbc.R2dbcProperties
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.fu.kofu.AbstractDsl
 import org.springframework.fu.kofu.ConfigurationDsl
-import java.util.LinkedHashMap
+import java.util.*
 
 class R2dbcDsl(private val init: R2dbcDsl.() -> Unit) : AbstractDsl() {
 
@@ -22,7 +23,7 @@ class R2dbcDsl(private val init: R2dbcDsl.() -> Unit) : AbstractDsl() {
 
     var properties: Map<String, String> = LinkedHashMap()
 
-    var optionsCustomizer: List<ConnectionFactoryOptionsBuilderCustomizer> = emptyList()
+    var optionsCustomizers: List<ConnectionFactoryOptionsBuilderCustomizer> = emptyList()
 
     var transactional: Boolean = false
 
@@ -32,7 +33,8 @@ class R2dbcDsl(private val init: R2dbcDsl.() -> Unit) : AbstractDsl() {
 
         val properties = r2dbcProperties()
 
-        R2dbcInitializer(properties, optionsCustomizer, transactional).initialize(context)
+        R2dbcInitializer(properties, optionsCustomizers, transactional).initialize(context)
+        R2dbcDataInitializer().initialize(context)
     }
 
     fun r2dbcProperties() : R2dbcProperties =
@@ -47,7 +49,7 @@ class R2dbcDsl(private val init: R2dbcDsl.() -> Unit) : AbstractDsl() {
         }
 
     fun customize(optionCustomizer: ConnectionFactoryOptionsBuilderCustomizer){
-        optionsCustomizer += optionCustomizer
+        optionsCustomizers += optionCustomizer
     }
 }
 

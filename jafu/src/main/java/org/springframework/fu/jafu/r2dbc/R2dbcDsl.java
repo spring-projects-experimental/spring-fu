@@ -1,7 +1,8 @@
 package org.springframework.fu.jafu.r2dbc;
 
-import org.springframework.boot.autoconfigure.data.r2dbc.R2dbcInitializer;
+import org.springframework.boot.autoconfigure.data.r2dbc.R2dbcDataInitializer;
 import org.springframework.boot.autoconfigure.r2dbc.ConnectionFactoryOptionsBuilderCustomizer;
+import org.springframework.boot.autoconfigure.r2dbc.R2dbcInitializer;
 import org.springframework.boot.autoconfigure.r2dbc.R2dbcProperties;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
@@ -74,5 +75,6 @@ public class R2dbcDsl extends AbstractDsl {
         super.initialize(context);
         this.dsl.accept(this);
         new R2dbcInitializer(properties, optionsCustomizers, transactional).initialize(context);
+        new R2dbcDataInitializer().initialize(context);
     }
 }

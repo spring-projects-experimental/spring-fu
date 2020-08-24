@@ -1,34 +1,32 @@
 package com.sample
 
-import org.springframework.data.r2dbc.core.DatabaseClient
-import org.springframework.data.r2dbc.core.asType
-import org.springframework.data.r2dbc.core.await
-import org.springframework.data.r2dbc.core.awaitOne
-import org.springframework.data.r2dbc.core.flow
-import org.springframework.data.r2dbc.core.into
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.reactive.asFlow
+import kotlinx.coroutines.reactive.awaitSingle
+import org.springframework.data.r2dbc.core.R2dbcEntityOperations
+import org.springframework.data.relational.core.query.Criteria.where
+import org.springframework.data.relational.core.query.Query.empty
+import org.springframework.data.relational.core.query.Query.query
 
-class UserRepository(private val client: DatabaseClient) {
+class UserRepository(private val operations: R2dbcEntityOperations) {
 
-	suspend fun count() =
-			client.execute("SELECT COUNT(*) FROM users").asType<Long>().fetch().awaitOne()
-
-	fun findAll() = client.select().from("users").asType<User>().fetch().flow()
-
-	suspend fun findOne(id: String) =
-			client.execute("SELECT * FROM users WHERE login = :login").bind("login", id).asType<User>().fetch().awaitOne()
-
-	suspend fun deleteAll() =
-		client.execute("DELETE FROM users").await()
-
-	suspend fun save(user: User)=
-		client.insert().into<User>().table("users").using(user).await()
+	suspend fun count(): Long =
+		operations.count(empty(), User::class.java).awaitSingle()
 
 
-	suspend fun init() {
-		client.execute("CREATE TABLE IF NOT EXISTS users (login varchar PRIMARY KEY, firstname varchar, lastname varchar);").await()
-		deleteAll()
-		save(User("smaldini", "Stéphane", "Maldini"))
-		save(User("sdeleuze", "Sébastien", "Deleuze"))
-		save(User("bclozel", "Brian", "Clozel"))
+	fun findAll(): Flow<User> =
+		operations.select(empty(), User::class.java).asFlow()
+
+
+	suspend fun findOne(id: String?): User =
+		operations.select(User::class.java).matching(query(where("login").`is`(id!!))).one().awaitSingle()
+
+
+	suspend fun deleteAll() {
+		operations.delete(User::class.java).all().awaitSingle()
 	}
+
+	suspend fun insert(user: User): User =
+		operations.insert(User::class.java).using(user).awaitSingle()
+
 }
