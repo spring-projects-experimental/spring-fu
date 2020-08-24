@@ -1,6 +1,7 @@
 package org.springframework.fu.jafu.webmvc;
 
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import org.springframework.beans.factory.config.BeanDefinitionCustomizer;
 import org.springframework.beans.factory.support.BeanDefinitionReaderUtils;
@@ -15,6 +16,10 @@ import org.springframework.boot.autoconfigure.web.servlet.RssConverterInitialize
 import org.springframework.boot.autoconfigure.web.servlet.ServletWebServerInitializer;
 import org.springframework.boot.autoconfigure.web.servlet.StringConverterInitializer;
 import org.springframework.boot.autoconfigure.web.servlet.WebMvcProperties;
+import org.springframework.boot.web.embedded.jetty.JettyServletWebServerFactory;
+import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
+import org.springframework.boot.web.embedded.undertow.UndertowServletWebServerFactory;
+import org.springframework.boot.web.servlet.server.ConfigurableServletWebServerFactory;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.core.io.ClassPathResource;
@@ -26,16 +31,15 @@ import org.springframework.web.servlet.function.RouterFunctions;
 /**
  * Jafu DSL for WebMvc server.
  *
- * This DSL to be used with {@link org.springframework.fu.jafu.Jafu#application(WebApplicationType, Consumer)}
- * using a {@link WebApplicationType#SERVLET} parameter configures a
- * <a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#webmvc-fn"></a>WebMvc server</a>.
+ * This DSL to be used with {@link org.springframework.fu.jafu.Jafu#webApplication(Consumer)}
+ * configures a <a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#webmvc-fn"></a>WebMvc server</a>.
  *
  * When no converter is configured, {@code String} and {@code Resource} ones are configured by default.
  * When a {@code converters} block is declared, the one specified are configured by default.
  *
  * Required dependencies can be retrieve using {@code org.springframework.boot:spring-boot-starter-web}.
  *
- * @see org.springframework.fu.jafu.Jafu#application(WebApplicationType, Consumer)
+ * @see org.springframework.fu.jafu.Jafu#webApplication(Consumer)
  * @see WebMvcServerDsl#converters(Consumer)
  * @author Sebastien Deleuze
  */
@@ -48,6 +52,8 @@ public class WebMvcServerDsl extends AbstractDsl {
 	private ResourceProperties resourceProperties = new ResourceProperties();
 
 	private WebMvcProperties webMvcProperties = new WebMvcProperties();
+
+	private ConfigurableServletWebServerFactory engine = null;
 
 	private boolean convertersConfigured = false;
 
@@ -71,6 +77,30 @@ public class WebMvcServerDsl extends AbstractDsl {
 	 */
 	public WebMvcServerDsl port(int port) {
 		this.port = port;
+		return this;
+	}
+
+	/**
+	 * Enable Tomcat engine.
+	 */
+	public WebMvcServerDsl tomcat() {
+		this.engine = new TomcatDelegate().get();
+		return this;
+	}
+
+	/**
+	 * Enable Jetty engine.
+	 */
+	public WebMvcServerDsl jetty() {
+		this.engine = new JettyDelegate().get();
+		return this;
+	}
+
+	/**
+	 * Enable Undertow engine.
+	 */
+	public WebMvcServerDsl undertow() {
+		this.engine = new UndertowDelegate().get();
 		return this;
 	}
 
@@ -113,6 +143,10 @@ public class WebMvcServerDsl extends AbstractDsl {
 			RouterFunctions.route().resources("/**", new ClassPathResource("static/")).build()
 		);
 		serverProperties.setPort(port);
+		if (engine == null) {
+			engine = new TomcatDelegate().get();
+		}
+		engine.setPort(port);
 		serverProperties.getServlet().setRegisterDefaultServlet(false);
 		if (!convertersConfigured) {
 			new StringConverterInitializer().initialize(context);
@@ -121,7 +155,28 @@ public class WebMvcServerDsl extends AbstractDsl {
 		if (context.containsBeanDefinition("webHandler")) {
 			throw new IllegalStateException("Only one webFlux per application is supported");
 		}
-		new ServletWebServerInitializer(serverProperties, webMvcProperties, resourceProperties).initialize(context);
+		new ServletWebServerInitializer(serverProperties, webMvcProperties, resourceProperties, engine).initialize(context);
+	}
+
+	private class TomcatDelegate implements Supplier<ConfigurableServletWebServerFactory> {
+		@Override
+		public ConfigurableServletWebServerFactory get() {
+			return new TomcatServletWebServerFactory();
+		}
+	}
+
+	private class JettyDelegate implements Supplier<ConfigurableServletWebServerFactory> {
+		@Override
+		public ConfigurableServletWebServerFactory get() {
+			return new JettyServletWebServerFactory();
+		}
+	}
+
+	private class UndertowDelegate implements Supplier<ConfigurableServletWebServerFactory> {
+		@Override
+		public ConfigurableServletWebServerFactory get() {
+			return new UndertowServletWebServerFactory();
+		}
 	}
 
 	/**

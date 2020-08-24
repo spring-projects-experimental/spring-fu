@@ -42,7 +42,7 @@ class WebMvcServerDslTests {
 
 	@Test
 	fun `Create an application with an empty jetty server`() {
-		val app = application(WebApplicationType.SERVLET) {
+		val app = webApplication {
 			webMvc {
 				engine = jetty()
 				port = 0
@@ -55,7 +55,7 @@ class WebMvcServerDslTests {
 
 	@Test
 	fun `Create an application with an empty undertow server`() {
-		val app = application(WebApplicationType.SERVLET) {
+		val app = webApplication {
 			webMvc {
 				engine = undertow()
 				port = 0

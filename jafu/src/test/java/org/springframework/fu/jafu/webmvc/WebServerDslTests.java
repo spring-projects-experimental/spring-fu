@@ -19,6 +19,20 @@ public class WebServerDslTests {
 	}
 
 	@Test
+	public void emptyJettyServer() {
+		var app = webApplication(a -> a.enable(webMvc(s -> s.port(0).jetty())));
+		var context = app.run();
+		context.close();
+	}
+
+	@Test
+	public void emptyUndertowServer() {
+		var app = webApplication(a -> a.enable(webMvc(s -> s.port(0).undertow())));
+		var context = app.run();
+		context.close();
+	}
+
+	@Test
 	void createAndRequestAnEndpoint() {
 		var app = webApplication(a -> a.enable(
 				webMvc(s -> s.port(0).router(r -> r.GET("/foo", request -> noContent().build())))));
