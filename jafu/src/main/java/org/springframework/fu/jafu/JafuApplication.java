@@ -95,7 +95,6 @@ public abstract class JafuApplication {
 		app.addInitializers(this.initializer);
 		if (this.customizer != null) app.addInitializers(this.customizer);
 		System.setProperty("spring.backgroundpreinitializer.ignore", "true");
-		// TODO Manage lazy loading like in Kofu
 		return app.run(args);
 	}
 
