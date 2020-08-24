@@ -1,6 +1,11 @@
 .gradle
 build/
 target/
+.classpath
+.project
+.settings/
+hs_err_pid*
+bin/
 !gradle/wrapper/gradle-wrapper.jar
 .idea
 *.iws
