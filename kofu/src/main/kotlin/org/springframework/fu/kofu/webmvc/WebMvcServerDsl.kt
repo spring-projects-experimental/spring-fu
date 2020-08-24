@@ -13,6 +13,10 @@ import org.springframework.boot.autoconfigure.web.servlet.RssConverterInitialize
 import org.springframework.boot.autoconfigure.web.servlet.ServletWebServerInitializer
 import org.springframework.boot.autoconfigure.web.servlet.StringConverterInitializer
 import org.springframework.boot.autoconfigure.web.servlet.WebMvcProperties
+import org.springframework.boot.web.embedded.jetty.JettyServletWebServerFactory
+import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory
+import org.springframework.boot.web.embedded.undertow.UndertowServletWebServerFactory
+import org.springframework.boot.web.servlet.server.ConfigurableServletWebServerFactory
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.registerBean
 import org.springframework.core.io.ClassPathResource
@@ -49,6 +53,15 @@ open class WebMvcServerDsl(private val init: WebMvcServerDsl.() -> Unit): Abstra
 	 */
 	var port: Int = 8080
 
+	/**
+	 * Define the underlying engine used.
+	 *
+	 * @see tomcat
+	 * @see jetty
+	 * @see undertow
+	 */
+	var engine: ConfigurableServletWebServerFactory? = null
+
 	override fun initialize(context: GenericApplicationContext) {
 		super.initialize(context)
 		init()
@@ -59,11 +72,15 @@ open class WebMvcServerDsl(private val init: WebMvcServerDsl.() -> Unit): Abstra
 		}
 		serverProperties.servlet.isRegisterDefaultServlet = false
 		serverProperties.port = port
+		if (engine == null) {
+			engine = tomcat()
+		}
+		engine!!.setPort(port)
 		if (!convertersConfigured) {
 			StringConverterInitializer().initialize(context)
 			ResourceConverterInitializer().initialize(context)
 		}
-		ServletWebServerInitializer(serverProperties, webMvcProperties, resourceProperties).initialize(context)
+		ServletWebServerInitializer(serverProperties, webMvcProperties, resourceProperties, engine).initialize(context)
 	}
 
 	/**
@@ -102,6 +119,42 @@ open class WebMvcServerDsl(private val init: WebMvcServerDsl.() -> Unit): Abstra
 	 * @see org.springframework.beans.factory.BeanFactory.getBeanProvider
 	 */
 	inline fun <reified T : Any> RouterFunctionDsl.provider() : ObjectProvider<T> = context.getBeanProvider()
+
+	/**
+	 * Tomcat engine.
+	 * @see engine
+	 */
+	fun tomcat() = TomcatDelegate().invoke()
+
+	/**
+	 * Jetty engine.
+	 * @see engine
+	 */
+	fun jetty() = JettyDelegate().invoke()
+
+	/**
+	 * Undertow engine.
+	 * @see engine
+	 */
+	fun undertow() = UndertowDelegate().invoke()
+
+	private class TomcatDelegate: () -> ConfigurableServletWebServerFactory {
+		override fun invoke(): ConfigurableServletWebServerFactory {
+			return TomcatServletWebServerFactory()
+		}
+	}
+
+	private class JettyDelegate: () -> ConfigurableServletWebServerFactory {
+		override fun invoke(): ConfigurableServletWebServerFactory {
+			return JettyServletWebServerFactory()
+		}
+	}
+
+	private class UndertowDelegate: () -> ConfigurableServletWebServerFactory {
+		override fun invoke(): ConfigurableServletWebServerFactory {
+			return UndertowServletWebServerFactory()
+		}
+	}
 
 	class WebMvcConverterDsl(private val init: WebMvcConverterDsl.() -> Unit) : AbstractDsl() {
 
