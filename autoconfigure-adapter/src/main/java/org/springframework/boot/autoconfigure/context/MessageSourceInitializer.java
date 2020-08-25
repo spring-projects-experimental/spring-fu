@@ -20,5 +20,6 @@ public class MessageSourceInitializer implements ApplicationContextInitializer<G
 	@Override
 	public void initialize(GenericApplicationContext context) {
 		context.registerBean(AbstractApplicationContext.MESSAGE_SOURCE_BEAN_NAME, MessageSource.class, () -> new MessageSourceAutoConfiguration().messageSource(this.properties));
+		context.registerBean(MessageSourceProperties.class, () -> this.properties);
 	}
 }

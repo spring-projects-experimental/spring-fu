@@ -18,7 +18,7 @@ package org.springframework.fu.kofu
 
 import org.springframework.beans.factory.getBeanNamesForType
 import org.springframework.boot.autoconfigure.context.MessageSourceInitializer
-import org.springframework.boot.autoconfigure.web.ResourceProperties
+import org.springframework.context.MessageSource
 import org.springframework.context.support.GenericApplicationContext
 
 
@@ -36,7 +36,7 @@ open class ApplicationDsl internal constructor(private val dsl: ApplicationDsl.(
 	override fun initialize(context: GenericApplicationContext) {
 		super.initialize(context)
 		dsl()
-		if (context.beanFactory.getBeanNamesForType<ResourceProperties>().isEmpty()) {
+		if (context.beanFactory.getBeanNamesForType<MessageSource>().isEmpty()) {
 			MessageSourceInitializer().initialize(context)
 		}
 	}
