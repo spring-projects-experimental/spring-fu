@@ -45,7 +45,11 @@ class SecurityDsl(private val init: SecurityDsl.() -> Unit) : AbstractDsl() {
 
 	var passwordEncoder: PasswordEncoder? = null
 
-	var http: HttpSecurityDsl.() -> Unit = {}
+	private var httpConfiguration: HttpSecurityDsl.() -> Unit = {}
+
+	fun http(httpConfiguration: HttpSecurityDsl.() -> Unit = {}) {
+		this.httpConfiguration = httpConfiguration
+	}
 
 	override fun initialize(context: GenericApplicationContext) {
 		super.initialize(context)
@@ -53,7 +57,7 @@ class SecurityDsl(private val init: SecurityDsl.() -> Unit) : AbstractDsl() {
 
 		ObjectPostProcessorInitializer().initialize(context)
 
-		val securityInitializer = HttpSecurityInitializer(Consumer { it.invoke(http) },
+		val securityInitializer = HttpSecurityInitializer(Consumer { it.invoke(httpConfiguration) },
 				authenticationManager, userDetailsService, passwordEncoder)
 
 		securityInitializer.initialize(context)

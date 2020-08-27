@@ -25,7 +25,7 @@ fun webFluxSecurity() {
 		webFlux {
 			security {
 				// authenticationManager = repoAuthenticationManager
-				http = {
+				http {
 					anonymous { }
 					authorizeExchange {
 						authorize("/view", hasRole("USER"))

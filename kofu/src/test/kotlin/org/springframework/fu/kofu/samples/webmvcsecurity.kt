@@ -9,7 +9,7 @@ fun webMvcSecurity() {
 		webMvc {
 			security {
 				// authenticationManager = repoAuthenticationManager
-				http = {
+				http {
 					anonymous { }
 					authorizeRequests {
 						authorize("/view", hasRole("USER"))

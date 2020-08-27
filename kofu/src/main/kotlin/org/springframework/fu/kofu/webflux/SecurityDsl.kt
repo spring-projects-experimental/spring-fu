@@ -34,7 +34,7 @@ import org.springframework.security.config.web.server.invoke
  *
  * Required dependencies can be retrieve using `org.springframework.boot:spring-boot-starter-security`.
  *
- * @author Jonas Bark, Ivan Skachkov
+ * @author Jonas Bark, Ivan Skachkov, Fred Montariol
  */
 class SecurityDsl(private val init: SecurityDsl.() -> Unit) : AbstractDsl() {
 
@@ -46,7 +46,11 @@ class SecurityDsl(private val init: SecurityDsl.() -> Unit) : AbstractDsl() {
 
 	var userDetailsPasswordService: ReactiveUserDetailsPasswordService? = null
 
-	var http: ServerHttpSecurityDsl.() -> Unit = {}
+	private var httpConfiguration: ServerHttpSecurityDsl.() -> Unit = {}
+
+	fun http(httpConfiguration: ServerHttpSecurityDsl.() -> Unit = {}) {
+		this.httpConfiguration = httpConfiguration
+	}
 
 	override fun initialize(context: GenericApplicationContext) {
 		super.initialize(context)
@@ -60,7 +64,7 @@ class SecurityDsl(private val init: SecurityDsl.() -> Unit) : AbstractDsl() {
 		)
 		securityInitializer.initialize(context)
 
-		val chain = securityInitializer.httpSecurity.invoke(http)
+		val chain = securityInitializer.httpSecurity.invoke(httpConfiguration)
 
 		WebFluxSecurityInitializer(chain).initialize(context)
 	}

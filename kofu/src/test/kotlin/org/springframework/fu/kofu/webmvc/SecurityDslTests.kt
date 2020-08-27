@@ -54,7 +54,7 @@ class SecurityDslTests {
 				security {
 					authenticationManager = repoAuthenticationManager
 
-					http = {
+					http {
 						authorizeRequests {
 							authorize("/public-view", permitAll)
 							authorize("/view", hasRole("USER"))

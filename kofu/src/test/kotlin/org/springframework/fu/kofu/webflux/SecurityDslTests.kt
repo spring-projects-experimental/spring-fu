@@ -52,7 +52,7 @@ class SecurityDslTests {
 				security {
 					authenticationManager = repoAuthenticationManager
 
-					http = {
+					http {
 						authorizeExchange {
 							authorize("/public-view", permitAll)
 							authorize("/view", hasRole("USER"))
