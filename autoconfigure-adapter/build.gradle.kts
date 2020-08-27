@@ -33,6 +33,8 @@ dependencies {
 	compileOnly("io.r2dbc:r2dbc-h2")
 	compileOnly("io.r2dbc:r2dbc-mssql")
 	compileOnly("com.zaxxer:HikariCP")
+	compileOnly("org.springframework.security:spring-security-web")
+	compileOnly("org.springframework.security:spring-security-config")
 }
 
 repositories {
