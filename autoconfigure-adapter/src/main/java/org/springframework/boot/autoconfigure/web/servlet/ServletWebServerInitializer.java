@@ -150,7 +150,7 @@ public class ServletWebServerInitializer implements ApplicationContextInitialize
 		context.registerBean(SimpleControllerHandlerAdapter.class, () -> enableWebMvcConfiguration.get().simpleControllerHandlerAdapter());
 		context.registerBean(HandlerExceptionResolver.class, () -> enableWebMvcConfiguration.get().handlerExceptionResolver(context.getBean(ContentNegotiationManager.class)));
 		context.registerBean(ViewResolver.class, () -> enableWebMvcConfiguration.get().mvcViewResolver(context.getBean(ContentNegotiationManager.class)));
-		context.registerBean(HandlerMappingIntrospector.class, () -> enableWebMvcConfiguration.get().mvcHandlerMappingIntrospector(), bd -> bd.setLazyInit(true));
+		context.registerBean("mvcHandlerMappingIntrospector", HandlerMappingIntrospector.class, () -> enableWebMvcConfiguration.get().mvcHandlerMappingIntrospector(), bd -> bd.setLazyInit(true));
 		context.registerBean(WelcomePageHandlerMapping.class, () -> enableWebMvcConfiguration.get().welcomePageHandlerMapping(context, context.getBean(FormattingConversionService.class), context.getBean(ResourceUrlProvider.class)));
 		context.registerBean(DispatcherServlet.LOCALE_RESOLVER_BEAN_NAME, LocaleResolver.class, () -> enableWebMvcConfiguration.get().localeResolver());
 		context.registerBean(DispatcherServlet.THEME_RESOLVER_BEAN_NAME, ThemeResolver.class, () -> enableWebMvcConfiguration.get().themeResolver());

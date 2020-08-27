@@ -17,6 +17,8 @@ dependencies {
 
 	compileOnly("org.springframework:spring-webmvc")
 	compileOnly("org.springframework:spring-webflux")
+	compileOnly("org.springframework.security:spring-security-web")
+	compileOnly("org.springframework.security:spring-security-config")
 	compileOnly("de.flapdoodle.embed:de.flapdoodle.embed.mongo")
 	compileOnly("org.springframework.data:spring-data-mongodb")
 	compileOnly("org.springframework.data:spring-data-r2dbc")
@@ -45,6 +47,8 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-starter-data-redis-reactive")
 	testImplementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
 	testImplementation("org.springframework.boot:spring-boot-starter-jdbc")
+	testImplementation("org.springframework.boot:spring-boot-starter-security")
+	testImplementation("org.springframework.security:spring-security-test")
 	testImplementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	testRuntimeOnly("de.flapdoodle.embed:de.flapdoodle.embed.mongo")
 	testImplementation("io.mockk:mockk:1.9")
@@ -77,6 +81,9 @@ tasks.withType<DokkaTask>().configureEach {
 			}
 			externalDocumentationLink {
 				url.set(URL("https://docs.spring.io/spring-framework/docs/current/kdoc-api/spring-framework/"))
+			}
+			externalDocumentationLink {
+				url.set(URL("https://docs.spring.io/spring-security/site/docs/current/api/"))
 			}
 			externalDocumentationLink {
 				url.set(URL("https://fasterxml.github.io/jackson-core/javadoc/2.9/"))
