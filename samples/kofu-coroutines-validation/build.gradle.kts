@@ -7,12 +7,12 @@ plugins {
 }
 
 dependencies {
-	implementation("org.springframework.fu:spring-fu-kofu:0.4.0")
+	implementation("org.springframework.fu:spring-fu-kofu:0.4.1-SNAPSHOT")
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core")
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
-	implementation("am.ik.yavi:yavi:0.4.0")
+	implementation("am.ik.yavi:yavi:0.4.1-SNAPSHOT")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
