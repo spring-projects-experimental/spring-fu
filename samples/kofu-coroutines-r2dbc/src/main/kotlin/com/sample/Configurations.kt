@@ -11,7 +11,7 @@ import org.springframework.r2dbc.connection.init.ResourceDatabasePopulator
 val dataConfig = configuration {
 	beans {
 		bean<UserRepository>()
-		bean<ConnectionFactoryInitializer> {
+		bean {
 			ConnectionFactoryInitializer().apply {
 				setConnectionFactory(ref())
 				setDatabasePopulator(ResourceDatabasePopulator(ClassPathResource("db/tables.sql")))
