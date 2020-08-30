@@ -9,7 +9,6 @@ include(
 		"kofu-coroutines-minimal",
 		"kofu-coroutines-r2dbc",
 		"kofu-coroutines-validation",
-		"kofu-petclinic-jdbc",
 		"kofu-reactive-minimal",
 		"kofu-reactive-mongodb",
 		"kofu-reactive-r2dbc",
