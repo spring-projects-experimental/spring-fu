@@ -10,7 +10,7 @@ dependencies {
 	implementation("org.springframework.fu:spring-fu-kofu:0.4.1-SNAPSHOT")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-	implementation("am.ik.yavi:yavi:0.4.1-SNAPSHOT")
+	implementation("am.ik.yavi:yavi:0.4.0")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.boot:spring-boot-starter-webflux")
