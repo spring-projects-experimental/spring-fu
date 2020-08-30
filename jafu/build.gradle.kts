@@ -47,8 +47,10 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-starter-mustache")
 	testImplementation("org.springframework.boot:spring-boot-starter-json")
 	testImplementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")
+	testImplementation("org.springframework.boot:spring-boot-starter-jdbc")
 	testImplementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	testRuntimeOnly("de.flapdoodle.embed:de.flapdoodle.embed.mongo")
+	testRuntimeOnly("com.h2database:h2")
 }
 
 publishing {
