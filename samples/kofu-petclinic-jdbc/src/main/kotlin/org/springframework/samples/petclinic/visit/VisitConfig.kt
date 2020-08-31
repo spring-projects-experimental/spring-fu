@@ -4,12 +4,10 @@ import org.springframework.fu.kofu.configuration
 import org.springframework.web.servlet.function.router
 
 val visitConfig = configuration {
+    // Lambda based for for native application compat because of https://github.com/oracle/graal/issues/2500
     beans {
-        // For native application compat because of https://github.com/oracle/graal/issues/2500
-        bean {
-            JdbcVisitRepositoryImpl(ref())
-        }
-        bean<VisitHandler>()
+        bean { JdbcVisitRepositoryImpl(ref()) }
+        bean { VisitHandler(ref(), ref()) }
         bean(::visitRoutes)
     }
 }

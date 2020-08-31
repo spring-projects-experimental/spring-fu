@@ -14,9 +14,6 @@ import org.springframework.samples.petclinic.visit.visitConfig
 import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect
 
 val app = webApplication {
-    beans {
-        bean { Java8TimeDialect() }
-    }
     messageSource {
         basename = "messages/messages"
     }

@@ -1,7 +1,6 @@
 package org.springframework.samples.petclinic.owner
 
 import org.springframework.samples.petclinic.pet.Pet
-import javax.validation.constraints.Digits
 
 data class Owner(
         val id: Int? = null,
@@ -9,7 +8,7 @@ data class Owner(
         val lastName: String,
         val address: String,
         val city: String,
-        val telephone: @Digits(fraction = 0, integer = 10) String,
+        val telephone: String,
         val pets: Set<Pet> = hashSetOf()
 ) {
 
