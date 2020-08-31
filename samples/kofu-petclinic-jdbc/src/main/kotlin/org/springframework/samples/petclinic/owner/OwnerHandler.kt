@@ -1,10 +1,13 @@
 package org.springframework.samples.petclinic.owner
 
 import org.springframework.samples.petclinic.form
+import org.springframework.samples.petclinic.pet.Pet
 import org.springframework.samples.petclinic.pet.PetRepository
+import org.springframework.samples.petclinic.pet.PetType
 import org.springframework.web.servlet.function.ServerRequest
 import org.springframework.web.servlet.function.ServerResponse
 import org.springframework.web.servlet.function.ServerResponse.ok
+import java.time.LocalDate
 
 class OwnerHandler(private val owners: OwnerRepository, private val pets: PetRepository) {
 
@@ -14,37 +17,34 @@ class OwnerHandler(private val owners: OwnerRepository, private val pets: PetRep
     private val ownerDetailsView = "owners/ownerDetails"
 
     fun getOwnerCreationView(request: ServerRequest): ServerResponse =
-            ok().render(createOrUpdateOwnerView, mapOf("owner" to Owner()))
+            ok().render(createOrUpdateOwnerView, mapOf("owner" to Owner.default()))
 
     fun addOwner(request: ServerRequest): ServerResponse {
         return try {
-            val owner = request.form<Owner>()
+            val owner = request.ownerFormParams()
             when {
                 owner.isValid() -> {
-                    owners.save(owner)
-                    ok().render("redirect:/owners/${owner.id}")
+                    val savedOwner = owners.save(owner)
+                    ok().render("redirect:/owners/${savedOwner.id}")
                 }
                 else -> ok().render(createOrUpdateOwnerView, mapOf("owner" to owner))
             }
-            owners.save(owner)
-            ok().render("redirect:/owners/${owner.id}")
         } catch (e: IllegalArgumentException) { // Reflect error TODO improve
             ok().render(createOrUpdateOwnerView);
         }
     }
 
     fun findOwnerView(request: ServerRequest): ServerResponse =
-            ok().render(findOwnerView, mapOf("owner" to Owner()))
+            ok().render(findOwnerView, mapOf("owner" to Owner.default()))
 
     fun findOwnerByLastName(request: ServerRequest): ServerResponse {
-        // TODO manage multiple fields error
         val search = request.params()["lastName"]?.firstOrNull() ?: ""
         val found = owners.findByLastName(search)
         return when {
             // TODO : Manage errors for thymeleaf (specific format ?) FieldError("lastName", "notFound", "not found")
-            found.isEmpty() -> ok().render(findOwnerView, mapOf("owner" to Owner()))
+            found.isEmpty() -> ok().render(findOwnerView, mapOf("owner" to Owner.default()))
             found.size == 1 -> ok().render("redirect:/owners/${found.first().id}")
-            else -> ok().render(listOwnersView, mapOf("selections" to found, "owner" to Owner()))
+            else -> ok().render(listOwnersView, mapOf("selections" to found))
         }
     }
 
@@ -55,11 +55,12 @@ class OwnerHandler(private val owners: OwnerRepository, private val pets: PetRep
 
     fun updateOwner(request: ServerRequest): ServerResponse {
         return try {
-            val owner = request.form<Owner>()
+            val owner = request.ownerFormParams()
+                    .copy(id= request.pathVariable("ownerId").toInt())
             when {
                 owner.isValid() -> {
-                    owners.save(owner)
-                    ok().render("redirect:/owners/${owner.id}")
+                    val savedOwner = owners.save(owner)
+                    ok().render("redirect:/owners/${savedOwner.id}")
                 }
                 else -> ok().render(createOrUpdateOwnerView, mapOf("owner" to owner))
             }
@@ -71,7 +72,30 @@ class OwnerHandler(private val owners: OwnerRepository, private val pets: PetRep
     fun getOwnerById(request: ServerRequest): ServerResponse {
         val ownerId = request.pathVariable("ownerId").toInt()
         val owner = owners.findById(ownerId)
-        owner.pets = pets.findByOwnerId(ownerId)
+                .copy(pets = pets.findByOwnerId(ownerId))
         return ok().render(ownerDetailsView, mapOf("owner" to owner))
     }
 }
+
+fun Owner.isValid() = firstName.isNotBlank()
+        && lastName.isNotBlank()
+        && address.isNotBlank()
+        && city.isNotBlank()
+        && telephone.isNotBlank()
+
+fun Owner.Companion.default(): Owner =
+        Owner(
+                firstName = "",
+                lastName = "",
+                telephone = "",
+                city = "",
+                address = ""
+        )
+
+fun ServerRequest.ownerFormParams(): Owner =
+        Owner(
+                firstName = param("firstName").orElseThrow { java.lang.IllegalArgumentException("firstName is mandatory") }.toString(),
+                lastName = param("lastName").orElseThrow { java.lang.IllegalArgumentException("lastName is mandatory") }.toString(),
+                address = param("address").orElseThrow { java.lang.IllegalArgumentException("address is mandatory") }.toString(),
+                city = param("city").orElseThrow { java.lang.IllegalArgumentException("city is mandatory") }.toString(),
+                telephone = param("telephone").orElseThrow { java.lang.IllegalArgumentException("telephone is mandatory") }.toString())

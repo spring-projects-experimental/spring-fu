@@ -4,11 +4,14 @@ import org.springframework.fu.kofu.configuration
 import org.springframework.web.servlet.function.router
 
 val petConfig = configuration {
-    // Lambda syntax for native application compat because of https://github.com/oracle/graal/issues/2500
     beans {
-        bean { JdbcPetRepositoryImpl(ref(), ref(), ref()) }
-        bean { PetHandler(ref(), ref()) }
+        // For native application compat because of https://github.com/oracle/graal/issues/2500
+        bean {
+            JdbcPetRepositoryImpl(ref(), ref(), ref())
+        }
+        bean<PetHandler>()
         bean(::petRoutes)
+        bean<PetTypeFormatter>()
     }
 }
 

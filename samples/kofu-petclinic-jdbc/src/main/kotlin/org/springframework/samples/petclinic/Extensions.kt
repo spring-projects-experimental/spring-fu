@@ -1,10 +1,7 @@
 package org.springframework.samples.petclinic
 
-import org.springframework.samples.petclinic.pet.Pet
-import org.springframework.samples.petclinic.pet.PetType
 import org.springframework.web.servlet.function.ServerRequest
 import org.springframework.web.servlet.function.paramOrNull
-import java.lang.IllegalArgumentException
 import java.time.LocalDate
 import kotlin.reflect.KMutableProperty
 import kotlin.reflect.full.createInstance
@@ -18,7 +15,7 @@ inline fun <reified T : Any> ServerRequest.form(prefix: List<String> = listOf())
         T::class.memberProperties
                 .filterIsInstance(KMutableProperty::class.java)
                 .fold(T::class.createInstance()) { instance, property ->
-                    val value: Any? = paramOrNull((prefix + property.name).joinToString("."))?.let {
+                    val value: Any? = paramOrNull((prefix + property.name).joinToString("."))?.asNotEmpty()?.let {
                         when (property.returnType) {
                             String::class, String::class.starProjectedType.withNullability(true) -> it
                             Int::class, Int::class.starProjectedType.withNullability(true) -> it.toInt()
@@ -34,10 +31,6 @@ inline fun <reified T : Any> ServerRequest.form(prefix: List<String> = listOf())
                     instance
                 }
 
-fun ServerRequest.petFormParams(petTypes: List<PetType>): Pet =
-        Pet().apply {
-            name = param("name").orElseThrow { IllegalArgumentException("name is mandatory") }.toString()
-            birthDate = LocalDate.parse(param("birthDate").orElseThrow { IllegalArgumentException("birthDate is mandatory") }.toString())
-            type = petTypes.first { it.name == param("type").orElseThrow { IllegalArgumentException("type is mandatory") }.toString() }
-            typeId = type!!.id
-        }
+fun String?.asNotEmpty(): String? = this?.let {
+    if (it.isEmpty()) null else it
+}

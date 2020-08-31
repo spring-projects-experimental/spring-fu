@@ -22,10 +22,9 @@ class JdbcPetRepositoryImpl(dataSource: DataSource,
     override fun findPetTypes(): List<PetType> {
         return jdbcTemplate.query("SELECT id, name FROM types ORDER BY name", emptyMap<String, Any>())
         { rs, _ ->
-            PetType().apply {
-                id = rs.getInt(1)
-                name = rs.getString(2)
-            }
+            PetType(
+                    id = rs.getInt(1),
+                    name = rs.getString(2))
         }
     }
 
@@ -33,71 +32,49 @@ class JdbcPetRepositoryImpl(dataSource: DataSource,
         val params: MapSqlParameterSource = MapSqlParameterSource().addValue("id", petTypeId)
         return jdbcTemplate.query("SELECT id, name FROM types WHERE id=:id", params)
         { rs, _ ->
-            PetType().apply {
-                id = rs.getInt(1)
-                name = rs.getString(2)
+            PetType(
+                    id = rs.getInt(1),
+                    name = rs.getString(2))
+        }.first()
+    }
+
+    override fun findById(petId: Int): Pet =
+            try {
+                val params: MapSqlParameterSource = MapSqlParameterSource().addValue("id", petId)
+                jdbcTemplate.query( // `query` used instead of `queryObject` to avoid nullability
+                        "SELECT id, name, birth_date, type_id, owner_id FROM pets WHERE id=:id", params)
+                { rs, _ ->
+                    Pet(
+                            id = rs.getInt(1),
+                            name = rs.getString(2),
+                            birthDate = rs.getDate(3).toLocalDate(),
+                            type = findByPetTypeId(rs.getInt(4)),
+                            owner = ownerRepository.findById(rs.getInt(5)))
+                }.first()
+            } catch (ex: EmptyResultDataAccessException) {
+                throw DataRetrievalFailureException("Cannot find pet with id: $petId")
             }
-        }
-                .first()
-    }
-
-    override fun findById(petId: Int): Pet {
-        val params: MapSqlParameterSource = MapSqlParameterSource().addValue("id", petId)
-        var pet: Pet
-
-        try {
-            pet = jdbcTemplate.query( // `query` used instead of `queryObject` to avoid nullability
-                    "SELECT id, name, birth_date, type_id, owner_id FROM pets WHERE id=:id", params)
-            { rs, _ ->
-                Pet().apply {
-                    id = rs.getInt(1)
-                    name = rs.getString(2)
-                    birthDate = rs.getDate(3).toLocalDate()
-                    typeId = rs.getInt(4)
-                    ownerId = rs.getInt(5)
-                }
-
-            }.first()
-
-        } catch (ex: EmptyResultDataAccessException) {
-            throw DataRetrievalFailureException("Cannot find pet with id: $petId")
-        }
-
-        pet.owner = ownerRepository.findById(pet.ownerId)
-        pet.type = findByPetTypeId(pet.typeId)
-        return pet
-    }
 
     override fun findByOwnerId(ownerId: Int): Set<Pet> {
+        val petTypes: Collection<PetType> = findPetTypes()
         val params: MapSqlParameterSource = MapSqlParameterSource().addValue("id", ownerId)
-        val pets = jdbcTemplate.query(
+        return jdbcTemplate.query(
                 "SELECT id, name, birth_date, type_id, owner_id FROM pets WHERE owner_id=:id ORDER BY id", params)
         { rs, _ ->
-            Pet().apply {
-                id = rs.getInt(1)
-                name = rs.getString(2)
-                birthDate = rs.getDate(3).toLocalDate()
-                owner = null
-                type = PetType()
-                typeId = rs.getInt(4)
-                this.ownerId = rs.getInt(5)
-            }
-        }
-                .toSet()
-
-        val petTypes: Collection<PetType> = findPetTypes()
-
-        for (pet in pets) {
-            pet.type = petTypes.first { it.id == pet.typeId }
-            pet.visits = visitRepository.findByPetId(pet.id)
-        }
-
-        return pets
+            val id = rs.getInt(1)
+            Pet(
+                    id = id,
+                    name = rs.getString(2),
+                    birthDate = rs.getDate(3).toLocalDate(),
+                    type = petTypes.first { it.id == rs.getInt(4) },
+                    owner = ownerRepository.findById(rs.getInt(5)),
+                    visits = visitRepository.findByPetId(id))
+        }.toSet()
     }
 
     override fun save(pet: Pet) {
         if (pet.isNew()) {
-            pet.id = insertPet.executeAndReturnKey(createPetParameterSource(pet)).toInt()
+            pet.copy(id = insertPet.executeAndReturnKey(createPetParameterSource(pet)).toInt())
         } else {
             jdbcTemplate
                     .update("UPDATE pets SET name=:name, birth_date=:birth_date, type_id=:type_id, "
@@ -109,6 +86,6 @@ class JdbcPetRepositoryImpl(dataSource: DataSource,
             MapSqlParameterSource().addValue("id", pet.id)
                     .addValue("name", pet.name)
                     .addValue("birth_date", pet.birthDate)
-                    .addValue("type_id", pet.typeId)
-                    .addValue("owner_id", pet.ownerId)
+                    .addValue("type_id", pet.type.id)
+                    .addValue("owner_id", pet.owner.id)
 }
