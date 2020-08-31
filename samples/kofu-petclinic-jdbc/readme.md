@@ -5,3 +5,9 @@ To build and run the native application packaged in a lightweight container with
 mvn spring-boot:build-image
 docker-compose up
 ```
+
+To build and run the native application as a native executable with a local `native-image` install:
+```
+mvn -Pnative spring-boot:package
+target/org.springframework.samples.petclinic.kofupetclinicapplicationkt
+```

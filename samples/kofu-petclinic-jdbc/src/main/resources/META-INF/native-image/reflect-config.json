@@ -32,31 +32,13 @@
     "allDeclaredConstructors":true
   },
   {
-    "name":"org.springframework.samples.petclinic.model.Person",
-    "allDeclaredFields":true,
-    "allDeclaredMethods":true,
-    "allDeclaredConstructors":true
-  },
-  {
-    "name":"org.springframework.samples.petclinic.owner.Pet",
+    "name":"org.springframework.samples.petclinic.pet.Pet",
     "allDeclaredFields":true,
     "allDeclaredMethods":true,
     "allDeclaredConstructors":true
   },
   {
     "name":"org.springframework.samples.petclinic.vet.Specialty",
-    "allDeclaredFields":true,
-    "allDeclaredMethods":true,
-    "allDeclaredConstructors":true
-  },
-  {
-    "name":"org.springframework.samples.petclinic.model.NamedEntity",
-    "allDeclaredFields":true,
-    "allDeclaredMethods":true,
-    "allDeclaredConstructors":true
-  },
-  {
-    "name":"org.springframework.samples.petclinic.model.BaseEntity",
     "allDeclaredFields":true,
     "allDeclaredMethods":true,
     "allDeclaredConstructors":true

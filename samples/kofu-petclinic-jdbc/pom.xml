@@ -32,6 +32,12 @@
     <dependencies>
 
         <dependency>
+            <groupId>org.springframework.experimental</groupId>
+            <artifactId>spring-graalvm-native</artifactId>
+            <version>0.8.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.springframework.fu</groupId>
             <artifactId>spring-fu-kofu</artifactId>
             <version>0.4.1-SNAPSHOT</version>
@@ -275,5 +281,36 @@
             </snapshots>
         </pluginRepository>
     </pluginRepositories>
+
+    <profiles>
+        <profile>
+            <id>native</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.graalvm.nativeimage</groupId>
+                        <artifactId>native-image-maven-plugin</artifactId>
+                        <version>20.2.0</version>
+                        <configuration>
+                            <mainClass>org.springframework.samples.petclinic.KofuPetClinicApplicationKt</mainClass>
+                            <buildArgs>-Dspring.native.remove-yaml-support=true --enable-all-security-services</buildArgs>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>native-image</goal>
+                                </goals>
+                                <phase>package</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-maven-plugin</artifactId>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>
