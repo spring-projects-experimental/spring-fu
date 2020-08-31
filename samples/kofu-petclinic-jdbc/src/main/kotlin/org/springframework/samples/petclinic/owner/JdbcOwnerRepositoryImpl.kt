@@ -16,8 +16,15 @@ class JdbcOwnerRepositoryImpl(val dataSource: DataSource) : OwnerRepository {
 
     override fun findByLastName(lastName: String): Collection<Owner> {
         val params: MapSqlParameterSource = MapSqlParameterSource().addValue("lastName", "${lastName}%")
-        return jdbcTemplate.query("SELECT id, first_name, last_name, address, city, telephone FROM owners WHERE last_name like :lastName",
-                params, BeanPropertyRowMapper.newInstance(Owner::class.java)) // TODO see if we keep/ propagate this
+        return jdbcTemplate.query("SELECT id, first_name, last_name, address, city, telephone FROM owners WHERE last_name like :lastName", params) { rs, _ ->
+            Owner(
+                    id = rs.getInt(1),
+                    firstName = rs.getString(2),
+                    lastName = rs.getString(3),
+                    address = rs.getString(4),
+                    city = rs.getString(5),
+                    telephone = rs.getString(6))
+        }
     }
 
     override fun findById(ownerId: Int): Owner {
@@ -28,14 +35,13 @@ class JdbcOwnerRepositoryImpl(val dataSource: DataSource) : OwnerRepository {
             owner = jdbcTemplate.query(
                     "SELECT id, first_name, last_name, address, city, telephone FROM owners WHERE id= :id", params)
             { rs, _ ->
-                Owner().apply {
-                    id = rs.getInt(1)
-                    firstName = rs.getString(2)
-                    lastName = rs.getString(3)
-                    address = rs.getString(4)
-                    city = rs.getString(5)
-                    telephone = rs.getString(6)
-                }
+                Owner(
+                        id = rs.getInt(1),
+                        firstName = rs.getString(2),
+                        lastName = rs.getString(3),
+                        address = rs.getString(4),
+                        city = rs.getString(5),
+                        telephone = rs.getString(6))
             }.first()
 
         } catch (ex: EmptyResultDataAccessException) {
@@ -45,14 +51,15 @@ class JdbcOwnerRepositoryImpl(val dataSource: DataSource) : OwnerRepository {
         return owner
     }
 
-    override fun save(owner: Owner) {
+    override fun save(owner: Owner): Owner {
         val parameterSource = BeanPropertySqlParameterSource(owner) // TODO wtf is that?
-        if (owner.isNew()) {
-            owner.id = insertOwner.executeAndReturnKey(parameterSource).toInt()
+        return if (owner.isNew()) {
+            owner.copy(id = insertOwner.executeAndReturnKey(parameterSource).toInt())
         } else {
             this.jdbcTemplate
                     .update("UPDATE owners SET first_name=:firstName, last_name=:lastName, address=:address, "
                             + "city=:city, telephone=:telephone WHERE id=:id", parameterSource)
+            owner
         }
     }
 }

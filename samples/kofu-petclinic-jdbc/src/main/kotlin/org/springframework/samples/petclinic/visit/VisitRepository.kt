@@ -6,7 +6,7 @@ import kotlin.jvm.Throws
 interface VisitRepository {
 
     @Throws(DataAccessException::class)
-    fun save(visit: Visit)
+    fun save(visit: Visit, petId: Int)
 
     fun findByPetId(petId: Int): Set<Visit>
 

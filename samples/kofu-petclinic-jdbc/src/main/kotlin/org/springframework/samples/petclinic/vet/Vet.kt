@@ -1,17 +1,10 @@
 package org.springframework.samples.petclinic.vet
 
-import org.springframework.samples.petclinic.model.Person
-
-class Vet : Person() {
-
-    var specialties: Set<Specialty> = hashSetOf()
-
-    fun getSpecialtiesSorted(): List<Specialty> =
-            specialties.sortedBy { it.name }.toList()
-
+data class Vet(
+        val id: Int,
+        val firstName: String,
+        val lastName: String,
+        val specialties: Set<Specialty> = hashSetOf()
+) {
     fun getNrOfSpecialties() = specialties.size
-
-    fun addSpecialty(specialty: Specialty) {
-        specialties += specialty
-    }
 }

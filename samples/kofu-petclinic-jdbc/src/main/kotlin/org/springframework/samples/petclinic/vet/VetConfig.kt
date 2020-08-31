@@ -4,18 +4,20 @@ import org.springframework.fu.kofu.configuration
 import org.springframework.web.servlet.function.router
 
 val vetConfig = configuration {
-    // Lambda syntax for native application compat because of https://github.com/oracle/graal/issues/2500
     beans {
-        bean { JdbcVetRepositoryImpl(ref()) }
+        // For native application compat because of https://github.com/oracle/graal/issues/2500
+        bean {
+            JdbcVetRepositoryImpl(ref())
+        }
         bean(::vetRoutes)
     }
 }
 
 fun vetRoutes(vetRepository: VetRepository) = router {
     GET("/vets.html") {
-        ok().render("vets/vetList", mapOf("vets" to Vets(vetRepository.findAll().toList())))
+        ok().render("vets/vetList", mapOf("vets" to vetRepository.findAll().toList()))
     }
     GET("/vets") {
-        ok().body(Vets(vetRepository.findAll().toList()))
+        ok().body(object { val vets = vetRepository.findAll().toList()})
     }
 }

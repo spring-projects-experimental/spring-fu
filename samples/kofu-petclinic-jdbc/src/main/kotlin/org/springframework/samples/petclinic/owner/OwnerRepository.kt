@@ -11,5 +11,5 @@ interface OwnerRepository {
     fun findById(id: Int): Owner
 
     @Throws(DataAccessException::class)
-    fun save(owner: Owner)
+    fun save(owner: Owner): Owner
 }
