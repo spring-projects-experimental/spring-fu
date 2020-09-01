@@ -34,7 +34,57 @@ import java.util.*
 class SecurityDslTests {
 
 	@Test
-	fun `Check spring-security configuration DSL`() {
+	fun `Check spring-security configuration DSL with provided userDetailsService`() {
+
+		val username = "user"
+		val password = "password"
+
+		val app = reactiveWebApplication {
+			webFlux {
+				port = 0
+				router {
+					GET("/public-view") { ok().build() }
+					GET("/view") { ok().build() }
+				}
+
+				security {
+					userDetailsService = userDetailsService(username, password)
+
+					http {
+						authorizeExchange {
+							authorize("/public-view", permitAll)
+							authorize("/view", hasRole("USER"))
+						}
+						httpBasic {}
+					}
+				}
+			}
+		}
+		app.run().use { context ->
+			val client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:${context.localServerPort}")
+					.responseTimeout(Duration.ofMinutes(10)) // useful for debug
+					.build()
+
+			client.get().uri("/public-view").exchange()
+					.expectStatus().is2xxSuccessful
+
+			client.get().uri("/view").exchange()
+					.expectStatus().isUnauthorized
+
+			val basicAuth =
+					Base64.getEncoder().encode("$username:$password".toByteArray()).toString(Charset.defaultCharset())
+			client.get().uri("/view").header("Authorization", "Basic $basicAuth").exchange()
+					.expectStatus().is2xxSuccessful
+
+			val basicAuthWrong =
+					Base64.getEncoder().encode("user:pass".toByteArray()).toString(Charset.defaultCharset())
+			client.get().uri("/view").header("Authorization", "Basic $basicAuthWrong").exchange()
+					.expectStatus().isUnauthorized
+		}
+	}
+
+	@Test
+	fun `Check spring-security configuration DSL with provided authenticationManager`() {
 
 		val username = "user"
 		val password = "password"
@@ -62,8 +112,8 @@ class SecurityDslTests {
 				}
 			}
 		}
-		with(app.run()) {
-			val client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:$localServerPort")
+		app.run().use { context ->
+			val client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:${context.localServerPort}")
 					.responseTimeout(Duration.ofMinutes(10)) // useful for debug
 					.build()
 
@@ -82,8 +132,6 @@ class SecurityDslTests {
 					Base64.getEncoder().encode("user:pass".toByteArray()).toString(Charset.defaultCharset())
 			client.get().uri("/view").header("Authorization", "Basic $basicAuthWrong").exchange()
 					.expectStatus().isUnauthorized
-
-			close()
 		}
 	}
 

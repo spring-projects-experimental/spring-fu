@@ -40,7 +40,7 @@ class SecurityDsl(private val init: SecurityDsl.() -> Unit) : AbstractDsl() {
 
 	var authenticationManager: ReactiveAuthenticationManager? = null
 
-	var reactiveUserDetailsService: ReactiveUserDetailsService? = null
+	var userDetailsService: ReactiveUserDetailsService? = null
 
 	var passwordEncoder: PasswordEncoder? = null
 
@@ -58,7 +58,7 @@ class SecurityDsl(private val init: SecurityDsl.() -> Unit) : AbstractDsl() {
 
 		val securityInitializer = ServerHttpSecurityInitializer(
 				authenticationManager,
-				reactiveUserDetailsService,
+				userDetailsService,
 				passwordEncoder,
 				userDetailsPasswordService
 		)

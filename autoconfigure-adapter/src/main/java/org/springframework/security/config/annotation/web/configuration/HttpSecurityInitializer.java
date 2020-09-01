@@ -3,9 +3,13 @@ package org.springframework.security.config.annotation.web.configuration;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.core.userdetails.UserDetailsPasswordService;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.function.Consumer;
@@ -21,27 +25,40 @@ public class HttpSecurityInitializer implements ApplicationContextInitializer<Ge
 	private final Consumer<HttpSecurity> httpSecurityDsl;
 	private final AuthenticationManager authenticationManager;
 	private final UserDetailsService userDetailsService;
-	private final PasswordEncoder passwordEncoder;
+	private PasswordEncoder passwordEncoder;
+	private final UserDetailsPasswordService userDetailsPasswordService;
 
 	public HttpSecurityInitializer(Consumer<HttpSecurity> httpSecurityDsl, AuthenticationManager authenticationManager,
-								   UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
+								   UserDetailsService userDetailsService, PasswordEncoder passwordEncoder,
+								   UserDetailsPasswordService userDetailsPasswordService) {
 		this.httpSecurityDsl = httpSecurityDsl;
 		this.authenticationManager = authenticationManager;
 		this.userDetailsService = userDetailsService;
 		this.passwordEncoder = passwordEncoder;
+		this.userDetailsPasswordService = userDetailsPasswordService;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public void initialize(GenericApplicationContext context) {
-		if (passwordEncoder != null) {
-			context.registerBean(PasswordEncoder.class, () -> passwordEncoder);
-		}
-
 		HttpSecurityConfiguration configuration = new HttpSecurityConfiguration();
 		configuration.setApplicationContext(context);
+
 		if (authenticationManager != null) {
 			configuration.setAuthenticationManager(authenticationManager);
+		} else {
+			// build authenticationManager otherwise HttpSecurityConfiguration will throw NPE
+			DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+			authProvider.setUserDetailsService(userDetailsService);
+			authProvider.setUserDetailsPasswordService(userDetailsPasswordService);
+
+			if (passwordEncoder == null) {
+				passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+			}
+			authProvider.setPasswordEncoder(passwordEncoder);
+			context.registerBean(PasswordEncoder.class, () -> passwordEncoder);
+
+			configuration.setAuthenticationManager(new ProviderManager(authProvider));
 		}
 
 		Supplier<HttpSecurity> httpSecuritySupplier = () -> {
@@ -52,14 +69,6 @@ public class HttpSecurityInitializer implements ApplicationContextInitializer<Ge
 				httpSecurity = configuration.httpSecurity();
 			} catch (Exception e) {
 				throw new IllegalStateException(e);
-			}
-
-			if (userDetailsService != null) {
-				try {
-					httpSecurity.userDetailsService(userDetailsService);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
 			}
 
 			this.httpSecurityDsl.accept(httpSecurity);

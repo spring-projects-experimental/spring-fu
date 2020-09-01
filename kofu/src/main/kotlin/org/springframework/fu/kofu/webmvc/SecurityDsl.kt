@@ -24,6 +24,7 @@ import org.springframework.security.config.annotation.web.configuration.ObjectPo
 import org.springframework.security.config.annotation.web.configuration.WebMvcSecurityInitializer
 import org.springframework.security.config.web.servlet.HttpSecurityDsl
 import org.springframework.security.config.web.servlet.invoke
+import org.springframework.security.core.userdetails.UserDetailsPasswordService
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.password.PasswordEncoder
 import java.util.function.Consumer
@@ -45,6 +46,8 @@ class SecurityDsl(private val init: SecurityDsl.() -> Unit) : AbstractDsl() {
 
 	var passwordEncoder: PasswordEncoder? = null
 
+	var userDetailsPasswordService: UserDetailsPasswordService? = null
+
 	private var httpConfiguration: HttpSecurityDsl.() -> Unit = {}
 
 	fun http(httpConfiguration: HttpSecurityDsl.() -> Unit = {}) {
@@ -58,7 +61,7 @@ class SecurityDsl(private val init: SecurityDsl.() -> Unit) : AbstractDsl() {
 		ObjectPostProcessorInitializer().initialize(context)
 
 		val securityInitializer = HttpSecurityInitializer(Consumer { it.invoke(httpConfiguration) },
-				authenticationManager, userDetailsService, passwordEncoder)
+                authenticationManager, userDetailsService, passwordEncoder, userDetailsPasswordService)
 
 		securityInitializer.initialize(context)
 
