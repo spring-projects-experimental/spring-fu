@@ -1,13 +1,9 @@
 package org.springframework.samples.petclinic.owner
 
-import org.springframework.samples.petclinic.form
-import org.springframework.samples.petclinic.pet.Pet
 import org.springframework.samples.petclinic.pet.PetRepository
-import org.springframework.samples.petclinic.pet.PetType
 import org.springframework.web.servlet.function.ServerRequest
 import org.springframework.web.servlet.function.ServerResponse
 import org.springframework.web.servlet.function.ServerResponse.ok
-import java.time.LocalDate
 
 class OwnerHandler(private val owners: OwnerRepository, private val pets: PetRepository) {
 

@@ -4,7 +4,7 @@ import org.springframework.fu.kofu.configuration
 import org.springframework.web.servlet.function.router
 
 val ownerConfig = configuration {
-    // Lambda based for for native application compat because of https://github.com/oracle/graal/issues/2500
+    // Lambda based syntax for native application compat because of https://github.com/oracle/graal/issues/2500
     beans {
         bean { JdbcOwnerRepositoryImpl(ref()) }
         bean { OwnerHandler(ref(), ref()) }
