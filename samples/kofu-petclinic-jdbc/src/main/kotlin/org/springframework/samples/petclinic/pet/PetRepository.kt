@@ -8,7 +8,7 @@ interface PetRepository{
     fun findPetTypes(): List<PetType>
 
     @Throws(DataAccessException::class)
-    fun findById(id: Int): Pet
+    fun findById(petId: Int): Pet
 
     @Throws(DataAccessException::class)
     fun findByOwnerId(ownerId: Int): Set<Pet>

@@ -8,7 +8,7 @@ interface OwnerRepository {
     fun findByLastName(lastName: String): Collection<Owner>
 
     @Throws(DataAccessException::class)
-    fun findById(id: Int): Owner
+    fun findById(ownerId: Int): Owner
 
     @Throws(DataAccessException::class)
     fun save(owner: Owner): Owner

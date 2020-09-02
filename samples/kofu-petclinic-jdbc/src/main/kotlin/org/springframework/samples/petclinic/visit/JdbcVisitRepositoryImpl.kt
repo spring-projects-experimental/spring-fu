@@ -7,7 +7,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert
 import javax.sql.DataSource
 
-class JdbcVisitRepositoryImpl(val dataSource: DataSource) : VisitRepository {
+class JdbcVisitRepositoryImpl(dataSource: DataSource) : VisitRepository {
 
     private val jdbcTemplate = NamedParameterJdbcTemplate(dataSource)
     private val insertVisit = SimpleJdbcInsert(dataSource).withTableName("visits").usingGeneratedKeyColumns("id")
