@@ -6,6 +6,7 @@ import org.springframework.beans.factory.support.BeanDefinitionReaderUtils.uniqu
 import org.springframework.boot.autoconfigure.web.ResourceProperties
 import org.springframework.boot.autoconfigure.web.ServerProperties
 import org.springframework.boot.autoconfigure.web.reactive.*
+import org.springframework.boot.context.properties.bind.Binder
 import org.springframework.boot.web.embedded.jetty.JettyReactiveWebServerFactory
 import org.springframework.boot.web.embedded.netty.NettyReactiveWebServerFactory
 import org.springframework.boot.web.embedded.tomcat.TomcatReactiveWebServerFactory
@@ -44,11 +45,11 @@ import org.springframework.web.server.WebFilter
  */
 open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit): AbstractDsl() {
 
-	private val serverProperties = ServerProperties()
+	private lateinit var serverProperties: ServerProperties
 
-	private val resourceProperties = ResourceProperties()
+	private lateinit var resourceProperties: ResourceProperties
 
-	private val webFluxProperties = WebFluxProperties()
+	private lateinit var webFluxProperties: WebFluxProperties
 
 	private var codecsConfigured: Boolean = false
 
@@ -69,6 +70,11 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit): Abst
 
 	override fun initialize(context: GenericApplicationContext) {
 		super.initialize(context)
+        with(Binder.get(context.environment)) {
+            serverProperties = bindOrCreate("server", ServerProperties::class.java)
+            resourceProperties = bindOrCreate("spring.resources", ResourceProperties::class.java)
+            webFluxProperties = bindOrCreate("spring.webflux", WebFluxProperties::class.java)
+        }
 		init()
 		context.registerBean(uniqueBeanName(RouterFunctionDsl::class.java.name, context)) {
 			org.springframework.web.reactive.function.server.router {
