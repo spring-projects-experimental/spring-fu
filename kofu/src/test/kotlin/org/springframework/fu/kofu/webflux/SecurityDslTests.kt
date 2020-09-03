@@ -17,12 +17,16 @@
 package org.springframework.fu.kofu.webflux
 
 import org.junit.jupiter.api.Test
+import org.springframework.beans.factory.getBean
 import org.springframework.fu.kofu.localServerPort
 import org.springframework.fu.kofu.reactiveWebApplication
 import org.springframework.security.authentication.UserDetailsRepositoryReactiveAuthenticationManager
+import org.springframework.security.config.web.server.ServerHttpSecurity
 import org.springframework.security.core.userdetails.MapReactiveUserDetailsService
 import org.springframework.security.core.userdetails.User
 import org.springframework.test.web.reactive.server.WebTestClient
+import org.springframework.web.reactive.function.client.ExchangeFilterFunction
+import reactor.kotlin.core.publisher.toMono
 import java.nio.charset.Charset
 import java.time.Duration
 import java.util.*
@@ -45,6 +49,7 @@ class SecurityDslTests {
 				router {
 					GET("/public-view") { ok().build() }
 					GET("/view") { ok().build() }
+					POST("/post") { ok().build() }
 				}
 
 				security {
@@ -53,6 +58,7 @@ class SecurityDslTests {
 					http {
 						authorizeExchange {
 							authorize("/public-view", permitAll)
+							authorize("/public-post", permitAll)
 							authorize("/view", hasRole("USER"))
 						}
 						httpBasic {}
@@ -61,12 +67,24 @@ class SecurityDslTests {
 			}
 		}
 		app.run().use { context ->
+			// verify that beans are present in context
+			context.getBean<ServerHttpSecurity>()
+
 			val client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:${context.localServerPort}")
+					.filters { exchangeFilterFunctions ->
+						exchangeFilterFunctions.add(logRequest());
+						exchangeFilterFunctions.add(logResponse());
+					}
 					.responseTimeout(Duration.ofMinutes(10)) // useful for debug
 					.build()
 
-			client.get().uri("/public-view").exchange()
+			client.get().uri("/public-view")
+					.exchange()
 					.expectStatus().is2xxSuccessful
+
+			/*client.post().uri("/public-post")
+					.exchange()
+					.expectStatus().is2xxSuccessful*/
 
 			client.get().uri("/view").exchange()
 					.expectStatus().isUnauthorized
@@ -80,6 +98,39 @@ class SecurityDslTests {
 					Base64.getEncoder().encode("user:pass".toByteArray()).toString(Charset.defaultCharset())
 			client.get().uri("/view").header("Authorization", "Basic $basicAuthWrong").exchange()
 					.expectStatus().isUnauthorized
+		}
+	}
+
+	private fun logRequest(): ExchangeFilterFunction {
+		return ExchangeFilterFunction.ofRequestProcessor { clientRequest ->
+			val sb = StringBuilder("Request: \n")
+			clientRequest
+					.headers()
+					.forEach { (name, values) ->
+						values.forEach { value ->
+							sb.append("header -> $name : $value \n")
+						}
+					}
+			sb.append("\n\n")
+			println(sb.toString())
+			clientRequest.toMono()
+		}
+	}
+
+	private fun logResponse(): ExchangeFilterFunction {
+		return ExchangeFilterFunction.ofResponseProcessor { clientResponse ->
+			val sb = StringBuilder("Response: \n")
+			clientResponse
+					.headers()
+					.asHttpHeaders()
+					.forEach { (name, values) ->
+						values.forEach { value ->
+							sb.append("header -> $name : $value \n")
+						}
+					}
+			sb.append("\n\n")
+			println(sb.toString())
+			clientResponse.toMono()
 		}
 	}
 
@@ -113,6 +164,9 @@ class SecurityDslTests {
 			}
 		}
 		app.run().use { context ->
+			// verify that beans are present in context
+			context.getBean<ServerHttpSecurity>()
+
 			val client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:${context.localServerPort}")
 					.responseTimeout(Duration.ofMinutes(10)) // useful for debug
 					.build()

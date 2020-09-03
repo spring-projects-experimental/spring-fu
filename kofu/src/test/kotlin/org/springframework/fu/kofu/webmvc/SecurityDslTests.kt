@@ -17,10 +17,12 @@
 package org.springframework.fu.kofu.webmvc
 
 import org.junit.jupiter.api.Test
+import org.springframework.beans.factory.getBean
 import org.springframework.fu.kofu.localServerPort
 import org.springframework.fu.kofu.webApplication
 import org.springframework.security.authentication.ProviderManager
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider
+import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.core.userdetails.User
 import org.springframework.security.provisioning.InMemoryUserDetailsManager
 import org.springframework.test.web.reactive.server.WebTestClient
@@ -62,6 +64,9 @@ class SecurityDslTests {
 			}
 		}
 		app.run().use { context ->
+			// verify that beans are present in context
+			context.getBean<HttpSecurity>()
+
 			val client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:${context.localServerPort}")
 					.responseTimeout(Duration.ofMinutes(10)) // useful for debug
 					.build()
@@ -110,11 +115,15 @@ class SecurityDslTests {
 							authorize("/view", hasRole("USER"))
 						}
 						httpBasic {}
+						csrf {}
 					}
 				}
 			}
 		}
 		app.run().use { context ->
+			// verify that beans are present in context
+			context.getBean<HttpSecurity>()
+
 			val client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:${context.localServerPort}")
 					.responseTimeout(Duration.ofMinutes(10)) // useful for debug
 					.build()

@@ -25,7 +25,7 @@ public class HttpSecurityInitializer implements ApplicationContextInitializer<Ge
 	private final Consumer<HttpSecurity> httpSecurityDsl;
 	private final AuthenticationManager authenticationManager;
 	private final UserDetailsService userDetailsService;
-	private PasswordEncoder passwordEncoder;
+	private final PasswordEncoder passwordEncoder;
 	private final UserDetailsPasswordService userDetailsPasswordService;
 
 	public HttpSecurityInitializer(Consumer<HttpSecurity> httpSecurityDsl, AuthenticationManager authenticationManager,
@@ -47,16 +47,16 @@ public class HttpSecurityInitializer implements ApplicationContextInitializer<Ge
 		if (authenticationManager != null) {
 			configuration.setAuthenticationManager(authenticationManager);
 		} else {
-			// build authenticationManager otherwise HttpSecurityConfiguration will throw NPE
+			// build authenticationManager, otherwise HttpSecurityConfiguration will throw NPE
 			DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
 			authProvider.setUserDetailsService(userDetailsService);
 			authProvider.setUserDetailsPasswordService(userDetailsPasswordService);
 
-			if (passwordEncoder == null) {
-				passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+			if (passwordEncoder != null) {
+				authProvider.setPasswordEncoder(passwordEncoder);
+			} else {
+				authProvider.setPasswordEncoder(PasswordEncoderFactories.createDelegatingPasswordEncoder());
 			}
-			authProvider.setPasswordEncoder(passwordEncoder);
-			context.registerBean(PasswordEncoder.class, () -> passwordEncoder);
 
 			configuration.setAuthenticationManager(new ProviderManager(authProvider));
 		}
@@ -76,7 +76,6 @@ public class HttpSecurityInitializer implements ApplicationContextInitializer<Ge
 			return httpSecurity;
 		};
 
-		// todo expose configuration '@Bean's
 		context.registerBean(
 				HTTPSECURITY_BEAN_NAME,
 				HttpSecurity.class,

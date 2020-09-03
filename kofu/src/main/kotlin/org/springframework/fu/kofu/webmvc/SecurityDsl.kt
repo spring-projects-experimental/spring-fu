@@ -22,6 +22,7 @@ import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.config.annotation.web.configuration.HttpSecurityInitializer
 import org.springframework.security.config.annotation.web.configuration.ObjectPostProcessorInitializer
 import org.springframework.security.config.annotation.web.configuration.WebMvcSecurityInitializer
+import org.springframework.security.config.annotation.web.configuration.WebSecurityInitializer
 import org.springframework.security.config.web.servlet.HttpSecurityDsl
 import org.springframework.security.config.web.servlet.invoke
 import org.springframework.security.core.userdetails.UserDetailsPasswordService
@@ -65,6 +66,7 @@ class SecurityDsl(private val init: SecurityDsl.() -> Unit) : AbstractDsl() {
 
 		securityInitializer.initialize(context)
 
+		WebSecurityInitializer().initialize(context)
 		WebMvcSecurityInitializer().initialize(context)
 	}
 }
