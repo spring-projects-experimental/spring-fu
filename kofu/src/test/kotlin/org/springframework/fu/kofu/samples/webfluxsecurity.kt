@@ -19,12 +19,14 @@ package org.springframework.fu.kofu.samples
 import org.springframework.fu.kofu.reactiveWebApplication
 import org.springframework.fu.kofu.webflux.security
 import org.springframework.fu.kofu.webflux.webFlux
+import org.springframework.security.core.userdetails.MapReactiveUserDetailsService
+import org.springframework.security.core.userdetails.User
 
 fun webFluxSecurity() {
 	reactiveWebApplication {
 		webFlux {
 			security {
-				// authenticationManager = repoAuthenticationManager
+				userDetailsService = userDetailsService()
 				http {
 					anonymous { }
 					authorizeExchange {
@@ -38,3 +40,13 @@ fun webFluxSecurity() {
 		}
 	}
 }
+
+private fun userDetailsService() =
+		MapReactiveUserDetailsService(
+				@Suppress("DEPRECATION")
+				User.withDefaultPasswordEncoder()
+						.username("username")
+						.password("password")
+						.roles("USER")
+						.build()
+		)
