@@ -47,6 +47,7 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
 	testImplementation("org.springframework.boot:spring-boot-starter-jdbc")
 	testImplementation("org.springframework.boot:spring-boot-starter-security")
+	testImplementation("org.springframework.security:spring-security-test")
 	testImplementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	testRuntimeOnly("de.flapdoodle.embed:de.flapdoodle.embed.mongo")
 	testImplementation("io.mockk:mockk:1.9")

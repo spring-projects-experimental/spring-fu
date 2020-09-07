@@ -18,18 +18,14 @@ package org.springframework.fu.kofu.webflux
 
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.getBean
-import org.springframework.fu.kofu.localServerPort
+import org.springframework.fu.kofu.passwordTest
 import org.springframework.fu.kofu.reactiveWebApplication
+import org.springframework.fu.kofu.testSecurityWebFlux
+import org.springframework.fu.kofu.usernameTest
 import org.springframework.security.authentication.UserDetailsRepositoryReactiveAuthenticationManager
 import org.springframework.security.config.web.server.ServerHttpSecurity
 import org.springframework.security.core.userdetails.MapReactiveUserDetailsService
 import org.springframework.security.core.userdetails.User
-import org.springframework.test.web.reactive.server.WebTestClient
-import org.springframework.web.reactive.function.client.ExchangeFilterFunction
-import reactor.kotlin.core.publisher.toMono
-import java.nio.charset.Charset
-import java.time.Duration
-import java.util.*
 
 
 /**
@@ -39,115 +35,53 @@ class SecurityDslTests {
 
 	@Test
 	fun `Check spring-security configuration DSL with provided userDetailsService`() {
-
-		val username = "user"
-		val password = "password"
-
 		val app = reactiveWebApplication {
 			webFlux {
 				port = 0
+
 				router {
 					GET("/public-view") { ok().build() }
 					GET("/view") { ok().build() }
-					POST("/post") { ok().build() }
+					POST("/public-post") { ok().build() }
 				}
 
 				security {
-					userDetailsService = userDetailsService(username, password)
+					userDetailsService = userDetailsService()
 
 					http {
 						authorizeExchange {
 							authorize("/public-view", permitAll)
-							authorize("/public-post", permitAll)
 							authorize("/view", hasRole("USER"))
+							authorize("/public-post", permitAll)
 						}
 						httpBasic {}
 					}
 				}
 			}
 		}
-		app.run().use { context ->
+		app.run().apply {
 			// verify that beans are present in context
-			context.getBean<ServerHttpSecurity>()
+			getBean<ServerHttpSecurity>()
 
-			val client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:${context.localServerPort}")
-					.filters { exchangeFilterFunctions ->
-						exchangeFilterFunctions.add(logRequest());
-						exchangeFilterFunctions.add(logResponse());
-					}
-					.responseTimeout(Duration.ofMinutes(10)) // useful for debug
-					.build()
+			testSecurityWebFlux(this)
 
-			client.get().uri("/public-view")
-					.exchange()
-					.expectStatus().is2xxSuccessful
-
-			/*client.post().uri("/public-post")
-					.exchange()
-					.expectStatus().is2xxSuccessful*/
-
-			client.get().uri("/view").exchange()
-					.expectStatus().isUnauthorized
-
-			val basicAuth =
-					Base64.getEncoder().encode("$username:$password".toByteArray()).toString(Charset.defaultCharset())
-			client.get().uri("/view").header("Authorization", "Basic $basicAuth").exchange()
-					.expectStatus().is2xxSuccessful
-
-			val basicAuthWrong =
-					Base64.getEncoder().encode("user:pass".toByteArray()).toString(Charset.defaultCharset())
-			client.get().uri("/view").header("Authorization", "Basic $basicAuthWrong").exchange()
-					.expectStatus().isUnauthorized
-		}
-	}
-
-	private fun logRequest(): ExchangeFilterFunction {
-		return ExchangeFilterFunction.ofRequestProcessor { clientRequest ->
-			val sb = StringBuilder("Request: \n")
-			clientRequest
-					.headers()
-					.forEach { (name, values) ->
-						values.forEach { value ->
-							sb.append("header -> $name : $value \n")
-						}
-					}
-			sb.append("\n\n")
-			println(sb.toString())
-			clientRequest.toMono()
-		}
-	}
-
-	private fun logResponse(): ExchangeFilterFunction {
-		return ExchangeFilterFunction.ofResponseProcessor { clientResponse ->
-			val sb = StringBuilder("Response: \n")
-			clientResponse
-					.headers()
-					.asHttpHeaders()
-					.forEach { (name, values) ->
-						values.forEach { value ->
-							sb.append("header -> $name : $value \n")
-						}
-					}
-			sb.append("\n\n")
-			println(sb.toString())
-			clientResponse.toMono()
+			close()
 		}
 	}
 
 	@Test
 	fun `Check spring-security configuration DSL with provided authenticationManager`() {
-
-		val username = "user"
-		val password = "password"
 		val repoAuthenticationManager =
-				UserDetailsRepositoryReactiveAuthenticationManager(userDetailsService(username, password))
+				UserDetailsRepositoryReactiveAuthenticationManager(userDetailsService())
 
 		val app = reactiveWebApplication {
 			webFlux {
 				port = 0
+
 				router {
 					GET("/public-view") { ok().build() }
 					GET("/view") { ok().build() }
+					POST("/public-post") { ok().build() }
 				}
 
 				security {
@@ -157,44 +91,29 @@ class SecurityDslTests {
 						authorizeExchange {
 							authorize("/public-view", permitAll)
 							authorize("/view", hasRole("USER"))
+							authorize("/public-post", permitAll)
 						}
 						httpBasic {}
 					}
 				}
 			}
 		}
-		app.run().use { context ->
+		app.run().apply {
 			// verify that beans are present in context
-			context.getBean<ServerHttpSecurity>()
+			getBean<ServerHttpSecurity>()
 
-			val client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:${context.localServerPort}")
-					.responseTimeout(Duration.ofMinutes(10)) // useful for debug
-					.build()
+			testSecurityWebFlux(this)
 
-			client.get().uri("/public-view").exchange()
-					.expectStatus().is2xxSuccessful
-
-			client.get().uri("/view").exchange()
-					.expectStatus().isUnauthorized
-
-			val basicAuth =
-					Base64.getEncoder().encode("$username:$password".toByteArray()).toString(Charset.defaultCharset())
-			client.get().uri("/view").header("Authorization", "Basic $basicAuth").exchange()
-					.expectStatus().is2xxSuccessful
-
-			val basicAuthWrong =
-					Base64.getEncoder().encode("user:pass".toByteArray()).toString(Charset.defaultCharset())
-			client.get().uri("/view").header("Authorization", "Basic $basicAuthWrong").exchange()
-					.expectStatus().isUnauthorized
+			close()
 		}
 	}
 
-	private fun userDetailsService(username: String, password: String) =
+	private fun userDetailsService() =
 			MapReactiveUserDetailsService(
 					@Suppress("DEPRECATION")
 					User.withDefaultPasswordEncoder()
-							.username(username)
-							.password(password)
+							.username(usernameTest)
+							.password(passwordTest)
 							.roles("USER")
 							.build()
 			)

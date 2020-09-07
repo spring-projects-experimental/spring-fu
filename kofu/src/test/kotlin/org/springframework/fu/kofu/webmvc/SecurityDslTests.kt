@@ -18,17 +18,17 @@ package org.springframework.fu.kofu.webmvc
 
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.getBean
-import org.springframework.fu.kofu.localServerPort
-import org.springframework.fu.kofu.webApplication
+import org.springframework.fu.kofu.*
 import org.springframework.security.authentication.ProviderManager
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.core.userdetails.User
 import org.springframework.security.provisioning.InMemoryUserDetailsManager
-import org.springframework.test.web.reactive.server.WebTestClient
-import java.nio.charset.Charset
-import java.time.Duration
-import java.util.*
+import org.springframework.security.web.csrf.CsrfToken
+import org.springframework.security.web.csrf.CsrfTokenRepository
+import org.springframework.security.web.csrf.DefaultCsrfToken
+import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletResponse
 
 
 /**
@@ -38,72 +38,57 @@ class SecurityDslTests {
 
 	@Test
 	fun `Check spring-security configuration DSL with provided userDetailsService`() {
-
-		val username = "user"
-		val password = "password"
-
 		val app = webApplication {
 			webMvc {
 				port = 0
+
 				router {
 					GET("/public-view") { ok().build() }
 					GET("/view") { ok().build() }
+					POST("/public-post") { ok().build() }
 				}
 
 				security {
-					userDetailsService = userDetailsService(username, password)
+					userDetailsService = userDetailsService()
 
 					http {
 						authorizeRequests {
 							authorize("/public-view", permitAll)
 							authorize("/view", hasRole("USER"))
+							authorize("/public-post", permitAll)
 						}
 						httpBasic {}
+						csrf {
+							csrfTokenRepository = csrfTokenRepository()
+						}
 					}
 				}
 			}
 		}
-		app.run().use { context ->
+		app.run().apply {
 			// verify that beans are present in context
-			context.getBean<HttpSecurity>()
+			getBean<HttpSecurity>()
 
-			val client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:${context.localServerPort}")
-					.responseTimeout(Duration.ofMinutes(10)) // useful for debug
-					.build()
+			testSecurityWebMvc(this)
 
-			client.get().uri("/public-view").exchange()
-					.expectStatus().is2xxSuccessful
-
-			client.get().uri("/view").exchange()
-					.expectStatus().isUnauthorized
-
-			val basicAuth =
-					Base64.getEncoder().encode("$username:$password".toByteArray()).toString(Charset.defaultCharset())
-			client.get().uri("/view").header("Authorization", "Basic $basicAuth").exchange()
-					.expectStatus().is2xxSuccessful
-
-			val basicAuthWrong =
-					Base64.getEncoder().encode("user:pass".toByteArray()).toString(Charset.defaultCharset())
-			client.get().uri("/view").header("Authorization", "Basic $basicAuthWrong").exchange()
-					.expectStatus().isUnauthorized
+			close()
 		}
 	}
 
 	@Test
 	fun `Check spring-security configuration DSL with provided authenticationManager`() {
-
-		val username = "user"
-		val password = "password"
 		val authProvider = DaoAuthenticationProvider()
-		authProvider.setUserDetailsService(userDetailsService(username, password))
+		authProvider.setUserDetailsService(userDetailsService())
 		val repoAuthenticationManager = ProviderManager(authProvider)
 
 		val app = webApplication {
 			webMvc {
 				port = 0
+
 				router {
 					GET("/public-view") { ok().build() }
 					GET("/view") { ok().build() }
+					POST("/public-post") { ok().build() }
 				}
 
 				security {
@@ -113,46 +98,52 @@ class SecurityDslTests {
 						authorizeRequests {
 							authorize("/public-view", permitAll)
 							authorize("/view", hasRole("USER"))
+							authorize("/public-post", permitAll)
 						}
 						httpBasic {}
-						csrf {}
+						csrf {
+							csrfTokenRepository = csrfTokenRepository()
+						}
 					}
 				}
 			}
 		}
-		app.run().use { context ->
+		app.run().apply {
 			// verify that beans are present in context
-			context.getBean<HttpSecurity>()
+			getBean<HttpSecurity>()
 
-			val client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:${context.localServerPort}")
-					.responseTimeout(Duration.ofMinutes(10)) // useful for debug
-					.build()
+			testSecurityWebMvc(this)
 
-			client.get().uri("/public-view").exchange()
-					.expectStatus().is2xxSuccessful
-
-			client.get().uri("/view").exchange()
-					.expectStatus().isUnauthorized
-
-			val basicAuth =
-					Base64.getEncoder().encode("$username:$password".toByteArray()).toString(Charset.defaultCharset())
-			client.get().uri("/view").header("Authorization", "Basic $basicAuth").exchange()
-					.expectStatus().is2xxSuccessful
-
-			val basicAuthWrong =
-					Base64.getEncoder().encode("user:pass".toByteArray()).toString(Charset.defaultCharset())
-			client.get().uri("/view").header("Authorization", "Basic $basicAuthWrong").exchange()
-					.expectStatus().isUnauthorized
+			close()
 		}
 	}
 
-	private fun userDetailsService(username: String, password: String) =
+	private fun userDetailsService() =
 			InMemoryUserDetailsManager(
 					@Suppress("DEPRECATION")
 					User.withDefaultPasswordEncoder()
-							.username(username)
-							.password(password)
+							.username(usernameTest)
+							.password(passwordTest)
 							.roles("USER")
 							.build()
 			)
+
+	private fun csrfTokenRepository() = object : CsrfTokenRepository {
+
+		override fun generateToken(request: HttpServletRequest) =
+				DefaultCsrfToken(csrfHeaderTest, "not_used", csrfTokenTest)
+
+		override fun saveToken(token: CsrfToken?, request: HttpServletRequest, response: HttpServletResponse) {
+			if (token == null) {
+				request.getSession(false).removeAttribute(csrfSessionAttribute)
+			} else {
+				request.session.setAttribute(csrfSessionAttribute, token)
+			}
+		}
+
+		override fun loadToken(request: HttpServletRequest): CsrfToken? {
+			val session = request.getSession(false) ?: return null
+			return (session.getAttribute(csrfSessionAttribute) as CsrfToken)
+		}
+	}
 }
