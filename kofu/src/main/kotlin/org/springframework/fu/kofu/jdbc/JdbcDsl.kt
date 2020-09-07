@@ -15,6 +15,17 @@ class JdbcDsl(private val init: JdbcDsl.() -> Unit) : AbstractDsl() {
 
     var initializationMode = DataSourceInitializationMode.EMBEDDED
 
+    var url: String? = null
+
+    var name: String? = null
+
+    var username: String? = null
+
+    var password: String? = null
+
+    var generateUniqueName: Boolean = true
+
+
     override fun initialize(context: GenericApplicationContext) {
         super.initialize(context)
         init()
@@ -24,6 +35,11 @@ class JdbcDsl(private val init: JdbcDsl.() -> Unit) : AbstractDsl() {
             schema = this@JdbcDsl.schema
             data = this@JdbcDsl.data
             initializationMode = this@JdbcDsl.initializationMode
+            url = this@JdbcDsl.url
+            name = this@JdbcDsl.name
+            username = this@JdbcDsl.username
+            password = this@JdbcDsl.password
+            generateUniqueName = this@JdbcDsl.generateUniqueName
         }
 
         EmbeddedDataSourceConfigurationInitializer(dataSourceProperties).initialize(context)

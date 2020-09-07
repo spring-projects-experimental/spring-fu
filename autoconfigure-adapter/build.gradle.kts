@@ -35,6 +35,8 @@ dependencies {
 	compileOnly("com.zaxxer:HikariCP")
 	compileOnly("org.springframework.security:spring-security-web")
 	compileOnly("org.springframework.security:spring-security-config")
+
+	compileOnly("org.thymeleaf.extras:thymeleaf-extras-java8time")
 }
 
 repositories {

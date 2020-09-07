@@ -1,4 +1,4 @@
-:spring-fu-version: 0.3.2
+:spring-fu-version: 0.4.0
 :kofu-kdoc-url: http://repo.spring.io/milestone/org/springframework/fu/spring-fu-kofu/{spring-fu-version}/spring-fu-kofu-{spring-fu-version}-javadoc.jar!
 :framework-kdoc-url: https://docs.spring.io/spring-framework/docs/5.2.x/kdoc-api
 
@@ -70,7 +70,7 @@ To use WebFlux.fn instead
 === Getting started
 
 * Go to https://start.spring.io/#!type=gradle-project&language=kotlin[start.spring.io]
-* Select the latest Spring Boot `2.3.x.RELEASE` release
+* Select the latest Spring Boot `2.4.x.RELEASE` release
 * Add the Spring milestone repository `https://repo.spring.io/milestone`
 * Select the "Web" starter
 * Add the `org.springframework.fu:spring-fu-kofu:{spring-fu-version}` dependency

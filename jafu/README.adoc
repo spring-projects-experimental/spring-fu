@@ -1,4 +1,4 @@
-:spring-fu-version: 0.3.2
+:spring-fu-version: 0.4.0
 :jafu-javadoc-url: http://repo.spring.io/milestone/org/springframework/fu/spring-fu-jafu/{spring-fu-version}/spring-fu-jafu-{spring-fu-version}-javadoc.jar!
 :framework-javadoc-url: https://docs.spring.io/spring-framework/docs/5.3.x/javadoc-api
 
@@ -18,7 +18,7 @@ Be aware that a few static imports will be needed.
 
 === Getting started
 
- * Create a Spring `2.3.x.RELEASE` project on https://start.spring.io/[start.spring.io]
+ * Create a Spring `2.4.x.RELEASE` project on https://start.spring.io/[start.spring.io]
  * Add the Spring milestone repository `https://repo.spring.io/milestone`
  * Select the "Web" starter
  * Add the `org.springframework.fu:spring-fu-jafu:{spring-fu-version}` dependency

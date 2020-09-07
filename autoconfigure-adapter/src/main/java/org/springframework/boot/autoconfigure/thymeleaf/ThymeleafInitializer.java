@@ -18,6 +18,8 @@ package org.springframework.boot.autoconfigure.thymeleaf;
 
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
+import org.springframework.util.ClassUtils;
+import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 
 /**
@@ -35,5 +37,8 @@ public class ThymeleafInitializer implements ApplicationContextInitializer<Gener
     public void initialize(GenericApplicationContext context) {
         ThymeleafAutoConfiguration.DefaultTemplateResolverConfiguration templateResolverConfiguration = new ThymeleafAutoConfiguration.DefaultTemplateResolverConfiguration(this.properties, context);
         context.registerBean(SpringResourceTemplateResolver.class, templateResolverConfiguration::defaultTemplateResolver);
+        if (ClassUtils.isPresent("org.thymeleaf.extras.java8time.dialect.Java8TimeDialect", null)) {
+            context.registerBean(Java8TimeDialect.class, () ->  new ThymeleafAutoConfiguration.ThymeleafJava8TimeDialect().java8TimeDialect());
+        }
     }
 }
