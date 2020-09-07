@@ -18,6 +18,7 @@ package org.springframework.fu.kofu.webmvc
 
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.getBean
+import org.springframework.context.ApplicationContext
 import org.springframework.fu.kofu.*
 import org.springframework.security.authentication.ProviderManager
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider
@@ -27,6 +28,8 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager
 import org.springframework.security.web.csrf.CsrfToken
 import org.springframework.security.web.csrf.CsrfTokenRepository
 import org.springframework.security.web.csrf.DefaultCsrfToken
+import org.springframework.test.web.reactive.server.WebTestClient
+import java.time.Duration
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
@@ -145,5 +148,21 @@ class SecurityDslTests {
 			val session = request.getSession(false) ?: return null
 			return (session.getAttribute(csrfSessionAttribute) as CsrfToken)
 		}
+	}
+
+	private fun testSecurityWebMvc(context: ApplicationContext) {
+		val client = WebTestClient.bindToServer()
+				.baseUrl("http://127.0.0.1:${context.localServerPort}")
+				.responseTimeout(Duration.ofMinutes(10)) // useful for debug
+				.build()
+
+		commonTests(client)
+
+		// Verify post succeed with csrf header
+		client
+				.post().uri("/public-post")
+				.header(csrfHeaderTest, csrfTokenTest)
+				.exchange()
+				.expectStatus().is2xxSuccessful
 	}
 }

@@ -18,14 +18,17 @@ package org.springframework.fu.kofu.webflux
 
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.getBean
-import org.springframework.fu.kofu.passwordTest
-import org.springframework.fu.kofu.reactiveWebApplication
-import org.springframework.fu.kofu.testSecurityWebFlux
-import org.springframework.fu.kofu.usernameTest
+import org.springframework.context.ApplicationContext
+import org.springframework.fu.kofu.*
+import org.springframework.fu.kofu.commonTests
+import org.springframework.fu.kofu.javautils.JavaKotlinUtils
 import org.springframework.security.authentication.UserDetailsRepositoryReactiveAuthenticationManager
 import org.springframework.security.config.web.server.ServerHttpSecurity
 import org.springframework.security.core.userdetails.MapReactiveUserDetailsService
 import org.springframework.security.core.userdetails.User
+import org.springframework.security.test.web.reactive.server.SecurityMockServerConfigurers
+import org.springframework.test.web.reactive.server.WebTestClient
+import java.time.Duration
 
 
 /**
@@ -117,4 +120,28 @@ class SecurityDslTests {
 							.roles("USER")
 							.build()
 			)
+
+	private fun testSecurityWebFlux(context: ApplicationContext) {
+		val client = WebTestClient.bindToServer()
+				.baseUrl("http://127.0.0.1:${context.localServerPort}")
+				.responseTimeout(Duration.ofMinutes(10)) // useful for debug
+				.build()
+
+		commonTests(client)
+
+		val mockClient = JavaKotlinUtils.getMockWebTestClient(context)
+
+		// Verify post fails without csrf header (mock client)
+		mockClient
+				.post().uri("/public-post")
+				.exchange()
+				.expectStatus().isForbidden
+
+		// Verify post succeed with csrf header
+		mockClient
+				.mutateWith(SecurityMockServerConfigurers.csrf())
+				.post().uri("/public-post")
+				.exchange()
+				.expectStatus().is2xxSuccessful
+	}
 }
