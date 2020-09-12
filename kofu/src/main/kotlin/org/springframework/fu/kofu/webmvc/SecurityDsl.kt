@@ -28,7 +28,6 @@ import org.springframework.security.config.web.servlet.invoke
 import org.springframework.security.core.userdetails.UserDetailsPasswordService
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.password.PasswordEncoder
-import java.util.function.Consumer
 
 /**
  * Kofu DSL for spring-security.
@@ -61,12 +60,13 @@ class SecurityDsl(private val init: SecurityDsl.() -> Unit) : AbstractDsl() {
 
 		ObjectPostProcessorInitializer().initialize(context)
 
-		val securityInitializer = HttpSecurityInitializer(Consumer { it.invoke(httpConfiguration) },
-                authenticationManager, userDetailsService, passwordEncoder, userDetailsPasswordService)
+		val securityInitializer = HttpSecurityInitializer(authenticationManager, userDetailsService, passwordEncoder,
+				userDetailsPasswordService)
 
 		securityInitializer.initialize(context)
 
-		WebSecurityInitializer().initialize(context)
+		WebSecurityInitializer { it.invoke(httpConfiguration) }
+				.initialize(context)
 		WebMvcSecurityInitializer().initialize(context)
 	}
 }

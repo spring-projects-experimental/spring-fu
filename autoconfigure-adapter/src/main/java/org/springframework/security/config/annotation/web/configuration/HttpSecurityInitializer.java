@@ -12,7 +12,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
@@ -22,16 +21,14 @@ public class HttpSecurityInitializer implements ApplicationContextInitializer<Ge
 	private static final String BEAN_NAME_PREFIX = "org.springframework.security.config.annotation.web.configuration.HttpSecurityConfiguration.";
 	static final String HTTPSECURITY_BEAN_NAME = BEAN_NAME_PREFIX + "httpSecurity";
 
-	private final Consumer<HttpSecurity> httpSecurityDsl;
 	private final AuthenticationManager authenticationManager;
 	private final UserDetailsService userDetailsService;
 	private final PasswordEncoder passwordEncoder;
 	private final UserDetailsPasswordService userDetailsPasswordService;
 
-	public HttpSecurityInitializer(Consumer<HttpSecurity> httpSecurityDsl, AuthenticationManager authenticationManager,
-								   UserDetailsService userDetailsService, PasswordEncoder passwordEncoder,
-								   UserDetailsPasswordService userDetailsPasswordService) {
-		this.httpSecurityDsl = httpSecurityDsl;
+	public HttpSecurityInitializer(
+			AuthenticationManager authenticationManager, UserDetailsService userDetailsService,
+			PasswordEncoder passwordEncoder, UserDetailsPasswordService userDetailsPasswordService) {
 		this.authenticationManager = authenticationManager;
 		this.userDetailsService = userDetailsService;
 		this.passwordEncoder = passwordEncoder;
@@ -64,16 +61,11 @@ public class HttpSecurityInitializer implements ApplicationContextInitializer<Ge
 		Supplier<HttpSecurity> httpSecuritySupplier = () -> {
 			configuration.setObjectPostProcessor(context.getBean(ObjectPostProcessor.class));
 
-			HttpSecurity httpSecurity;
 			try {
-				httpSecurity = configuration.httpSecurity();
+				return configuration.httpSecurity();
 			} catch (Exception e) {
 				throw new IllegalStateException(e);
 			}
-
-			this.httpSecurityDsl.accept(httpSecurity);
-
-			return httpSecurity;
 		};
 
 		context.registerBean(

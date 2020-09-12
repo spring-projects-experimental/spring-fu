@@ -13,8 +13,8 @@ public class WebMvcSecurityInitializer implements ApplicationContextInitializer<
 
 	@Override
 	public void initialize(GenericApplicationContext context) {
-		final WebMvcSecurityConfiguration configuration = new WebMvcSecurityConfiguration();
 		Supplier<WebMvcSecurityConfiguration> configurationSupplier = () -> {
+			final WebMvcSecurityConfiguration configuration = new WebMvcSecurityConfiguration();
 			configuration.setApplicationContext(context);
 			return configuration;
 		};

@@ -63,10 +63,8 @@ class SecurityDsl(private val init: SecurityDsl.() -> Unit) : AbstractDsl() {
 				userDetailsPasswordService
 		)
 		securityInitializer.initialize(context)
-
-		val chain = securityInitializer.httpSecurity.invoke(httpConfiguration)
-
-		WebFluxSecurityInitializer(chain).initialize(context)
+		WebFluxSecurityInitializer { it.invoke(httpConfiguration) }
+				.initialize(context)
 	}
 }
 

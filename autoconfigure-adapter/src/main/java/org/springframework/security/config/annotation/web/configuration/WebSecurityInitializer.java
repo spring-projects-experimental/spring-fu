@@ -15,12 +15,19 @@ import javax.servlet.Filter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
  * {@link ApplicationContextInitializer} adapter for {@link WebSecurityConfiguration}.
  */
 public class WebSecurityInitializer implements ApplicationContextInitializer<GenericApplicationContext> {
+
+	private final Consumer<HttpSecurity> httpSecurityDsl;
+
+	public WebSecurityInitializer(Consumer<HttpSecurity> httpSecurityDsl) {
+		this.httpSecurityDsl = httpSecurityDsl;
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -33,9 +40,14 @@ public class WebSecurityInitializer implements ApplicationContextInitializer<Gen
 			public WebSecurityConfiguration get() {
 				if (configuration == null) {
 					configuration = new WebSecurityConfiguration();
-					HttpSecurity security = context.getBean(HttpSecurityInitializer.HTTPSECURITY_BEAN_NAME, HttpSecurity.class);
+					HttpSecurity httpSecurity = context.getBean(HttpSecurityInitializer.HTTPSECURITY_BEAN_NAME, HttpSecurity.class);
+
+					if (httpSecurityDsl != null) {
+						httpSecurityDsl.accept(httpSecurity);
+					}
+
 					try {
-						configuration.setFilterChains(Collections.singletonList(security.build()));
+						configuration.setFilterChains(Collections.singletonList(httpSecurity.build()));
 					} catch (Exception e) {
 						throw new IllegalStateException(e);
 					}

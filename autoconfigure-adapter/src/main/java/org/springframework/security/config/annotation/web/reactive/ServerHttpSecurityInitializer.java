@@ -18,13 +18,12 @@ import java.util.function.Supplier;
  */
 public class ServerHttpSecurityInitializer implements ApplicationContextInitializer<GenericApplicationContext> {
 	private static final String BEAN_NAME_PREFIX = "org.springframework.security.config.annotation.web.reactive.HttpSecurityConfiguration.";
-	private static final String HTTPSECURITY_BEAN_NAME = BEAN_NAME_PREFIX + "httpSecurity";
+	static final String HTTPSECURITY_BEAN_NAME = BEAN_NAME_PREFIX + "httpSecurity";
 
 	private final ReactiveAuthenticationManager authenticationManager;
 	private final ReactiveUserDetailsService reactiveUserDetailsService;
 	private final PasswordEncoder passwordEncoder;
 	private final ReactiveUserDetailsPasswordService userDetailsPasswordService;
-	private ServerHttpSecurity httpSecurity;
 
 	/**
 	 * @param authenticationManager      {@link ServerHttpSecurityConfiguration}
@@ -34,8 +33,7 @@ public class ServerHttpSecurityInitializer implements ApplicationContextInitiali
 	 */
 	public ServerHttpSecurityInitializer(
 			ReactiveAuthenticationManager authenticationManager,
-			ReactiveUserDetailsService reactiveUserDetailsService,
-			PasswordEncoder passwordEncoder,
+			ReactiveUserDetailsService reactiveUserDetailsService, PasswordEncoder passwordEncoder,
 			ReactiveUserDetailsPasswordService userDetailsPasswordService) {
 		this.authenticationManager = authenticationManager;
 		this.reactiveUserDetailsService = reactiveUserDetailsService;
@@ -45,25 +43,29 @@ public class ServerHttpSecurityInitializer implements ApplicationContextInitiali
 
 	@Override
 	public void initialize(GenericApplicationContext context) {
-		final ServerHttpSecurityConfiguration configuration = new ServerHttpSecurityConfiguration();
-		if (authenticationManager != null) {
-			configuration.setAuthenticationManager(authenticationManager);
-		}
-		if (reactiveUserDetailsService != null) {
-			configuration.setReactiveUserDetailsService(reactiveUserDetailsService);
-		}
-		if (passwordEncoder != null) {
-			configuration.setPasswordEncoder(passwordEncoder);
-		}
-		if (userDetailsPasswordService != null) {
-			configuration.setUserDetailsPasswordService(userDetailsPasswordService);
-		}
+		Supplier<ServerHttpSecurityConfiguration> configurationSupplier = new Supplier<ServerHttpSecurityConfiguration>() {
+			private ServerHttpSecurityConfiguration configuration;
 
-		this.httpSecurity = configuration.httpSecurity();
-
-		Supplier<ServerHttpSecurityConfiguration> configurationSupplier = () -> {
-			configuration.setAdapterRegistry(context.getBean(ReactiveAdapterRegistry.class));
-			return configuration;
+			@Override
+			public ServerHttpSecurityConfiguration get() {
+				if (configuration == null) {
+					configuration = new ServerHttpSecurityConfiguration();
+					if (authenticationManager != null) {
+						configuration.setAuthenticationManager(authenticationManager);
+					}
+					if (reactiveUserDetailsService != null) {
+						configuration.setReactiveUserDetailsService(reactiveUserDetailsService);
+					}
+					if (passwordEncoder != null) {
+						configuration.setPasswordEncoder(passwordEncoder);
+					}
+					if (userDetailsPasswordService != null) {
+						configuration.setUserDetailsPasswordService(userDetailsPasswordService);
+					}
+					configuration.setAdapterRegistry(context.getBean(ReactiveAdapterRegistry.class));
+				}
+				return configuration;
+			}
 		};
 
 		context.registerBean(AuthenticationPrincipalArgumentResolver.class, () -> configurationSupplier.get().authenticationPrincipalArgumentResolver());
@@ -71,15 +73,11 @@ public class ServerHttpSecurityInitializer implements ApplicationContextInitiali
 		context.registerBean(
 				HTTPSECURITY_BEAN_NAME,
 				ServerHttpSecurity.class,
-				() -> this.httpSecurity,
+				() -> configurationSupplier.get().httpSecurity(),
 				bd -> {
 					bd.setScope("prototype");
 					bd.setAutowireCandidate(true);
 				}
 		);
-	}
-
-	public ServerHttpSecurity getHttpSecurity() {
-		return httpSecurity;
 	}
 }
