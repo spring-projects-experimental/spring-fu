@@ -11,6 +11,8 @@ import org.springframework.boot.autoconfigure.web.servlet.WebMvcProperties;
 import org.springframework.boot.autoconfigure.web.servlet.WebMvcRegistrations;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
+import org.springframework.data.r2dbc.convert.MappingR2dbcConverter;
+import org.springframework.data.r2dbc.convert.R2dbcConverter;
 import org.springframework.data.r2dbc.convert.R2dbcCustomConversions;
 import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
 import org.springframework.data.r2dbc.core.ReactiveDataAccessStrategy;
@@ -45,10 +47,10 @@ public class R2dbcDataInitializer implements ApplicationContextInitializer<Gener
             }
         };
 
-        context.registerBean(R2dbcEntityTemplate.class, () -> r2dbcDataConfiguration.get().r2dbcEntityTemplate(context.getBean(ReactiveDataAccessStrategy.class)));
+        context.registerBean(R2dbcEntityTemplate.class, () -> r2dbcDataConfiguration.get().r2dbcEntityTemplate(context.getBean(R2dbcConverter.class)));
         context.registerBean(R2dbcCustomConversions.class, () -> r2dbcDataConfiguration.get().r2dbcCustomConversions());
         context.registerBean(R2dbcMappingContext.class, () -> r2dbcDataConfiguration.get().r2dbcMappingContext(context.getBeanProvider(NamingStrategy.class), context.getBean(R2dbcCustomConversions.class)));
-        context.registerBean(ReactiveDataAccessStrategy.class, () -> r2dbcDataConfiguration.get().reactiveDataAccessStrategy(context.getBean(R2dbcMappingContext.class), context.getBean(R2dbcCustomConversions.class)));
+        context.registerBean(MappingR2dbcConverter.class, () -> r2dbcDataConfiguration.get().r2dbcConverter(context.getBean(R2dbcMappingContext.class), context.getBean(R2dbcCustomConversions.class)));
     }
 
 }

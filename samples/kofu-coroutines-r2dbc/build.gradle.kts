@@ -1,9 +1,9 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-	id("org.jetbrains.kotlin.jvm") version "1.3.72"
-	id("io.spring.dependency-management") version "1.0.9.RELEASE"
-	id("org.springframework.boot") version "2.4.0-M2"
+	id("org.jetbrains.kotlin.jvm") version "1.4.10"
+	id("io.spring.dependency-management") version "1.0.10.RELEASE"
+	id("org.springframework.boot") version "2.4.0-M3"
 }
 
 dependencies {
