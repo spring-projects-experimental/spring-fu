@@ -14,7 +14,7 @@ allprojects {
 		plugin("io.spring.dependency-management")
 	}
 
-	version = "0.4.1-SNAPSHOT"
+	version = "0.4.1"
 	group = "org.springframework.fu"
 
 	dependencyManagement {
