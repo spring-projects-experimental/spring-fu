@@ -65,40 +65,41 @@ tasks.withType<Test> {
 	}
 }
 
-tasks.withType<DokkaTask> {
-	outputFormat = "html"
-	configuration {
-		samples = listOf("src/test/kotlin/org/springframework/fu/kofu/samples")
-		reportUndocumented = false
-		externalDocumentationLink {
-			url = URL("https://docs.spring.io/spring-framework/docs/current/javadoc-api/")
-		}
-		externalDocumentationLink {
-			url = URL("https://docs.spring.io/spring-framework/docs/current/kdoc-api/spring-framework/")
-		}
-		externalDocumentationLink {
-			url = URL("https://fasterxml.github.io/jackson-core/javadoc/2.9/")
-		}
-		externalDocumentationLink {
-			url = URL("https://fasterxml.github.io/jackson-annotations/javadoc/2.9/")
-		}
-		externalDocumentationLink {
-			url = URL("https://fasterxml.github.io/jackson-databind/javadoc/2.9/")
-		}
-		externalDocumentationLink {
-			url = URL("https://docs.spring.io/spring-data/mongodb/docs/2.2.x/api/")
-		}
-		externalDocumentationLink {
-			url = URL("https://docs.oracle.com/javase/8/docs/api/")
-		}
-		externalDocumentationLink {
-			url = URL("https://docs.spring.io/spring-boot/docs/2.2.x/api/")
-		}
-		externalDocumentationLink {
-			url = URL("https://docs.spring.io/spring-data/r2dbc/docs/1.1.x/api/")
-		}
-		externalDocumentationLink {
-			url = URL("https://docs.spring.io/spring-data/cassandra/docs/current/api/")
+tasks.withType<DokkaTask>().configureEach {
+	dokkaSourceSets {
+		named("main") {
+			samples.from(fileTree("src/test/kotlin/org/springframework/fu/kofu/samples"))
+			reportUndocumented.set(false)
+			externalDocumentationLink {
+				url.set(URL("https://docs.spring.io/spring-framework/docs/current/javadoc-api/"))
+			}
+			externalDocumentationLink {
+				url.set(URL("https://docs.spring.io/spring-framework/docs/current/kdoc-api/spring-framework/"))
+			}
+			externalDocumentationLink {
+				url.set(URL("https://fasterxml.github.io/jackson-core/javadoc/2.9/"))
+			}
+			externalDocumentationLink {
+				url.set(URL("https://fasterxml.github.io/jackson-annotations/javadoc/2.9/"))
+			}
+			externalDocumentationLink {
+				url.set(URL("https://fasterxml.github.io/jackson-databind/javadoc/2.9/"))
+			}
+			externalDocumentationLink {
+				url.set(URL("https://docs.spring.io/spring-data/mongodb/docs/2.2.x/api/"))
+			}
+			externalDocumentationLink {
+				url.set(URL("https://docs.oracle.com/javase/8/docs/api/"))
+			}
+			externalDocumentationLink {
+				url.set(URL("https://docs.spring.io/spring-boot/docs/2.2.x/api/"))
+			}
+			externalDocumentationLink {
+				url.set(URL("https://docs.spring.io/spring-data/r2dbc/docs/1.1.x/api/"))
+			}
+			externalDocumentationLink {
+				url.set(URL("https://docs.spring.io/spring-data/cassandra/docs/current/api/"))
+			}
 		}
 	}
 }
