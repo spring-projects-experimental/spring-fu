@@ -20,6 +20,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.getBean
 import org.springframework.data.annotation.Id
+import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate
 import org.springframework.data.mongodb.core.findById
 import org.springframework.fu.kofu.application
@@ -29,11 +30,11 @@ import java.time.Duration
 class EmbeddedMongoModuleTests {
 
 	@Test
-	fun `enable mongodb embedded module`() {
+	fun `enable mongodb embedded module with reactive support`() {
 		val port = SocketUtils.findAvailableTcpPort()
 		val app = application {
 			beans {
-				bean<TestRepository>()
+				bean<TestReactiveRepository>()
 			}
 			reactiveMongodb {
 				uri = "mongodb://localhost:$port/test"
@@ -41,15 +42,42 @@ class EmbeddedMongoModuleTests {
 			}
 		}
 		with(app.run()){
-			val repository = getBean<TestRepository>()
+			val repository = getBean<TestReactiveRepository>()
 			repository.save(TestUser("1", "foo")).block(Duration.ofSeconds(3))
 			assertEquals("foo", repository.findById("1").block(Duration.ofSeconds(3))?.name)
+			close()
+		}
+	}
+
+	@Test
+	fun `enable mongodb embedded module`() {
+		val port = SocketUtils.findAvailableTcpPort()
+		val app = application {
+			beans {
+				bean<TestRepository>()
+			}
+			mongodb() {
+				uri = "mongodb://localhost:$port/test"
+				embedded()
+			}
+		}
+		with(app.run()){
+			val repository = getBean<TestRepository>()
+			repository.save(TestUser("1", "foo"))
+			assertEquals("foo", repository.findById("1")?.name)
 			close()
 		}
 	}
 }
 
 class TestRepository(
+		private val template: MongoTemplate
+) {
+	fun findById(id: String) = template.findById<TestUser>(id)
+	fun save(user: TestUser) = template.save(user)
+}
+
+class TestReactiveRepository(
 		private val template: ReactiveMongoTemplate
 ) {
 	fun findById(id: String) = template.findById<TestUser>(id)

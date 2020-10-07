@@ -55,6 +55,7 @@ dependencies {
 	testImplementation("org.springframework:spring-r2dbc")
 	testRuntimeOnly("io.r2dbc:r2dbc-h2")
 	testRuntimeOnly("io.r2dbc:r2dbc-postgresql:0.8.4.RELEASE")
+	testImplementation("org.mongodb:mongodb-driver-legacy")
 }
 
 tasks.withType<Test> {
