@@ -15,6 +15,7 @@ class H2R2dbcDslTests {
 		val app = application {
 			r2dbc {
 				url = "r2dbc:h2:mem:///testdb"
+				transactional = true
 			}
 			beans {
 				bean<TestRepository>()
@@ -23,12 +24,18 @@ class H2R2dbcDslTests {
 
 		with(app.run()) {
 			val repository = getBean<TestRepository>()
+			val transactionalOperator = getBean<TransactionalOperator>()
 
 			StepVerifier
 					.create(repository.createTable()
-							.flatMap { repository.save(TestUser("1", "foo")) }
-							.flatMap { repository.findById("1") })
-					.expectNext(TestUser("1", "foo"))
+							.then(repository.save(user))
+							.then(repository.findById(user.id))
+							// another option would be to plug in SingleConnectionFactory somehow
+							// because in memory (serverless) h2 databases don't seem to be shared between connections
+							.`as`(transactionalOperator::transactional)
+					)
+					.expectNext(user)
+					.verifyComplete()
 			close()
 		}
 	}
