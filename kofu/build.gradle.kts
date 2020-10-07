@@ -42,14 +42,19 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")
 	testImplementation("org.springframework.boot:spring-boot-starter-data-cassandra-reactive")
 	testImplementation("org.springframework.boot:spring-boot-starter-data-redis-reactive")
+	testImplementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
+	testImplementation("org.springframework.boot:spring-boot-starter-jdbc")
 	testImplementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	testRuntimeOnly("de.flapdoodle.embed:de.flapdoodle.embed.mongo")
 	testImplementation("io.mockk:mockk:1.9")
 	testImplementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
 	testImplementation("javax.servlet:javax.servlet-api")
-	testCompile("org.testcontainers:testcontainers:1.11.3")
+	testCompile("org.testcontainers:testcontainers")
 	testImplementation("redis.clients:jedis")
 	testImplementation("io.lettuce:lettuce-core")
+	testImplementation("org.springframework:spring-r2dbc")
+	testRuntimeOnly("io.r2dbc:r2dbc-h2")
+	testRuntimeOnly("io.r2dbc:r2dbc-postgresql:0.8.4.RELEASE")
 	testImplementation("org.mongodb:mongodb-driver-legacy")
 }
 
@@ -57,54 +62,56 @@ tasks.withType<Test> {
 	if (project.hasProperty("isCI")) {
 		exclude("org/springframework/fu/kofu/redis/ReactiveRedisDslTests.class")
 		exclude("org/springframework/fu/kofu/redis/RedisDslTests.class")
+		exclude("org/springframework/fu/kofu/r2dbc/PostgreSqlR2dbcDslTests.class")
 	}
 }
 
-tasks.withType<DokkaTask> {
-	outputFormat = "html"
-	configuration {
-		samples = listOf("src/test/kotlin/org/springframework/fu/kofu/samples")
-		reportUndocumented = false
-		externalDocumentationLink {
-			url = URL("https://docs.spring.io/spring-framework/docs/current/javadoc-api/")
-		}
-		externalDocumentationLink {
-			url = URL("https://docs.spring.io/spring-framework/docs/current/kdoc-api/spring-framework/")
-		}
-		externalDocumentationLink {
-			url = URL("https://fasterxml.github.io/jackson-core/javadoc/2.9/")
-		}
-		externalDocumentationLink {
-			url = URL("https://fasterxml.github.io/jackson-annotations/javadoc/2.9/")
-		}
-		externalDocumentationLink {
-			url = URL("https://fasterxml.github.io/jackson-databind/javadoc/2.9/")
-		}
-		externalDocumentationLink {
-			url = URL("https://docs.spring.io/spring-data/mongodb/docs/2.2.x/api/")
-		}
-		externalDocumentationLink {
-			url = URL("https://docs.oracle.com/javase/8/docs/api/")
-		}
-		externalDocumentationLink {
-			url = URL("https://docs.spring.io/spring-boot/docs/2.2.x/api/")
-		}
-		externalDocumentationLink {
-			url = URL("https://docs.spring.io/spring-data/r2dbc/docs/1.1.x/api/")
-		}
-		externalDocumentationLink {
-			url = URL("https://docs.spring.io/spring-data/cassandra/docs/current/api/")
+tasks.withType<DokkaTask>().configureEach {
+	dokkaSourceSets {
+		named("main") {
+			samples.from(fileTree("src/test/kotlin/org/springframework/fu/kofu/samples"))
+			reportUndocumented.set(false)
+			externalDocumentationLink {
+				url.set(URL("https://docs.spring.io/spring-framework/docs/current/javadoc-api/"))
+			}
+			externalDocumentationLink {
+				url.set(URL("https://docs.spring.io/spring-framework/docs/current/kdoc-api/spring-framework/"))
+			}
+			externalDocumentationLink {
+				url.set(URL("https://fasterxml.github.io/jackson-core/javadoc/2.9/"))
+			}
+			externalDocumentationLink {
+				url.set(URL("https://fasterxml.github.io/jackson-annotations/javadoc/2.9/"))
+			}
+			externalDocumentationLink {
+				url.set(URL("https://fasterxml.github.io/jackson-databind/javadoc/2.9/"))
+			}
+			externalDocumentationLink {
+				url.set(URL("https://docs.spring.io/spring-data/mongodb/docs/2.2.x/api/"))
+			}
+			externalDocumentationLink {
+				url.set(URL("https://docs.oracle.com/javase/8/docs/api/"))
+			}
+			externalDocumentationLink {
+				url.set(URL("https://docs.spring.io/spring-boot/docs/2.2.x/api/"))
+			}
+			externalDocumentationLink {
+				url.set(URL("https://docs.spring.io/spring-data/r2dbc/docs/1.1.x/api/"))
+			}
+			externalDocumentationLink {
+				url.set(URL("https://docs.spring.io/spring-data/cassandra/docs/current/api/"))
+			}
 		}
 	}
 }
 
 publishing {
 	publications {
-		create(project.name, MavenPublication::class.java) {
+		create<MavenPublication>(project.name) {
 			from(components["java"])
 			artifactId = "spring-fu-kofu"
 			val sourcesJar by tasks.creating(Jar::class) {
-				classifier = "sources"
+				archiveClassifier.set("sources")
 				from(sourceSets["main"].allSource)
 				from(sourceSets["test"].allSource.apply {
 					include("org/springframework/boot/kofu/samples/**")
@@ -112,11 +119,19 @@ publishing {
 			}
 			artifact(sourcesJar)
 			val dokkaJar by tasks.creating(Jar::class) {
-				dependsOn("dokka")
-				classifier = "javadoc"
-				from(buildDir.resolve("dokka"))
+				dependsOn("dokkaHtml")
+				archiveClassifier.set("javadoc")
+				from(buildDir.resolve("dokka/html"))
 			}
 			artifact(dokkaJar)
+			versionMapping {
+				usage("java-api") {
+					fromResolutionOf("runtimeClasspath")
+				}
+				usage("java-runtime") {
+					fromResolutionResult()
+				}
+			}
 		}
 	}
 }

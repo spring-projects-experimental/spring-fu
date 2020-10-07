@@ -47,26 +47,36 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-starter-mustache")
 	testImplementation("org.springframework.boot:spring-boot-starter-json")
 	testImplementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")
+	testImplementation("org.springframework.boot:spring-boot-starter-jdbc")
 	testImplementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	testRuntimeOnly("de.flapdoodle.embed:de.flapdoodle.embed.mongo")
+	testRuntimeOnly("com.h2database:h2")
 }
 
 publishing {
 	publications {
-		create(project.name, MavenPublication::class.java) {
+		create<MavenPublication>(project.name) {
 			from(components["java"])
 			artifactId = "spring-fu-jafu"
 			val sourcesJar by tasks.creating(Jar::class) {
-				classifier = "sources"
+				archiveClassifier.set("sources")
 				from(sourceSets["main"].allSource)
 			}
 			artifact(sourcesJar)
 			val javadocJar by tasks.creating(Jar::class) {
 				dependsOn("javadoc")
-				classifier = "javadoc"
+				archiveClassifier.set("javadoc")
 				from(buildDir.resolve("docs/javadoc"))
 			}
 			artifact(javadocJar)
+			versionMapping {
+				usage("java-api") {
+					fromResolutionOf("runtimeClasspath")
+				}
+				usage("java-runtime") {
+					fromResolutionResult()
+				}
+			}
 		}
 	}
 }

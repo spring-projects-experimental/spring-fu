@@ -1,5 +1,8 @@
 package com.sample;
 
+import org.springframework.data.relational.core.mapping.Table;
+
+@Table("users")
 public class User {
 
 	private String login;

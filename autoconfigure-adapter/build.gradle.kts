@@ -15,8 +15,10 @@ dependencies {
 	compileOnly("org.springframework:spring-webmvc")
 	compileOnly("javax.servlet:javax.servlet-api")
 	compileOnly("org.springframework:spring-webflux")
+	compileOnly("org.springframework:spring-jdbc")
 	compileOnly("de.flapdoodle.embed:de.flapdoodle.embed.mongo")
 	compileOnly("org.springframework.data:spring-data-mongodb")
+	compileOnly("org.springframework.data:spring-data-r2dbc")
 	compileOnly("org.mongodb:mongodb-driver-legacy")
 	compileOnly("org.mongodb:mongodb-driver-reactivestreams")
 	compileOnly("org.springframework.data:spring-data-cassandra")
@@ -25,11 +27,15 @@ dependencies {
 	compileOnly("io.lettuce:lettuce-core")
 	compileOnly("com.fasterxml.jackson.core:jackson-databind")
 	compileOnly("com.samskivert:jmustache")
-	compileOnly("org.springframework.data:spring-data-r2dbc")
+	compileOnly("org.thymeleaf:thymeleaf")
+	compileOnly("org.thymeleaf:thymeleaf-spring5")
+	compileOnly("org.springframework:spring-r2dbc")
 	compileOnly("io.r2dbc:r2dbc-postgresql")
 	compileOnly("io.r2dbc:r2dbc-h2")
 	compileOnly("io.r2dbc:r2dbc-mssql")
-	compileOnly("com.github.jasync-sql:jasync-r2dbc-mysql:0.9.53")
+	compileOnly("com.zaxxer:HikariCP")
+
+	compileOnly("org.thymeleaf.extras:thymeleaf-extras-java8time")
 }
 
 repositories {
@@ -38,14 +44,22 @@ repositories {
 
 publishing {
 	publications {
-		create(project.name, MavenPublication::class.java) {
+		create<MavenPublication>(project.name) {
 			from(components["java"])
 			artifactId = "spring-fu-autoconfigure-adapter"
 			val sourcesJar by tasks.creating(Jar::class) {
-				classifier = "sources"
+				archiveClassifier.set("sources")
 				from(sourceSets["main"].allSource)
 			}
 			artifact(sourcesJar)
+			versionMapping {
+				usage("java-api") {
+					fromResolutionOf("runtimeClasspath")
+				}
+				usage("java-runtime") {
+					fromResolutionResult()
+				}
+			}
 		}
 	}
 }

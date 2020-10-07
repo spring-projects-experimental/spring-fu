@@ -1,6 +1,5 @@
 package org.springframework.boot.autoconfigure.data.redis;
 
-import org.jetbrains.annotations.NotNull;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.data.redis.connection.RedisSentinelConfiguration;
@@ -24,7 +23,6 @@ public class SentinelInitializer implements ApplicationContextInitializer<Generi
         }
     }
 
-    @NotNull
     private RedisSentinelConfiguration getRedisSentinelConfiguration() {
         return new RedisSentinelConfiguration(sentinel.getMaster(), new HashSet<>(sentinel.getNodes()));
     }

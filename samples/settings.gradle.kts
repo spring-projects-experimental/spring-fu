@@ -2,6 +2,7 @@ rootProject.name = "spring-fu-samples"
 
 include(
 		"jafu-reactive-minimal",
+		"jafu-reactive-mongodb",
 		"jafu-reactive-r2dbc",
 		"jafu-servlet-minimal",
 		"kofu-coroutines-mongodb",

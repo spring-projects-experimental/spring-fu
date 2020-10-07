@@ -16,8 +16,11 @@
 
 package org.springframework.fu.kofu
 
+import org.springframework.beans.factory.getBeanNamesForType
 import org.springframework.boot.autoconfigure.context.MessageSourceInitializer
+import org.springframework.context.MessageSource
 import org.springframework.context.support.GenericApplicationContext
+
 
 /**
  * Kofu top level DSL for application which allows to configure a Spring Boot
@@ -33,7 +36,9 @@ open class ApplicationDsl internal constructor(private val dsl: ApplicationDsl.(
 	override fun initialize(context: GenericApplicationContext) {
 		super.initialize(context)
 		dsl()
-		MessageSourceInitializer().initialize(context)
+		if (context.beanFactory.getBeanNamesForType<MessageSource>().isEmpty()) {
+			MessageSourceInitializer().initialize(context)
+		}
 	}
 
 }

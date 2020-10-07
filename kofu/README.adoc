@@ -1,8 +1,8 @@
-:spring-fu-version: 0.3.0
+:spring-fu-version: 0.4.1
 :kofu-kdoc-url: http://repo.spring.io/milestone/org/springframework/fu/spring-fu-kofu/{spring-fu-version}/spring-fu-kofu-{spring-fu-version}-javadoc.jar!
 :framework-kdoc-url: https://docs.spring.io/spring-framework/docs/5.2.x/kdoc-api
 
-image:https://img.shields.io/badge/Kofu%20documentation-blue.svg["Kofu documentation", link="{kofu-kdoc-url}/kofu/org.springframework.fu.kofu/-application-dsl.html"]
+image:https://img.shields.io/badge/Kofu%20documentation-blue.svg["Kofu documentation", link="{kofu-kdoc-url}/kofu/index.html"]
 
 == KoFu DSL for Spring Boot
 
@@ -70,7 +70,7 @@ To use WebFlux.fn instead
 === Getting started
 
 * Go to https://start.spring.io/#!type=gradle-project&language=kotlin[start.spring.io]
-* Select the latest Spring Boot `2.3.x.RELEASE` release
+* Select the latest Spring Boot `2.4.0` milestone
 * Add the Spring milestone repository `https://repo.spring.io/milestone`
 * Select the "Web" starter
 * Add the `org.springframework.fu:spring-fu-kofu:{spring-fu-version}` dependency
@@ -98,3 +98,10 @@ See also sample projects https://github.com/spring-projects/spring-fu/tree/maste
 You can now also benefits of
 https://docs.spring.io/spring/docs/5.2.x/spring-framework-reference/[Spring Framework reference documentation]
 which is now available with Kotlin code samples.
+
+=== Differences with regular Boot applications
+
+- Spring optimizations for native applications are enabled by default
+- XML support is disabled by default
+- SpEL support is disabled by default
+- Devtools automatic restart does not work yet so just restart your applications (very fast with KoFu)

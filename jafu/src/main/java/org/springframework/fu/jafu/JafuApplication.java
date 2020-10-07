@@ -8,6 +8,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.GenericApplicationContext;
+import org.springframework.core.SpringProperties;
 
 
 /**
@@ -25,6 +26,11 @@ public abstract class JafuApplication {
 
 	protected JafuApplication(ApplicationContextInitializer<GenericApplicationContext> initializer) {
 		this.initializer = initializer;
+		SpringProperties.setFlag("spring.xml.ignore");
+		SpringProperties.setFlag("spring.spel.ignore");
+		SpringProperties.setProperty("server.servlet.register-default-servlet", "false");
+		SpringProperties.setProperty("spring.devtools.restart.enabled", "false");
+		System.setProperty("org.graalvm.nativeimage.imagecode", "jafu");
 	}
 
 	/**
@@ -89,7 +95,6 @@ public abstract class JafuApplication {
 		app.addInitializers(this.initializer);
 		if (this.customizer != null) app.addInitializers(this.customizer);
 		System.setProperty("spring.backgroundpreinitializer.ignore", "true");
-		// TODO Manage lazy loading like in Kofu
 		return app.run(args);
 	}
 

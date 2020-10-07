@@ -24,7 +24,7 @@ import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
 
 /**
- * {@link ApplicationContextInitializer} adapter for {@link CassandraAutoConfiguration}.
+ * {@link ApplicationContextInitializer} adapter for {@link MongoAutoConfiguration}.
  */
 public class MongoInitializer implements ApplicationContextInitializer<GenericApplicationContext> {
 
@@ -40,7 +40,9 @@ public class MongoInitializer implements ApplicationContextInitializer<GenericAp
 	@Override
 	public void initialize(GenericApplicationContext context) {
 		MongoAutoConfiguration configuration = new MongoAutoConfiguration();
-		context.registerBean(MongoClient.class, () -> configuration.mongo(this.properties, context.getEnvironment(), context.getBeanProvider(MongoClientSettingsBuilderCustomizer.class), context.getBeanProvider(MongoClientSettings.class)), (definition) -> {
+		MongoAutoConfiguration.MongoClientSettingsConfiguration mongoClientSettingsConfiguration = new MongoAutoConfiguration.MongoClientSettingsConfiguration();
+		context.registerBean(MongoClientSettingsBuilderCustomizer.class, () -> mongoClientSettingsConfiguration.mongoPropertiesCustomizer(this.properties, context.getEnvironment()));
+		context.registerBean(MongoClient.class, () -> configuration.mongo(context.getBeanProvider(MongoClientSettingsBuilderCustomizer.class), mongoClientSettingsConfiguration.mongoClientSettings()), (definition) -> {
 			if (embeddedServer) {
 				definition.setDependsOn("embeddedMongoServer");
 			}

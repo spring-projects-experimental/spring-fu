@@ -29,6 +29,20 @@ class IntegrationTests {
     }
 
     @Test
+    fun `Null login should fail`() {
+        client.post().uri("/api/user")
+                .bodyValue(User(null, "John", "Doe"))
+                .exchange()
+                .expectStatus().isBadRequest
+                .expectBody<Map<String, List<Map<String, *>>>>()
+                .consumeWith { res ->
+                    val details = res.responseBody!!.getValue("details")
+                    Assertions.assertEquals(1, details.size)
+                    Assertions.assertEquals("\"login\" must not be null", details[0]["defaultMessage"])
+                }
+    }
+
+    @Test
     fun `Empty fields request should fail`() {
         client.post().uri("/api/user")
                 .bodyValue(User("", "", ""))

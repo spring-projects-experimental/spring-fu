@@ -26,7 +26,6 @@ public class IntegrationTests {
 				.expectHeader().contentType(MediaType.APPLICATION_JSON_VALUE);
 	}
 
-
 	@AfterAll
 	void afterAll() {
 		context.stop();

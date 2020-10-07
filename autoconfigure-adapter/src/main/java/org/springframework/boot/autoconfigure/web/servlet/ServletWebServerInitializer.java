@@ -10,13 +10,12 @@ import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
 import org.springframework.boot.autoconfigure.web.ResourceProperties;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
-import org.springframework.boot.web.embedded.tomcat.TomcatConnectorCustomizer;
-import org.springframework.boot.web.embedded.tomcat.TomcatContextCustomizer;
-import org.springframework.boot.web.embedded.tomcat.TomcatProtocolHandlerCustomizer;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.boot.web.server.WebServerFactoryCustomizerBeanPostProcessor;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.boot.web.servlet.filter.OrderedHiddenHttpMethodFilter;
+import org.springframework.boot.web.servlet.server.ConfigurableServletWebServerFactory;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.core.ResolvableType;
@@ -28,13 +27,15 @@ import org.springframework.web.accept.ContentNegotiationManager;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.RequestContextFilter;
 import org.springframework.web.servlet.DispatcherServlet;
+import org.springframework.web.servlet.FlashMapManager;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.servlet.LocaleResolver;
+import org.springframework.web.servlet.RequestToViewNameTranslator;
+import org.springframework.web.servlet.ThemeResolver;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.function.support.HandlerFunctionAdapter;
 import org.springframework.web.servlet.function.support.RouterFunctionMapping;
-import org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 import org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter;
 import org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter;
@@ -55,29 +56,31 @@ public class ServletWebServerInitializer implements ApplicationContextInitialize
 
 	private final ServerProperties serverProperties;
 
+	private final ConfigurableServletWebServerFactory serverFactory;
+
 	private final WebMvcProperties webMvcProperties;
 
 	private final ResourceProperties resourceProperties;
 
 
-	public ServletWebServerInitializer(ServerProperties serverProperties, WebMvcProperties webMvcProperties, ResourceProperties resourceProperties) {
+	public ServletWebServerInitializer(ServerProperties serverProperties, WebMvcProperties webMvcProperties, ResourceProperties resourceProperties, ConfigurableServletWebServerFactory serverFactory) {
 		this.serverProperties = serverProperties;
 		this.webMvcProperties = webMvcProperties;
 		this.resourceProperties = resourceProperties;
+		this.serverFactory = serverFactory;
 	}
 
 	@Override
 	public void initialize(GenericApplicationContext context) {
-		context.registerBean("webServerFactoryCustomizerBeanPostProcessor", WebServerFactoryCustomizerBeanPostProcessor.class);
+		context.registerBean("webServerFactoryCustomizerBeanPostProcessor", WebServerFactoryCustomizerBeanPostProcessor.class, WebServerFactoryCustomizerBeanPostProcessor::new);
 		context.registerBean(WebMvcProperties.class, () -> this.webMvcProperties);
 		context.registerBean(ServletWebServerFactoryAutoConfiguration.BeanPostProcessorsRegistrar.class, ServletWebServerFactoryAutoConfiguration.BeanPostProcessorsRegistrar::new);
-		context.registerBean(TomcatServletWebServerFactory.class, () -> new ServletWebServerFactoryConfiguration.EmbeddedTomcat().tomcatServletWebServerFactory(
-				context.getBeanProvider(TomcatConnectorCustomizer.class),
-				context.getBeanProvider(TomcatContextCustomizer.class),
-				context.getBeanProvider(ResolvableType.forClass(TomcatProtocolHandlerCustomizer.class))));
+		context.registerBean(ConfigurableServletWebServerFactory.class, () -> serverFactory);
 		ServletWebServerFactoryAutoConfiguration servletWebServerFactoryConfiguration = new ServletWebServerFactoryAutoConfiguration();
 		context.registerBean(ServletWebServerFactoryCustomizer.class, () -> servletWebServerFactoryConfiguration.servletWebServerFactoryCustomizer(serverProperties));
-		context.registerBean(TomcatServletWebServerFactoryCustomizer.class, () -> servletWebServerFactoryConfiguration.tomcatServletWebServerFactoryCustomizer(serverProperties));
+		if (serverFactory instanceof TomcatServletWebServerFactory) {
+			context.registerBean(TomcatServletWebServerFactoryCustomizer.class, () -> servletWebServerFactoryConfiguration.tomcatServletWebServerFactoryCustomizer(serverProperties));
+		}
 		context.registerBean(FilterRegistrationBean.class, servletWebServerFactoryConfiguration::forwardedHeaderFilter);
 
 		DispatcherServletAutoConfiguration.DispatcherServletConfiguration dispatcherServletConfiguration = new DispatcherServletAutoConfiguration.DispatcherServletConfiguration();
@@ -94,7 +97,7 @@ public class ServletWebServerInitializer implements ApplicationContextInitialize
 			@Override
 			public WebMvcAutoConfigurationAdapter get() {
 				if (configuration == null) {
-					configuration = new WebMvcAutoConfigurationAdapter(resourceProperties, webMvcProperties, context, context.getBeanProvider(HttpMessageConverters.class), context.getBeanProvider(ResourceHandlerRegistrationCustomizer.class));
+					configuration = new WebMvcAutoConfigurationAdapter(resourceProperties, webMvcProperties, context, context.getBeanProvider(HttpMessageConverters.class), context.getBeanProvider(ResourceHandlerRegistrationCustomizer.class), context.getBeanProvider(DispatcherServletPath.class), context.getBeanProvider(ResolvableType.forClass(ServletRegistrationBean.class)));
 					return configuration;
 				}
 				return configuration;
@@ -103,7 +106,6 @@ public class ServletWebServerInitializer implements ApplicationContextInitialize
 		context.registerBean(InternalResourceViewResolver.class, () -> webMvcConfigurationAdapter.get().defaultViewResolver());
 		context.registerBean(BeanNameViewResolver.class, () -> webMvcConfigurationAdapter.get().beanNameViewResolver());
 		context.registerBean("viewResolver", ContentNegotiatingViewResolver.class, () -> webMvcConfigurationAdapter.get().viewResolver(context));
-		context.registerBean(LocaleResolver.class, () -> webMvcConfigurationAdapter.get().localeResolver());
 		context.registerBean(RequestContextFilter.class, WebMvcAutoConfigurationAdapter::requestContextFilter);
 		// TODO Favicon management
 
@@ -129,10 +131,12 @@ public class ServletWebServerInitializer implements ApplicationContextInitialize
 		context.registerBean(ResourceChainResourceHandlerRegistrationCustomizer.class, () -> new ResourceChainCustomizerConfiguration().resourceHandlerRegistrationCustomizer());
 		context.registerBean(PathMatcher.class, () -> enableWebMvcConfiguration.get().mvcPathMatcher());
 		context.registerBean(UrlPathHelper.class, () -> enableWebMvcConfiguration.get().mvcUrlPathHelper());
-		context.registerBean(HandlerMapping.class, () ->  enableWebMvcConfiguration.get().viewControllerHandlerMapping(context.getBean(PathMatcher.class), context.getBean(UrlPathHelper.class), context.getBean(FormattingConversionService.class), context.getBean(ResourceUrlProvider.class)));
-		context.registerBean(BeanNameUrlHandlerMapping.class, () ->  enableWebMvcConfiguration.get().beanNameHandlerMapping(context.getBean(FormattingConversionService.class), context.getBean(ResourceUrlProvider.class)));
-		context.registerBean(RouterFunctionMapping.class, () ->  enableWebMvcConfiguration.get().routerFunctionMapping(context.getBean(FormattingConversionService.class), context.getBean(ResourceUrlProvider.class)));
-		context.registerBean(HandlerMapping.class, () -> enableWebMvcConfiguration.get().resourceHandlerMapping(context.getBean(UrlPathHelper.class), context.getBean(PathMatcher.class), context.getBean(ContentNegotiationManager.class), context.getBean(FormattingConversionService.class), context.getBean(ResourceUrlProvider.class)));
+		context.registerBean(HandlerMapping.class, () ->  enableWebMvcConfiguration.get().viewControllerHandlerMapping(context.getBean(FormattingConversionService.class), context.getBean(ResourceUrlProvider.class)));
+		context.registerBean(RouterFunctionMapping.class, () ->  {
+
+			return enableWebMvcConfiguration.get().routerFunctionMapping(context.getBean(FormattingConversionService.class), context.getBean(ResourceUrlProvider.class));
+		});
+		context.registerBean(HandlerMapping.class, () -> enableWebMvcConfiguration.get().resourceHandlerMapping(context.getBean(ContentNegotiationManager.class), context.getBean(FormattingConversionService.class), context.getBean(ResourceUrlProvider.class)));
 		context.registerBean(ResourceUrlProvider.class, () -> enableWebMvcConfiguration.get().mvcResourceUrlProvider());
 		context.registerBean(HandlerMapping.class, () -> enableWebMvcConfiguration.get().defaultServletHandlerMapping());
 		context.registerBean(HandlerFunctionAdapter.class, () -> enableWebMvcConfiguration.get().handlerFunctionAdapter());
@@ -142,6 +146,10 @@ public class ServletWebServerInitializer implements ApplicationContextInitialize
 		context.registerBean(ViewResolver.class, () -> enableWebMvcConfiguration.get().mvcViewResolver(context.getBean(ContentNegotiationManager.class)));
 		context.registerBean(HandlerMappingIntrospector.class, () -> enableWebMvcConfiguration.get().mvcHandlerMappingIntrospector(), bd -> bd.setLazyInit(true));
 		context.registerBean(WelcomePageHandlerMapping.class, () -> enableWebMvcConfiguration.get().welcomePageHandlerMapping(context, context.getBean(FormattingConversionService.class), context.getBean(ResourceUrlProvider.class)));
+		context.registerBean(DispatcherServlet.LOCALE_RESOLVER_BEAN_NAME, LocaleResolver.class, () -> enableWebMvcConfiguration.get().localeResolver());
+		context.registerBean(DispatcherServlet.THEME_RESOLVER_BEAN_NAME, ThemeResolver.class, () -> enableWebMvcConfiguration.get().themeResolver());
+		context.registerBean(DispatcherServlet.FLASH_MAP_MANAGER_BEAN_NAME, FlashMapManager.class, () -> enableWebMvcConfiguration.get().flashMapManager());
+		context.registerBean(DispatcherServlet.REQUEST_TO_VIEW_NAME_TRANSLATOR_BEAN_NAME, RequestToViewNameTranslator.class, () -> enableWebMvcConfiguration.get().viewNameTranslator());
 	}
 
 	private class EnableWebMvcConfigurationWrapper extends EnableWebMvcConfiguration {
@@ -159,6 +167,5 @@ public class ServletWebServerInitializer implements ApplicationContextInitialize
 		protected void configureHandlerExceptionResolvers(List<HandlerExceptionResolver> exceptionResolvers) {
 			exceptionResolvers.add(new DefaultHandlerExceptionResolver());
 		}
-
 	}
 }
