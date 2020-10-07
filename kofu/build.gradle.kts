@@ -118,9 +118,9 @@ publishing {
 			}
 			artifact(sourcesJar)
 			val dokkaJar by tasks.creating(Jar::class) {
-				dependsOn("dokka")
+				dependsOn("dokkaHtml")
 				archiveClassifier.set("javadoc")
-				from(buildDir.resolve("dokka"))
+				from(buildDir.resolve("dokka/html"))
 			}
 			artifact(dokkaJar)
 			versionMapping {
