@@ -24,6 +24,8 @@ import org.springframework.boot.web.reactive.server.ConfigurableReactiveWebServe
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.fu.jafu.AbstractDsl;
+import org.springframework.fu.jafu.templating.MustacheDsl;
+import org.springframework.fu.jafu.templating.ThymeleafDsl;
 import org.springframework.fu.jafu.web.JacksonDsl;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.RouterFunctions;
@@ -127,6 +129,23 @@ public class WebFluxServerDsl extends AbstractDsl {
 	}
 
 	/**
+	 * @see #thymeleaf(Consumer)
+	 */
+	public WebFluxServerDsl thymeleaf() {
+		return thymeleaf(dsl -> {});
+	}
+
+	/**
+	 * Configure Thymeleaf view resolver.
+	 *
+	 * Require {@code org.springframework.boot:spring-boot-starter-thymeleaf} dependency.
+	 */
+	public WebFluxServerDsl thymeleaf(Consumer<ThymeleafDsl> dsl) {
+		new ThymeleafDsl(dsl).initializeReactive(context);
+		return this;
+	}
+
+	/**
 	 * @see #mustache(Consumer)
 	 */
 	public WebFluxServerDsl mustache() {
@@ -139,7 +158,7 @@ public class WebFluxServerDsl extends AbstractDsl {
 	 * Require {@code org.springframework.boot:spring-boot-starter-mustache} dependency.
 	 */
 	public WebFluxServerDsl mustache(Consumer<MustacheDsl> dsl) {
-		new MustacheDsl(dsl).initialize(context);
+		new MustacheDsl(dsl).initializeReactive(context);
 		return this;
 	}
 

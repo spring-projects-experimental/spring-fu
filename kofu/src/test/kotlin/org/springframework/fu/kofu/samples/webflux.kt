@@ -8,7 +8,7 @@ import org.springframework.fu.kofu.configuration
 import org.springframework.fu.kofu.mongo.reactiveMongodb
 import org.springframework.fu.kofu.reactiveWebApplication
 import org.springframework.fu.kofu.webflux.cors
-import org.springframework.fu.kofu.webflux.mustache
+import org.springframework.fu.kofu.templating.mustache
 import org.springframework.fu.kofu.webflux.webClient
 import org.springframework.fu.kofu.webflux.webFlux
 import org.springframework.web.reactive.function.server.*

@@ -18,6 +18,7 @@ package org.springframework.fu.kofu.webmvc
 
 import org.junit.jupiter.api.Test
 import org.springframework.fu.kofu.localServerPort
+import org.springframework.fu.kofu.templating.mustache
 import org.springframework.fu.kofu.webApplication
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.test.web.reactive.server.expectBody

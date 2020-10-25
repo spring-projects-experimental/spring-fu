@@ -3,8 +3,8 @@ package org.springframework.samples.petclinic
 import org.springframework.core.io.ClassPathResource
 import org.springframework.fu.kofu.jdbc.jdbc
 import org.springframework.fu.kofu.messageSource
+import org.springframework.fu.kofu.templating.thymeleaf
 import org.springframework.fu.kofu.webApplication
-import org.springframework.fu.kofu.webmvc.thymeleaf
 import org.springframework.fu.kofu.webmvc.webMvc
 import org.springframework.samples.petclinic.owner.ownerConfig
 import org.springframework.samples.petclinic.pet.petConfig

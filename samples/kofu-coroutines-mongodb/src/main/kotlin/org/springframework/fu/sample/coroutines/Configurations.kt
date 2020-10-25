@@ -5,7 +5,7 @@ import kotlinx.coroutines.runBlocking
 import org.springframework.boot.context.event.ApplicationReadyEvent
 import org.springframework.fu.kofu.configuration
 import org.springframework.fu.kofu.mongo.reactiveMongodb
-import org.springframework.fu.kofu.webflux.mustache
+import org.springframework.fu.kofu.templating.mustache
 import org.springframework.fu.kofu.webflux.webFlux
 
 val dataConfig = configuration {

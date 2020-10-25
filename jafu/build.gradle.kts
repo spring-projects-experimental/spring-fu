@@ -45,6 +45,7 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-starter-tomcat")
 	testImplementation("org.springframework.boot:spring-boot-starter-undertow")
 	testImplementation("org.springframework.boot:spring-boot-starter-jetty")
+	testImplementation("org.springframework.boot:spring-boot-starter-thymeleaf")
 	testImplementation("org.springframework.boot:spring-boot-starter-mustache")
 	testImplementation("org.springframework.boot:spring-boot-starter-json")
 	testImplementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")

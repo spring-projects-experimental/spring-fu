@@ -14,13 +14,16 @@
  * limitations under the License.
  */
 
-package org.springframework.fu.kofu.webmvc
+package org.springframework.fu.kofu.templating
 
 import org.springframework.boot.autoconfigure.thymeleaf.ThymeleafInitializer
 import org.springframework.boot.autoconfigure.thymeleaf.ThymeleafProperties
+import org.springframework.boot.autoconfigure.thymeleaf.ThymeleafReactiveWebInitializer
 import org.springframework.boot.autoconfigure.thymeleaf.ThymeleafServletWebInitializer
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.fu.kofu.AbstractDsl
+import org.springframework.fu.kofu.webflux.WebFluxServerDsl
+import org.springframework.fu.kofu.webmvc.WebMvcServerDsl
 
 /**
  * Kofu DSL for Thymeleaf template engine.
@@ -29,7 +32,7 @@ import org.springframework.fu.kofu.AbstractDsl
  *
  * Required dependencies can be retrieve using `org.springframework.boot:spring-boot-starter-thymeleaf`.
  */
-class ThymeleafDsl(private val init: ThymeleafDsl.() -> Unit): AbstractDsl() {
+class ThymeleafDsl(private val init: ThymeleafDsl.() -> Unit) : AbstractDsl() {
 
     private val properties = ThymeleafProperties()
 
@@ -43,11 +46,20 @@ class ThymeleafDsl(private val init: ThymeleafDsl.() -> Unit): AbstractDsl() {
             properties.suffix = value
         }
 
+    fun initializeServlet(context: GenericApplicationContext) {
+        this.initialize(context)
+        ThymeleafServletWebInitializer(properties).initialize(context)
+    }
+
+    fun initializeReactive(context: GenericApplicationContext) {
+        this.initialize(context)
+        ThymeleafReactiveWebInitializer(properties).initialize(context)
+    }
+
     override fun initialize(context: GenericApplicationContext) {
         super.initialize(context)
         init()
         ThymeleafInitializer(properties).initialize(context)
-        ThymeleafServletWebInitializer(properties).initialize(context)
     }
 }
 
@@ -55,7 +67,19 @@ class ThymeleafDsl(private val init: ThymeleafDsl.() -> Unit): AbstractDsl() {
  * Configure a [Thymeleaf](https://github.com/thymeleaf/thymeleaf) view resolver.
  *
  * Require `org.springframework.boot:spring-boot-starter-thymeleaf` dependency.
+ *
+ * @sample org.springframework.fu.kofu.samples.thymeleafDsl
+ */
+fun WebFluxServerDsl.thymeleaf(dsl: ThymeleafDsl.() -> Unit = {}) {
+    ThymeleafDsl(dsl).initializeReactive(context)
+}
+
+
+/**
+ * Configure a [Thymeleaf](https://github.com/thymeleaf/thymeleaf) view resolver.
+ *
+ * Require `org.springframework.boot:spring-boot-starter-thymeleaf` dependency.
  */
 fun WebMvcServerDsl.thymeleaf(dsl: ThymeleafDsl.() -> Unit = {}) {
-    ThymeleafDsl(dsl).initialize(context)
+    ThymeleafDsl(dsl).initializeServlet(context)
 }

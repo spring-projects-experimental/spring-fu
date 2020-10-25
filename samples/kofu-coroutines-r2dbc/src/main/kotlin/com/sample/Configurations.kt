@@ -3,7 +3,7 @@ package com.sample
 import org.springframework.core.io.ClassPathResource
 import org.springframework.fu.kofu.configuration
 import org.springframework.fu.kofu.r2dbc.r2dbc
-import org.springframework.fu.kofu.webflux.mustache
+import org.springframework.fu.kofu.templating.mustache
 import org.springframework.fu.kofu.webflux.webFlux
 import org.springframework.r2dbc.connection.init.ConnectionFactoryInitializer
 import org.springframework.r2dbc.connection.init.ResourceDatabasePopulator
