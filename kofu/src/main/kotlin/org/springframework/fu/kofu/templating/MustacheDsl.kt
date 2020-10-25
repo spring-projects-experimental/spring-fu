@@ -14,13 +14,16 @@
  * limitations under the License.
  */
 
-package org.springframework.fu.kofu.webmvc
+package org.springframework.fu.kofu.templating
 
 import org.springframework.boot.autoconfigure.mustache.MustacheInitializer
 import org.springframework.boot.autoconfigure.mustache.MustacheProperties
+import org.springframework.boot.autoconfigure.mustache.MustacheReactiveWebInitializer
 import org.springframework.boot.autoconfigure.mustache.MustacheServletWebInitializer
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.fu.kofu.AbstractDsl
+import org.springframework.fu.kofu.webflux.WebFluxServerDsl
+import org.springframework.fu.kofu.webmvc.WebMvcServerDsl
 
 /**
  * Kofu DSL for Mustache template engine.
@@ -38,21 +41,32 @@ class MustacheDsl(private val init: MustacheDsl.() -> Unit): AbstractDsl() {
 	/**
 	 * Prefix to apply to template names.
 	 */
-	var prefix: String = MustacheProperties.DEFAULT_PREFIX
+	var prefix: String
+		get() = properties.prefix
 		set(value) {
 			properties.prefix = value
 		}
 
-	var suffix: String = MustacheProperties.DEFAULT_SUFFIX
+	var suffix: String
+		get() = properties.suffix
 		set(value) {
 			properties.suffix = value
 		}
+
+	fun initializeReactive(context: GenericApplicationContext) {
+		this.initialize(context)
+		MustacheReactiveWebInitializer(properties).initialize(context)
+	}
+
+	fun initializeServlet(context: GenericApplicationContext) {
+		this.initialize(context)
+		MustacheServletWebInitializer(properties).initialize(context)
+	}
 
 	override fun initialize(context: GenericApplicationContext) {
 		super.initialize(context)
 		init()
 		MustacheInitializer(properties).initialize(context)
-		MustacheServletWebInitializer(properties).initialize(context)
 	}
 }
 
@@ -61,8 +75,19 @@ class MustacheDsl(private val init: MustacheDsl.() -> Unit): AbstractDsl() {
  *
  * Require `org.springframework.boot:spring-boot-starter-mustache` dependency.
  *
+ * @sample org.springframework.fu.kofu.samples.mustacheDsl
+ * @author Sebastien Deleuze
+ */
+fun WebFluxServerDsl.mustache(dsl: MustacheDsl.() -> Unit = {}) {
+	MustacheDsl(dsl).initializeReactive(context)
+}
+/**
+ * Configure a [Mustache](https://github.com/samskivert/jmustache) view resolver.
+ *
+ * Require `org.springframework.boot:spring-boot-starter-mustache` dependency.
+ *
  * @author Sebastien Deleuze
  */
 fun WebMvcServerDsl.mustache(dsl: MustacheDsl.() -> Unit = {}) {
-	MustacheDsl(dsl).initialize(context)
+	MustacheDsl(dsl).initializeServlet(context)
 }

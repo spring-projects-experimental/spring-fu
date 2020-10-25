@@ -1,3 +1,5 @@
+package org.springframework.fu.kofu.webmvc
+
 /*
  * Copyright 2002-2018 the original author or authors.
  *
@@ -14,39 +16,37 @@
  * limitations under the License.
  */
 
-package org.springframework.fu.kofu.webflux
-
 import org.junit.jupiter.api.Test
 import org.springframework.fu.kofu.localServerPort
-import org.springframework.fu.kofu.reactiveWebApplication
-import org.springframework.fu.kofu.templating.mustache
+import org.springframework.fu.kofu.templating.thymeleaf
+import org.springframework.fu.kofu.webApplication
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.test.web.reactive.server.expectBody
 
 /**
  * @author Sebastien Deleuze
  */
-class MustacheDslTests {
+class ThymeleafDslTests {
 
-	@Test
-	fun `Create and request a Mustache view`() {
-		val app = reactiveWebApplication {
-			webFlux {
-				port = 0
-				mustache()
-				router {
-					GET("/view") { ok().render("template", mapOf("name" to "world")) }
-				}
-			}
-		}
-		with(app.run()) {
-			val client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:$localServerPort").build()
-			client.get().uri("/view").exchange()
-					.expectStatus().is2xxSuccessful
-					.expectBody<String>()
-					.isEqualTo("Hello world!")
-			close()
-		}
-	}
+    @Test
+    fun `Create and request a Thymeleaf view`() {
+        val app = webApplication {
+            webMvc {
+                port = 0
+                thymeleaf()
+                router {
+                    GET("/view") { ok().render("template", mapOf("name" to "world")) }
+                }
+            }
+        }
+        with(app.run()) {
+            val client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:$localServerPort").build()
+            client.get().uri("/view").exchange()
+                .expectStatus().is2xxSuccessful
+                .expectBody<String>()
+                .isEqualTo("<p>Hello world!</p>")
+            close()
+        }
+    }
 
 }

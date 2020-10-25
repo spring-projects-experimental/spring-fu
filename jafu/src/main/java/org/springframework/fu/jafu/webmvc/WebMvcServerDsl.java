@@ -5,7 +5,6 @@ import java.util.function.Supplier;
 
 import org.springframework.beans.factory.config.BeanDefinitionCustomizer;
 import org.springframework.beans.factory.support.BeanDefinitionReaderUtils;
-import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.web.ResourceProperties;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.boot.autoconfigure.web.servlet.AtomConverterInitializer;
@@ -24,6 +23,8 @@ import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.fu.jafu.AbstractDsl;
+import org.springframework.fu.jafu.templating.MustacheDsl;
+import org.springframework.fu.jafu.templating.ThymeleafDsl;
 import org.springframework.fu.jafu.web.JacksonDsl;
 import org.springframework.web.servlet.function.RouterFunction;
 import org.springframework.web.servlet.function.RouterFunctions;
@@ -178,6 +179,41 @@ public class WebMvcServerDsl extends AbstractDsl {
 			return new UndertowServletWebServerFactory();
 		}
 	}
+
+	/**
+	 * @see #thymeleaf(Consumer)
+	 */
+	public WebMvcServerDsl thymeleaf() {
+		return thymeleaf(dsl -> {});
+	}
+
+	/**
+	 * Configure Thymeleaf view resolver.
+	 *
+	 * Require {@code org.springframework.boot:spring-boot-starter-thymeleaf} dependency.
+	 */
+	public WebMvcServerDsl thymeleaf(Consumer<ThymeleafDsl> dsl) {
+		new ThymeleafDsl(dsl).initializeServlet(context);
+		return this;
+	}
+
+	/**
+	 * @see #mustache(Consumer)
+	 */
+	public WebMvcServerDsl mustache() {
+		return mustache(dsl -> {});
+	}
+
+	/**
+	 * Configure Mustache view resolver.
+	 *
+	 * Require {@code org.springframework.boot:spring-boot-starter-mustache} dependency.
+	 */
+	public WebMvcServerDsl mustache(Consumer<MustacheDsl> dsl) {
+		new MustacheDsl(dsl).initializeServlet(context);
+		return this;
+	}
+
 
 	/**
 	 * Jafu DSL for WebMvc server codecs.
