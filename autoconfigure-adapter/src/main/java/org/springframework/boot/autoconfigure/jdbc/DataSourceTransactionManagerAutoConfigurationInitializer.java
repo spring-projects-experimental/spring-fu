@@ -15,8 +15,8 @@ public class DataSourceTransactionManagerAutoConfigurationInitializer implements
   public void initialize(GenericApplicationContext context) {
     if (context.getBeanFactory().getBeanNamesForType(DataSourceTransactionManagerAutoConfiguration.class).length==0) {
       context.registerBean(DataSourceTransactionManagerAutoConfiguration.class, () -> new DataSourceTransactionManagerAutoConfiguration());
-      context.registerBean(DataSourceTransactionManagerAutoConfiguration.DataSourceTransactionManagerConfiguration.class, () -> new DataSourceTransactionManagerAutoConfiguration.DataSourceTransactionManagerConfiguration());
-      context.registerBean("transactionManager", DataSourceTransactionManager.class, () -> context.getBean(DataSourceTransactionManagerAutoConfiguration.DataSourceTransactionManagerConfiguration.class).transactionManager(context.getBean(DataSource.class),context.getBeanProvider(TransactionManagerCustomizers.class)));
+      context.registerBean(DataSourceTransactionManagerAutoConfiguration.JdbcTransactionManagerConfiguration.class, () -> new DataSourceTransactionManagerAutoConfiguration.JdbcTransactionManagerConfiguration());
+      context.registerBean("transactionManager", DataSourceTransactionManager.class, () -> context.getBean(DataSourceTransactionManagerAutoConfiguration.JdbcTransactionManagerConfiguration.class).transactionManager(context.getBean(DataSource.class),context.getBeanProvider(TransactionManagerCustomizers.class)));
     }
   }
 }

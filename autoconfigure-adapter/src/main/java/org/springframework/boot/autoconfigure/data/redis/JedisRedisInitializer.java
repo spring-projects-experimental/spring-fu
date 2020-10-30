@@ -13,25 +13,21 @@ import java.net.UnknownHostException;
  * {@link ApplicationContextInitializer} adapter for {@link JedisConnectionConfiguration}
  */
 public class JedisRedisInitializer implements ApplicationContextInitializer<GenericApplicationContext> {
-    private final RedisProperties redisProperties;
+	private final RedisProperties redisProperties;
 
-    public JedisRedisInitializer(RedisProperties redisProperties) {
-        this.redisProperties = redisProperties;
-    }
+	public JedisRedisInitializer(RedisProperties redisProperties) {
+		this.redisProperties = redisProperties;
+	}
 
-    @Override
-    public void initialize(GenericApplicationContext context) {
-        if (redisProperties.getJedis().getPool() != null) {
-            context.registerBean(RedisConnectionFactory.class, () -> getJedisConnectionFactory(context));
-        }
-    }
+	@Override
+	public void initialize(GenericApplicationContext context) {
+		if (redisProperties.getJedis().getPool() != null) {
+			context.registerBean(RedisConnectionFactory.class, () -> getJedisConnectionFactory(context));
+		}
+	}
 
-    private JedisConnectionFactory getJedisConnectionFactory(GenericApplicationContext context) {
-        final JedisConnectionConfiguration configuration = new JedisConnectionConfiguration(redisProperties, context.getBeanProvider(RedisSentinelConfiguration.class), context.getBeanProvider(RedisClusterConfiguration.class));
-        try {
-            return configuration.redisConnectionFactory(context.getBeanProvider(JedisClientConfigurationBuilderCustomizer.class));
-        } catch (UnknownHostException e) {
-            throw new IllegalStateException(e);
-        }
-    }
+	private JedisConnectionFactory getJedisConnectionFactory(GenericApplicationContext context) {
+		final JedisConnectionConfiguration configuration = new JedisConnectionConfiguration(redisProperties, context.getBeanProvider(RedisSentinelConfiguration.class), context.getBeanProvider(RedisClusterConfiguration.class));
+		return configuration.redisConnectionFactory(context.getBeanProvider(JedisClientConfigurationBuilderCustomizer.class));
+	}
 }

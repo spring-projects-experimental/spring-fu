@@ -117,9 +117,10 @@ class WebFluxServerDslTests {
 		}
 		with(app.run()) {
 			val client = getBean<WebClient.Builder>().build()
-			client.get().uri("http://127.0.0.1:$localServerPort/").exchange().test()
-					.consumeNextWith { assertEquals(NO_CONTENT, it.statusCode()) }
-					.verifyComplete()
+			client.get().uri("http://127.0.0.1:$localServerPort/").exchangeToMono {
+				assertEquals(NO_CONTENT, it.statusCode())
+				Mono.empty<Void>()
+			}.block()
 			close()
 		}
 	}

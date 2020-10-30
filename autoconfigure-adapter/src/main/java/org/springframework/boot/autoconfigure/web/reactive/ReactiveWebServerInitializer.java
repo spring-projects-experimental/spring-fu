@@ -25,6 +25,7 @@ import java.util.function.Supplier;
 
 import org.springframework.boot.autoconfigure.web.ResourceProperties;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
+import org.springframework.boot.autoconfigure.web.WebProperties;
 import org.springframework.boot.autoconfigure.web.reactive.error.ErrorWebFluxAutoConfiguration;
 import org.springframework.boot.web.codec.CodecCustomizer;
 import org.springframework.boot.web.reactive.error.DefaultErrorAttributes;
@@ -55,20 +56,24 @@ import org.springframework.web.server.i18n.LocaleContextResolver;
 /**
  * {@link ApplicationContextInitializer} adapter for Reactive webflux server auto-configurations.
  */
+@SuppressWarnings("deprecation")
 public class ReactiveWebServerInitializer implements ApplicationContextInitializer<GenericApplicationContext> {
 
 	private final ServerProperties serverProperties;
 
 	private final ResourceProperties resourceProperties;
 
+	private final WebProperties webProperties;
+
 	private final ConfigurableReactiveWebServerFactory serverFactory;
 
 	private final WebFluxProperties webFluxProperties;
 
 
-	public ReactiveWebServerInitializer(ServerProperties serverProperties, ResourceProperties resourceProperties, WebFluxProperties webFluxProperties, ConfigurableReactiveWebServerFactory serverFactory) {
+	public ReactiveWebServerInitializer(ServerProperties serverProperties, ResourceProperties resourceProperties, WebProperties webProperties, WebFluxProperties webFluxProperties, ConfigurableReactiveWebServerFactory serverFactory) {
 		this.serverProperties = serverProperties;
 		this.resourceProperties = resourceProperties;
+		this.webProperties = webProperties;
 		this.webFluxProperties = webFluxProperties;
 		this.serverFactory = serverFactory;
 	}
@@ -79,13 +84,12 @@ public class ReactiveWebServerInitializer implements ApplicationContextInitializ
 
 		context.registerBean(ReactiveWebServerFactoryCustomizer.class, () -> new ReactiveWebServerFactoryCustomizer(this.serverProperties));
 		context.registerBean(ConfigurableReactiveWebServerFactory.class, () -> serverFactory);
-		//noinspection deprecation
 		context.registerBean(ErrorAttributes.class, () -> new DefaultErrorAttributes(serverProperties.getError().isIncludeException()));
 		context.registerBean(ErrorWebExceptionHandler.class,  () -> {
 			ErrorWebFluxAutoConfiguration errorConfiguration = new ErrorWebFluxAutoConfiguration(this.serverProperties);
-			return errorConfiguration.errorWebExceptionHandler(context.getBean(ErrorAttributes.class), this.resourceProperties, context.getBeanProvider(ViewResolver.class), context.getBean(SERVER_CODEC_CONFIGURER_BEAN_NAME, ServerCodecConfigurer.class), context);
+			return errorConfiguration.errorWebExceptionHandler(context.getBean(ErrorAttributes.class), this.resourceProperties, this.webProperties, context.getBeanProvider(ViewResolver.class), context.getBean(SERVER_CODEC_CONFIGURER_BEAN_NAME, ServerCodecConfigurer.class), context);
 		});
-		context.registerBean("fuWebFluxConfiguration", EnableWebFluxConfigurationWrapper.class, () -> new EnableWebFluxConfigurationWrapper(context, webFluxProperties));
+		context.registerBean("fuWebFluxConfiguration", EnableWebFluxConfigurationWrapper.class, () -> new EnableWebFluxConfigurationWrapper(context, webFluxProperties, webProperties));
 		context.registerBean(LOCALE_CONTEXT_RESOLVER_BEAN_NAME, LocaleContextResolver.class, () -> context.getBean(EnableWebFluxConfigurationWrapper.class).localeContextResolver());
 		context.registerBean("responseStatusExceptionHandler", WebExceptionHandler.class, () -> context.getBean("fuWebFluxConfiguration", EnableWebFluxConfigurationWrapper.class).responseStatusExceptionHandler());
 
@@ -101,14 +105,14 @@ public class ReactiveWebServerInitializer implements ApplicationContextInitializ
 		context.registerBean("webFluxValidator", Validator.class, () -> context.getBean("fuWebFluxConfiguration", EnableWebFluxConfigurationWrapper.class).webFluxValidator());
 		context.registerBean(HttpHandler.class, () -> applicationContext(context).build());
 		context.registerBean(WEB_HANDLER_BEAN_NAME, DispatcherHandler.class, (Supplier<DispatcherHandler>) DispatcherHandler::new);
-		context.registerBean(WebFluxConfig.class, () -> new WebFluxConfig(resourceProperties, webFluxProperties, context, context.getBeanProvider(HandlerMethodArgumentResolver.class), context.getBeanProvider(CodecCustomizer.class),
+		context.registerBean(WebFluxConfig.class, () -> new WebFluxConfig(resourceProperties, webProperties, webFluxProperties, context, context.getBeanProvider(HandlerMethodArgumentResolver.class), context.getBeanProvider(CodecCustomizer.class),
 			context.getBeanProvider(ResourceHandlerRegistrationCustomizer.class), context.getBeanProvider(ViewResolver.class)));
 	}
 
 	private class EnableWebFluxConfigurationWrapper extends EnableWebFluxConfiguration {
 
-		public EnableWebFluxConfigurationWrapper(GenericApplicationContext context, WebFluxProperties webFluxProperties) {
-			super(webFluxProperties, context.getBeanProvider(WebFluxRegistrations.class));
+		public EnableWebFluxConfigurationWrapper(GenericApplicationContext context, WebFluxProperties webFluxProperties, WebProperties webProperties) {
+			super(webFluxProperties, webProperties, context.getBeanProvider(WebFluxRegistrations.class));
 			setConfigurers(new ArrayList<>(context.getBeansOfType(WebFluxConfigurer.class).values()));
 		}
 

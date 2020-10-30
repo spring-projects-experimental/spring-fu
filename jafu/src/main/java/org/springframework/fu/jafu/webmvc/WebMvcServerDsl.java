@@ -8,6 +8,7 @@ import org.springframework.beans.factory.support.BeanDefinitionReaderUtils;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.web.ResourceProperties;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
+import org.springframework.boot.autoconfigure.web.WebProperties;
 import org.springframework.boot.autoconfigure.web.servlet.AtomConverterInitializer;
 import org.springframework.boot.autoconfigure.web.servlet.FormConverterInitializer;
 import org.springframework.boot.autoconfigure.web.servlet.JacksonJsonConverterInitializer;
@@ -50,6 +51,8 @@ public class WebMvcServerDsl extends AbstractDsl {
 	private ServerProperties serverProperties = new ServerProperties();
 
 	private ResourceProperties resourceProperties = new ResourceProperties();
+
+	private WebProperties webProperties = new WebProperties();
 
 	private WebMvcProperties webMvcProperties = new WebMvcProperties();
 
@@ -155,7 +158,7 @@ public class WebMvcServerDsl extends AbstractDsl {
 		if (context.containsBeanDefinition("webHandler")) {
 			throw new IllegalStateException("Only one webFlux per application is supported");
 		}
-		new ServletWebServerInitializer(serverProperties, webMvcProperties, resourceProperties, engine).initialize(context);
+		new ServletWebServerInitializer(serverProperties, webMvcProperties, resourceProperties, webProperties, engine).initialize(context);
 	}
 
 	private class TomcatDelegate implements Supplier<ConfigurableServletWebServerFactory> {
