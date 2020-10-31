@@ -39,7 +39,7 @@ class JdbcDsl(private val init: JdbcDsl.() -> Unit) : AbstractDsl() {
             name = this@JdbcDsl.name
             username = this@JdbcDsl.username
             password = this@JdbcDsl.password
-            generateUniqueName = this@JdbcDsl.generateUniqueName
+            isGenerateUniqueName = this@JdbcDsl.generateUniqueName
         }
 
         EmbeddedDataSourceConfigurationInitializer(dataSourceProperties).initialize(context)

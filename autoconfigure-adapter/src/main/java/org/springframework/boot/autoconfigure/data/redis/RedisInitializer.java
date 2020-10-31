@@ -14,22 +14,10 @@ import java.net.UnknownHostException;
  * {@link ApplicationContextInitializer} adapter for {@link RedisAutoConfiguration}
  */
 public class RedisInitializer implements ApplicationContextInitializer<GenericApplicationContext> {
-    @Override
-    public void initialize(GenericApplicationContext context) {
+	@Override
+	public void initialize(GenericApplicationContext context) {
 		RedisAutoConfiguration redisAutoConfiguration = new RedisAutoConfiguration();
-    	context.registerBean("redisTemplate", RedisTemplate.class, () -> {
-			try {
-				return redisAutoConfiguration.redisTemplate(context.getBean(RedisConnectionFactory.class));
-			} catch (UnknownHostException e) {
-				throw new IllegalStateException(e);
-			}
-		}, (definition) -> ((RootBeanDefinition) definition).setTargetType(ResolvableType.forClassWithGenerics(RedisTemplate.class, Object.class, Object.class)));
-        context.registerBean("stringRedisTemplate", StringRedisTemplate.class, () -> {
-			try {
-				return redisAutoConfiguration.stringRedisTemplate(context.getBean(RedisConnectionFactory.class));
-			} catch (UnknownHostException e) {
-				throw new IllegalStateException(e);
-			}
-		});
-    }
+		context.registerBean("redisTemplate", RedisTemplate.class, () -> redisAutoConfiguration.redisTemplate(context.getBean(RedisConnectionFactory.class)), (definition) -> ((RootBeanDefinition) definition).setTargetType(ResolvableType.forClassWithGenerics(RedisTemplate.class, Object.class, Object.class)));
+		context.registerBean("stringRedisTemplate", StringRedisTemplate.class, () -> redisAutoConfiguration.stringRedisTemplate(context.getBean(RedisConnectionFactory.class)));
+	}
 }

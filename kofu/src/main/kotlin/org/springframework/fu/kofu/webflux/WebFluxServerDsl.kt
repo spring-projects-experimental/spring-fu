@@ -3,8 +3,8 @@ package org.springframework.fu.kofu.webflux
 import org.springframework.beans.factory.ObjectProvider
 import org.springframework.beans.factory.getBeanProvider
 import org.springframework.beans.factory.support.BeanDefinitionReaderUtils.uniqueBeanName
-import org.springframework.boot.autoconfigure.web.ResourceProperties
 import org.springframework.boot.autoconfigure.web.ServerProperties
+import org.springframework.boot.autoconfigure.web.WebProperties
 import org.springframework.boot.autoconfigure.web.reactive.*
 import org.springframework.boot.web.embedded.jetty.JettyReactiveWebServerFactory
 import org.springframework.boot.web.embedded.netty.NettyReactiveWebServerFactory
@@ -42,11 +42,14 @@ import org.springframework.web.server.WebFilter
  * @see WebFluxServerDsl.mustache
  * @author Sebastien Deleuze
  */
+@Suppress("DEPRECATION")
 open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit): AbstractDsl() {
 
 	private val serverProperties = ServerProperties()
 
-	private val resourceProperties = ResourceProperties()
+	private val resourceProperties = org.springframework.boot.autoconfigure.web.ResourceProperties()
+
+	private val webProperties = WebProperties()
 
 	private val webFluxProperties = WebFluxProperties()
 
@@ -86,7 +89,7 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit): Abst
 		if (context.containsBeanDefinition("webHandler")) {
 			throw IllegalStateException("Only one webFlux per application is supported")
 		}
-		ReactiveWebServerInitializer(serverProperties, resourceProperties, webFluxProperties, engine).initialize(context)
+		ReactiveWebServerInitializer(serverProperties, resourceProperties, webProperties, webFluxProperties, engine).initialize(context)
 	}
 
 	/**

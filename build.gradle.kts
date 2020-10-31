@@ -1,10 +1,10 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-	id("org.jetbrains.kotlin.jvm") version "1.3.72" apply false
+	id("org.jetbrains.kotlin.jvm") version "1.4.10" apply false
 	id("org.springframework.boot") apply false
-	id("org.jetbrains.dokka") version "0.10.1" apply false
-	id("io.spring.dependency-management") version "1.0.9.RELEASE"
+	id("org.jetbrains.dokka") version "1.4.10" apply false
+	id("io.spring.dependency-management") version "1.0.10.RELEASE"
 	id("maven-publish")
 }
 
@@ -14,7 +14,7 @@ allprojects {
 		plugin("io.spring.dependency-management")
 	}
 
-	version = "0.4.1-SNAPSHOT"
+	version = "0.4.2-SNAPSHOT"
 	group = "org.springframework.fu"
 
 	dependencyManagement {
