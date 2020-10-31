@@ -61,6 +61,13 @@ dependencies {
 	testImplementation("io.lettuce:lettuce-core")
 }
 
+tasks.withType<Test> {
+	if (project.hasProperty("isCI")) {
+		exclude("org/springframework/fu/jafu/redis/ReactiveRedisDslTests.class")
+		exclude("org/springframework/fu/jafu/redis/RedisDslTests.class")
+	}
+}
+
 publishing {
 	publications {
 		create<MavenPublication>(project.name) {
