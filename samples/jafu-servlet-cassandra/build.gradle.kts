@@ -10,7 +10,7 @@ java {
 }
 
 dependencies {
-	implementation("org.springframework.fu:spring-fu-jafu:0.4.2")
+	implementation("org.springframework.fu:spring-fu-jafu:0.4.3-SNAPSHOT")
 	implementation("org.testcontainers:cassandra:1.14.3")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.data:spring-data-cassandra")
