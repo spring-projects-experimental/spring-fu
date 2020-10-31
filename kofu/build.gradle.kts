@@ -82,7 +82,7 @@ tasks.withType<DokkaTask>().configureEach {
 				url.set(URL("https://docs.spring.io/spring-framework/docs/current/kdoc-api/spring-framework/"))
 			}
 			externalDocumentationLink {
-				url = URL("https://docs.spring.io/spring-security/site/docs/current/api/")
+				url.set(URL("https://docs.spring.io/spring-security/site/docs/current/api/"))
 			}
 			externalDocumentationLink {
 				url.set(URL("https://fasterxml.github.io/jackson-core/javadoc/2.9/"))
