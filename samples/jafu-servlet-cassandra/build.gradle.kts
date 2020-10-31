@@ -28,4 +28,7 @@ repositories {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+	if (project.hasProperty("isCI")) {
+		exclude("com/sample/IntegrationTests.class")
+	}
 }
