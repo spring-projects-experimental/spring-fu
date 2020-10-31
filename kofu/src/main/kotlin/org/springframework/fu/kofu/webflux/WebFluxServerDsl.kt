@@ -280,6 +280,13 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit): Abst
 		fun multipart() {
 			MultipartCodecInitializer(false).initialize(context)
 		}
+
+		/**
+		 * Enable [org.springframework.http.codec.json.KotlinSerializationJsonDecoder] and [org.springframework.http.codec.json.KotlinSerializationJsonEncoder]
+		 */
+		fun kotlinSerialization() {
+			KotlinSerializationCodecInitializer(false).initialize(context)
+		}
 	}
 
 }

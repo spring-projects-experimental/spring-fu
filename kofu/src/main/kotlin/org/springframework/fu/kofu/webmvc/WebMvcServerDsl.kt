@@ -5,14 +5,7 @@ import org.springframework.beans.factory.getBeanProvider
 import org.springframework.beans.factory.support.BeanDefinitionReaderUtils
 import org.springframework.boot.autoconfigure.web.ServerProperties
 import org.springframework.boot.autoconfigure.web.WebProperties
-import org.springframework.boot.autoconfigure.web.servlet.FormConverterInitializer
-import org.springframework.boot.autoconfigure.web.servlet.ResourceConverterInitializer
-import org.springframework.boot.autoconfigure.web.servlet.AtomConverterInitializer
-import org.springframework.boot.autoconfigure.web.servlet.JacksonJsonConverterInitializer
-import org.springframework.boot.autoconfigure.web.servlet.RssConverterInitializer
-import org.springframework.boot.autoconfigure.web.servlet.ServletWebServerInitializer
-import org.springframework.boot.autoconfigure.web.servlet.StringConverterInitializer
-import org.springframework.boot.autoconfigure.web.servlet.WebMvcProperties
+import org.springframework.boot.autoconfigure.web.servlet.*
 import org.springframework.boot.web.embedded.jetty.JettyServletWebServerFactory
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory
 import org.springframework.boot.web.embedded.undertow.UndertowServletWebServerFactory
@@ -210,6 +203,13 @@ open class WebMvcServerDsl(private val init: WebMvcServerDsl.() -> Unit): Abstra
 		 */
 		fun rss() {
 			RssConverterInitializer().initialize(context)
+		}
+
+		/**
+		 * Enable [org.springframework.http.converter.json.KotlinSerializationJsonHttpMessageConverter]
+		 */
+		fun kotlinSerialization() {
+			KotlinSerializationConverterInitializer().initialize(context)
 		}
 	}
 }

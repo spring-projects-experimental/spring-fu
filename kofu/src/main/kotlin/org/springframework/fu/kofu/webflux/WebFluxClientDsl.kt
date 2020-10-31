@@ -112,6 +112,14 @@ class WebFluxClientDsl(private val init: WebFluxClientDsl.() -> Unit) : Abstract
 		fun multipart() {
 			MultipartCodecInitializer(true).initialize(context)
 		}
+
+		/**
+		 * Enable [org.springframework.http.codec.json.KotlinSerializationJsonDecoder] and
+		 * [org.springframework.http.codec.json.KotlinSerializationJsonEncoder]
+		 */
+		fun kotlinSerialization() {
+			KotlinSerializationCodecInitializer(true).initialize(context)
+		}
 	}
 }
 
