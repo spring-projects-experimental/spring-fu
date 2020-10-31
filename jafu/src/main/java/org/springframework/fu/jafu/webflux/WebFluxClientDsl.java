@@ -156,8 +156,6 @@ public class WebFluxClientDsl extends AbstractDsl {
 		/**
 		 * Enable {@link org.springframework.http.codec.multipart.MultipartHttpMessageWriter} and
 		 * {@link org.springframework.http.codec.multipart.MultipartHttpMessageReader}
-		 *
-		 * This codec requires Synchronoss NIO Multipart library via  the {@code org.synchronoss.cloud:nio-multipart-parser} dependency.
 		 */
 		public WebFluxClientCodecDsl multipart() {
 			new MultipartCodecInitializer(true).initialize(context);

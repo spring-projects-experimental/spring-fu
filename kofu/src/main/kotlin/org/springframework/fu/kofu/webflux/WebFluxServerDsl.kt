@@ -273,9 +273,6 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit): Abst
 		/**
 		 * Enable [org.springframework.http.codec.multipart.MultipartHttpMessageWriter] and
 		 * [org.springframework.http.codec.multipart.MultipartHttpMessageReader]
-		 *
-		 * This codec requires Synchronoss NIO Multipart library via  the `org.synchronoss.cloud:nio-multipart-parser`
-		 * dependency.
 		 */
 		fun multipart() {
 			MultipartCodecInitializer(false).initialize(context)
