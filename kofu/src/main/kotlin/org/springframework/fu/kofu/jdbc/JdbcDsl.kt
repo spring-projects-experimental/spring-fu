@@ -1,7 +1,6 @@
 package org.springframework.fu.kofu.jdbc
 
 import org.springframework.boot.autoconfigure.jdbc.*
-import org.springframework.boot.autoconfigure.r2dbc.R2dbcProperties
 import org.springframework.boot.jdbc.DataSourceInitializationMode
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.fu.kofu.AbstractDsl
@@ -25,6 +24,8 @@ class JdbcDsl(private val init: JdbcDsl.() -> Unit) : AbstractDsl() {
 
     var generateUniqueName: Boolean = true
 
+    var datasourceType: DataSourceType = DataSourceType.Generic
+
 
     override fun initialize(context: GenericApplicationContext) {
         super.initialize(context)
@@ -42,7 +43,11 @@ class JdbcDsl(private val init: JdbcDsl.() -> Unit) : AbstractDsl() {
             isGenerateUniqueName = this@JdbcDsl.generateUniqueName
         }
 
-        EmbeddedDataSourceConfigurationInitializer(dataSourceProperties).initialize(context)
+        when(datasourceType) {
+            DataSourceType.Hikari -> DataSourceConfiguration_HikariInitializer(dataSourceProperties).initialize(context)
+            DataSourceType.Embedded -> EmbeddedDataSourceConfigurationInitializer(dataSourceProperties).initialize(context)
+            DataSourceType.Generic -> DataSourceConfiguration_GenericInitializer(dataSourceProperties).initialize(context)
+        }
         JdbcTemplateConfigurationInitializer(jdbcProperties).initialize(context)
         DataSourceTransactionManagerAutoConfigurationInitializer().initialize(context)
         DataSourceInitializerInvokerInitializer(dataSourceProperties).initialize(context)
