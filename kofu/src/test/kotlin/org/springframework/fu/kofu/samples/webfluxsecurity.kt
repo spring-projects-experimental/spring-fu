@@ -17,25 +17,22 @@
 package org.springframework.fu.kofu.samples
 
 import org.springframework.fu.kofu.reactiveWebApplication
-import org.springframework.fu.kofu.webflux.security
-import org.springframework.fu.kofu.webflux.webFlux
+import org.springframework.fu.kofu.security.webFluxSecurity
 import org.springframework.security.core.userdetails.MapReactiveUserDetailsService
 import org.springframework.security.core.userdetails.User
 
 fun webFluxSecurity() {
 	reactiveWebApplication {
-		webFlux {
-			security {
-				userDetailsService = userDetailsService()
-				http {
-					anonymous { }
-					authorizeExchange {
-						authorize("/view", hasRole("USER"))
-						authorize("/public-view", permitAll)
-					}
-					headers {}
-					logout {}
+		webFluxSecurity {
+			userDetailsService = userDetailsService()
+			http {
+				anonymous { }
+				authorizeExchange {
+					authorize("/view", hasRole("USER"))
+					authorize("/public-view", permitAll)
 				}
+				headers {}
+				logout {}
 			}
 		}
 	}

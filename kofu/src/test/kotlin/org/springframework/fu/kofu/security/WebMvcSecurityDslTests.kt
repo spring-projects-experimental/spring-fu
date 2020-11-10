@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package org.springframework.fu.kofu.webmvc
+package org.springframework.fu.kofu.security
 
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.getBean
 import org.springframework.context.ApplicationContext
 import org.springframework.fu.kofu.*
+import org.springframework.fu.kofu.webmvc.webMvc
 import org.springframework.security.authentication.ProviderManager
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -37,7 +38,7 @@ import javax.servlet.http.HttpServletResponse
 /**
  * @author Fred Montariol
  */
-class SecurityDslTests {
+class WebMvcSecurityDslTests {
 
 	@Test
 	fun `Check spring-security configuration DSL with provided userDetailsService`() {
@@ -50,20 +51,20 @@ class SecurityDslTests {
 					GET("/view") { ok().build() }
 					POST("/public-post") { ok().build() }
 				}
+			}
 
-				security {
-					userDetailsService = userDetailsService()
+			webMvcSecurity {
+				userDetailsService = userDetailsService()
 
-					http {
-						authorizeRequests {
-							authorize("/public-view", permitAll)
-							authorize("/view", hasRole("USER"))
-							authorize("/public-post", permitAll)
-						}
-						httpBasic {}
-						csrf {
-							csrfTokenRepository = csrfTokenRepository()
-						}
+				http {
+					authorizeRequests {
+						authorize("/public-view", permitAll)
+						authorize("/view", hasRole("USER"))
+						authorize("/public-post", permitAll)
+					}
+					httpBasic {}
+					csrf {
+						csrfTokenRepository = csrfTokenRepository()
 					}
 				}
 			}
@@ -93,20 +94,20 @@ class SecurityDslTests {
 					GET("/view") { ok().build() }
 					POST("/public-post") { ok().build() }
 				}
+			}
 
-				security {
-					authenticationManager = repoAuthenticationManager
+			webMvcSecurity {
+				authenticationManager = repoAuthenticationManager
 
-					http {
-						authorizeRequests {
-							authorize("/public-view", permitAll)
-							authorize("/view", hasRole("USER"))
-							authorize("/public-post", permitAll)
-						}
-						httpBasic {}
-						csrf {
-							csrfTokenRepository = csrfTokenRepository()
-						}
+				http {
+					authorizeRequests {
+						authorize("/public-view", permitAll)
+						authorize("/view", hasRole("USER"))
+						authorize("/public-post", permitAll)
+					}
+					httpBasic {}
+					csrf {
+						csrfTokenRepository = csrfTokenRepository()
 					}
 				}
 			}

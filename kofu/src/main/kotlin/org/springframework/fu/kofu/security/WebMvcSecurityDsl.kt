@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
-package org.springframework.fu.kofu.webmvc
+package org.springframework.fu.kofu.security
 
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.fu.kofu.AbstractDsl
+import org.springframework.fu.kofu.ConfigurationDsl
+import org.springframework.fu.kofu.webmvc.WebMvcServerDsl
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.config.annotation.web.configuration.HttpSecurityInitializer
 import org.springframework.security.config.annotation.web.configuration.ObjectPostProcessorInitializer
@@ -38,7 +40,7 @@ import org.springframework.security.crypto.password.PasswordEncoder
  *
  * @author Fred Montariol
  */
-class SecurityDsl(private val init: SecurityDsl.() -> Unit) : AbstractDsl() {
+class WebMvcSecurityDsl(private val init: WebMvcSecurityDsl.() -> Unit) : AbstractDsl() {
 
 	var authenticationManager: AuthenticationManager? = null
 
@@ -76,9 +78,10 @@ class SecurityDsl(private val init: SecurityDsl.() -> Unit) : AbstractDsl() {
  *
  * Requires `org.springframework.boot:spring-boot-starter-security` dependency.
  *
+ * @see WebMvcSecurityDsl
  * @sample org.springframework.fu.kofu.samples.webMvcSecurity
  * @author Fred Montariol
  */
-fun WebMvcServerDsl.security(dsl: SecurityDsl.() -> Unit = {}) {
-	SecurityDsl(dsl).initialize(context)
+fun ConfigurationDsl.webMvcSecurity(dsl: WebMvcSecurityDsl.() -> Unit = {}) {
+	WebMvcSecurityDsl(dsl).initialize(context)
 }
