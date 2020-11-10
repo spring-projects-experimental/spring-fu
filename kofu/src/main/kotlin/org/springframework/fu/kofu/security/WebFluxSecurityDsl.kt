@@ -50,7 +50,7 @@ class WebFluxSecurityDsl(private val init: WebFluxSecurityDsl.() -> Unit) : Abst
 
 	var userDetailsPasswordService: ReactiveUserDetailsPasswordService? = null
 
-	var serverSecurityContextRepository: ServerSecurityContextRepository? = null
+	var securityContextRepository: ServerSecurityContextRepository? = null
 
 	private var httpConfiguration: ServerHttpSecurityDsl.() -> Unit = {}
 
@@ -70,8 +70,8 @@ class WebFluxSecurityDsl(private val init: WebFluxSecurityDsl.() -> Unit) : Abst
 		)
 		securityInitializer.initialize(context)
 		WebFluxSecurityInitializer {
-			if (serverSecurityContextRepository != null) {
-				it.securityContextRepository(serverSecurityContextRepository)
+			if (securityContextRepository != null) {
+				it.securityContextRepository(securityContextRepository)
 			} else {
 				it
 			}
