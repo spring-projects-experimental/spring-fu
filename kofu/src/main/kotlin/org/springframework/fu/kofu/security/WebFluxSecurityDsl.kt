@@ -16,6 +16,8 @@
 
 package org.springframework.fu.kofu.security
 
+import org.springframework.beans.factory.ObjectProvider
+import org.springframework.beans.factory.getBeanProvider
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.fu.kofu.AbstractDsl
 import org.springframework.fu.kofu.ConfigurationDsl
@@ -27,6 +29,7 @@ import org.springframework.security.config.web.server.invoke
 import org.springframework.security.core.userdetails.ReactiveUserDetailsPasswordService
 import org.springframework.security.core.userdetails.ReactiveUserDetailsService
 import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.security.web.server.context.ServerSecurityContextRepository
 
 /**
  * Kofu DSL for spring-security.
@@ -47,6 +50,8 @@ class WebFluxSecurityDsl(private val init: WebFluxSecurityDsl.() -> Unit) : Abst
 
 	var userDetailsPasswordService: ReactiveUserDetailsPasswordService? = null
 
+	var serverSecurityContextRepository: ServerSecurityContextRepository? = null
+
 	private var httpConfiguration: ServerHttpSecurityDsl.() -> Unit = {}
 
 	fun http(httpConfiguration: ServerHttpSecurityDsl.() -> Unit = {}) {
@@ -64,7 +69,14 @@ class WebFluxSecurityDsl(private val init: WebFluxSecurityDsl.() -> Unit) : Abst
 				userDetailsPasswordService
 		)
 		securityInitializer.initialize(context)
-		WebFluxSecurityInitializer { it.invoke(httpConfiguration) }
+		WebFluxSecurityInitializer {
+			if (serverSecurityContextRepository != null) {
+				it.securityContextRepository(serverSecurityContextRepository)
+			} else {
+				it
+			}
+					.invoke(httpConfiguration)
+		}
 				.initialize(context)
 	}
 }
@@ -81,3 +93,24 @@ class WebFluxSecurityDsl(private val init: WebFluxSecurityDsl.() -> Unit) : Abst
 fun ConfigurationDsl.webFluxSecurity(dsl: WebFluxSecurityDsl.() -> Unit = {}) {
 	WebFluxSecurityDsl(dsl).initialize(context)
 }
+
+/**
+ * Get a reference to the bean by type or type + name with the syntax
+ * `ref<Foo>()` or `ref<Foo>("foo")`. When leveraging Kotlin type inference
+ * it could be as short as `ref()` or `ref("foo")`.
+ * TODO Update when SPR-17648 will be fixed
+ * @param name the name of the bean to retrieve
+ * @param T type the bean must match, can be an interface or superclass
+ */
+inline fun <reified T : Any> WebFluxSecurityDsl.ref(name: String? = null): T = when (name) {
+	null -> context.getBean(T::class.java)
+	else -> context.getBean(name, T::class.java)
+}
+
+/**
+ * Return an provider for the specified bean, allowing for lazy on-demand retrieval
+ * of instances, including availability and uniqueness options.
+ * TODO Update when SPR-17648 will be fixed
+ * @see org.springframework.beans.factory.BeanFactory.getBeanProvider
+ */
+inline fun <reified T : Any> WebFluxSecurityDsl.provider() : ObjectProvider<T> = context.getBeanProvider()

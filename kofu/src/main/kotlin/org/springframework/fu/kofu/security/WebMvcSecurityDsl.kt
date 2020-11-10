@@ -16,10 +16,11 @@
 
 package org.springframework.fu.kofu.security
 
+import org.springframework.beans.factory.ObjectProvider
+import org.springframework.beans.factory.getBeanProvider
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.fu.kofu.AbstractDsl
 import org.springframework.fu.kofu.ConfigurationDsl
-import org.springframework.fu.kofu.webmvc.WebMvcServerDsl
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.config.annotation.web.configuration.HttpSecurityInitializer
 import org.springframework.security.config.annotation.web.configuration.ObjectPostProcessorInitializer
@@ -30,6 +31,7 @@ import org.springframework.security.config.web.servlet.invoke
 import org.springframework.security.core.userdetails.UserDetailsPasswordService
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.security.web.context.SecurityContextRepository
 
 /**
  * Kofu DSL for spring-security.
@@ -50,6 +52,8 @@ class WebMvcSecurityDsl(private val init: WebMvcSecurityDsl.() -> Unit) : Abstra
 
 	var userDetailsPasswordService: UserDetailsPasswordService? = null
 
+	var securityContextRepository: SecurityContextRepository? = null
+
 	private var httpConfiguration: HttpSecurityDsl.() -> Unit = {}
 
 	fun http(httpConfiguration: HttpSecurityDsl.() -> Unit = {}) {
@@ -67,7 +71,14 @@ class WebMvcSecurityDsl(private val init: WebMvcSecurityDsl.() -> Unit) : Abstra
 
 		securityInitializer.initialize(context)
 
-		WebSecurityInitializer { it.invoke(httpConfiguration) }
+		WebSecurityInitializer {
+			if (securityContextRepository != null) {
+				it.securityContext().securityContextRepository(securityContextRepository).and()
+			} else {
+				it
+			}
+					.invoke(httpConfiguration)
+		}
 				.initialize(context)
 		WebMvcSecurityInitializer().initialize(context)
 	}
@@ -85,3 +96,24 @@ class WebMvcSecurityDsl(private val init: WebMvcSecurityDsl.() -> Unit) : Abstra
 fun ConfigurationDsl.webMvcSecurity(dsl: WebMvcSecurityDsl.() -> Unit = {}) {
 	WebMvcSecurityDsl(dsl).initialize(context)
 }
+
+/**
+ * Get a reference to the bean by type or type + name with the syntax
+ * `ref<Foo>()` or `ref<Foo>("foo")`. When leveraging Kotlin type inference
+ * it could be as short as `ref()` or `ref("foo")`.
+ * TODO Update when SPR-17648 will be fixed
+ * @param name the name of the bean to retrieve
+ * @param T type the bean must match, can be an interface or superclass
+ */
+inline fun <reified T : Any> WebMvcSecurityDsl.ref(name: String? = null): T = when (name) {
+	null -> context.getBean(T::class.java)
+	else -> context.getBean(name, T::class.java)
+}
+
+/**
+ * Return an provider for the specified bean, allowing for lazy on-demand retrieval
+ * of instances, including availability and uniqueness options.
+ * TODO Update when SPR-17648 will be fixed
+ * @see org.springframework.beans.factory.BeanFactory.getBeanProvider
+ */
+inline fun <reified T : Any> WebMvcSecurityDsl.provider() : ObjectProvider<T> = context.getBeanProvider()
