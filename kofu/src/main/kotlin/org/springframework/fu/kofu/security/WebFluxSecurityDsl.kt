@@ -14,18 +14,19 @@
  * limitations under the License.
  */
 
-package org.springframework.fu.kofu.webflux
+package org.springframework.fu.kofu.security
 
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.fu.kofu.AbstractDsl
+import org.springframework.fu.kofu.ConfigurationDsl
 import org.springframework.security.authentication.ReactiveAuthenticationManager
 import org.springframework.security.config.annotation.web.reactive.ServerHttpSecurityInitializer
 import org.springframework.security.config.annotation.web.reactive.WebFluxSecurityInitializer
+import org.springframework.security.config.web.server.ServerHttpSecurityDsl
+import org.springframework.security.config.web.server.invoke
 import org.springframework.security.core.userdetails.ReactiveUserDetailsPasswordService
 import org.springframework.security.core.userdetails.ReactiveUserDetailsService
 import org.springframework.security.crypto.password.PasswordEncoder
-import org.springframework.security.config.web.server.ServerHttpSecurityDsl
-import org.springframework.security.config.web.server.invoke
 
 /**
  * Kofu DSL for spring-security.
@@ -36,7 +37,7 @@ import org.springframework.security.config.web.server.invoke
  *
  * @author Jonas Bark, Ivan Skachkov, Fred Montariol
  */
-class SecurityDsl(private val init: SecurityDsl.() -> Unit) : AbstractDsl() {
+class WebFluxSecurityDsl(private val init: WebFluxSecurityDsl.() -> Unit) : AbstractDsl() {
 
 	var authenticationManager: ReactiveAuthenticationManager? = null
 
@@ -73,9 +74,10 @@ class SecurityDsl(private val init: SecurityDsl.() -> Unit) : AbstractDsl() {
  *
  * Requires `org.springframework.boot:spring-boot-starter-security` dependency.
  *
+ * @see WebFluxSecurityDsl
  * @sample org.springframework.fu.kofu.samples.webFluxSecurity
  * @author Jonas Bark
  */
-fun WebFluxServerDsl.security(dsl: SecurityDsl.() -> Unit = {}) {
-	SecurityDsl(dsl).initialize(context)
+fun ConfigurationDsl.webFluxSecurity(dsl: WebFluxSecurityDsl.() -> Unit = {}) {
+	WebFluxSecurityDsl(dsl).initialize(context)
 }

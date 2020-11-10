@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package org.springframework.fu.kofu.webflux
+package org.springframework.fu.kofu.security
 
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.getBean
 import org.springframework.context.ApplicationContext
 import org.springframework.fu.kofu.*
-import org.springframework.fu.kofu.commonTests
 import org.springframework.fu.kofu.javautils.JavaKotlinUtils
+import org.springframework.fu.kofu.webflux.webFlux
 import org.springframework.security.authentication.UserDetailsRepositoryReactiveAuthenticationManager
 import org.springframework.security.config.web.server.ServerHttpSecurity
 import org.springframework.security.core.userdetails.MapReactiveUserDetailsService
@@ -34,7 +34,7 @@ import java.time.Duration
 /**
  * @author Jonas Bark, Ivan Skachkov, Fred Montariol
  */
-class SecurityDslTests {
+class WebFluxSecurityDslTests {
 
 	@Test
 	fun `Check spring-security configuration DSL with provided userDetailsService`() {
@@ -47,18 +47,18 @@ class SecurityDslTests {
 					GET("/view") { ok().build() }
 					POST("/public-post") { ok().build() }
 				}
+			}
 
-				security {
-					userDetailsService = userDetailsService()
+			webFluxSecurity {
+				userDetailsService = userDetailsService()
 
-					http {
-						authorizeExchange {
-							authorize("/public-view", permitAll)
-							authorize("/view", hasRole("USER"))
-							authorize("/public-post", permitAll)
-						}
-						httpBasic {}
+				http {
+					authorizeExchange {
+						authorize("/public-view", permitAll)
+						authorize("/view", hasRole("USER"))
+						authorize("/public-post", permitAll)
 					}
+					httpBasic {}
 				}
 			}
 		}
@@ -86,18 +86,18 @@ class SecurityDslTests {
 					GET("/view") { ok().build() }
 					POST("/public-post") { ok().build() }
 				}
+			}
 
-				security {
-					authenticationManager = repoAuthenticationManager
+			webFluxSecurity {
+				authenticationManager = repoAuthenticationManager
 
-					http {
-						authorizeExchange {
-							authorize("/public-view", permitAll)
-							authorize("/view", hasRole("USER"))
-							authorize("/public-post", permitAll)
-						}
-						httpBasic {}
+				http {
+					authorizeExchange {
+						authorize("/public-view", permitAll)
+						authorize("/view", hasRole("USER"))
+						authorize("/public-post", permitAll)
 					}
+					httpBasic {}
 				}
 			}
 		}
