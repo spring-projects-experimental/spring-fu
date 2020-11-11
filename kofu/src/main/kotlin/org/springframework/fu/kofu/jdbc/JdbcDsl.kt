@@ -25,6 +25,7 @@ class JdbcDsl(private val init: JdbcDsl.() -> Unit) : AbstractDsl() {
 
     var generateUniqueName: Boolean = true
 
+    var driverClassName: String? = null
 
     override fun initialize(context: GenericApplicationContext) {
         super.initialize(context)
@@ -40,6 +41,7 @@ class JdbcDsl(private val init: JdbcDsl.() -> Unit) : AbstractDsl() {
             username = this@JdbcDsl.username
             password = this@JdbcDsl.password
             isGenerateUniqueName = this@JdbcDsl.generateUniqueName
+            driverClassName = this@JdbcDsl.driverClassName
         }
 
         EmbeddedDataSourceConfigurationInitializer(dataSourceProperties).initialize(context)
