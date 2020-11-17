@@ -11,7 +11,19 @@ jobs:
     - get: spring-fu
       trigger: true
     - task: build
-      file: spring-fu/ci/build.yml
+      config:
+        platform: linux
+        image_resource:
+          type: registry-image
+          source:
+            repository: openjdk
+            tag: 11-jdk
+            username: ((docker-hub-username))
+            password: ((docker-hub-password))
+        inputs:
+          - name: spring-fu
+        run:
+          path: spring-fu/ci/build.sh
   - name: deploy
     public: true
     plan:
@@ -20,7 +32,19 @@ jobs:
       - build
       trigger: true
     - task: deploy
-      file: spring-fu/ci/deploy.yml
+      config:
+        platform: linux
+        image_resource:
+          type: registry-image
+          source:
+            repository: openjdk
+            tag: 11-jdk
+            username: ((docker-hub-username))
+            password: ((docker-hub-password))
+        inputs:
+          - name: spring-fu
+        run:
+          path: spring-fu/ci/deploy.sh
       params:
        ARTIFACTORY_USERNAME: ((artifactory_username))
        ARTIFACTORY_PASSWORD: ((artifactory_password))
