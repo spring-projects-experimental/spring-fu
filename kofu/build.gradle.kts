@@ -71,6 +71,7 @@ tasks.withType<Test> {
 		exclude("org/springframework/fu/kofu/redis/ReactiveRedisDslTests.class")
 		exclude("org/springframework/fu/kofu/redis/RedisDslTests.class")
 		exclude("org/springframework/fu/kofu/r2dbc/PostgreSqlR2dbcDslTests.class")
+		exclude("org/springframework/fu/kofu/jdbc/JdbcDslTests.class")
 	}
 }
 
