@@ -34,7 +34,7 @@ class R2dbcDsl(private val init: R2dbcDsl.() -> Unit) : AbstractDsl() {
         val properties = r2dbcProperties()
 
         R2dbcInitializer(properties, optionsCustomizers, transactional).initialize(context)
-        R2dbcDataInitializer().initialize(context)
+//        R2dbcDataInitializer().initialize(context)
     }
 
     fun r2dbcProperties() : R2dbcProperties =
