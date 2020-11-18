@@ -51,6 +51,11 @@ allprojects {
 		useJUnitPlatform()
 	}
 
+	tasks.withType<JavaCompile> {
+		sourceCompatibility = "8"
+		targetCompatibility = "8"
+	}
+
 	tasks.withType<KotlinCompile> {
 		kotlinOptions {
 			jvmTarget = "1.8"
