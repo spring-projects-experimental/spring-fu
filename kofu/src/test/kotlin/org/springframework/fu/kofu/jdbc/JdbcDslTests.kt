@@ -1,10 +1,9 @@
 package org.springframework.fu.kofu.jdbc
 
 import org.junit.Assert
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.getBean
-import org.springframework.boot.autoconfigure.jdbc.DataSourceType
 import org.springframework.fu.kofu.application
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
@@ -17,9 +16,7 @@ class JdbcDslTests {
     @Test
     fun `enable jdbc`() {
         val app = application {
-            jdbc {
-                datasourceType = DataSourceType.Embedded
-            }
+            jdbc(DataSourceType.Embedded)
         }
 
         with(app.run()) {
@@ -43,7 +40,7 @@ class JdbcDslTests {
         pg.start()
 
         val app = application {
-            jdbc {
+            jdbc(DataSourceType.Generic) {
                 url = "jdbc:postgresql://${pg.containerIpAddress}:${pg.firstMappedPort}/db"
                 username = "jo"
                 password = "pwd"
@@ -79,8 +76,7 @@ class JdbcDslTests {
         pg.start()
 
         val app = application {
-            jdbc {
-                datasourceType = DataSourceType.Hikari
+            jdbc(DataSourceType.Hikari) {
                 url = "jdbc:postgresql://${pg.containerIpAddress}:${pg.firstMappedPort}/db"
                 username = "jo"
                 password = "pwd"
@@ -106,8 +102,7 @@ class JdbcDslTests {
     @Test
     fun `enable jdbc H2 embedded datasource`() {
         val app = application {
-            jdbc {
-                datasourceType = DataSourceType.Embedded
+            jdbc(DataSourceType.Embedded) {
                 url = "jdbc::h2:mem:///testdb"
                 username = "jo"
                 password = "pwd"
@@ -142,7 +137,7 @@ class JdbcDslTests {
         mysql.start()
 
         val app = application {
-            jdbc {
+            jdbc(DataSourceType.Generic) {
                 url = "jdbc:mysql://${mysql.containerIpAddress}:${mysql.firstMappedPort}/db"
                 username = "jo"
                 password = "pwd"
@@ -185,8 +180,7 @@ class JdbcDslTests {
         mysql.start()
 
         val app = application {
-            jdbc {
-                datasourceType = DataSourceType.Hikari
+            jdbc(DataSourceType.Hikari) {
                 url = "jdbc:mysql://${mysql.containerIpAddress}:${mysql.firstMappedPort}/db"
                 username = "jo"
                 password = "pwd"

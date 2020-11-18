@@ -6,7 +6,7 @@ import org.springframework.context.support.GenericApplicationContext
 import org.springframework.fu.kofu.AbstractDsl
 import org.springframework.fu.kofu.ConfigurationDsl
 
-class JdbcDsl(private val init: JdbcDsl.() -> Unit) : AbstractDsl() {
+class JdbcDsl(private val datasourceType: DataSourceType, private val init: JdbcDsl.() -> Unit) : AbstractDsl() {
 
     var schema = listOf<String>()
 
@@ -23,8 +23,6 @@ class JdbcDsl(private val init: JdbcDsl.() -> Unit) : AbstractDsl() {
     var password: String? = null
 
     var generateUniqueName: Boolean = true
-
-    var datasourceType: DataSourceType = DataSourceType.Generic
 
 
     override fun initialize(context: GenericApplicationContext) {
@@ -58,6 +56,6 @@ class JdbcDsl(private val init: JdbcDsl.() -> Unit) : AbstractDsl() {
  * Configure JDBC support.
  * @see JdbcDsl
  */
-fun ConfigurationDsl.jdbc(dsl: JdbcDsl.() -> Unit = {}) {
-    JdbcDsl(dsl).initialize(context)
+fun ConfigurationDsl.jdbc(datasourceType: DataSourceType, dsl: JdbcDsl.() -> Unit = {}) {
+    JdbcDsl(datasourceType, dsl).initialize(context)
 }
