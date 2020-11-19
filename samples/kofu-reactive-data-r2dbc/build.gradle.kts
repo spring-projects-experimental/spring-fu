@@ -8,11 +8,11 @@ plugins {
 }
 
 dependencies {
-	implementation("org.springframework.fu:spring-fu-kofu:0.5.0-SNAPSHOT")
+	implementation("org.springframework.fu:spring-fu-kofu:0.4.3-SNAPSHOT")
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
 	implementation("org.springframework.boot:spring-boot-starter-mustache")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-	implementation("org.springframework:spring-r2dbc")
+	implementation("org.springframework.data:spring-data-r2dbc")
 	implementation("io.r2dbc:r2dbc-h2")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")

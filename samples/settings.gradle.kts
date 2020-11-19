@@ -12,6 +12,7 @@ include(
 		"kofu-coroutines-validation",
 		"kofu-reactive-minimal",
 		"kofu-reactive-mongodb",
+		"kofu-reactive-data-r2dbc",
 		"kofu-reactive-r2dbc",
 		"kofu-reactive-redis",
 		"kofu-reactive-cassandra",

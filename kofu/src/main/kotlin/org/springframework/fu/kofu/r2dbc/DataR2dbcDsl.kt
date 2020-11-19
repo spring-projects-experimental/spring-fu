@@ -5,26 +5,12 @@ import org.springframework.context.support.GenericApplicationContext
 import org.springframework.fu.kofu.AbstractDsl
 import org.springframework.fu.kofu.ConfigurationDsl
 
-class DataDsl(private val init: DataDsl.() -> Unit) : AbstractDsl() {
-
-    private var r2dbc: R2dbcDsl? = null
-
-    /**
-     * Configure R2DBC support for
-     * @see R2dbcDsl
-     */
-    fun r2dbc(dsl: R2dbcDsl.() -> Unit = {}) {
-        r2dbc = R2dbcDsl(dsl)
-    }
+class DataR2dbcDsl(private val init: DataR2dbcDsl.() -> Unit) : AbstractDsl() {
 
     override fun initialize(context: GenericApplicationContext) {
         super.initialize(context)
         init()
-
-        r2dbc?.let {
-            it.initialize(context)
-            R2dbcDataInitializer().initialize(context)
-        }
+        R2dbcDataInitializer().initialize(context)
     }
 }
 
@@ -32,6 +18,6 @@ class DataDsl(private val init: DataDsl.() -> Unit) : AbstractDsl() {
  * Configure R2DBC support.
  * @see R2dbcDsl
  */
-fun ConfigurationDsl.dataR2dbc(dsl: DataDsl.() -> Unit = {}) {
-    DataDsl(dsl).initialize(context)
+fun ConfigurationDsl.dataR2dbc(r2dbcDsl: DataR2dbcDsl.() -> Unit = {}) {
+    DataR2dbcDsl(r2dbcDsl).initialize(context)
 }
