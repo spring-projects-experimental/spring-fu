@@ -53,6 +53,7 @@ Here is the semi-automated release process (to be improved) with `O.x` being the
 ** Bullet point of main features
 ** Check "This is a pre-release"
 * Replace in the `build.gradle.kts` and `pom.xml` `0.x` by `0.y-SNAPSHOT`
+* `git commit -a -m "Switch to 0.y-SNAPSHOT"`
 * `git push`
 * Warn on Slack that the release process is finished and that commits are allowed on `master` again.
 * Announce the release (Slack, Twitter, potentially blog post)
