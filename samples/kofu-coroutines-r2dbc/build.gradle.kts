@@ -7,7 +7,7 @@ plugins {
 }
 
 dependencies {
-	implementation("org.springframework.fu:spring-fu-kofu:0.4.3")
+	implementation("org.springframework.fu:spring-fu-kofu:0.5.0-SNAPSHOT")
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
 	implementation("org.springframework.boot:spring-boot-starter-mustache")
 	implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
