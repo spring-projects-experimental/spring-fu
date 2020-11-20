@@ -3,6 +3,7 @@ package org.springframework.fu.kofu
 import org.springframework.beans.BeanUtils
 import org.springframework.boot.context.properties.FunctionalConfigurationPropertiesBinder
 import org.springframework.boot.context.properties.bind.Bindable
+import org.springframework.context.ApplicationContextInitializer
 import org.springframework.context.ApplicationEvent
 import org.springframework.context.support.BeanDefinitionDsl
 import org.springframework.context.support.GenericApplicationContext
@@ -37,6 +38,15 @@ open class ConfigurationDsl(private val dsl: ConfigurationDsl.() -> Unit): Abstr
 	 * @sample org.springframework.fu.kofu.samples.applicationDslWithConfiguration
 	 */
 	fun enable(configuration: AbstractDsl) {
+		configuration.initialize(context)
+	}
+
+	/**
+	 * Enable the specified ApplicationContextInitializer.
+	 * @see configuration
+	 * @sample org.springframework.context.ApplicationContextInitializer
+	 */
+	fun enable(configuration: ApplicationContextInitializer<GenericApplicationContext>) {
 		configuration.initialize(context)
 	}
 
