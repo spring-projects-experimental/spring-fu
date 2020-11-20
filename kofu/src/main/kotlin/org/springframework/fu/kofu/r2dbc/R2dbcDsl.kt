@@ -1,6 +1,5 @@
 package org.springframework.fu.kofu.r2dbc
 
-import org.springframework.boot.autoconfigure.data.r2dbc.R2dbcDataInitializer
 import org.springframework.boot.autoconfigure.r2dbc.ConnectionFactoryOptionsBuilderCustomizer
 import org.springframework.boot.autoconfigure.r2dbc.R2dbcInitializer
 import org.springframework.boot.autoconfigure.r2dbc.R2dbcProperties

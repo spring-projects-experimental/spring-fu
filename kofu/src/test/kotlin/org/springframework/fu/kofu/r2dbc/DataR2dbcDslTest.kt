@@ -39,7 +39,7 @@ class DataR2dbcDslTest {
             Assert.assertNotNull(entityTemplate)
 
             StepVerifier
-                    .create(entityTemplate.databaseClient.sql("CREATE TABLE TEST_DATA_USER (id VARCHAR(255) PRIMARY KEY, name VARCHAR(255));").then()
+                    .create(entityTemplate.databaseClient.sql("CREATE TABLE TEST_DATA_USER (id UUID PRIMARY KEY, name VARCHAR(255));").then()
                             .then(entityTemplate.insert(dataUser))
                             .then(entityTemplate.selectOne(Query.query(Criteria.where("id").isEqual(dataUser.id)), TestDataUser::class.java)))
                     .expectNext(dataUser)
@@ -76,7 +76,7 @@ class DataR2dbcDslTest {
             Assert.assertNotNull(entityTemplate)
 
             StepVerifier
-                    .create(entityTemplate.databaseClient.sql("CREATE TABLE TEST_DATA_USER (id VARCHAR(255) PRIMARY KEY, name VARCHAR(255));").then()
+                    .create(entityTemplate.databaseClient.sql("CREATE TABLE TEST_DATA_USER (id UUID PRIMARY KEY, name VARCHAR(255));").then()
                             .then(entityTemplate.insert(dataUser))
                             .then(entityTemplate.selectOne(Query.query(Criteria.where("id").isEqual(dataUser.id)), TestDataUser::class.java)))
                     .expectNext(dataUser)
@@ -84,9 +84,10 @@ class DataR2dbcDslTest {
                     .verifyComplete()
             close()
         }
+        pg.stop()
     }
 }
 
-val dataUser = TestDataUser(UUID.randomUUID().toString(), "foo")
-data class TestDataUser(@Id val id: String, val name: String): Serializable
+val dataUser = TestDataUser(UUID.randomUUID(), "foo")
+data class TestDataUser(@Id val id: UUID, val name: String): Serializable
 

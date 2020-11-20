@@ -8,7 +8,7 @@ import org.springframework.r2dbc.connection.init.ResourceDatabasePopulator;
 
 import java.util.function.Consumer;
 
-import static org.springframework.fu.jafu.r2dbc.R2dbcDsl.r2dbc;
+import static org.springframework.fu.jafu.r2dbc.DataR2dbcDsl.dataR2dbc;
 import static org.springframework.fu.jafu.webflux.WebFluxServerDsl.webFlux;
 
 public abstract class Configurations {
@@ -19,7 +19,7 @@ public abstract class Configurations {
 				initializer.setConnectionFactory(b.ref(ConnectionFactory.class));
 				initializer.setDatabasePopulator(new ResourceDatabasePopulator(new ClassPathResource("db/tables.sql")));
 				return initializer;
-			})).enable(r2dbc(dsl -> dsl.url("r2dbc:h2:mem:///testdb;DB_CLOSE_DELAY=-1")));
+			})).enable(dataR2dbc(dataR2dbcDsl -> dataR2dbcDsl.r2dbc(dsl -> dsl.url("r2dbc:h2:mem:///testdb;DB_CLOSE_DELAY=-1"))));
 
 	public static Consumer<ConfigurationDsl> webConfig = conf -> conf
 			.beans(beans -> beans.bean(UserHandler.class))
