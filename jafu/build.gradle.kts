@@ -27,6 +27,7 @@ dependencies {
 	compileOnly("org.springframework:spring-webmvc")
 	compileOnly("com.fasterxml.jackson.core:jackson-databind")
 	compileOnly("org.springframework.data:spring-data-mongodb")
+	compileOnly("org.springframework.data:spring-data-elasticsearch")
 	compileOnly("de.flapdoodle.embed:de.flapdoodle.embed.mongo")
 	compileOnly("org.springframework.data:spring-data-r2dbc")
 	compileOnly("com.datastax.oss:java-driver-core")
@@ -47,6 +48,7 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")
 	testImplementation("org.springframework.boot:spring-boot-starter-jdbc")
 	testImplementation("org.springframework.boot:spring-boot-starter-data-redis-reactive")
+	testImplementation("org.springframework.data:spring-data-elasticsearch")
 	testImplementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
 	testImplementation("org.springframework.boot:spring-boot-starter-jdbc")
 	testImplementation("com.fasterxml.jackson.module:jackson-module-kotlin")
@@ -62,6 +64,8 @@ dependencies {
 
 tasks.withType<Test> {
 	if (project.hasProperty("isCI")) {
+		exclude("org/springframework/fu/jafu/elasticsearch/ElasticSearchDslTest.class")
+		exclude("org/springframework/fu/jafu/elasticsearch/ReactiveElasticSearchDslTest.class")
 		exclude("org/springframework/fu/jafu/r2dbc/DataR2dbcDslTest.class")
 		exclude("org/springframework/fu/jafu/r2dbc/R2dbcDslTest.class")
 		exclude("org/springframework/fu/jafu/redis/ReactiveRedisDslTests.class")
