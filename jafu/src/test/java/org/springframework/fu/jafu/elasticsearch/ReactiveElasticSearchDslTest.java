@@ -33,7 +33,7 @@ class ReactiveElasticSearchDslTest {
         assertNotNull(reactiveClient);
 
         var request =  new IndexRequest("spring-data")
-                .source(Collections.singletonMap("feature", "high-level-rest-client"));
+                .source(Collections.singletonMap("feature", "reactive-client"));
         StepVerifier
                 .create(reactiveClient.index(request))
                 .assertNext(next -> assertEquals(RestStatus.CREATED, next.status()))

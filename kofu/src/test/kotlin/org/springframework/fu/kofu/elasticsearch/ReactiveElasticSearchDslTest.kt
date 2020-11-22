@@ -39,7 +39,7 @@ class ReactiveElasticSearchDslTest {
             Assertions.assertNotNull(reactiveClient)
 
             val request: IndexRequest = IndexRequest("spring-data")
-                    .source(singletonMap("feature", "high-level-rest-client"))
+                    .source(singletonMap("feature", "reactive-client"))
 
             StepVerifier
                     .create(reactiveClient.index(request))
