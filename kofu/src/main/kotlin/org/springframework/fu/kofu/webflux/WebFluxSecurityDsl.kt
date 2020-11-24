@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-package org.springframework.fu.kofu.security
+package org.springframework.fu.kofu.webflux
 
 import org.springframework.beans.factory.ObjectProvider
 import org.springframework.beans.factory.getBeanProvider
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.fu.kofu.AbstractDsl
-import org.springframework.fu.kofu.ConfigurationDsl
 import org.springframework.security.authentication.ReactiveAuthenticationManager
 import org.springframework.security.config.annotation.web.reactive.ServerHttpSecurityInitializer
 import org.springframework.security.config.annotation.web.reactive.WebFluxSecurityInitializer
@@ -90,7 +89,7 @@ class WebFluxSecurityDsl(private val init: WebFluxSecurityDsl.() -> Unit) : Abst
  * @sample org.springframework.fu.kofu.samples.webFluxSecurity
  * @author Jonas Bark
  */
-fun ConfigurationDsl.webFluxSecurity(dsl: WebFluxSecurityDsl.() -> Unit = {}) {
+fun WebFluxServerDsl.security(dsl: WebFluxSecurityDsl.() -> Unit = {}) {
 	WebFluxSecurityDsl(dsl).initialize(context)
 }
 
