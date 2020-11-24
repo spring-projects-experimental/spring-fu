@@ -3,11 +3,6 @@ plugins {
 	id("java-library")
 }
 
-tasks.compileJava {
-	sourceCompatibility = "8"
-	targetCompatibility = "8"
-}
-
 tasks.compileTestJava {
 	sourceCompatibility = "11"
 	targetCompatibility = "11"

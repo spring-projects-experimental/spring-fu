@@ -32,6 +32,32 @@ If you want to build the project, install the artifacts in the local Maven repos
 	./gradlew build
 ----
 
+=== Release process
+
+Here is the semi-automated release process (to be improved) with `O.x` being the version to release and `0.y` the new version:
+
+* Warn on Slack that the release process starts and that no commit is allowed on `master`.
+* Check https://ci.spring.io/teams/spring-fu/pipelines/spring-fu[the CI] is green.
+* Replace in the `build.gradle.kts` and `pom.xml` `0.x-SNAPSHOT` by `0.x`
+* Set `:spring-fu-version: 0.x` in `jafu/README.adoc` and `kofu/README.adoc`
+* `git commit -a -m "Release Spring Fu 0.x"`
+* `git tag v0.x`
+* `git push`
+* `git push --tags`
+* Wait the green build on https://ci.spring.io/teams/spring-fu/pipelines/spring-fu[the CI].
+* Check the JaFu documentation badge link on https://github.com/spring-projects-experimental/spring-fu/tree/master/jafu and the koFu one on https://github.com/spring-projects-experimental/spring-fu/tree/master/kofu
+* https://github.com/spring-projects-experimental/spring-fu/milestones[Close the milestone]
+* Publish a https://github.com/spring-projects-experimental/spring-fu/releases/new[new release]:
+** Tag: `v0.x`
+** Title: `v0.x`
+** Bullet point of main features
+** Check "This is a pre-release"
+* Replace in the `build.gradle.kts` and `pom.xml` `0.x` by `0.y-SNAPSHOT`
+* `git commit -a -m "Switch to 0.y-SNAPSHOT"`
+* `git push`
+* Warn on Slack that the release process is finished and that commits are allowed on `master` again.
+* Announce the release (Slack, Twitter, potentially blog post)
+
 === Contributor License Agreement
 
 If you have not previously done so, please fill out and submit the https://cla.pivotal.io/sign/spring[Contributor License Agreement].

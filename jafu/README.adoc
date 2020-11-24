@@ -1,8 +1,7 @@
-:spring-fu-version: 0.4.2
+:spring-fu-version: 0.4.3
 :jafu-javadoc-url: http://repo.spring.io/milestone/org/springframework/fu/spring-fu-jafu/{spring-fu-version}/spring-fu-jafu-{spring-fu-version}-javadoc.jar!
-:framework-javadoc-url: https://docs.spring.io/spring-framework/docs/5.3.x/javadoc-api
 
-image:https://img.shields.io/badge/Jafu%20documentation-blue.svg["Jafu documentation", link="{jafu-javadoc-url}/index.html"]
+image:https://img.shields.io/badge/JaFu%20documentation-blue.svg["JaFu documentation", link="{jafu-javadoc-url}/index.html"]
 
 == JaFu DSL for Spring Boot
 

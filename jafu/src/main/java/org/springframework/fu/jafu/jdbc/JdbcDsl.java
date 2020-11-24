@@ -63,6 +63,11 @@ public class JdbcDsl extends AbstractDsl {
         return this;
     }
 
+    public JdbcDsl driverClassName(String driverClassName){
+        dataSourceProperties.setDriverClassName(driverClassName);
+        return this;
+    }
+
     public JdbcDsl schema(String schema){
         if (dataSourceProperties.getSchema() == null) {
             List<String> schemaList = new ArrayList<>();

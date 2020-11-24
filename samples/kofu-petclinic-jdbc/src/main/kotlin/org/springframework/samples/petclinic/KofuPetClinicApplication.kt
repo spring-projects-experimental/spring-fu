@@ -1,6 +1,7 @@
 package org.springframework.samples.petclinic
 
 import org.springframework.core.io.ClassPathResource
+import org.springframework.fu.kofu.jdbc.DataSourceType
 import org.springframework.fu.kofu.jdbc.jdbc
 import org.springframework.fu.kofu.messageSource
 import org.springframework.fu.kofu.templating.thymeleaf
@@ -29,7 +30,7 @@ val app = webApplication {
             resources("/webjars/**", ClassPathResource("META-INF/resources/webjars/"))
         }
     }
-    jdbc {
+    jdbc(DataSourceType.Generic) {
         schema = listOf("classpath*:db/h2/schema.sql")
         data = listOf("classpath*:db/h2/data.sql")
     }

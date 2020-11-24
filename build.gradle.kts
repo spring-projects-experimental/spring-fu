@@ -14,7 +14,7 @@ allprojects {
 		plugin("io.spring.dependency-management")
 	}
 
-	version = "0.4.3-SNAPSHOT"
+	version = "0.5.0-SNAPSHOT"
 	group = "org.springframework.fu"
 
 	dependencyManagement {
@@ -49,6 +49,11 @@ allprojects {
 
 	tasks.withType<Test> {
 		useJUnitPlatform()
+	}
+
+	tasks.withType<JavaCompile> {
+		sourceCompatibility = "8"
+		targetCompatibility = "8"
 	}
 
 	tasks.withType<KotlinCompile> {

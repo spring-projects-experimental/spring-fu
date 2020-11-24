@@ -60,6 +60,9 @@ dependencies {
 	testImplementation("org.springframework:spring-r2dbc")
 	testRuntimeOnly("io.r2dbc:r2dbc-h2")
 	testRuntimeOnly("io.r2dbc:r2dbc-postgresql:0.8.4.RELEASE")
+	testRuntimeOnly("org.postgresql:postgresql:42.2.18")
+	testRuntimeOnly("mysql:mysql-connector-java:8.0.22")
+
 	testImplementation("org.mongodb:mongodb-driver-legacy")
 }
 
@@ -68,6 +71,7 @@ tasks.withType<Test> {
 		exclude("org/springframework/fu/kofu/redis/ReactiveRedisDslTests.class")
 		exclude("org/springframework/fu/kofu/redis/RedisDslTests.class")
 		exclude("org/springframework/fu/kofu/r2dbc/PostgreSqlR2dbcDslTests.class")
+		exclude("org/springframework/fu/kofu/jdbc/JdbcDslTests.class")
 	}
 }
 
