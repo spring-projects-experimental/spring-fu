@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-package org.springframework.fu.kofu.security
+package org.springframework.fu.kofu.webflux
 
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.getBean
 import org.springframework.context.ApplicationContext
 import org.springframework.fu.kofu.*
 import org.springframework.fu.kofu.javautils.JavaKotlinUtils
-import org.springframework.fu.kofu.webflux.webFlux
 import org.springframework.security.authentication.UserDetailsRepositoryReactiveAuthenticationManager
 import org.springframework.security.config.web.server.ServerHttpSecurity
 import org.springframework.security.core.userdetails.MapReactiveUserDetailsService
@@ -47,18 +46,18 @@ class WebFluxSecurityDslTests {
 					GET("/view") { ok().build() }
 					POST("/public-post") { ok().build() }
 				}
-			}
 
-			webFluxSecurity {
-				userDetailsService = userDetailsService()
+				security {
+					userDetailsService = userDetailsService()
 
-				http {
-					authorizeExchange {
-						authorize("/public-view", permitAll)
-						authorize("/view", hasRole("USER"))
-						authorize("/public-post", permitAll)
+					http {
+						authorizeExchange {
+							authorize("/public-view", permitAll)
+							authorize("/view", hasRole("USER"))
+							authorize("/public-post", permitAll)
+						}
+						httpBasic {}
 					}
-					httpBasic {}
 				}
 			}
 		}
@@ -86,18 +85,18 @@ class WebFluxSecurityDslTests {
 					GET("/view") { ok().build() }
 					POST("/public-post") { ok().build() }
 				}
-			}
 
-			webFluxSecurity {
-				authenticationManager = repoAuthenticationManager
+				security {
+					authenticationManager = repoAuthenticationManager
 
-				http {
-					authorizeExchange {
-						authorize("/public-view", permitAll)
-						authorize("/view", hasRole("USER"))
-						authorize("/public-post", permitAll)
+					http {
+						authorizeExchange {
+							authorize("/public-view", permitAll)
+							authorize("/view", hasRole("USER"))
+							authorize("/public-post", permitAll)
+						}
+						httpBasic {}
 					}
-					httpBasic {}
 				}
 			}
 		}

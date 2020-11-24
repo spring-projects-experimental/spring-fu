@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-package org.springframework.fu.kofu.security
+package org.springframework.fu.kofu.webmvc
 
 import org.springframework.beans.factory.ObjectProvider
 import org.springframework.beans.factory.getBeanProvider
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.fu.kofu.AbstractDsl
-import org.springframework.fu.kofu.ConfigurationDsl
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.config.annotation.web.configuration.HttpSecurityInitializer
 import org.springframework.security.config.annotation.web.configuration.ObjectPostProcessorInitializer
@@ -93,7 +92,7 @@ class WebMvcSecurityDsl(private val init: WebMvcSecurityDsl.() -> Unit) : Abstra
  * @sample org.springframework.fu.kofu.samples.webMvcSecurity
  * @author Fred Montariol
  */
-fun ConfigurationDsl.webMvcSecurity(dsl: WebMvcSecurityDsl.() -> Unit = {}) {
+fun WebMvcServerDsl.security(dsl: WebMvcSecurityDsl.() -> Unit = {}) {
 	WebMvcSecurityDsl(dsl).initialize(context)
 }
 
