@@ -1,6 +1,7 @@
 package com.sample;
 
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -37,10 +38,11 @@ public class IntegrationTests {
 
 	@Test
 	public void requestHttpApiEndpointForGettingOneSpecificUser() {
-		client.get().uri("/api/user/blozel").exchange()
+		client.get().uri("/api/user/bclozel").exchange()
 				.expectStatus().is2xxSuccessful()
 				.expectHeader().contentType(MediaType.APPLICATION_JSON_VALUE)
-				.expectBody(User.class);
+				.expectBody(User.class)
+				.isEqualTo(new User("bclozel", "Brian", "Clozel"));
 	}
 
 	@AfterAll

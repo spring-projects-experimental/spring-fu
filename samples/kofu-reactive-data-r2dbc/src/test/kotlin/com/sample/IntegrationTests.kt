@@ -39,10 +39,11 @@ class IntegrationTests {
 
 	@Test
 	fun `Request HTTP API endpoint for getting one specified user`() {
-		client.get().uri("/api/user/blozel").exchange()
+		client.get().uri("/api/user/bclozel").exchange()
 				.expectStatus().is2xxSuccessful
 				.expectHeader().contentType(MediaType.APPLICATION_JSON_VALUE)
 				.expectBody<User>()
+				.isEqualTo(User("bclozel", "Brian", "Clozel"))
 	}
 
 	@Test
