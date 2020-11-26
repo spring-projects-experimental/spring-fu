@@ -43,6 +43,7 @@ class IntegrationTests {
 				.expectStatus().is2xxSuccessful
 				.expectHeader().contentType(MediaType.APPLICATION_JSON_VALUE)
 				.expectBody<User>()
+				.isEqualTo(User("bclozel", "Brian", "Clozel"))
 	}
 
 	@Test

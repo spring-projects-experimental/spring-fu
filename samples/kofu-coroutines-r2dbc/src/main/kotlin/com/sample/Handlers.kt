@@ -1,11 +1,8 @@
 package com.sample
 
 import org.springframework.http.MediaType
-import org.springframework.web.reactive.function.server.ServerRequest
+import org.springframework.web.reactive.function.server.*
 import org.springframework.web.reactive.function.server.ServerResponse.ok
-import org.springframework.web.reactive.function.server.bodyAndAwait
-import org.springframework.web.reactive.function.server.bodyValueAndAwait
-import org.springframework.web.reactive.function.server.renderAndAwait
 
 @Suppress("UNUSED_PARAMETER")
 class UserHandler(
@@ -16,8 +13,12 @@ class UserHandler(
 		ok().contentType(MediaType.APPLICATION_JSON).bodyAndAwait<User>(repository.findAll())
 
 	suspend fun userApi(request: ServerRequest) =
-		ok().contentType(MediaType.APPLICATION_JSON)
-				.bodyValueAndAwait(repository.findOne(request.pathVariable("login")))
+			ok().contentType(MediaType.APPLICATION_JSON).run {
+				repository.findOne(request.pathVariable("login"))
+						?.let { bodyValueAndAwait(it) }
+						?:buildAndAwait()
+			}
+
 
 	suspend fun listView(request: ServerRequest) =
 		ok().renderAndAwait("users", mapOf("users" to repository.findAll()))

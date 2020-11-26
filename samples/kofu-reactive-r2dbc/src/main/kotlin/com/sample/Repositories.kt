@@ -1,28 +1,50 @@
 package com.sample
 
-import org.springframework.data.r2dbc.core.R2dbcEntityOperations
-import org.springframework.data.relational.core.query.Criteria
-import org.springframework.data.relational.core.query.Query
+import org.springframework.r2dbc.core.DatabaseClient
+import reactor.core.publisher.Mono
 
-class UserRepository(private val operations: R2dbcEntityOperations) {
+class UserRepository(private val client: DatabaseClient) {
 
-	fun count() =
-			operations.count(Query.empty(), User::class.java)
-
-
-	fun findAll() =
-			operations.select(Query.empty(), User::class.java)
+    fun count() =
+            client.sql("SELECT COUNT(login) FROM users")
+                    .map { row -> (row.get(0) as Long).toInt() }
+                    .first()
 
 
-	fun findOne(id: String?) =
-			operations.select(User::class.java).matching(Query.query(Criteria.where("login").`is`(id!!))).one()
+    fun findAll() =
+            client.sql("SELECT login, firstname, lastname from users")
+                    .map { row ->
+                        User(
+                                login = row.get("login", String::class.java)!!,
+                                firstname = row.get("firstname", String::class.java)!!,
+                                lastname = row.get("lastname", String::class.java)!!
+                        )
+                    }
+                    .all()
+
+    fun findOne(id: String?) =
+            id?.let {
+            client.sql("SELECT login, firstname, lastname from users where login = :id")
+                    .bind("id", it)
+                    .map { row ->
+                        User(
+                                login = row.get("login", String::class.java)!!,
+                                firstname = row.get("firstname", String::class.java)!!,
+                                lastname = row.get("lastname", String::class.java)!!
+                        )
+                    }
+                    .first()
+            } ?: Mono.empty()
 
 
-	fun deleteAll() =
-		operations.delete(User::class.java).all().then()
+    fun deleteAll() =
+            client.sql("DELETE FROM users").then()
 
 
-	fun insert(user: User) =
-			operations.insert(User::class.java).using(user)
+    fun insert(user: User) =
+            client.sql("INSERT INTO users(login, firstname, lastname) values(:login, :firstname, :lastname)")
+                    .bind("login", user.login)
+                    .bind("firstname", user.firstname)
+                    .bind("lastname", user.lastname)
 
 }

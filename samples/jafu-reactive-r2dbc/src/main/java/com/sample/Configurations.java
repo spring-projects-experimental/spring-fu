@@ -1,13 +1,12 @@
 package com.sample;
 
-import java.util.function.Consumer;
-
 import io.r2dbc.spi.ConnectionFactory;
-
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.fu.jafu.ConfigurationDsl;
 import org.springframework.r2dbc.connection.init.ConnectionFactoryInitializer;
 import org.springframework.r2dbc.connection.init.ResourceDatabasePopulator;
+
+import java.util.function.Consumer;
 
 import static org.springframework.fu.jafu.r2dbc.R2dbcDsl.r2dbc;
 import static org.springframework.fu.jafu.webflux.WebFluxServerDsl.webFlux;
@@ -32,7 +31,11 @@ public abstract class Configurations {
 					server.port(8080);
 				}
 				server
-						.router(r -> r.GET("/", conf.ref(UserHandler.class)::listApi))
+						.router(r -> {
+							r.GET("/", conf.ref(UserHandler.class)::listApi);
+							r.GET("/api/user", conf.ref(UserHandler.class)::listApi);
+							r.GET("/api/user/{login}", conf.ref(UserHandler.class)::userApi);
+						})
 						.codecs(codecs -> codecs.string().jackson());
 			}));
 }

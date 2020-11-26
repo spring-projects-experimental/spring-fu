@@ -1,39 +1,54 @@
 package com.sample;
 
+import org.springframework.r2dbc.core.DatabaseClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import org.springframework.data.r2dbc.core.R2dbcEntityOperations;
-
-import static org.springframework.data.relational.core.query.Criteria.where;
-import static org.springframework.data.relational.core.query.Query.empty;
-import static org.springframework.data.relational.core.query.Query.query;
 
 public class UserRepository {
 
-	private final R2dbcEntityOperations operations;
+	private final DatabaseClient client;
 
-	public UserRepository(R2dbcEntityOperations operations) {
-		this.operations = operations;
+	public UserRepository(DatabaseClient client) {
+		this.client = client;
 	}
 
 	public Mono<Long> count() {
-		return operations.count(empty(), User.class);
+		return client.sql("SELECT count(login) from users")
+				.map(row -> row.get(0, Long.class))
+				.first();
 	}
 
 	public Flux<User> findAll() {
-		return operations.select(empty(), User.class);
+		return client.sql("SELECT login, firstname, lastname from users")
+				.map(row ->
+						new User(
+								row.get("login", String.class),
+								row.get("firstname", String.class),
+								row.get("lastname", String.class)))
+				.all();
 	}
 
 	public Mono<User> findOne(String id) {
-		return operations.select(User.class).matching(query(where("login").is(id))).one();
+		return client.sql("SELECT login, firstname, lastname from users where login = :id")
+				.bind("id", id)
+				.map(row ->
+						new User(
+								row.get("login", String.class),
+								row.get("firstname", String.class),
+								row.get("lastname", String.class)))
+				.first();
 	}
 
 	public Mono<Void> deleteAll() {
-		return operations.delete(User.class).all().then();
+		return client.sql("DELETE FROM users").then();
 	}
 
-	public Mono<User> insert(User user) {
-		return operations.insert(User.class).using(user);
+	public Mono<Void> insert(User user) {
+		return client.sql("INSERT INTO users(login, firstname, lastname) values(:login, :firstname, :lastname)")
+				.bind("login", user.getLogin())
+				.bind("firstname", user.getFirstname())
+				.bind("lastname", user.getLastname())
+				.then();
 	}
 }

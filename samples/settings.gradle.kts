@@ -3,6 +3,7 @@ rootProject.name = "spring-fu-samples"
 include(
 		"jafu-reactive-minimal",
 		"jafu-reactive-mongodb",
+		"jafu-reactive-data-r2dbc",
 		"jafu-reactive-r2dbc",
 		"jafu-servlet-minimal",
 		"jafu-servlet-cassandra",
@@ -12,6 +13,7 @@ include(
 		"kofu-coroutines-validation",
 		"kofu-reactive-minimal",
 		"kofu-reactive-mongodb",
+		"kofu-reactive-data-r2dbc",
 		"kofu-reactive-r2dbc",
 		"kofu-reactive-redis",
 		"kofu-reactive-cassandra",
