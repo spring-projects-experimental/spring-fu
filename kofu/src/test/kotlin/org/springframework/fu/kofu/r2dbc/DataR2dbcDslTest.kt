@@ -50,7 +50,7 @@ class DataR2dbcDslTest {
     }
 
     @Test
-    fun `enable data with postgres r2dbc`(@TempDir tempDir: Path) {
+    fun `enable data with postgres r2dbc`() {
         val pg = object : GenericContainer<Nothing>("postgres:13") {
             init {
                 withExposedPorts(5432)

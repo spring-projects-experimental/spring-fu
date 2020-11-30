@@ -151,6 +151,19 @@ publishing {
 			})
 		}
 
+		create<MavenPublication>("kofu-reactive-data-r2dbc") {
+			groupId = "org.springframework.fu"
+			artifactId = "spring-fu-samples-kofu-reactive-data-r2dbc"
+			artifact(task<Zip>("kofuReactiveDataR2dbcSampleZip") {
+				from("samples/kofu-reactive-data-r2dbc") {
+					exclude("build", ".gradle", ".idea", "out", "*.iml")
+				}
+				destinationDirectory.set(file("$buildDir/dist"))
+				into("kofu-reactive-data-r2dbc")
+				setExecutablePermissions()
+			})
+		}
+
 		create<MavenPublication>("kofu-reactive-redis") {
 			groupId = "org.springframework.fu"
 			artifactId = "spring-fu-samples-kofu-reactive-redis"
