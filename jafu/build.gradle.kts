@@ -62,8 +62,8 @@ dependencies {
 
 tasks.withType<Test> {
 	if (project.hasProperty("isCI")) {
-		exclude("org/springframework/fu/jafu/r2dbc/DataR2dbcDslTest.java")
-		exclude("org/springframework/fu/jafu/r2dbc/R2dbcDslTest.java")
+		exclude("org/springframework/fu/jafu/r2dbc/DataR2dbcDslTest.class")
+		exclude("org/springframework/fu/jafu/r2dbc/R2dbcDslTest.class")
 		exclude("org/springframework/fu/jafu/redis/ReactiveRedisDslTests.class")
 		exclude("org/springframework/fu/jafu/redis/RedisDslTests.class")
 	}

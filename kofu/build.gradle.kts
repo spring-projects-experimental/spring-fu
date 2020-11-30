@@ -70,7 +70,7 @@ tasks.withType<Test> {
 	if (project.hasProperty("isCI")) {
 		exclude("org/springframework/fu/kofu/redis/ReactiveRedisDslTests.class")
 		exclude("org/springframework/fu/kofu/redis/RedisDslTests.class")
-		exclude("org/springframework/fu/kofu/r2dbc/DataR2dbcDslTest.kt")
+		exclude("org/springframework/fu/kofu/r2dbc/DataR2dbcDslTest.kt.class")
 		exclude("org/springframework/fu/kofu/r2dbc/PostgreSqlR2dbcDslTests.class")
 		exclude("org/springframework/fu/kofu/jdbc/JdbcDslTests.class")
 	}
