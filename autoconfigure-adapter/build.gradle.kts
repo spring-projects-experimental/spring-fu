@@ -17,6 +17,7 @@ dependencies {
 	compileOnly("org.mongodb:mongodb-driver-legacy")
 	compileOnly("org.mongodb:mongodb-driver-reactivestreams")
 	compileOnly("org.springframework.data:spring-data-cassandra")
+	compileOnly("org.springframework.data:spring-data-elasticsearch")
 	compileOnly("org.springframework.data:spring-data-redis")
 	compileOnly("redis.clients:jedis")
 	compileOnly("io.lettuce:lettuce-core")

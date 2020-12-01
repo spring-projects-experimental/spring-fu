@@ -25,6 +25,7 @@ dependencies {
 	compileOnly("org.mongodb:mongodb-driver-reactivestreams")
 	compileOnly("org.springframework.data:spring-data-cassandra")
 	compileOnly("org.springframework.data:spring-data-redis")
+	compileOnly("org.springframework.data:spring-data-elasticsearch")
 	compileOnly("com.fasterxml.jackson.core:jackson-databind")
 	compileOnly("com.samskivert:jmustache")
 	compileOnly("io.projectreactor.kotlin:reactor-kotlin-extensions")
@@ -58,6 +59,7 @@ dependencies {
 	testImplementation("redis.clients:jedis")
 	testImplementation("io.lettuce:lettuce-core")
 	testImplementation("org.springframework:spring-r2dbc")
+	testImplementation("org.springframework.data:spring-data-elasticsearch")
 	testRuntimeOnly("io.r2dbc:r2dbc-h2")
 	testRuntimeOnly("io.r2dbc:r2dbc-postgresql:0.8.4.RELEASE")
 	testRuntimeOnly("org.postgresql:postgresql:42.2.18")
@@ -68,6 +70,8 @@ dependencies {
 
 tasks.withType<Test> {
 	if (project.hasProperty("isCI")) {
+		exclude("org/springframework/fu/kofu/elasticsearch/ElasticSearchDslTest.class")
+		exclude("org/springframework/fu/kofu/elasticsearch/ReactiveElasticSearchDslTest.class")
 		exclude("org/springframework/fu/kofu/redis/ReactiveRedisDslTests.class")
 		exclude("org/springframework/fu/kofu/redis/RedisDslTests.class")
 		exclude("org/springframework/fu/kofu/r2dbc/DataR2dbcDslTest.class")
