@@ -6,7 +6,7 @@ import org.springframework.context.support.GenericApplicationContext
 import org.springframework.fu.kofu.AbstractDsl
 import org.springframework.fu.kofu.ConfigurationDsl
 
-class ProjectInfoDsl(private val init: ProjectInfoDsl.() -> Unit, private val properties: ProjectInfoProperties) : AbstractDsl() {
+class ProjectInfoDsl(private val properties: ProjectInfoProperties, private val init: ProjectInfoDsl.() -> Unit) : AbstractDsl() {
 
     override fun initialize(context: GenericApplicationContext) {
         super.initialize(context)
@@ -20,5 +20,5 @@ class ProjectInfoDsl(private val init: ProjectInfoDsl.() -> Unit, private val pr
  * @see ProjectInfoDsl
  */
 fun ConfigurationDsl.projectInfo(projectInfoDsl: ProjectInfoDsl.() -> Unit = {}) {
-    ProjectInfoDsl(projectInfoDsl, configurationProperties(prefix = "spring.info")).initialize(context)
+    ProjectInfoDsl(configurationProperties(prefix = "spring.info"), projectInfoDsl).initialize(context)
 }
