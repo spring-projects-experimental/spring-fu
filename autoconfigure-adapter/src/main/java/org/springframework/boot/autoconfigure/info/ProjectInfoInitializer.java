@@ -30,10 +30,12 @@ public class ProjectInfoInitializer implements ApplicationContextInitializer<Gen
 
   private final ProjectInfoProperties properties;
 
-	public ProjectInfoInitializer(ProjectInfoProperties properties) { this.properties = properties;	}
+  public ProjectInfoInitializer(ProjectInfoProperties properties) {
+    this.properties = properties;
+  }
 
-	@Override
-	public void initialize(GenericApplicationContext context) {
+  @Override
+  public void initialize(GenericApplicationContext context) {
     Supplier<ProjectInfoAutoConfiguration> projectInfoAutoConfigurationSupplier = new Supplier<ProjectInfoAutoConfiguration>() {
 
       private ProjectInfoAutoConfiguration configuration;
@@ -47,22 +49,22 @@ public class ProjectInfoInitializer implements ApplicationContextInitializer<Gen
       }
     };
 
-		context.registerBean(BuildProperties.class, () -> {
-		  try {
-          return projectInfoAutoConfigurationSupplier.get().buildProperties();
+    context.registerBean(BuildProperties.class, () -> {
+      try {
+        return projectInfoAutoConfigurationSupplier.get().buildProperties();
       } catch (Exception e) {
         e.printStackTrace();
       }
       return null;
     });
 
-		context.registerBean(GitProperties.class, () -> {
+    context.registerBean(GitProperties.class, () -> {
       try {
-  		  return projectInfoAutoConfigurationSupplier.get().gitProperties();
+        return projectInfoAutoConfigurationSupplier.get().gitProperties();
       } catch (Exception e) {
         e.printStackTrace();
       }
       return null;
     });
-	}
+  }
 }
