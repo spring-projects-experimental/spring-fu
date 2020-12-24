@@ -11,6 +11,7 @@ dependencies {
 	compileOnly("javax.servlet:javax.servlet-api")
 	compileOnly("org.springframework:spring-webflux")
 	compileOnly("org.springframework:spring-jdbc")
+	compileOnly("org.jooq:jooq")
 	compileOnly("de.flapdoodle.embed:de.flapdoodle.embed.mongo")
 	compileOnly("org.springframework.data:spring-data-mongodb")
 	compileOnly("org.springframework.data:spring-data-r2dbc")
