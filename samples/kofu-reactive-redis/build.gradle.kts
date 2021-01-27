@@ -12,7 +12,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-mustache")
 	implementation("org.springframework.boot:spring-boot-starter-data-redis")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-	implementation("org.testcontainers:testcontainers:1.14.3")
+	implementation("org.testcontainers:testcontainers:1.15.1")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 }

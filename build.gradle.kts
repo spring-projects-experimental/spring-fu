@@ -21,7 +21,7 @@ allprojects {
 		val bootVersion: String by project
 		imports {
 			mavenBom("org.springframework.boot:spring-boot-dependencies:$bootVersion")
-			mavenBom("org.testcontainers:testcontainers-bom:1.14.3")
+			mavenBom("org.testcontainers:testcontainers-bom:1.15.1")
 		}
 	}
 
