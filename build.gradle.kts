@@ -1,10 +1,10 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-	id("org.jetbrains.kotlin.jvm") version "1.4.10" apply false
+	id("org.jetbrains.kotlin.jvm") version "1.4.31" apply false
 	id("org.springframework.boot") apply false
-	id("org.jetbrains.dokka") version "1.4.10" apply false
-	id("io.spring.dependency-management") version "1.0.10.RELEASE"
+	id("org.jetbrains.dokka") version "1.4.20" apply false
+	id("io.spring.dependency-management") version "1.0.11.RELEASE"
 	id("maven-publish")
 }
 
@@ -21,7 +21,7 @@ allprojects {
 		val bootVersion: String by project
 		imports {
 			mavenBom("org.springframework.boot:spring-boot-dependencies:$bootVersion")
-			mavenBom("org.testcontainers:testcontainers-bom:1.15.1")
+			mavenBom("org.testcontainers:testcontainers-bom:1.15.2")
 		}
 	}
 
