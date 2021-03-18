@@ -85,11 +85,13 @@ class JacksonDslTests {
 		}
 		with(app.run()) {
 			val client = getBean<WebClient.Builder>().build()
-			val response = client.get().uri("http://127.0.0.1:$localServerPort/user").exchange()
+			val response = client.get().uri("http://127.0.0.1:$localServerPort/user")
+					.retrieve()
+					.toBodilessEntity()
 			response.test()
 					.consumeNextWith {
-						assertEquals(HttpStatus.OK, it.statusCode())
-						assertEquals(APPLICATION_JSON, it.headers().contentType().get())
+						assertEquals(HttpStatus.OK, it.statusCode)
+						assertEquals(APPLICATION_JSON, it.headers.contentType)
 					}
 					.verifyComplete()
 			val mappers = getBeanProvider<ObjectMapper>().toList()

@@ -69,7 +69,7 @@ class JacksonDslTests {
 		val app = webApplication {
 			webMvc {
 				port = 0
-				converters() {
+				converters {
 					jackson()
 				}
 				router {
@@ -86,11 +86,13 @@ class JacksonDslTests {
 		}
 		with(app.run()) {
 			val client = getBean<WebClient.Builder>().build()
-			val response = client.get().uri("http://127.0.0.1:$localServerPort/user").exchange()
+			val response = client.get().uri("http://127.0.0.1:$localServerPort/user")
+					.retrieve()
+					.toBodilessEntity()
 			response.test()
 					.consumeNextWith {
-						assertEquals(HttpStatus.OK, it.statusCode())
-						assertEquals(MediaType.APPLICATION_JSON_VALUE, it.headers().contentType().get().toString())
+						assertEquals(HttpStatus.OK, it.statusCode)
+						assertEquals(APPLICATION_JSON_VALUE, it.headers.contentType.toString())
 					}
 					.verifyComplete()
 			val mappers = getBeanProvider<ObjectMapper>().toList()
