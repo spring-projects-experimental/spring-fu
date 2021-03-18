@@ -5,7 +5,7 @@ import org.jooq.meta.jaxb.Logging.INFO
 plugins {
 	id("org.jetbrains.kotlin.jvm") version "1.4.31"
 	id("io.spring.dependency-management") version "1.0.11.RELEASE"
-	id("org.springframework.boot") version "2.4.3"
+	id("org.springframework.boot") version "2.4.4"
 	id("nu.studer.jooq") version "5.0.1"
 }
 
