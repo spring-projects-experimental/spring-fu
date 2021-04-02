@@ -3,7 +3,7 @@ resources:
     type: git
     source:
       uri: https://github.com/spring-projects/spring-fu
-      branch: master
+      branch: main
 jobs:
   - name: build
     public: true

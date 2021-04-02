@@ -7,7 +7,7 @@ image:https://img.shields.io/badge/KoFu%20documentation-blue.svg["KoFu documenta
 
 KoFu (for **Ko**tlin and **Fu**nctional) is an alternative way of configuring explicitly your Spring Boot application,
 different from regular auto-configuration, using a Kotlin DSL. It is based on Spring Boot infrastructure, but
-https://github.com/spring-projects/spring-fu/tree/master/autoconfigure-adapter[used via functional bean definitions]
+https://github.com/spring-projects/spring-fu/tree/main/autoconfigure-adapter[used via functional bean definitions]
 instead of JavaConfig.
 
 It leverages other Spring Kotlin DSLs available in Spring like:
@@ -92,7 +92,7 @@ fun main() {
 }
 ```
 
-See also sample projects https://github.com/spring-projects/spring-fu/tree/master/samples[here].
+See also sample projects https://github.com/spring-projects/spring-fu/tree/main/samples[here].
 
 You can now also benefits of
 https://docs.spring.io/spring/docs/5.2.x/spring-framework-reference/[Spring Framework reference documentation]
