@@ -6,11 +6,6 @@ Spring Boot explicitly with code in a declarative way with great  discoverabilit
 It provides fast startup (40% faster than regular auto-configuration on a minimal Spring MVC app), low memory consumption
 and is a good fit with https://www.graalvm.org/docs/reference-manual/native-image/[GraalVM native] thanks to its (almost) reflection-less approach.
 
-== Native images
-
-If you are interested in running Spring applications (including JaFu and KoFu ones) as GraalVM native images,
-see the https://github.com/spring-projects-experimental/spring-graalvm-native[spring-graalvm-native] project and its https://github.com/spring-projects-experimental/spring-graalvm-native/tree/master/spring-graalvm-native-samples/jafu[jafu] and https://github.com/spring-projects-experimental/spring-graalvm-native/tree/master/spring-graalvm-native-samples/jafu-webmvc[jafu-webmvc] samples.
-
 == Status
 
 Spring Fu is not intended to be used in production yet, but rather to incubate and get feedback and contributions
