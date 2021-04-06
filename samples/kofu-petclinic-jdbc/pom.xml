@@ -34,7 +34,7 @@
         <dependency>
             <groupId>org.springframework.fu</groupId>
             <artifactId>spring-fu-kofu</artifactId>
-            <version>0.4.4-SNAPSHOT</version>
+            <version>0.4.4</version>
         </dependency>
 
         <!-- Spring and Spring Boot dependencies -->
