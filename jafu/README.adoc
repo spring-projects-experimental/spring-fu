@@ -18,7 +18,7 @@ Be aware that a few static imports will be needed.
 === Getting started
 
  * Go to https://start.spring.io/[start.spring.io]
- * Select the latest Spring Boot `2.4.0` milestone
+ * Select the latest Spring Boot `2.4.x` version
  * Add the Spring milestone repository `https://repo.spring.io/milestone`
  * Select the "Web" starter
  * Add the `org.springframework.fu:spring-fu-jafu:{spring-fu-version}` dependency
