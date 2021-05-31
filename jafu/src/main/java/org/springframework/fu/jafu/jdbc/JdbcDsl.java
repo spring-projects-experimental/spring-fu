@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-import org.springframework.boot.autoconfigure.jdbc.DataSourceInitializerInvokerInitializer;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfigurationInitializer;
 import org.springframework.boot.autoconfigure.jdbc.EmbeddedDataSourceConfigurationInitializer;
@@ -104,6 +103,5 @@ public class JdbcDsl extends AbstractDsl {
         new EmbeddedDataSourceConfigurationInitializer(dataSourceProperties).initialize(context);
         new JdbcTemplateConfigurationInitializer(jdbcProperties).initialize(context);
         new DataSourceTransactionManagerAutoConfigurationInitializer().initialize(context);
-        new DataSourceInitializerInvokerInitializer(dataSourceProperties).initialize(context);
     }
 }

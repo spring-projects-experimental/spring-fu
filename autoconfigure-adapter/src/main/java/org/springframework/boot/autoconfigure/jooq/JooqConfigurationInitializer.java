@@ -1,7 +1,6 @@
 package org.springframework.boot.autoconfigure.jooq;
 
 import org.jooq.*;
-import org.jooq.conf.Settings;
 import org.jooq.impl.DataSourceConnectionProvider;
 import org.jooq.impl.DefaultConfiguration;
 import org.jooq.impl.DefaultExecuteListenerProvider;
@@ -34,16 +33,8 @@ public class JooqConfigurationInitializer implements ApplicationContextInitializ
                         jooqProperties,
                         context.getBean(ConnectionProvider.class),
                         context.getBean(DataSource.class),
-                        context.getBeanProvider(TransactionProvider.class),
-                        context.getBeanProvider(RecordMapperProvider.class),
-                        context.getBeanProvider(RecordUnmapperProvider.class),
-                        context.getBeanProvider(Settings.class),
-                        context.getBeanProvider(RecordListenerProvider.class),
                         context.getBeanProvider(ExecuteListenerProvider.class),
-                        context.getBeanProvider(VisitListenerProvider.class),
-                        context.getBeanProvider(TransactionListenerProvider.class),
-                        context.getBeanProvider(ExecutorProvider.class)
-
+                        context.getBeanProvider(DefaultConfigurationCustomizer.class)
                 )
         );
 

@@ -50,7 +50,6 @@ class JdbcDsl(private val datasourceType: DataSourceType, private val init: Jdbc
         }
         JdbcTemplateConfigurationInitializer(jdbcProperties).initialize(context)
         DataSourceTransactionManagerAutoConfigurationInitializer().initialize(context)
-        DataSourceInitializerInvokerInitializer(dataSourceProperties).initialize(context)
     }
 }
 
