@@ -8,6 +8,7 @@ import org.springframework.context.ApplicationEvent
 import org.springframework.context.support.BeanDefinitionDsl
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.registerBean
+import java.util.*
 
 /**
  * Kofu DSL for a configuration that can be imported in an application or used in tests.
@@ -58,7 +59,7 @@ open class ConfigurationDsl(private val dsl: ConfigurationDsl.() -> Unit): Abstr
 	 */
 	inline fun <reified T : Any> configurationProperties(properties: T? = null, prefix: String = ""): T {
 		val bindedProperties = properties ?: FunctionalConfigurationPropertiesBinder(context).bind(prefix, Bindable.of(T::class.java)).orElseGet { BeanUtils.instantiateClass(T::class.java) }
-		context.registerBean<T>("${T::class.java.simpleName.toLowerCase()}ConfigurationProperties") {
+		context.registerBean<T>("${T::class.java.simpleName.lowercase(Locale.getDefault())}ConfigurationProperties") {
 			bindedProperties
 		}
 		return bindedProperties

@@ -44,6 +44,8 @@ class JdbcDslTests {
                 url = "jdbc:postgresql://${pg.containerIpAddress}:${pg.firstMappedPort}/db"
                 username = "jo"
                 password = "pwd"
+                schema = listOf("qsfqf")
+                schema = listOf("qsfqf")
             }
             beans {
                 bean<JdbcRepository>()

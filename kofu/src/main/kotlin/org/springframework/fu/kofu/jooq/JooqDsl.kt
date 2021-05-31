@@ -60,7 +60,6 @@ class JooqDsl(private val datasourceType: DataSourceType, private val init: Jooq
         JdbcTemplateConfigurationInitializer(jdbcProperties).initialize(context)
         JooqConfigurationInitializer(jooqProperties).initialize(context)
         DataSourceTransactionManagerAutoConfigurationInitializer().initialize(context)
-        DataSourceInitializerInvokerInitializer(dataSourceProperties).initialize(context)
     }
 }
 

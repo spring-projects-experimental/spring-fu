@@ -103,7 +103,7 @@ public class ServletWebServerInitializer implements ApplicationContextInitialize
 			@Override
 			public WebMvcAutoConfigurationAdapter get() {
 				if (configuration == null) {
-					configuration = new WebMvcAutoConfigurationAdapter(webProperties, webMvcProperties, context, context.getBeanProvider(HttpMessageConverters.class), context.getBeanProvider(ResourceHandlerRegistrationCustomizer.class), context.getBeanProvider(DispatcherServletPath.class), context.getBeanProvider(ResolvableType.forClass(ServletRegistrationBean.class)));
+					configuration = new WebMvcAutoConfigurationAdapter(resourceProperties, webProperties, webMvcProperties, context, context.getBeanProvider(HttpMessageConverters.class), context.getBeanProvider(ResourceHandlerRegistrationCustomizer.class), context.getBeanProvider(DispatcherServletPath.class), context.getBeanProvider(ResolvableType.forClass(ServletRegistrationBean.class)));
 					return configuration;
 				}
 				return configuration;

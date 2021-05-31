@@ -19,9 +19,9 @@ package org.springframework.boot.autoconfigure.mongo.embedded;
 import java.io.IOException;
 
 import de.flapdoodle.embed.mongo.MongodExecutable;
-import de.flapdoodle.embed.mongo.config.IMongodConfig;
-import de.flapdoodle.embed.process.config.IRuntimeConfig;
 
+import de.flapdoodle.embed.mongo.config.MongodConfig;
+import de.flapdoodle.embed.process.config.RuntimeConfig;
 import org.springframework.boot.autoconfigure.mongo.MongoProperties;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
@@ -39,8 +39,9 @@ public class EmbeddedMongoInitializer implements ApplicationContextInitializer<G
 
 	@Override
 	public void initialize(GenericApplicationContext context) {
-		EmbeddedMongoAutoConfiguration configuration = new EmbeddedMongoAutoConfiguration(this.properties, this.embeddedProperties);
-		context.registerBean(IMongodConfig.class, () -> {
+		// , this.embeddedProperties
+		EmbeddedMongoAutoConfiguration configuration = new EmbeddedMongoAutoConfiguration(this.properties);
+		context.registerBean(MongodConfig.class, () -> {
 			try {
 				return configuration.embeddedMongoConfiguration(this.embeddedProperties);
 			}
@@ -49,18 +50,11 @@ public class EmbeddedMongoInitializer implements ApplicationContextInitializer<G
 			}
 			return null;
 		});
-		context.registerBean("embeddedMongoServer", MongodExecutable.class, () -> {
-			try {
-				return configuration.embeddedMongoServer(context.getBean(IMongodConfig.class), context.getBean(IRuntimeConfig.class), context);
-			}
-			catch (IOException e) {
-				e.printStackTrace();
-			}
-			return null;
-		}, definition -> {
+		context.registerBean("embeddedMongoServer", MongodExecutable.class, () ->
+				configuration.embeddedMongoServer(context.getBean(MongodConfig.class), context.getBean(RuntimeConfig.class), context), definition -> {
 			definition.setInitMethodName("start");
 			definition.setDestroyMethodName("stop");
 		});
-		context.registerBean(IRuntimeConfig.class, () -> new EmbeddedMongoAutoConfiguration.RuntimeConfigConfiguration().embeddedMongoRuntimeConfig(context.getBeanProvider(DownloadConfigBuilderCustomizer.class)));
+		context.registerBean(RuntimeConfig.class, () -> new EmbeddedMongoAutoConfiguration.RuntimeConfigConfiguration().embeddedMongoRuntimeConfig(context.getBeanProvider(DownloadConfigBuilderCustomizer.class)));
 	}
 }

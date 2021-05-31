@@ -115,7 +115,7 @@ class JacksonDslTests {
 		}
 		with(app.run()) {
 			val client = WebTestClient.bindToServer().baseUrl("http://127.0.0.1:$localServerPort").build()
-			client.get().uri("/user").exchange().expectStatus().is5xxServerError
+			client.get().uri("/user").exchange().expectStatus().is4xxClientError
 			close()
 		}
 	}
