@@ -45,7 +45,6 @@ class JdbcDslTests {
                 username = "jo"
                 password = "pwd"
                 schema = listOf("qsfqf")
-                schema = listOf("qsfqf")
             }
             beans {
                 bean<JdbcRepository>()
