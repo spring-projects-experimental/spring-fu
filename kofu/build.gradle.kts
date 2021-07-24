@@ -107,16 +107,16 @@ tasks.withType<DokkaTask>().configureEach {
 				url.set(URL("https://fasterxml.github.io/jackson-databind/javadoc/2.9/"))
 			}
 			externalDocumentationLink {
-				url.set(URL("https://docs.spring.io/spring-data/mongodb/docs/2.2.x/api/"))
+				url.set(URL("https://docs.spring.io/spring-data/mongodb/docs/3.2.x/api/"))
 			}
 			externalDocumentationLink {
 				url.set(URL("https://docs.oracle.com/javase/8/docs/api/"))
 			}
 			externalDocumentationLink {
-				url.set(URL("https://docs.spring.io/spring-boot/docs/2.2.x/api/"))
+				url.set(URL("https://docs.spring.io/spring-boot/docs/2.5.x/api/"))
 			}
 			externalDocumentationLink {
-				url.set(URL("https://docs.spring.io/spring-data/r2dbc/docs/1.1.x/api/"))
+				url.set(URL("https://docs.spring.io/spring-data/r2dbc/docs/1.4.x/api/"))
 			}
 			externalDocumentationLink {
 				url.set(URL("https://docs.spring.io/spring-data/cassandra/docs/current/api/"))
