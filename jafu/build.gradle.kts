@@ -11,9 +11,9 @@ tasks.compileTestJava {
 tasks.withType<Javadoc> {
 	with (options as StandardJavadocDocletOptions) {
 		links = listOf(
-				"https://docs.spring.io/spring-framework/docs/5.2.x/javadoc-api/",
-				"https://docs.spring.io/spring-boot/docs/2.3.x/api/",
-				"https://docs.spring.io/spring-data/r2dbc/docs/1.1.x/api/"
+				"https://docs.spring.io/spring-framework/docs/current/javadoc-api/",
+				"https://docs.spring.io/spring-boot/docs/current/api/",
+				"https://docs.spring.io/spring-data/r2dbc/docs/1.4.x/api/"
 		)
 		addStringOption("Xdoclint:none", "-quiet")
 		memberLevel = org.gradle.external.javadoc.JavadocMemberLevel.PROTECTED
