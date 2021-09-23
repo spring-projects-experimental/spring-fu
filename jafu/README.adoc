@@ -12,7 +12,7 @@ instead of JavaConfig.
 
 === API reference
 
-An overview of JaFu DSL is provided bellow with the related {jafu-javadoc-url}/index.html[API documentation].
+An overview of JaFu DSL is provided below with the related {jafu-javadoc-url}/index.html[API documentation].
 Be aware that a few static imports will be needed.
 
 === Getting started
