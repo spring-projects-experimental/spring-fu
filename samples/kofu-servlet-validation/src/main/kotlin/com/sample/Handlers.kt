@@ -10,6 +10,9 @@ class UserHandler {
     fun createApi(request: ServerRequest) =
             request.body(User::class.java)
                     .validate()
-                    .leftMap { mapOf("details" to it.details()) }
-                    .fold(badRequest()::body, ok()::body)
+                    .mapError { it.detail() }
+                    .fold(
+                        { badRequest().body(mapOf("details" to it)) },
+                        ok()::body
+                    )
 }

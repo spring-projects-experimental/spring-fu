@@ -14,6 +14,9 @@ class UserHandler {
     suspend fun createApi(request: ServerRequest): ServerResponse =
             request.awaitBody<User>()
                     .validate()
-                    .leftMap { mapOf("details" to it.details()) }
-					.awaitFold(badRequest()::bodyValueAndAwait, ok()::bodyValueAndAwait)
+                    .mapError { it.detail() }
+                    .awaitFold(
+                        { badRequest().bodyValueAndAwait(mapOf("details" to it)) },
+                        ok()::bodyValueAndAwait
+                    )
 }
