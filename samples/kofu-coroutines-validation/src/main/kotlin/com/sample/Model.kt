@@ -1,9 +1,7 @@
 package com.sample
 
-import am.ik.yavi.builder.ValidatorBuilder
-import am.ik.yavi.builder.konstraint
-import am.ik.yavi.core.ConstraintViolations
-import am.ik.yavi.fn.Either
+import am.ik.yavi.builder.validator
+import am.ik.yavi.core.Validated
 
 data class User(
         val login: String,
@@ -11,20 +9,24 @@ data class User(
         val lastname: String
 ) {
     companion object {
-        val validator = ValidatorBuilder.of<User>()
-                .konstraint(User::login) {
-                    notNull().greaterThanOrEqual(4).lessThanOrEqual(8)
-                }
-                .konstraint(User::firstname) {
-                    notBlank().lessThanOrEqual(32)
-                }
-                .konstraint(User::lastname) {
-                    notBlank().lessThanOrEqual(32)
-                }
-                .build()
+        val validator = validator<User> {
+            User::login {
+                notNull()
+                greaterThanOrEqual(4)
+                lessThanOrEqual(8)
+            }
+            User::firstname {
+                notBlank()
+                lessThanOrEqual(32)
+            }
+            User::lastname {
+                notBlank()
+                lessThanOrEqual(32)
+            }
+        }.applicative()
     }
 
-    fun validate(): Either<ConstraintViolations, User> {
-        return validator.validateToEither(this)
+    fun validate(): Validated<User> {
+        return validator.validate(this)
     }
 }

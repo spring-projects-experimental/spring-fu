@@ -12,7 +12,10 @@ class UserHandler {
             request.bodyToMono<User>()
                     .flatMap { user ->
                         user.validate()
-                                .leftMap { mapOf("details" to it.details()) }
-                                .fold(badRequest()::bodyValue, ok()::bodyValue)
+                            .mapError { it.detail() }
+                            .fold(
+                                { badRequest().bodyValue(mapOf("details" to it)) },
+                                ok()::bodyValue
+                            )
                     }
 }
