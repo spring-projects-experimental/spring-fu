@@ -26,7 +26,6 @@ class RedisDsl(private val init: RedisDsl.() -> Unit) : AbstractRedisDsl(), Jedi
 
 	override fun jedis(dsl: PoolDsl.() -> Unit) {
 		jedisInitializer = ApplicationContextInitializer {
-			properties.jedis.pool = Pool()
 			JedisDsl(properties, dsl).initialize(it)
 			JedisRedisInitializer(properties).initialize(it)
 		}

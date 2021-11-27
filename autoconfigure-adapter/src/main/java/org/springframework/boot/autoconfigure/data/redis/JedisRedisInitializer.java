@@ -5,9 +5,8 @@ import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.data.redis.connection.RedisClusterConfiguration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisSentinelConfiguration;
+import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
-
-import java.net.UnknownHostException;
 
 /**
  * {@link ApplicationContextInitializer} adapter for {@link JedisConnectionConfiguration}
@@ -27,7 +26,7 @@ public class JedisRedisInitializer implements ApplicationContextInitializer<Gene
 	}
 
 	private JedisConnectionFactory getJedisConnectionFactory(GenericApplicationContext context) {
-		final JedisConnectionConfiguration configuration = new JedisConnectionConfiguration(redisProperties, context.getBeanProvider(RedisSentinelConfiguration.class), context.getBeanProvider(RedisClusterConfiguration.class));
+		final JedisConnectionConfiguration configuration = new JedisConnectionConfiguration(redisProperties, context.getBeanProvider(RedisStandaloneConfiguration.class), context.getBeanProvider(RedisSentinelConfiguration.class), context.getBeanProvider(RedisClusterConfiguration.class));
 		return configuration.redisConnectionFactory(context.getBeanProvider(JedisClientConfigurationBuilderCustomizer.class));
 	}
 }

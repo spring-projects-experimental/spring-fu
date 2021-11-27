@@ -47,8 +47,6 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit): Abst
 
 	private val serverProperties = ServerProperties()
 
-	private val resourceProperties = org.springframework.boot.autoconfigure.web.ResourceProperties()
-
 	private val webProperties = WebProperties()
 
 	private val webFluxProperties = WebFluxProperties()
@@ -89,7 +87,7 @@ open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit): Abst
 		if (context.containsBeanDefinition("webHandler")) {
 			throw IllegalStateException("Only one webFlux per application is supported")
 		}
-		ReactiveWebServerInitializer(serverProperties, resourceProperties, webProperties, webFluxProperties, engine).initialize(context)
+		ReactiveWebServerInitializer(serverProperties, webProperties, webFluxProperties, engine).initialize(context)
 	}
 
 	/**

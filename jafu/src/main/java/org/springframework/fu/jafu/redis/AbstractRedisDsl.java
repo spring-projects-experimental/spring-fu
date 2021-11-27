@@ -212,7 +212,6 @@ public abstract class AbstractRedisDsl<SELF extends AbstractRedisDsl<SELF>> exte
         }
 
         public LettuceDsl pool(final Consumer<PoolDsl> pool) {
-            this.lettuce.setPool(new RedisProperties.Pool());
             pool.accept(new PoolDsl(this.lettuce.getPool()));
             return this;
         }

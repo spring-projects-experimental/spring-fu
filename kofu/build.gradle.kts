@@ -57,7 +57,7 @@ dependencies {
 	testImplementation("io.mockk:mockk:1.9")
 	testImplementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
 	testImplementation("javax.servlet:javax.servlet-api")
-	testCompile("org.testcontainers:testcontainers")
+	testImplementation("org.testcontainers:testcontainers")
 	testImplementation("redis.clients:jedis")
 	testImplementation("io.lettuce:lettuce-core")
 	testImplementation("org.springframework:spring-r2dbc")

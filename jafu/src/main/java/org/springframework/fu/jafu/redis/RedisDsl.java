@@ -50,7 +50,6 @@ public class RedisDsl extends AbstractRedisDsl<RedisDsl> {
 
         JedisDsl(final RedisProperties.Jedis jedis) {
             this.jedis = jedis;
-            this.jedis.setPool(new RedisProperties.Pool());
         }
 
         public JedisDsl pool(final Consumer<PoolDsl> pool) {
