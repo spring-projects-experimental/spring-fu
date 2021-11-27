@@ -1,14 +1,7 @@
 package org.springframework.fu.jafu.webflux;
 
-import static org.springframework.beans.factory.support.BeanDefinitionReaderUtils.uniqueBeanName;
-
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-
 import org.springframework.beans.factory.config.BeanDefinitionCustomizer;
 import org.springframework.beans.factory.support.BeanDefinitionReaderUtils;
-import org.springframework.boot.WebApplicationType;
-import org.springframework.boot.autoconfigure.web.ResourceProperties;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.boot.autoconfigure.web.WebProperties;
 import org.springframework.boot.autoconfigure.web.reactive.FormCodecInitializer;
@@ -31,6 +24,11 @@ import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.RouterFunctions;
 import org.springframework.web.server.WebFilter;
 
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+
+import static org.springframework.beans.factory.support.BeanDefinitionReaderUtils.uniqueBeanName;
+
 /**
  * Jafu DSL for WebFlux server.
  *
@@ -49,14 +47,11 @@ import org.springframework.web.server.WebFilter;
  * @see WebFluxServerDsl#mustache()
  * @author Sebastien Deleuze
  */
-@SuppressWarnings("deprecation")
 public class WebFluxServerDsl extends AbstractDsl {
 
 	private final Consumer<WebFluxServerDsl> dsl;
 
 	private ServerProperties serverProperties = new ServerProperties();
-
-	private ResourceProperties resourceProperties = new ResourceProperties();
 
 	private WebProperties webProperties = new WebProperties();
 
@@ -186,7 +181,7 @@ public class WebFluxServerDsl extends AbstractDsl {
 		if (context.containsBeanDefinition("webHandler")) {
 			throw new IllegalStateException("Only one webFlux per application is supported");
 		}
-		new ReactiveWebServerInitializer(serverProperties, resourceProperties, webProperties, webFluxProperties, engine).initialize(context);
+		new ReactiveWebServerInitializer(serverProperties, webProperties, webFluxProperties, engine).initialize(context);
 
 	}
 

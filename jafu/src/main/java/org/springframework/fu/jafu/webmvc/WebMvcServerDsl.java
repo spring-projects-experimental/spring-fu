@@ -1,11 +1,7 @@
 package org.springframework.fu.jafu.webmvc;
 
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-
 import org.springframework.beans.factory.config.BeanDefinitionCustomizer;
 import org.springframework.beans.factory.support.BeanDefinitionReaderUtils;
-import org.springframework.boot.autoconfigure.web.ResourceProperties;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.boot.autoconfigure.web.WebProperties;
 import org.springframework.boot.autoconfigure.web.servlet.AtomConverterInitializer;
@@ -30,6 +26,9 @@ import org.springframework.fu.jafu.web.JacksonDsl;
 import org.springframework.web.servlet.function.RouterFunction;
 import org.springframework.web.servlet.function.RouterFunctions;
 
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+
 /**
  * Jafu DSL for WebMvc server.
  *
@@ -50,8 +49,6 @@ public class WebMvcServerDsl extends AbstractDsl {
 	private final Consumer<WebMvcServerDsl> dsl;
 
 	private ServerProperties serverProperties = new ServerProperties();
-
-	private ResourceProperties resourceProperties = new ResourceProperties();
 
 	private WebProperties webProperties = new WebProperties();
 
@@ -159,7 +156,7 @@ public class WebMvcServerDsl extends AbstractDsl {
 		if (context.containsBeanDefinition("webHandler")) {
 			throw new IllegalStateException("Only one webFlux per application is supported");
 		}
-		new ServletWebServerInitializer(serverProperties, webMvcProperties, resourceProperties, webProperties, engine).initialize(context);
+		new ServletWebServerInitializer(serverProperties, webMvcProperties, webProperties, engine).initialize(context);
 	}
 
 	private class TomcatDelegate implements Supplier<ConfigurableServletWebServerFactory> {

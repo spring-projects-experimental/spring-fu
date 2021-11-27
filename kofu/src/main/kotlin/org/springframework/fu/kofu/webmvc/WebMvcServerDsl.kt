@@ -37,8 +37,6 @@ open class WebMvcServerDsl(private val init: WebMvcServerDsl.() -> Unit): Abstra
 
 	private val webMvcProperties = WebMvcProperties()
 
-	private val resourceProperties = org.springframework.boot.autoconfigure.web.ResourceProperties()
-
 	private val webProperties = WebProperties()
 
 	private var convertersConfigured: Boolean = false
@@ -75,7 +73,7 @@ open class WebMvcServerDsl(private val init: WebMvcServerDsl.() -> Unit): Abstra
 			StringConverterInitializer().initialize(context)
 			ResourceConverterInitializer().initialize(context)
 		}
-		ServletWebServerInitializer(serverProperties, webMvcProperties, resourceProperties, webProperties, engine).initialize(context)
+		ServletWebServerInitializer(serverProperties, webMvcProperties, webProperties, engine).initialize(context)
 	}
 
 	/**
