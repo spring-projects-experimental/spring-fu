@@ -17,7 +17,6 @@
 package org.springframework.boot.autoconfigure.data.mongo;
 
 import com.mongodb.reactivestreams.client.MongoClient;
-
 import org.springframework.boot.autoconfigure.mongo.MongoProperties;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
@@ -43,15 +42,23 @@ public class MongoReactiveDataInitializer implements ApplicationContextInitializ
 	@Override
 	public void initialize(GenericApplicationContext context) {
 		MongoDataConfiguration dataConfiguration = new MongoDataConfiguration();
-		context.registerBean(MongoCustomConversions.class, dataConfiguration::mongoCustomConversions);
-		context.registerBean(MongoMappingContext.class, () -> {
-			try {
-				return dataConfiguration.mongoMappingContext(context, properties, context.getBean(MongoCustomConversions.class));
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-			}
-			return null;
-		});
+		if (context.getBeanFactory().getBeanNamesForType(MongoCustomConversions.class).length == 0) {
+			context.registerBean(MongoCustomConversions.class, dataConfiguration::mongoCustomConversions);
+		}
+		if (context.getBeanFactory().getBeanNamesForType(MongoMappingContext.class).length == 0) {
+			context.registerBean(MongoMappingContext.class, () -> {
+				try {
+					return dataConfiguration.mongoMappingContext(
+						context,
+						properties,
+						context.getBean(MongoCustomConversions.class)
+					);
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				}
+				return null;
+			});
+		}
 
 		MongoReactiveDataAutoConfiguration configuration = new MongoReactiveDataAutoConfiguration();
 		context.registerBean(MappingMongoConverter.class, () -> configuration.mappingMongoConverter(context.getBean(MongoMappingContext.class), context.getBean(MongoCustomConversions.class)));
