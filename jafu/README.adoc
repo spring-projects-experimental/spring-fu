@@ -1,4 +1,4 @@
-:spring-fu-version: 0.4.3
+:spring-fu-version: 0.5.0
 :jafu-javadoc-url: http://repo.spring.io/milestone/org/springframework/fu/spring-fu-jafu/{spring-fu-version}/spring-fu-jafu-{spring-fu-version}-javadoc.jar!
 
 image:https://img.shields.io/badge/JaFu%20documentation-blue.svg["JaFu documentation", link="{jafu-javadoc-url}/index.html"]
@@ -18,7 +18,7 @@ Be aware that a few static imports will be needed.
 === Getting started
 
  * Go to https://start.spring.io/[start.spring.io]
- * Select the latest Spring Boot `2.4.x` version
+ * Select the latest Spring Boot `2.6.x` version
  * Add the Spring milestone repository `https://repo.spring.io/milestone`
  * Select the "Web" starter
  * Add the `org.springframework.fu:spring-fu-jafu:{spring-fu-version}` dependency
