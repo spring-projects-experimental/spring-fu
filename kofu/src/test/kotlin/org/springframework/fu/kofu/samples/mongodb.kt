@@ -1,5 +1,6 @@
 package org.springframework.fu.kofu.samples
 
+import de.flapdoodle.embed.mongo.distribution.Version
 import org.springframework.fu.kofu.application
 import org.springframework.fu.kofu.mongo.reactiveMongodb
 
@@ -15,7 +16,7 @@ fun mongoEmbedded() {
 	application {
 		reactiveMongodb {
 			uri = "mongodb://myserver.com/foo"
-			embedded()
+			embedded(version = Version.Main.PRODUCTION)
 		}
 	}
 }

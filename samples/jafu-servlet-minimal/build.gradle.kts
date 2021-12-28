@@ -1,6 +1,6 @@
 plugins {
 	id("io.spring.dependency-management") version "1.0.11.RELEASE"
-	id("org.springframework.boot") version "2.5.3"
+	id("org.springframework.boot") version "2.6.2"
 	id("java")
 }
 
@@ -10,7 +10,7 @@ java {
 }
 
 dependencies {
-	implementation("org.springframework.fu:spring-fu-jafu:0.4.5-SNAPSHOT")
+	implementation("org.springframework.fu:spring-fu-jafu:0.5.0-SNAPSHOT")
 
 	implementation("org.springframework.boot:spring-boot-starter-web")
 

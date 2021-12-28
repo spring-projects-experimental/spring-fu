@@ -27,8 +27,7 @@ fun app(properties: ApplicationProperties) = reactiveWebApplication {
 }
 
 fun main() {
-	class KCassandraContainer : CassandraContainer<KCassandraContainer>() // https://github.com/testcontainers/testcontainers-java/issues/318
-	val cassandraContainer = KCassandraContainer().withInitScript("schema.cql")
+	val cassandraContainer = CassandraContainer().withInitScript("schema.cql")
 	cassandraContainer.start()
 	val properties = ApplicationProperties(
 			cassandraHost = cassandraContainer.containerIpAddress,

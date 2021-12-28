@@ -18,9 +18,7 @@ val dataConfig = configuration {
 		}
 	}
 	reactiveMongodb {
-		embedded {
-			version = Version.Main.PRODUCTION
-		}
+		embedded(Version.Main.PRODUCTION)
 	}
 }
 

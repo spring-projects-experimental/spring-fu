@@ -15,12 +15,11 @@ class IntegrationTests {
 
 	private lateinit var context: ConfigurableApplicationContext
 
-	class KCassandraContainer : CassandraContainer<KCassandraContainer>() // https://github.com/testcontainers/testcontainers-java/issues/318
-	private lateinit var cassandraContainer: KCassandraContainer
+	private lateinit var cassandraContainer: CassandraContainer<*>
 
 	@BeforeAll
 	fun beforeAll() {
-		cassandraContainer = KCassandraContainer().withInitScript("schema.cql")
+		cassandraContainer = CassandraContainer().withInitScript("schema.cql")
 		cassandraContainer.start()
 		val properties = ApplicationProperties(
 			cassandraPort = cassandraContainer.firstMappedPort,

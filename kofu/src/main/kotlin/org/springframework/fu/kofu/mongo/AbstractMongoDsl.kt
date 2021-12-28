@@ -54,20 +54,21 @@ abstract class AbstractMongoDsl(private val init: MongoDsl.() -> Unit) : Abstrac
      *
      * @sample org.springframework.fu.kofu.samples.mongoEmbedded
      */
-    fun embedded(dsl: EmbeddedMongoDsl.() -> Unit = {}) {
+    fun embedded(version: IFeatureAwareVersion, dsl: EmbeddedMongoDsl.() -> Unit = {}) {
         embedded = true
-        EmbeddedMongoDsl(properties, dsl).initialize(context)
+        EmbeddedMongoDsl(properties, version, dsl).initialize(context)
     }
 
     /**
      * Kofu DSL for embedded MongoDB configuration.
      */
-    class EmbeddedMongoDsl(private val mongoProperties: MongoProperties, private val init: EmbeddedMongoDsl.() -> Unit) : AbstractDsl() {
+    class EmbeddedMongoDsl(private val mongoProperties: MongoProperties, version: IFeatureAwareVersion, private val init: EmbeddedMongoDsl.() -> Unit) : AbstractDsl() {
 
         private val embeddedMongoProperties = EmbeddedMongoProperties()
 
         override fun initialize(context: GenericApplicationContext) {
             super.initialize(context)
+            embeddedMongoProperties.version = version.asInDownloadPath()
             init()
             EmbeddedMongoInitializer(mongoProperties, embeddedMongoProperties).initialize(context)
         }

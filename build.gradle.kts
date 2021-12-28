@@ -1,9 +1,9 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-	id("org.jetbrains.kotlin.jvm") version "1.5.21" apply false
+	id("org.jetbrains.kotlin.jvm") version "1.6.10" apply false
 	id("org.springframework.boot") apply false
-	id("org.jetbrains.dokka") version "1.5.0" apply false
+	id("org.jetbrains.dokka") version "1.6.10" apply false
 	id("io.spring.dependency-management") version "1.0.11.RELEASE"
 	id("maven-publish")
 }
@@ -14,7 +14,7 @@ allprojects {
 		plugin("io.spring.dependency-management")
 	}
 
-	version = "0.4.5-SNAPSHOT"
+	version = "0.5.0-SNAPSHOT"
 	group = "org.springframework.fu"
 
 	dependencyManagement {

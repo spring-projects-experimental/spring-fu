@@ -65,8 +65,8 @@ public class ReactiveMongoDsl extends AbstractDsl {
 	 *
 	 * Require {@code de.flapdoodle.embed:de.flapdoodle.embed.mongo} dependency.
 	 */
-	public ReactiveMongoDsl embedded() {
-		new EmbeddedMongoDsl(properties, it -> {}).initialize(context);
+	public ReactiveMongoDsl embedded(IFeatureAwareVersion version) {
+		new EmbeddedMongoDsl(properties, version, it -> {}).initialize(context);
 		embedded = true;
 		return this;
 	}
@@ -76,8 +76,8 @@ public class ReactiveMongoDsl extends AbstractDsl {
 	 *
 	 * Require {@code de.flapdoodle.embed:de.flapdoodle.embed.mongo} dependency.
 	 */
-	public ReactiveMongoDsl embedded(Consumer<EmbeddedMongoDsl> dsl) {
-		new EmbeddedMongoDsl(properties, dsl).initialize(context);
+	public ReactiveMongoDsl embedded(IFeatureAwareVersion version, Consumer<EmbeddedMongoDsl> dsl) {
+		new EmbeddedMongoDsl(properties, version, dsl).initialize(context);
 		embedded = true;
 		return this;
 	}
@@ -103,9 +103,10 @@ public class ReactiveMongoDsl extends AbstractDsl {
 		private final MongoProperties mongoProperties;
 		private final EmbeddedMongoProperties embeddedMongoProperties = new EmbeddedMongoProperties();
 
-		EmbeddedMongoDsl(MongoProperties properties, Consumer<EmbeddedMongoDsl> dsl) {
+		EmbeddedMongoDsl(MongoProperties properties, IFeatureAwareVersion version, Consumer<EmbeddedMongoDsl> dsl) {
 			this.dsl = dsl;
 			this.mongoProperties = properties;
+			this.embeddedMongoProperties.setVersion(version.asInDownloadPath());
 		}
 
 		/**

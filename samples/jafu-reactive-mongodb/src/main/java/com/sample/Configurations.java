@@ -7,6 +7,8 @@ import org.springframework.fu.jafu.mongo.ReactiveMongoDsl;
 import java.io.IOException;
 import java.util.function.Consumer;
 
+import de.flapdoodle.embed.mongo.distribution.Version;
+
 import static org.springframework.fu.jafu.webflux.WebFluxServerDsl.webFlux;
 
 public abstract class Configurations {
@@ -20,7 +22,7 @@ public abstract class Configurations {
                     ioException.printStackTrace();
                 }
             })
-            .enable(ReactiveMongoDsl.reactiveMongo(ReactiveMongoDsl::embedded));
+            .enable(ReactiveMongoDsl.reactiveMongo(dsl -> dsl.embedded(Version.Main.PRODUCTION)));
 
 
     public static Consumer<ConfigurationDsl> webConfig = conf -> conf

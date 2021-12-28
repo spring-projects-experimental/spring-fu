@@ -16,6 +16,7 @@
 
 package org.springframework.fu.kofu.webflux
 
+import de.flapdoodle.embed.mongo.distribution.Version
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -179,7 +180,7 @@ class WebFluxServerDslTests {
 				level = LogLevel.DEBUG
 			}
 			reactiveMongodb {
-				embedded()
+				embedded(Version.Main.PRODUCTION)
 			}
 		}
 		with(app.run()) {

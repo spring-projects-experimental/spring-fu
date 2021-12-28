@@ -16,6 +16,7 @@
 
 package org.springframework.fu.kofu.mongo
 
+import de.flapdoodle.embed.mongo.distribution.Version
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.getBean
@@ -38,7 +39,7 @@ class EmbeddedMongoModuleTests {
 			}
 			reactiveMongodb {
 				uri = "mongodb://localhost:$port/test"
-				embedded()
+				embedded(Version.Main.PRODUCTION)
 			}
 		}
 		with(app.run()){
@@ -58,7 +59,7 @@ class EmbeddedMongoModuleTests {
 			}
 			mongodb() {
 				uri = "mongodb://localhost:$port/test"
-				embedded()
+				embedded(Version.Main.PRODUCTION)
 			}
 		}
 		with(app.run()){

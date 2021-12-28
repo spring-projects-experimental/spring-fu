@@ -1,5 +1,6 @@
 package com.sample
 
+import de.flapdoodle.embed.mongo.distribution.Version
 import org.springframework.boot.context.event.ApplicationReadyEvent
 import org.springframework.fu.kofu.configuration
 import org.springframework.fu.kofu.mongo.reactiveMongodb
@@ -14,7 +15,7 @@ val dataConfig = configuration {
 		ref<UserRepository>().init()
 	}
 	reactiveMongodb {
-		embedded()
+		embedded(Version.Main.PRODUCTION)
 	}
 }
 

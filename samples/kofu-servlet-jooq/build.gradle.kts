@@ -3,14 +3,14 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jooq.meta.jaxb.Logging.INFO
 
 plugins {
-	id("org.jetbrains.kotlin.jvm") version "1.5.21"
+	id("org.jetbrains.kotlin.jvm") version "1.6.10"
 	id("io.spring.dependency-management") version "1.0.11.RELEASE"
-	id("org.springframework.boot") version "2.5.3"
+	id("org.springframework.boot") version "2.6.2"
 	id("nu.studer.jooq") version "5.0.1"
 }
 
 dependencies {
-	implementation("org.springframework.fu:spring-fu-kofu:0.4.5-SNAPSHOT")
+	implementation("org.springframework.fu:spring-fu-kofu:0.5.0-SNAPSHOT")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-jooq")
 	implementation("org.springframework.boot:spring-boot-starter-mustache")
