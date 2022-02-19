@@ -1,0 +1,31 @@
+{{> header}}
+
+<h1>{{title}}</h1>
+
+<div class="articles">
+
+    {{#banner.title}}
+        <section>
+            <header class="banner">
+                <h2 class="banner-title">{{banner.title}}</h2>
+            </header>
+            <div class="banner-content">
+                {{banner.content}}
+            </div>
+        </section>
+    {{/banner.title}}
+
+    {{#articles}}
+        <section>
+            <header class="article-header">
+                <h2 class="article-title"><a href="/article/{{slug}}">{{title}}</a></h2>
+                <div class="article-meta">By  <strong>{{author.firstname}}</strong>, on <strong>{{addedAt}}</strong></div>
+            </header>
+            <div class="article-description">
+                {{headline}}
+            </div>
+        </section>
+    {{/articles}}
+</div>
+
+{{> footer}}
