@@ -7,6 +7,7 @@ class KofuTutorialApplicationTests {
 
     @Test
     fun contextLoads() {
+        assert(true)
     }
 
 }
