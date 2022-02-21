@@ -23,15 +23,29 @@ It leverages other Spring Kotlin DSLs available in Spring like:
 - SpEL support is disabled by default
 - Devtools automatic restart does not work yet so just restart your applications (very fast with KoFu)
 
+== Content of this tutorial
+
+We are going to build the same blog application as https://spring.io/guides/tutorials/spring-boot-kotlin/[the tutorial for writing Spring Boot applications in Kotlin].
+
+Instead of Spring Data JPA, we are going to use plain JDBC, in order to avoid completely the use of CGLIB.
+Writing repositories in plain JDBC requires a consistent extra effort. Fortunately, there exist light ORM like
+https://github.com/JetBrains/Exposed[Jetbrains Exposed] or https://www.jooq.org/[Jooq], that are an excellent trade-off
+between the productivity of JPA and the readability/testability of plain JDBC. But those are out of the scope of this tutorial.
+
+We will see how KoFu enhances the testability of our code, removing the "magics" of annotations autowiring, and giving you back
+the full control of the dependency injection context.
+
+In the end we will see an example of how to plugin-in modules that are not yet fully supported like https://liquibase.org/[Liquibase].
+
 == Getting started
 Click https://start.spring.io/#!type=gradle-project&language=kotlin&platformVersion=2.6.3&packaging=jar&jvmVersion=11&groupId=com.example&artifactId=blog&name=blog&description=&packageName=com.example.blog&dependencies=web,mustache,jdbc,h2[here] to go to a preconfigured Spring Initializer
 
 We selected:
 
-1. Gradle (Kotlin DSL) as build system and Kotlin as language.
+1. Gradle (Kotlin DSL) as the build system and Kotlin as language.
 2. The latest stable Spring Boot `2.6.x` version (2.6.3 at the moment of writing).
 3. Changed the name of artifact to "blog"
-4. Jar packaging and 11 Jvm target
+4. Jar packaging and Jvm 11 target
 5. The following dependencies:
     * Spring Web
     * Mustache
@@ -44,9 +58,64 @@ The zip contains a regular spring application template. Unpack and open it with 
 
 Go to `build.gradle.kts` (Gradle) or `pom.xml` (Maven). If you don't know their content, you can refer to the sections "Understanding the Gradle Build" or "Understanding the Maven Build" of https://spring.io/guides/tutorials/spring-boot-kotlin/#understanding-generated-app[this] other tutorial.
 
-==== Plugins
+==== Repositories
 
-Let's start from the plugins sections. With KoFu, there are no more GCLIB proxies in place, then we don't need to `open` the classes of our beans.
+Add the spring milestone repository.
+
+===== Gradle
+
+[source,kotlin]
+----
+repositories {
+    maven {
+        url = uri("https://repo.spring.io/milestone")
+    }
+    mavenCentral()
+}
+----
+
+===== Maven
+
+[source,xml]
+----
+<repositories>
+    <repository>
+        <id>spring-milestone</id>
+        <name>spring milestone</name>
+        <url>https://repo.spring.io/milestone</url>
+    </repository>
+</repositories>
+----
+
+==== Dependencies
+
+Add the Kofu dependency. At the time of writing the last version of KoFu is the `0.5.0`.
+
+===== Gradle
+
+[source,kotlin]
+----
+dependencies {
+    ...
+    implementation("org.springframework.fu:spring-fu-kofu:$kofuVersion")
+    ...
+}
+----
+
+===== Maven
+
+[source,xml]
+----
+<dependency>
+    <groupId>org.springframework.fu</groupId>
+    <artifactId>spring-fu-kofu</artifactId>
+    <version>${kofu.version}</version>
+</dependency>
+----
+
+==== Remove plugins (optional)
+
+Let's remove what we don't need anymore. With KoFu, there are no more GCLIB proxies in place, then we don't need to `open` the classes of our beans (classes are `final` by default in Kotlin).
 
 Then we can remove the unnecessary plugins.
 
@@ -72,7 +141,7 @@ plugins {
 
 ===== Maven
 
-Remove the following marked lines from your `pom.xml`
+Remove the marked lines from your `pom.xml`
 
 [source,xml]
 ----
@@ -100,7 +169,6 @@ Remove the following marked lines from your `pom.xml`
 ----
 
 The plugin section should look like this:
-
 
 [source,xml]
 ----
@@ -142,156 +210,4 @@ val app = webApplication {
 fun main(args: Array<String>) {
     app.run(args)
 }
-----
-
-If you are using gradle, modify the generated `build.gradle.kts` as following:
-
-[source,kotlin]
-----
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
-plugins {
-    id("org.springframework.boot") version "2.6.3"
-    id("io.spring.dependency-management") version "1.0.11.RELEASE"
-    kotlin("jvm") version "1.6.10"
-}
-
-group = "com.sample"
-version = "0.0.1-SNAPSHOT"
-java.sourceCompatibility = JavaVersion.VERSION_11
-val kofuVersion = "0.5.0"
-
-repositories {
-    maven {
-        url = uri("https://repo.spring.io/milestone")
-    }
-    mavenCentral()
-}
-
-dependencies {
-    implementation("org.springframework.fu:spring-fu-kofu:$kofuVersion")
-    implementation("org.springframework.boot:spring-boot-starter-jdbc")
-    implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-    implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    runtimeOnly("com.h2database:h2")
-
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
-}
-
-tasks.withType<KotlinCompile> {
-    kotlinOptions {
-        freeCompilerArgs = listOf("-Xjsr305=strict")
-        jvmTarget = "11"
-    }
-}
-
-tasks.withType<Test> {
-    useJUnitPlatform()
-}
-----
-
-If you are using maven, modify instead the generated `pom.xml` as following:
-
-[source,xml]
-----
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.6.3</version>
-		<relativePath/> <!-- lookup parent from repository -->
-	</parent>
-	<groupId>com.sample</groupId>
-	<artifactId>kofu-tutorial</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>kofu-tutorial</name>
-	<properties>
-		<java.version>11</java.version>
-		<kotlin.version>1.6.10</kotlin.version>
-		<spring.version>2.6.3</spring.version>
-		<jackson.version>2.13.1</jackson.version>
-		<kofu.version>0.5.0</kofu.version>
-	</properties>
-	<repositories>
-		<repository>
-			<id>spring-milestone</id>
-			<name>spring milestone</name>
-			<url>https://repo.spring.io/milestone</url>
-		</repository>
-	</repositories>
-	<dependencies>
-		<dependency>
-			<groupId>org.springframework.fu</groupId>
-			<artifactId>spring-fu-kofu</artifactId>
-			<version>${kofu.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-jdbc</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-mustache</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.module</groupId>
-			<artifactId>jackson-module-kotlin</artifactId>
-			<version>${jackson.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.jetbrains.kotlin</groupId>
-			<artifactId>kotlin-reflect</artifactId>
-			<version>${kotlin.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.jetbrains.kotlin</groupId>
-			<artifactId>kotlin-stdlib-jdk8</artifactId>
-			<version>${kotlin.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<version>1.4.200</version>
-			<scope>runtime</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
-
-	<build>
-		<sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
-		<testSourceDirectory>${project.basedir}/src/test/kotlin</testSourceDirectory>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>org.jetbrains.kotlin</groupId>
-				<artifactId>kotlin-maven-plugin</artifactId>
-				<version>${kotlin.version}</version>
-				<configuration>
-					<jvmTarget>11</jvmTarget>
-					<args>
-						<arg>-Xjsr305=strict</arg>
-					</args>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
-
-</project>
 ----
