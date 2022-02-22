@@ -195,6 +195,8 @@ The plugin section should look like this:
 
 Go to `BlogApplication.kt` and modify its content as follows:
 
+`src/main/kotlin/com/example/blog/BlogApplication.kt`
+
 [source,kotlin]
 ----
 package com.sample.blog
@@ -215,6 +217,8 @@ fun main(args: Array<String>) {
 == Writing your first route
 
 Let's write the routing to display a simple web page
+
+`src/main/kotlin/com/example/blog/BlogApplication.kt`
 
 [source,kotlin]
 ----
@@ -246,6 +250,8 @@ For example, here we see that mustache has two properties: `prefix` and `suffix`
 extension, respectively. To test this feature, instead of using the default templates folder `classpath:/templates/`, we are going to change
 it to `classpath:/views/`
 
+`src/main/kotlin/com/example/blog/BlogApplication.kt`
+
 [source,kotlin]
 ----
 val app = webApplication {
@@ -273,3 +279,6 @@ In the `views` folder we create the following template:
     </body>
 </html>
 ----
+
+Start the web application by running the main function of BlogApplication.kt, and go to http://localhost:8080/,
+you should see a sober web page with a "Blog" headline.

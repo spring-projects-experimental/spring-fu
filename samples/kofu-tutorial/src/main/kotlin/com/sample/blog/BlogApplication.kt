@@ -1,4 +1,4 @@
-package com.sample.kofututorial
+package com.sample.blog
 
 import org.springframework.fu.kofu.templating.mustache
 import org.springframework.fu.kofu.webApplication
