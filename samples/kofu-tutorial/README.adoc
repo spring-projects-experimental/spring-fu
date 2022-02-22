@@ -211,3 +211,65 @@ fun main(args: Array<String>) {
     app.run(args)
 }
 ----
+
+== Writing your first route
+
+Let's write the routing to display a simple web page
+
+[source,kotlin]
+----
+val app = webApplication {
+    webMvc {
+        mustache()
+
+        router {
+            GET("/"){
+                ServerResponse.ok()
+                    .render("blog", mapOf("title" to "Blog"))
+            }
+        }
+    }
+}
+
+fun main(args: Array<String>) {
+    app.run(args)
+}
+----
+Notice that the `render` method doesn't use a `Model` class but just a `Map<String, Any>`.
+
+Also, we are explicitly declaring the use of `mustache` through the activation function call. KoFu doesn't start thing automatically. We have to
+declare it. The cool part is that you can explore all the possible configuration options using the IDE code completion.
+
+image::images/code_completion.png[width=500]
+
+For example, here we see that mustache has two properties: `prefix` and `suffix`, to change the directory of the templates and the templates
+extension, respectively. To test this feature, instead of using the default templates folder `classpath:/templates/`, we are going to change
+it to `classpath:/views/`
+
+[source,kotlin]
+----
+val app = webApplication {
+    webMvc {
+        mustache{
+            prefix = "classpath:/views/"
+        }
+        ...
+    }
+}
+----
+
+In the `views` folder we create the following template:
+
+`src/main/resources/views/blog.mustache`
+
+[source,html]
+----
+<html>
+    <head>
+        <title>{{title}}</title>
+    </head>
+    <body>
+        <h1>{{title}}</h1>
+    </body>
+</html>
+----
