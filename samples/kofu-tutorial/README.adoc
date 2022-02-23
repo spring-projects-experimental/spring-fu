@@ -241,7 +241,7 @@ fun main(args: Array<String>) {
 ----
 Notice that the `render` method doesn't use a `Model` class but just a `Map<String, Any>`.
 
-Also, we are explicitly declaring the use of `mustache` through the activation function call. KoFu doesn't start thing automatically. We have to
+Also, we are explicitly declaring the use of `mustache` through the activation function call. KoFu doesn't start things automatically. We have to
 declare it. The cool part is that you can explore all the possible configuration options using the IDE code completion.
 
 image::images/code_completion.png[width=500]
@@ -282,3 +282,58 @@ In the `views` folder we create the following template:
 
 Start the web application by running the main function of BlogApplication.kt, and go to http://localhost:8080/,
 you should see a sober web page with a "Blog" headline.
+
+== Testing with JUnit5
+
+Compared to regular Spring Boot, where you have to use the annotion `SpringBootTest`, there is nothing fancy to do
+with a KoFu test. You write a normal test, and start/stop spring in the `@BeforeAll` and `@AfterAll`. It is a
+regular JUnit test.
+
+`src/test/kotlin/com/example/blog/BlogTests.kt`
+
+[source,kotlin]
+----
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+class BlogTests {
+    lateinit var context: ConfigurableApplicationContext
+    lateinit var client: MockMvc
+
+    @BeforeAll
+    internal fun setUp() {
+        val port = (10000..10500).random()
+
+        context = app.run(arrayOf("--spring.port=${port}"))
+        client = MockMvcBuilders
+            .webAppContextSetup(context as WebApplicationContext)
+            .build()
+    }
+
+    @AfterAll
+    internal fun tearDown() {
+        context.close()
+    }
+
+    @Test
+    internal fun `Assert blog page title, content and status code`() {
+        client.get("/")
+            .andExpect {
+                status { isOk() }
+                content {
+                    string(Matchers.containsString("<h1>Blog</h1>"))
+                }
+            }
+    }
+}
+----
+
+There is no magic here. Everything is transparent.
+
+`@TestInstance(TestInstance.Lifecycle.PER_CLASS)` is related to JUnit 5, you
+probably already know what it is if you use JUnit 5. https://www.baeldung.com/junit-testinstance-annotation[It is needed to use `@BeforeAll` and `@AfterAll`] annotations.
+You can change the tests instances lyfe cycle also project-wise if you like it, as described https://github.com/spring-guides/tut-spring-boot-kotlin#test-instance-lifecycle[here].
+I would not suggest doing it.
+
+In the `@BeforeAll` we start spring on a random port and use the application context to create the MockMvClient, so that
+it points to correct port.
+
+We then use the `client` to perform the http requests in the test and verify the result. More on MockMvc https://www.baeldung.com/integration-testing-in-spring[here].
