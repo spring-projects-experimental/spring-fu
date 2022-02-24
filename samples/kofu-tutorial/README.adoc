@@ -285,7 +285,7 @@ you should see a sober web page with a "Blog" headline.
 
 == Testing with JUnit5
 
-Compared to regular Spring Boot, where you have to use the annotion `SpringBootTest`, there is nothing fancy to do
+Compared to regular Spring Boot, where you have to use the annotion `@SpringBootTest`, there is nothing fancy to do
 with a KoFu test. You write a normal test, and start/stop spring in the `@BeforeAll` and `@AfterAll`. It is a
 regular JUnit test.
 
@@ -331,9 +331,111 @@ There is no magic here. Everything is transparent.
 `@TestInstance(TestInstance.Lifecycle.PER_CLASS)` is related to JUnit 5, you
 probably already know what it is if you use JUnit 5. https://www.baeldung.com/junit-testinstance-annotation[It is needed to use `@BeforeAll` and `@AfterAll`] annotations.
 You can change the tests instances lyfe cycle also project-wise if you like it, as described https://github.com/spring-guides/tut-spring-boot-kotlin#test-instance-lifecycle[here].
-I would not suggest doing it.
+I would not suggest of doing it.
 
-In the `@BeforeAll` we start spring on a random port and use the application context to create the MockMvClient, so that
+In the `@BeforeAll` we start Spring on a random port and use the application context to create the MockMvc, so that
 it points to correct port.
 
 We then use the `client` to perform the http requests in the test and verify the result. More on MockMvc https://www.baeldung.com/integration-testing-in-spring[here].
+
+== Write some extension utilities
+
+We are going to write some extension utilities that we will use in the next section.
+
+`src/main/kotlin/com/example/blog/extensions.kt`
+
+[source,kotlin]
+----
+fun LocalDateTime.format(): String = this.format(englishDateFormatter)
+
+private val daysLookup = (1..31).associate { it.toLong() to getOrdinal(it) }
+
+private val englishDateFormatter = DateTimeFormatterBuilder()
+    .appendPattern("yyyy-MM-dd")
+    .appendLiteral(" ")
+    .appendText(ChronoField.DAY_OF_MONTH, daysLookup)
+    .appendLiteral(" ")
+    .appendPattern("yyyy")
+    .toFormatter(Locale.ENGLISH)
+
+private fun getOrdinal(n: Int) = when {
+    n in 11..13 -> "${n}th"
+    n % 10 == 1 -> "${n}st"
+    n % 10 == 2 -> "${n}nd"
+    n % 10 == 3 -> "${n}rd"
+    else -> "${n}th"
+}
+
+fun String.toSlug() = lowercase()
+    .replace("\n", " ")
+    .replace("[^a-z\\d\\s]".toRegex(), " ")
+    .split(" ")
+    .joinToString("-")
+    .replace("-+".toRegex(), "-")
+----
+
+== Persistence with JDBC
+
+KoFu doesn't make use of CGLIB. This means that we have to write our repository and map our entities manually. This is not necessarily a bad thing: if you implement
+the https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html[Clean Architecture], you are going to map your entities anyway. Also mastering JPA
+implementations, like the one provided by Hibernate is not easy like it seems.
+
+Also, ORM frameworks forces you to model your entities as a 1:1 mapping of the E/R schema of the database. This could lead to design problems like:
+
+ * http://hibernate.org/orm/what-is-an-orm/[Object-Relational impedance mismatch]
+ * https://martinfowler.com/bliki/AnemicDomainModel.html[Anemic Domain Model]
+ * https://refactoring.guru/smells/primitive-obsession[Primitive obsession coding smell]
+
+Let's then start model our domain entities at first:
+
+`src/main/kotlin/com/example/blog/entities.kt`
+
+[source,kotlin]
+----
+sealed class Entity<out T>(open val info: T){
+    data class Existing<out T>(val id: Id<Int>, override val info: T) : Entity<T>(info)
+    data class New<out T>(override val info: T) : Entity<T>(info)
+}
+
+data class Id<T>(val value: T)
+
+data class Name(
+    val firstname: String,
+    val lastname: String,
+)
+
+@JvmInline
+value class Login(val value: String)
+
+data class User(
+    val login: Login,
+    val name: Name,
+    val description: String? = null){
+
+    companion object{
+        fun of(
+            login: String,
+            firstname: String,
+            lastname: String,
+            description: String? = null) =
+            User(Login(login), Name(firstname, lastname), description)
+    }
+}
+
+data class Article<out T : Entity<User>>(
+    val title: String,
+    val headline: String,
+    val content: String,
+    private val userFn: () -> T,
+    val slug: String = title.toSlug(),
+    val addedAt: LocalDateTime = LocalDateTime.now().withNano(0)
+){
+    fun <U: Entity<User>> withUser(user: U): Article<U> =
+        Article(title, headline, content, { user }, slug, addedAt)
+
+    fun existing(id: Id<Int>) =
+        Entity.Existing(id, Article(title, headline, content, userFn, slug, addedAt))
+
+    val user by lazy(userFn)
+}
+----
