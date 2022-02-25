@@ -393,7 +393,7 @@ Let's then start model our domain entities at first:
 [source,kotlin]
 ----
 sealed class Entity<out T>(open val info: T){
-    data class Existing<out T>(val id: Id<Int>, override val info: T) : Entity<T>(info)
+    data class WithId<out T>(val id: Id<Long>, override val info: T) : Entity<T>(info)
     data class New<out T>(override val info: T) : Entity<T>(info)
 }
 
@@ -405,7 +405,14 @@ data class Name(
 )
 
 @JvmInline
-value class Login(val value: String)
+value class Login private constructor(val value: String){
+    companion object{
+        fun of(value: String): Login{
+            require(value.isNotEmpty()){ "can't accept an empty login value" }
+            return Login(value)
+        }
+    }
+}
 
 data class User(
     val login: Login,
@@ -418,7 +425,7 @@ data class User(
             firstname: String,
             lastname: String,
             description: String? = null) =
-            User(Login(login), Name(firstname, lastname), description)
+            User(Login.of(login), Name(firstname, lastname), description)
     }
 }
 
@@ -430,12 +437,29 @@ data class Article<out T : Entity<User>>(
     val slug: String = title.toSlug(),
     val addedAt: LocalDateTime = LocalDateTime.now().withNano(0)
 ){
-    fun <U: Entity<User>> withUser(user: U): Article<U> =
-        Article(title, headline, content, { user }, slug, addedAt)
-
-    fun existing(id: Id<Int>) =
-        Entity.Existing(id, Article(title, headline, content, userFn, slug, addedAt))
-
     val user by lazy(userFn)
 }
 ----
+
+Here we used some of the many nice features of Kotlin.
+
+===== Sealed class for the Entity
+
+When you use a repository to save an entity, you usually don't make distinction beetween saving something new or doing an update.
+This is a responsibility of the repository. Also, it happens many times that you want the persistence layer to give you
+back a generated ID. There exist some strategies to model this: the most naive is to reserve some values (like 0 or negatives) to
+express the intent of requesting a generated ID.
+
+This is a perfect use-case for the https://kotlinlang.org/docs/sealed-classes.html[sealed classes] of Kotlin. We use a generic `Entity<T>`
+class that is inherited by `Entity<T>.New` and `Entity<T>.WithId`. Then you can say that a repository accepts an `Entity<T>` when it
+comes to the `save` method, and it returns an `Entity<T>.WithId` for the `get/find` methods. Internally the `save` method will check
+statically if we are saving something new or to update.
+
+===== Value class and companion objects for the Login and the User
+
+A login value is not just a string. It is a string with some restrictions. In this case it should not be empty. We can use
+https://kotlinlang.org/docs/inline-classes.html[Kotlin inline classes] to wrap the string without any runtime overhead and
+force its validation making the constructor private and exposing the constructor method `of`.
+
+The class `User` is composed by attributes that are not primitives. As a consequence, its constructor become less friendly to use.
+That's why we expose a constructor method `of` also for the `User`.
