@@ -50,3 +50,5 @@ data class Article<out T : Entity<User>>(
 ){
     val author by lazy(authorFn)
 }
+
+typealias ArticleEntity = Entity.WithId<Article<Entity.WithId<User>>>

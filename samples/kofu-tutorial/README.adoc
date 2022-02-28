@@ -477,3 +477,26 @@ delegated property, that executes the lambda only if the property is accessed.
 
 Testing the repositories doesn't require anything special. Once we have created an instance of a `Datasource` that points to
 an H2, we just have to pass it to the constructor of the repositories.
+
+We are going to use https://kotest.io/docs/assertions/assertions.html[Kotest assertions]. Add the following dependency:
+
+`build.gradle.kts`
+
+[source,kotlin]
+----
+testImplementation("io.kotest:kotest-assertions-core-jvm:5.1.0")
+----
+
+or if maven
+
+`pom.xml`
+
+[source,xml]
+----
+<dependency>
+    <groupId>io.kotest</groupId>
+    <artifactId>kotest-assertions-core-jvm</artifactId>
+    <version>5.1.0</version>
+</dependency>
+----
+
