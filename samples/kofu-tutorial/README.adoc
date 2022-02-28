@@ -386,7 +386,9 @@ Also, ORM frameworks forces you to model your entities as a 1:1 mapping of the E
  * https://martinfowler.com/bliki/AnemicDomainModel.html[Anemic Domain Model]
  * https://refactoring.guru/smells/primitive-obsession[Primitive obsession coding smell]
 
-Let's then start model our domain entities at first:
+Let's model our domain entities at first:
+
+=== Domain Entities
 
 `src/main/kotlin/com/example/blog/entities.kt`
 
@@ -433,11 +435,11 @@ data class Article<out T : Entity<User>>(
     val title: String,
     val headline: String,
     val content: String,
-    private val userFn: () -> T,
+    private val authorFn: () -> T,
     val slug: String = title.toSlug(),
     val addedAt: LocalDateTime = LocalDateTime.now().withNano(0)
 ){
-    val user by lazy(userFn)
+    val author by lazy(authorFn)
 }
 ----
 
@@ -463,3 +465,15 @@ force its validation making the constructor private and exposing the constructor
 
 The class `User` is composed by attributes that are not primitives. As a consequence, its constructor become less friendly to use.
 That's why we expose a constructor method `of` also for the `User`.
+
+===== Lazy delegated property for the user
+
+If we don't use JPA, we lose some interesting properties. Lazy fetching of relations, for example. That's why in the
+constructor of `Article` we don't receive an `Entity<User>`, but a lambda that returns an `Entity<User>` (`<T>` is constraint
+of being an `Entity<User>`). The property `author` is a https://kotlinlang.org/docs/delegated-properties.html#lazy-properties[lazy]
+delegated property, that executes the lambda only if the property is accessed.
+
+=== Repositories Tests
+
+Testing the repositories doesn't require anything special. Once we have created an instance of a `Datasource` that points to
+an H2, we just have to pass it to the constructor of the repositories.

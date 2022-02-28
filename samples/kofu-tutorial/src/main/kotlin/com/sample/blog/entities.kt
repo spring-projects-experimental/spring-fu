@@ -44,9 +44,9 @@ data class Article<out T : Entity<User>>(
     val title: String,
     val headline: String,
     val content: String,
-    private val userFn: () -> T,
+    private val authorFn: () -> T,
     val slug: String = title.toSlug(),
     val addedAt: LocalDateTime = LocalDateTime.now().withNano(0)
 ){
-    val user by lazy(userFn)
+    val author by lazy(authorFn)
 }
