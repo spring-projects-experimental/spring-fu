@@ -56,31 +56,13 @@ class UserRepositoriesTests {
         val user = userRepository.save(Entity.WithId(Id(userId.toLong()), luca.copy(login = Login.of(newLogin))))
         val login = getLogin(user)
 
-        user.info.login shouldBe newLogin
+        user.info.login.value shouldBe newLogin
         login shouldBe newLogin
     }
 
-    private fun getLogin(user: Entity.WithId<User>): String =
+    private fun getLogin(user: UserEntity): String =
         jdbcTemplate
             .query("select * from user where id=${user.id.value}") { rs, _ -> rs.getString("login") }
             .first()
-
 }
 
-class JdbcUserRepositoryImpl(dataSource: DataSource): UserRepository {
-    override fun save(entity: Entity<User>): Entity.WithId<User> {
-        TODO("Not yet implemented")
-    }
-
-    override fun findAll(): Collection<Entity.WithId<User>> {
-        TODO("Not yet implemented")
-    }
-
-    override fun findById(id: Id<Long>): Entity.WithId<User>? {
-        TODO("Not yet implemented")
-    }
-
-    override fun findByLogin(login: Login): Entity.WithId<User>? {
-        TODO("Not yet implemented")
-    }
-}

@@ -18,13 +18,6 @@ class JdbcTestsHelper(private val dataSource: DataSource) {
                 .url(h2Url)
                 .build()
         }
-
-        val luca = User.of("springluca", "Luca", "Piccinelli")
-        val article1 = Article(
-            "Spring Kotlin DSL is amazing",
-            "Dear Spring community ...",
-            "Lorem ipsum",
-            { Entity.New(luca) })
     }
 
     private val jdbcTemplate = JdbcTemplate(dataSource)
@@ -43,18 +36,14 @@ class JdbcTestsHelper(private val dataSource: DataSource) {
         "lastname" to user.name.lastname)
     )
 
-    fun insertArticle(article: Article<Entity.New<User>>): Pair<Number, Number> {
-        val userId = insertUser(article.author.info)
-
-        return userId to insertArticle.executeAndReturnKey(mapOf(
-            "title" to article.title,
-            "headline" to article.headline,
-            "content" to article.content,
-            "slug" to article.slug,
-            "added_at" to article.addedAt,
-            "author_id" to userId)
-        )
-    }
+    fun insertArticle(article: Article): Number = insertArticle.executeAndReturnKey(mapOf(
+        "title" to article.title,
+        "headline" to article.headline,
+        "content" to article.content,
+        "slug" to article.slug,
+        "added_at" to article.addedAt,
+        "author_id" to article.author.id.value)
+    )
 
     fun createUserTable() = jdbcTemplate.execute(
         """create table if not exists user(

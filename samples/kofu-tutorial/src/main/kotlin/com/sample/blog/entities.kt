@@ -40,15 +40,16 @@ data class User(
     }
 }
 
-data class Article<out T : Entity<User>>(
+data class Article(
     val title: String,
     val headline: String,
     val content: String,
-    private val authorFn: () -> T,
+    private val authorFn: () -> UserEntity,
     val slug: String = title.toSlug(),
     val addedAt: LocalDateTime = LocalDateTime.now().withNano(0)
 ){
     val author by lazy(authorFn)
 }
 
-typealias ArticleEntity = Entity.WithId<Article<Entity.WithId<User>>>
+typealias UserEntity = Entity.WithId<User>
+typealias ArticleEntity = Entity.WithId<Article>

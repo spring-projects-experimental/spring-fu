@@ -475,10 +475,10 @@ delegated property, that executes the lambda only if the property is accessed.
 
 === Repositories Tests
 
-Testing the repositories doesn't require anything special. Once we have created an instance of a `Datasource` that points to
-an H2, we just have to pass it to the constructor of the repositories.
+Testing the repositories doesn't require anything special. Once created an instance of a `Datasource` that points to
+an H2, we have to pass it to the constructor of the repositories.
 
-We are going to use https://kotest.io/docs/assertions/assertions.html[Kotest assertions]. Add the following dependency:
+We are going to use https://kotest.io/docs/assertions/assertions.html[Kotest assertions], then add the following dependency:
 
 `build.gradle.kts`
 
