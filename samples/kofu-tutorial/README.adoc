@@ -441,9 +441,14 @@ data class Article<out T : Entity<User>>(
 ){
     val author by lazy(authorFn)
 }
+
+typealias UserEntity = Entity.WithId<User>
+typealias ArticleEntity = Entity.WithId<Article>
 ----
 
-Here we used some of the many nice features of Kotlin.
+Please notice the typealiases at the end. With the `typealias` we specify a more readable name to use for the entities.
+
+Here we also used some of the many nice features of Kotlin.
 
 ===== Sealed class for the Entity
 
@@ -500,3 +505,396 @@ or if maven
 </dependency>
 ----
 
+We will need a Jdbc helper class in order to create tables and doing some quick query. The helper also has a companion object method
+`getDataSource` in order to manually instantiate a JdbcDatasource for the tests.
+
+`src/test/kotlin/com/example/blog/JdbcTestsHelper.kt`
+
+[source,kotlin]
+----
+class JdbcTestsHelper(dataSource: DataSource) {
+    companion object{
+        val h2Url = "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;"
+
+        fun getDataSource(): DataSource = DataSourceBuilder.create()
+            .driverClassName("org.h2.Driver")
+            .username("sa")
+            .password("")
+            .url(h2Url)
+            .build()
+    }
+
+    private val jdbcTemplate = JdbcTemplate(dataSource)
+
+    private val insertUser = SimpleJdbcInsert(dataSource)
+        .withTableName("USER")
+        .usingGeneratedKeyColumns("id")
+
+    private val insertArticle = SimpleJdbcInsert(dataSource)
+        .withTableName("ARTICLE")
+        .usingGeneratedKeyColumns("id")
+
+    fun insertUser(user: User): Number = insertUser.executeAndReturnKey(mapOf(
+        "login" to user.login.value,
+        "firstname" to user.name.firstname,
+        "lastname" to user.name.lastname)
+    )
+
+    fun insertArticle(article: Article): Number = insertArticle.executeAndReturnKey(mapOf(
+        "title" to article.title,
+        "headline" to article.headline,
+        "content" to article.content,
+        "slug" to article.slug,
+        "added_at" to article.addedAt,
+        "author_id" to article.author.id.value)
+    )
+
+    fun createUserTable() = jdbcTemplate.execute(
+        """create table if not exists user(
+                    id IDENTITY PRIMARY KEY,
+                    login VARCHAR NOT NULL,
+                    firstname VARCHAR NOT NULL,
+                    lastname VARCHAR NOT NULL,
+                    description VARCHAR
+                )"""
+    )
+
+    fun createArticleTable() = jdbcTemplate.execute(
+        """create table if not exists article(
+                    id IDENTITY PRIMARY KEY,
+                    title VARCHAR NOT NULL,
+                    headline VARCHAR NOT NULL,
+                    content VARCHAR NOT NULL,
+                    slug VARCHAR NOT NULL,
+                    added_at DATETIME,
+                    author_id INT NOT NULL,
+                    constraint FK_USER foreign key (author_id) references user(id)
+                )"""
+    )
+
+    fun dropDb(){
+        jdbcTemplate.execute("DROP ALL OBJECTS")
+    }
+}
+----
+
+We will test and implement only the methods that we are going to actually use.
+The `UserRepository` and `ArticleRepository` will have the following interfaces
+
+`src/main/kotlin/com/example/blog/repositories.kt`
+
+[source,kotlin]
+----
+interface UserRepository {
+    fun save(user: Entity<User>): UserEntity
+    fun findAll(): Collection<UserEntity>
+    fun findById(id: Id<Long>): UserEntity?
+    fun findByLogin(login: Login): UserEntity?
+}
+
+interface ArticleRepository {
+    fun save(article: Entity<Article>): ArticleEntity
+    fun findAll(): Collection<ArticleEntity>
+    fun findAllByOrderByAddedAtDesc(): Collection<ArticleEntity>
+    fun findById(id: Id<Long>): ArticleEntity?
+    fun findBySlug(slug: String): ArticleEntity?
+}
+----
+
+Please notice that the repositories `save` methods receive an `Entity` class, while when an Entity is returned, it is always of
+type `Entity.WithId`. This is because `save` if both for insert and update, then it can receive either `Entity.New` or
+`Entity.WithId`
+
+Then it follows the `UserRepository` tests.
+
+`src/test/kotlin/com/example/blog/UserRepositoriesTests.kt`
+
+[source,kotlin]
+----
+class UserRepositoriesTests {
+    private val dataSource: DataSource = JdbcTestsHelper.getDataSource()
+
+    private val jdbcTemplate = JdbcTemplate(dataSource)
+    private val repoHelper = JdbcTestsHelper(dataSource)
+
+    private val userRepository: UserRepository = JdbcUserRepositoryImpl(dataSource)
+
+    private val luca = User.of("springluca", "Luca", "Piccinelli")
+
+    @BeforeEach
+    fun setUp() {
+        repoHelper.createUserTable()
+    }
+
+    @AfterEach
+    fun tearDown() {
+        repoHelper.dropDb()
+    }
+
+    @Test
+    fun `When findByLogin then return User`() {
+        repoHelper.insertUser(luca)
+        val user = userRepository.findByLogin(luca.login)
+        user?.info shouldBe luca
+    }
+
+    @Test
+    fun `When findAll then return a collection of users`() {
+        repoHelper.insertUser(luca)
+        val users = userRepository.findAll()
+        users.map { it.info }.toList() shouldBe listOf(luca)
+    }
+
+    @Test
+    fun `When saving the user should exist`() {
+        val user = userRepository.save(Entity.New(luca))
+        val login = getLogin(user)
+        user.info.login.value shouldBe login
+    }
+
+    @Test
+    fun `When updating user its data should change`() {
+        val userId = repoHelper.insertUser(luca)
+
+        val newLogin = "banana"
+        val user = userRepository.save(Entity.WithId(Id(userId.toLong()), luca.copy(login = Login.of(newLogin))))
+        val login = getLogin(user)
+
+        user.info.login.value shouldBe newLogin
+        login shouldBe newLogin
+    }
+
+    private fun getLogin(user: UserEntity): String =
+        jdbcTemplate
+            .query("select * from user where id=${user.id.value}") { rs, _ -> rs.getString("login") }
+            .first()
+}
+----
+
+and `ArticleRepositories` tests
+
+`src/test/kotlin/com/example/blog/ArticleRepositoriesTests.kt`
+
+[source,kotlin]
+----
+class ArticleRepositoriesTests {
+    private val dataSource: DataSource = JdbcTestsHelper.getDataSource()
+
+    private val jdbcTemplate = JdbcTemplate(dataSource)
+    private val repoHelper = JdbcTestsHelper(dataSource)
+
+    private val articleRepository = JdbcArticleRepositoryImpl(dataSource)
+
+    private val luca = User.of("springluca", "Luca", "Piccinelli")
+    private lateinit var article: Article
+
+    @BeforeEach
+    internal fun setUp() {
+        repoHelper.createUserTable()
+        repoHelper.createArticleTable()
+
+        val userId = repoHelper.insertUser(luca)
+        article = Article(
+            "Spring Kotlin DSL is amazing",
+            "Dear Spring community ...",
+            "Lorem ipsum",
+            { Entity.WithId(Id(userId.toLong()), luca) })
+    }
+
+    @AfterEach
+    internal fun tearDown() {
+        repoHelper.dropDb()
+    }
+
+    @Test
+    fun `When findBySlug then return Article`() {
+        val id = repoHelper.insertArticle(article)
+        val articleEntity = articleRepository.findBySlug(article.slug)
+        articleEntity?.id?.value shouldBe id.toLong()
+    }
+
+    @Test
+    fun `When findByAll then return a collection of articles`() {
+        val id = repoHelper.insertArticle(article)
+        val articles = articleRepository.findAll()
+        articles.map { it.id.value }.toList() shouldBe listOf(id.toLong())
+    }
+
+    @Test
+    fun `When saving the user should exist`() {
+        val article = articleRepository.save(Entity.New(article))
+        val slug = get(article, "slug")
+        article.info.slug shouldBe slug
+    }
+
+    @Test
+    fun `When updating user its data should change`() {
+        val articleId = repoHelper.insertArticle(article)
+
+        val newTitle = "banana"
+        val article = articleRepository.save(Entity.WithId(Id(articleId.toLong()), article.copy(title = newTitle)))
+        val title = get(article, "title")
+
+        article.info.title shouldBe newTitle
+        title shouldBe newTitle
+    }
+
+    private fun get(article: ArticleEntity, name: String): String =
+        jdbcTemplate
+            .query("select * from article where id=${article.id.value}") { rs, _ -> rs.getString(name) }
+            .first()
+}
+----
+
+These tests have nothing particular. At first we instantiate the repositories using the `Datasource` coming from the helper.
+Then we prepare the database before each test (see `@BeforeEach`), and we drop everything after each test (see `@AfterEach`),
+so that each test is actually isolated from the others.
+
+=== The repositories
+
+Finally, the repositories implementations
+
+`src/main/kotlin/com/example/blog/JdbcUserRepositoryImpl.kt`
+
+[source,kotlin]
+----
+class JdbcUserRepositoryImpl(dataSource: DataSource): UserRepository {
+
+    private val jdbcTemplate = NamedParameterJdbcTemplate(dataSource)
+
+    private val insertUser = SimpleJdbcInsert(dataSource)
+        .withTableName("user")
+        .usingGeneratedKeyColumns("id")
+
+    override fun findByLogin(login: Login): UserEntity? = firstOrNull("login", login.value)
+    override fun findById(id: Id<Long>): UserEntity? = firstOrNull("id", id.value)
+    override fun findAll(): Collection<UserEntity> =
+        jdbcTemplate.query("select * from user") { rs, _ -> toUser(rs) }
+
+    override fun save(user: Entity<User>): UserEntity {
+        val parameters = with(user.info) {
+            mapOf(
+                "login" to login.value,
+                "firstname" to name.firstname,
+                "lastname" to name.lastname
+            )
+        }
+        return when(user){
+            is Entity.New ->{
+                insertUser
+                    .executeAndReturnKey(parameters)
+                    .let { id -> Entity.WithId(Id(id.toLong()), user.info) }
+            }
+            is Entity.WithId -> jdbcTemplate
+                .update(
+                    "update user set login=:login, firstname=:firstname, lastname=:lastname where id=:id",
+                    parameters.toMutableMap().also { it["id"] = "${user.id.value}" })
+                .let { user }
+        }
+    }
+
+    private fun firstOrNull(paramName: String, value: Any) = jdbcTemplate
+        .query("select * from user where $paramName=:$paramName", mapOf(paramName to value)) { rs, _ ->
+            toUser(rs)
+        }
+        .firstOrNull()
+
+    private fun toUser(rs: ResultSet) = Entity.WithId(
+        Id(rs.getLong("id")),
+        User.of(
+            rs.getString("login"),
+            rs.getString("firstname"),
+            rs.getString("lastname")
+        )
+    )
+}
+----
+
+NOTE: Notice in the `save` method how we switch between `Entity.New` and `Entity.WithId`. This switch (`when` in Kotlin)
+is exhaustive, thanks to the power of sealed classes. That means that the compiler forces use to match every
+possible case of the switch, so that nothing unexpected can happen at run-time. The https://kotlinlang.org/docs/typecasts.html#smart-casts[smart cast] do the rest,
+so in each branch of the `when` we can access the specialized attributes of each class (e.g. the `id` when updating).
+
+`src/main/kotlin/com/example/blog/JdbcArticleRepositoryImpl.kt`
+
+[source,kotlin]
+----
+class JdbcArticleRepositoryImpl(dataSource: DataSource): ArticleRepository {
+    private val jdbcTemplate = NamedParameterJdbcTemplate(dataSource)
+    private val userRepository = JdbcUserRepositoryImpl(dataSource)
+
+    private val insert = SimpleJdbcInsert(dataSource)
+        .withTableName("article")
+        .usingGeneratedKeyColumns("id")
+
+    override fun findById(id: Id<Long>): ArticleEntity? = firstOrNull("id", id.value)
+    override fun findBySlug(slug: String): ArticleEntity? = firstOrNull("slug", slug)
+    override fun findAll(): Collection<ArticleEntity> =
+        findAll("select * from article")
+
+    override fun findAllByOrderByAddedAtDesc(): Collection<ArticleEntity> =
+        findAll("select * from article order by added_at desc")
+
+    override fun save(article: Entity<Article>): ArticleEntity {
+        val parameters = with(article.info) {
+            mapOf(
+                "title" to title,
+                "headline" to headline,
+                "slug" to slug,
+                "added_at" to addedAt,
+                "content" to content,
+                "author_id" to author.id.value,
+            )
+        }
+
+        return when (article) {
+            is Entity.New -> {
+                insert
+                    .executeAndReturnKey(parameters)
+                    .let { id -> Entity.WithId(Id(id.toLong()), article.info) }
+            }
+            is Entity.WithId -> jdbcTemplate
+                .update(
+                    """update article set
+                        |title=:title,
+                        |headline=:headline,
+                        |slug=:slug,
+                        |added_at=:added_at,
+                        |content=:content,
+                        |author_id=:author_id
+                        |where id=:id""".trimMargin(),
+                    parameters.toMutableMap<String, Any>().also { it["id"] = "${article.id.value}" })
+                .let { article }
+        }
+    }
+
+    private fun toArticle(rs: ResultSet): ArticleEntity {
+        val userId = rs.getLong("author_id")
+        val articleId = rs.getLong("id")
+        return Entity.WithId(
+            Id(articleId),
+            Article(
+                rs.getString("title"),
+                rs.getString("headline"),
+                rs.getString("content"),
+                {
+                    userRepository
+                        .findById(userId.run(::Id))
+                        ?: throw DataRetrievalFailureException("On article with id $articleId There is no user with id $userId")
+                },
+                rs.getString("slug"),
+                rs.getTimestamp("added_at").toLocalDateTime()
+            )
+        )
+    }
+
+    private fun findAll(query: String) =
+        jdbcTemplate.query(query) { rs, _ -> toArticle(rs) }
+
+    private fun firstOrNull(parameterName: String, value: Any) = jdbcTemplate
+        .query("select * from article where $parameterName=:$parameterName", mapOf(parameterName to value)) { rs, _ ->
+            toArticle(rs)
+        }
+        .firstOrNull()
+}
+----

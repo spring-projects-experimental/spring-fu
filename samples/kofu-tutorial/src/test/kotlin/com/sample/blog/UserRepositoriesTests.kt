@@ -13,7 +13,7 @@ class UserRepositoriesTests {
     private val jdbcTemplate = JdbcTemplate(dataSource)
     private val repoHelper = JdbcTestsHelper(dataSource)
 
-    private val userRepository = JdbcUserRepositoryImpl(dataSource)
+    private val userRepository: UserRepository = JdbcUserRepositoryImpl(dataSource)
 
     private val luca = User.of("springluca", "Luca", "Piccinelli")
 
@@ -35,7 +35,7 @@ class UserRepositoriesTests {
     }
 
     @Test
-    fun `When findByAll then return a collection of users`() {
+    fun `When findAll then return a collection of users`() {
         repoHelper.insertUser(luca)
         val users = userRepository.findAll()
         users.map { it.info }.toList() shouldBe listOf(luca)

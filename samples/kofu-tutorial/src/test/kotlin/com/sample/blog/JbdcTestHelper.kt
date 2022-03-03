@@ -6,18 +6,16 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert
 import javax.sql.DataSource
 
 
-class JdbcTestsHelper(private val dataSource: DataSource) {
+class JdbcTestsHelper(dataSource: DataSource) {
     companion object{
         val h2Url = "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;"
 
-        fun getDataSource(): DataSource {
-            return DataSourceBuilder.create()
-                .driverClassName("org.h2.Driver")
-                .username("sa")
-                .password("")
-                .url(h2Url)
-                .build()
-        }
+        fun getDataSource(): DataSource = DataSourceBuilder.create()
+            .driverClassName("org.h2.Driver")
+            .username("sa")
+            .password("")
+            .url(h2Url)
+            .build()
     }
 
     private val jdbcTemplate = JdbcTemplate(dataSource)
