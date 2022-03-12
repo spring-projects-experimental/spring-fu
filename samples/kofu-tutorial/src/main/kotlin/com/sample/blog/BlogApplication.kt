@@ -9,7 +9,7 @@ import org.springframework.fu.kofu.webApplication
 import org.springframework.fu.kofu.webmvc.webMvc
 import org.springframework.web.servlet.function.ServerResponse
 
-val h2 = configuration {
+val datasource = configuration {
     jdbc(DataSourceType.Hikari){
         url = "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE"
         driverClassName = "org.h2.Driver"
@@ -18,7 +18,7 @@ val h2 = configuration {
     }
 }
 
-val persistence = configuration {
+val repositories = configuration {
     beans {
         bean { JdbcUserRepositoryImpl(ref()) }
         bean { JdbcArticleRepositoryImpl(ref()) }
@@ -67,8 +67,8 @@ val app = webApplication {
     profile("dev"){
         enable(populate)
     }
-    enable(persistence)
-    enable(h2)
+    enable(repositories)
+    enable(datasource)
     webMvc {
         mustache{
             prefix = "classpath:/views/"
@@ -84,5 +84,5 @@ val app = webApplication {
 }
 
 fun main(args: Array<String>) {
-    app.run(args + arrayOf("--spring.profiles.active=dev"))
+    app.run(args, profiles = "dev")
 }

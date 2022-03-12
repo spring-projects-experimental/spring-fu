@@ -895,16 +895,49 @@ class JdbcArticleRepositoryImpl(dataSource: DataSource): ArticleRepository {
 }
 ----
 
-=== The Datasource
+=== Add repositories to the Spring context
 
-Our repositories use a `Datasource`. Then we have to create one when starting our application. We are going to use an Hikari datasource
-connected to a H2 database.
+Now it's time to add the repositories to the spring context. Let's modify the main app in `BlogApplication.kt`
 
 `src/main/kotlin/com/example/blog/BlogApplication.kt`
 
 [source,kotlin]
 ----
-val h2 = configuration {
+val repositories = configuration {
+    beans {
+        bean { JdbcUserRepositoryImpl(ref()) }
+        bean { JdbcArticleRepositoryImpl(ref()) }
+    }
+}
+
+val app = webApplication {
+    enable(repositories)
+    webMvc {
+        ...
+    }
+}
+----
+
+We just created a new configuration and put the repositories into the context with `beans{}`. Then we enabled the new configuration.
+Please notice the `ref()` calls in repositories constructors. This is the equivalent of `@Autowired`. The `ref()` call
+asks Spring to find an implementation of a `Datasource`. In this case it is a shorthand for
+
+[source, kotlin]
+----
+val datasource: Datasource = ref()
+JdbcUserRepositoryImpl(datasource)
+----
+
+We are asking spring to give us an implementation of a `Datasource`. Pay attention that `spring-boot-starter-jdbc` doesn't inject a datasource
+like it does with regulat Springboot. We have to declare it explicitly as it follows:
+
+`src/main/kotlin/com/example/blog/BlogApplication.kt`
+
+[source,kotlin]
+----
+val repositories = ...
+
+val datasource = configuration {
     jdbc(DataSourceType.Hikari){
         url = "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE"
         driverClassName = "org.h2.Driver"
@@ -914,25 +947,82 @@ val h2 = configuration {
 }
 
 val app = webApplication {
-    enable(h2)
+    enable(repositories)
+    enable(datasource)
     webMvc {
-        mustache{
-            prefix = "classpath:/views/"
-        }
+        ...
+    }
+}
+----
 
-        router {
-            GET("/"){
-                ServerResponse.ok()
-                    .render("blog", mapOf("title" to "Blog"))
-            }
+In the `datasource` configuration we call the `jdbc()` function and declare how to connect the datasource to a database.
+When spring starts, we want to create the tables into the database and, for develop purpose, populate it with some data.
+
+`src/main/kotlin/com/example/blog/BlogApplication.kt`
+
+[source,kotlin]
+----
+val repositories = ...
+
+val datasource = ...
+
+val createDb = configuration {
+    listener<ApplicationReadyEvent> {
+        JdbcHelper(ref()).apply {
+            createUserTable()
+            createArticleTable()
         }
     }
 }
 
+val populate = configuration {
+    listener<ApplicationReadyEvent> {
+        val userRepository: UserRepository = ref()
+        val articleRepository: ArticleRepository = ref()
+
+        val author = Entity.New(User.of("springluca", "Luca", "Piccinelli"))
+        val persistedAuthor = userRepository.save(author)
+        articleRepository.save(Entity.New(
+            Article(
+                title = "Reactor Bismuth is out",
+                headline = "Lorem ipsum",
+                content = "dolor sit amet",
+                authorFn = { persistedAuthor }
+            )
+        ))
+        articleRepository.save(
+            Entity.New(
+                Article(
+                    title = "Reactor Aluminium has landed",
+                    headline = "Lorem ipsum",
+                    content = "dolor sit amet",
+                    authorFn = { persistedAuthor }
+                )
+            )
+        )
+    }
+}
+
+val app = webApplication {
+    enable(repositories)
+    enable(datasource)
+    enable(createDb)
+    profile("dev"){
+        enable(populate)
+    }
+    webMvc {
+        ...
+    }
+}
+
 fun main(args: Array<String>) {
-    app.run(args)
+    app.run(args, profiles = "dev")
 }
 ----
+
+We declared two other configuration and used `listener<ApplicationReadyEvent>` to run code after that Spring has started.
+
+Notice that the `populate` configuration is enable only for `profile("dev")`. In the `main` function we set the profile to `"dev"`.
 
 == Implementing the blog engine
 
