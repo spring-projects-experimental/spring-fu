@@ -8,10 +8,10 @@ import org.springframework.jdbc.core.JdbcTemplate
 import javax.sql.DataSource
 
 class UserRepositoriesTests {
-    private val dataSource: DataSource = JdbcTestsHelper.getDataSource()
+    private val dataSource: DataSource = JdbcHelper.getDataSource()
 
     private val jdbcTemplate = JdbcTemplate(dataSource)
-    private val repoHelper = JdbcTestsHelper(dataSource)
+    private val repoHelper = JdbcHelper(dataSource)
 
     private val userRepository: UserRepository = JdbcUserRepositoryImpl(dataSource)
 

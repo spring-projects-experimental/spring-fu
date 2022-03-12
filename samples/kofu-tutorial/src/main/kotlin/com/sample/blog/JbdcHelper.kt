@@ -6,7 +6,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert
 import javax.sql.DataSource
 
 
-class JdbcTestsHelper(dataSource: DataSource) {
+class JdbcHelper(dataSource: DataSource) {
     companion object{
         val h2Url = "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;"
 

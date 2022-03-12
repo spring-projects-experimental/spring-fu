@@ -894,3 +894,8 @@ class JdbcArticleRepositoryImpl(dataSource: DataSource): ArticleRepository {
         .firstOrNull()
 }
 ----
+
+== Implementing the blog engine
+
+We update the "blog" mustache templates.
+
