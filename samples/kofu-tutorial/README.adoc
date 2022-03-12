@@ -928,8 +928,8 @@ val datasource: Datasource = ref()
 JdbcUserRepositoryImpl(datasource)
 ----
 
-We are asking spring to give us an implementation of a `Datasource`. Pay attention that `spring-boot-starter-jdbc` doesn't inject a datasource
-like it does with regulat Springboot. We have to declare it explicitly as it follows:
+We are asking spring to give us an implementation of a `Datasource`. Pay attention that `spring-boot-starter-jdbc` doesn't create magically a datasource
+like it does with regular Springboot. We have to declare it explicitly as it follows:
 
 `src/main/kotlin/com/example/blog/BlogApplication.kt`
 
