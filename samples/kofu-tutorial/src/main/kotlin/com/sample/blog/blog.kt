@@ -6,11 +6,6 @@ import org.springframework.fu.kofu.webmvc.webMvc
 import org.springframework.web.servlet.function.ServerRequest
 import org.springframework.web.servlet.function.ServerResponse
 
-val blogModule = configuration {
-    enable(blog)
-    enable(blogPersistence)
-}
-
 val blog = configuration {
     webMvc {
         mustache{
@@ -26,15 +21,6 @@ val blog = configuration {
     }
 }
 
-val blogPersistence = configuration {
-    beans {
-        beans {
-            bean { JdbcUserRepositoryImpl(ref()) }
-            bean { JdbcArticleRepositoryImpl(ref()) }
-        }
-    }
-}
-
 class HtmlHandler(
     private val articleRepository: ArticleRepository
 ) {
@@ -46,20 +32,18 @@ class HtmlHandler(
             ),
         )
 
-    fun article(request: ServerRequest): ServerResponse {
-        return articleRepository
-            .findBySlug(request.pathVariable("slug"))
-            ?.render()
-            ?.let { article ->
-                ServerResponse.ok().render(
-                    "article", mapOf(
-                        "title" to article.title,
-                        "article" to article
-                    )
+    fun article(request: ServerRequest): ServerResponse = articleRepository
+        .findBySlug(request.pathVariable("slug"))
+        ?.render()
+        ?.let { article ->
+            ServerResponse.ok().render(
+                "article", mapOf(
+                    "title" to article.title,
+                    "article" to article
                 )
-            }
-            ?: ServerResponse.notFound().build()
-    }
+            )
+        }
+        ?: ServerResponse.notFound().build()
 }
 
 data class RenderedArticle(

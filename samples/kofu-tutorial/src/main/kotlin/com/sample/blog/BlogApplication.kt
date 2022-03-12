@@ -4,10 +4,7 @@ import org.springframework.boot.context.event.ApplicationReadyEvent
 import org.springframework.fu.kofu.configuration
 import org.springframework.fu.kofu.jdbc.DataSourceType
 import org.springframework.fu.kofu.jdbc.jdbc
-import org.springframework.fu.kofu.templating.mustache
 import org.springframework.fu.kofu.webApplication
-import org.springframework.fu.kofu.webmvc.webMvc
-import org.springframework.web.servlet.function.ServerResponse
 
 val datasource = configuration {
     jdbc(DataSourceType.Hikari){
@@ -69,18 +66,7 @@ val app = webApplication {
     }
     enable(repositories)
     enable(datasource)
-    webMvc {
-        mustache{
-            prefix = "classpath:/views/"
-        }
-
-        router {
-            GET("/"){
-                ServerResponse.ok()
-                    .render("blog", mapOf("title" to "Blog"))
-            }
-        }
-    }
+    enable(blog)
 }
 
 fun main(args: Array<String>) {
