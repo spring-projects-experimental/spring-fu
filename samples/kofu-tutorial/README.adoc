@@ -895,6 +895,45 @@ class JdbcArticleRepositoryImpl(dataSource: DataSource): ArticleRepository {
 }
 ----
 
+=== The Datasource
+
+Our repositories use a `Datasource`. Then we have to create one when starting our application. We are going to use an Hikari datasource
+connected to a H2 database.
+
+`src/main/kotlin/com/example/blog/BlogApplication.kt`
+
+[source,kotlin]
+----
+val h2 = configuration {
+    jdbc(DataSourceType.Hikari){
+        url = "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE"
+        driverClassName = "org.h2.Driver"
+        username = "sa"
+        password = ""
+    }
+}
+
+val app = webApplication {
+    enable(h2)
+    webMvc {
+        mustache{
+            prefix = "classpath:/views/"
+        }
+
+        router {
+            GET("/"){
+                ServerResponse.ok()
+                    .render("blog", mapOf("title" to "Blog"))
+            }
+        }
+    }
+}
+
+fun main(args: Array<String>) {
+    app.run(args)
+}
+----
+
 == Implementing the blog engine
 
 We update the "blog" mustache templates.

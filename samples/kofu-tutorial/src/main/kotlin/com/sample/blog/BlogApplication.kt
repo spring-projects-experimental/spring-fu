@@ -4,7 +4,10 @@ import org.springframework.boot.context.event.ApplicationReadyEvent
 import org.springframework.fu.kofu.configuration
 import org.springframework.fu.kofu.jdbc.DataSourceType
 import org.springframework.fu.kofu.jdbc.jdbc
+import org.springframework.fu.kofu.templating.mustache
 import org.springframework.fu.kofu.webApplication
+import org.springframework.fu.kofu.webmvc.webMvc
+import org.springframework.web.servlet.function.ServerResponse
 
 val h2 = configuration {
     jdbc(DataSourceType.Hikari){
@@ -15,41 +18,67 @@ val h2 = configuration {
     }
 }
 
-val app = webApplication {
-    enable(h2)
-    enable(blogModule)
+val persistence = configuration {
     beans {
-        listener<ApplicationReadyEvent> {
-            val jdbcHelper = JdbcHelper(ref())
-            jdbcHelper.createUserTable()
-            jdbcHelper.createArticleTable()
+        bean { JdbcUserRepositoryImpl(ref()) }
+        bean { JdbcArticleRepositoryImpl(ref()) }
+    }
+}
+
+val createDb = configuration {
+    listener<ApplicationReadyEvent> {
+        JdbcHelper(ref()).apply {
+            createUserTable()
+            createArticleTable()
         }
     }
-    profile("dev"){
-        listener<ApplicationReadyEvent> {
-            val userRepository: UserRepository = ref()
-            val articleRepository: ArticleRepository = ref()
+}
 
-            val author = Entity.New(User.of("springluca", "Luca", "Piccinelli"))
-            val persistedAuthor = userRepository.save(author)
-            articleRepository.save(Entity.New(
+val populate = configuration {
+    listener<ApplicationReadyEvent> {
+        val userRepository: UserRepository = ref()
+        val articleRepository: ArticleRepository = ref()
+
+        val author = Entity.New(User.of("springluca", "Luca", "Piccinelli"))
+        val persistedAuthor = userRepository.save(author)
+        articleRepository.save(Entity.New(
+            Article(
+                title = "Reactor Bismuth is out",
+                headline = "Lorem ipsum",
+                content = "dolor sit amet",
+                authorFn = { persistedAuthor }
+            )
+        ))
+        articleRepository.save(
+            Entity.New(
                 Article(
-                    title = "Reactor Bismuth is out",
+                    title = "Reactor Aluminium has landed",
                     headline = "Lorem ipsum",
                     content = "dolor sit amet",
                     authorFn = { persistedAuthor }
                 )
-            ))
-            articleRepository.save(
-                Entity.New(
-                    Article(
-                        title = "Reactor Aluminium has landed",
-                        headline = "Lorem ipsum",
-                        content = "dolor sit amet",
-                        authorFn = { persistedAuthor }
-                    )
-                )
             )
+        )
+    }
+}
+
+val app = webApplication {
+    enable(createDb)
+    profile("dev"){
+        enable(populate)
+    }
+    enable(persistence)
+    enable(h2)
+    webMvc {
+        mustache{
+            prefix = "classpath:/views/"
+        }
+
+        router {
+            GET("/"){
+                ServerResponse.ok()
+                    .render("blog", mapOf("title" to "Blog"))
+            }
         }
     }
 }
