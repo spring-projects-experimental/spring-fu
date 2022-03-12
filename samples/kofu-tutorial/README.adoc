@@ -376,11 +376,10 @@ fun String.toSlug() = lowercase()
 
 == Persistence with JDBC
 
-KoFu doesn't make use of CGLIB. This means that we have to write our repository and map our entities manually. This is not necessarily a bad thing: if you implement
-the https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html[Clean Architecture], you are going to map your entities anyway. Also mastering JPA
-implementations, like the one provided by Hibernate is not easy like it seems.
+KoFu doesn't make use of CGLIB. This means that we have to write our repository and map our entities manually. Also mastering JPA
+implementations, like Hibernate, is not easy like it seems.
 
-Also, ORM frameworks forces you to model your entities as a 1:1 mapping of the E/R schema of the database. This could lead to design problems like:
+ORM frameworks forces you to model your entities as a 1:1 mapping with the E/R schema of the database. This could lead to design problems like:
 
  * http://hibernate.org/orm/what-is-an-orm/[Object-Relational impedance mismatch]
  * https://martinfowler.com/bliki/AnemicDomainModel.html[Anemic Domain Model]
@@ -394,9 +393,9 @@ Let's model our domain entities at first:
 
 [source,kotlin]
 ----
-sealed class Entity<out T>(open val info: T){
-    data class WithId<out T>(val id: Id<Long>, override val info: T) : Entity<T>(info)
-    data class New<out T>(override val info: T) : Entity<T>(info)
+sealed class Entity<out T>{
+    data class WithId<out T>(val id: Id<Long>, val info: T) : Entity<T>()
+    data class New<out T>(val info: T) : Entity<T>()
 }
 
 data class Id<T>(val value: T)
@@ -431,11 +430,11 @@ data class User(
     }
 }
 
-data class Article<out T : Entity<User>>(
+data class Article(
     val title: String,
     val headline: String,
     val content: String,
-    private val authorFn: () -> T,
+    private val authorFn: () -> UserEntity,
     val slug: String = title.toSlug(),
     val addedAt: LocalDateTime = LocalDateTime.now().withNano(0)
 ){
@@ -746,9 +745,9 @@ class ArticleRepositoriesTests {
 }
 ----
 
-These tests have nothing particular. At first we instantiate the repositories using the `Datasource` coming from the helper.
-Then we prepare the database before each test (see `@BeforeEach`), and we drop everything after each test (see `@AfterEach`),
-so that each test is actually isolated from the others.
+When using JPA, you test the repositories with `@DataJpaTests`, that requires spring to start. In contrast, the tests above have nothing particular.
+At first we instantiate the repositories using the `Datasource` coming from the helper. Then we prepare the database before each test
+(see `@BeforeEach`), and we drop everything after each test (see `@AfterEach`), so that each test is actually isolated from the others.
 
 === The repositories
 
@@ -771,26 +770,25 @@ class JdbcUserRepositoryImpl(dataSource: DataSource): UserRepository {
     override fun findAll(): Collection<UserEntity> =
         jdbcTemplate.query("select * from user") { rs, _ -> toUser(rs) }
 
-    override fun save(user: Entity<User>): UserEntity {
-        val parameters = with(user.info) {
-            mapOf(
-                "login" to login.value,
-                "firstname" to name.firstname,
-                "lastname" to name.lastname
-            )
+    override fun save(user: Entity<User>): UserEntity = when(user){
+        is Entity.New ->{
+            insertUser
+                .executeAndReturnKey(getUserParameters(user.info))
+                .let { id -> Entity.WithId(Id(id.toLong()), user.info) }
         }
-        return when(user){
-            is Entity.New ->{
-                insertUser
-                    .executeAndReturnKey(parameters)
-                    .let { id -> Entity.WithId(Id(id.toLong()), user.info) }
-            }
-            is Entity.WithId -> jdbcTemplate
-                .update(
-                    "update user set login=:login, firstname=:firstname, lastname=:lastname where id=:id",
-                    parameters.toMutableMap().also { it["id"] = "${user.id.value}" })
-                .let { user }
-        }
+        is Entity.WithId -> jdbcTemplate
+            .update(
+                "update user set login=:login, firstname=:firstname, lastname=:lastname where id=:id",
+                getUserParameters(user.info).toMutableMap().also { it["id"] = "${user.id.value}" })
+            .let { user }
+    }
+
+    private fun getUserParameters(user: User): Map<String, Any> = with(user) {
+        mapOf(
+            "login" to login.value,
+            "firstname" to name.firstname,
+            "lastname" to name.lastname
+        )
     }
 
     private fun firstOrNull(paramName: String, value: Any) = jdbcTemplate
@@ -810,7 +808,7 @@ class JdbcUserRepositoryImpl(dataSource: DataSource): UserRepository {
 }
 ----
 
-NOTE: Notice in the `save` method how we switch between `Entity.New` and `Entity.WithId`. This switch (`when` in Kotlin)
+NOTE: Notice in the `save` method how we switch (`when` in Kotlin) between `Entity.New` and `Entity.WithId`. It is
 is exhaustive, thanks to the power of sealed classes. That means that the compiler forces use to match every
 possible case of the switch, so that nothing unexpected can happen at run-time. The https://kotlinlang.org/docs/typecasts.html#smart-casts[smart cast] do the rest,
 so in each branch of the `when` we can access the specialized attributes of each class (e.g. the `id` when updating).
@@ -835,37 +833,35 @@ class JdbcArticleRepositoryImpl(dataSource: DataSource): ArticleRepository {
     override fun findAllByOrderByAddedAtDesc(): Collection<ArticleEntity> =
         findAll("select * from article order by added_at desc")
 
-    override fun save(article: Entity<Article>): ArticleEntity {
-        val parameters = with(article.info) {
-            mapOf(
-                "title" to title,
-                "headline" to headline,
-                "slug" to slug,
-                "added_at" to addedAt,
-                "content" to content,
-                "author_id" to author.id.value,
-            )
+    override fun save(article: Entity<Article>): ArticleEntity = when (article) {
+        is Entity.New -> {
+            insert
+                .executeAndReturnKey(getArticleParameters(article.info))
+                .let { id -> Entity.WithId(Id(id.toLong()), article.info) }
         }
+        is Entity.WithId -> jdbcTemplate
+            .update(
+                """update article set
+                    |title=:title,
+                    |headline=:headline,
+                    |slug=:slug,
+                    |added_at=:added_at,
+                    |content=:content,
+                    |author_id=:author_id
+                    |where id=:id""".trimMargin(),
+                getArticleParameters(article.info).toMutableMap().also { it["id"] = "${article.id.value}" })
+            .let { article }
+    }
 
-        return when (article) {
-            is Entity.New -> {
-                insert
-                    .executeAndReturnKey(parameters)
-                    .let { id -> Entity.WithId(Id(id.toLong()), article.info) }
-            }
-            is Entity.WithId -> jdbcTemplate
-                .update(
-                    """update article set
-                        |title=:title,
-                        |headline=:headline,
-                        |slug=:slug,
-                        |added_at=:added_at,
-                        |content=:content,
-                        |author_id=:author_id
-                        |where id=:id""".trimMargin(),
-                    parameters.toMutableMap<String, Any>().also { it["id"] = "${article.id.value}" })
-                .let { article }
-        }
+    private fun getArticleParameters(article: Article): Map<String, Any> = with(article) {
+        mapOf(
+            "title" to title,
+            "headline" to headline,
+            "slug" to slug,
+            "added_at" to addedAt,
+            "content" to content,
+            "author_id" to author.id.value,
+        )
     }
 
     private fun toArticle(rs: ResultSet): ArticleEntity {

@@ -3,9 +3,9 @@ package com.sample.blog
 import java.time.LocalDateTime
 
 
-sealed class Entity<out T>(open val info: T){
-    data class WithId<out T>(val id: Id<Long>, override val info: T) : Entity<T>(info)
-    data class New<out T>(override val info: T) : Entity<T>(info)
+sealed class Entity<out T>{
+    data class WithId<out T>(val id: Id<Long>, val info: T) : Entity<T>()
+    data class New<out T>(val info: T) : Entity<T>()
 }
 
 data class Id<T>(val value: T)

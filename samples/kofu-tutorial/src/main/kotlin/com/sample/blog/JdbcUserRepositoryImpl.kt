@@ -18,26 +18,25 @@ class JdbcUserRepositoryImpl(dataSource: DataSource): UserRepository {
     override fun findAll(): Collection<UserEntity> =
         jdbcTemplate.query("select * from user") { rs, _ -> toUser(rs) }
 
-    override fun save(user: Entity<User>): UserEntity {
-        val parameters = with(user.info) {
-            mapOf(
-                "login" to login.value,
-                "firstname" to name.firstname,
-                "lastname" to name.lastname
-            )
+    override fun save(user: Entity<User>): UserEntity = when(user){
+        is Entity.New ->{
+            insertUser
+                .executeAndReturnKey(getUserParameters(user.info))
+                .let { id -> Entity.WithId(Id(id.toLong()), user.info) }
         }
-        return when(user){
-            is Entity.New ->{
-                insertUser
-                    .executeAndReturnKey(parameters)
-                    .let { id -> Entity.WithId(Id(id.toLong()), user.info) }
-            }
-            is Entity.WithId -> jdbcTemplate
-                .update(
-                    "update user set login=:login, firstname=:firstname, lastname=:lastname where id=:id",
-                    parameters.toMutableMap().also { it["id"] = "${user.id.value}" })
-                .let { user }
-        }
+        is Entity.WithId -> jdbcTemplate
+            .update(
+                "update user set login=:login, firstname=:firstname, lastname=:lastname where id=:id",
+                getUserParameters(user.info).toMutableMap().also { it["id"] = "${user.id.value}" })
+            .let { user }
+    }
+
+    private fun getUserParameters(user: User): Map<String, Any> = with(user) {
+        mapOf(
+            "login" to login.value,
+            "firstname" to name.firstname,
+            "lastname" to name.lastname
+        )
     }
 
     private fun firstOrNull(paramName: String, value: Any) = jdbcTemplate

@@ -22,37 +22,35 @@ class JdbcArticleRepositoryImpl(dataSource: DataSource): ArticleRepository {
     override fun findAllByOrderByAddedAtDesc(): Collection<ArticleEntity> =
         findAll("select * from article order by added_at desc")
 
-    override fun save(article: Entity<Article>): ArticleEntity {
-        val parameters = with(article.info) {
-            mapOf(
-                "title" to title,
-                "headline" to headline,
-                "slug" to slug,
-                "added_at" to addedAt,
-                "content" to content,
-                "author_id" to author.id.value,
-            )
+    override fun save(article: Entity<Article>): ArticleEntity = when (article) {
+        is Entity.New -> {
+            insert
+                .executeAndReturnKey(getArticleParameters(article.info))
+                .let { id -> Entity.WithId(Id(id.toLong()), article.info) }
         }
+        is Entity.WithId -> jdbcTemplate
+            .update(
+                """update article set
+                    |title=:title, 
+                    |headline=:headline, 
+                    |slug=:slug,
+                    |added_at=:added_at, 
+                    |content=:content,
+                    |author_id=:author_id
+                    |where id=:id""".trimMargin(),
+                getArticleParameters(article.info).toMutableMap().also { it["id"] = "${article.id.value}" })
+            .let { article }
+    }
 
-        return when (article) {
-            is Entity.New -> {
-                insert
-                    .executeAndReturnKey(parameters)
-                    .let { id -> Entity.WithId(Id(id.toLong()), article.info) }
-            }
-            is Entity.WithId -> jdbcTemplate
-                .update(
-                    """update article set
-                        |title=:title, 
-                        |headline=:headline, 
-                        |slug=:slug,
-                        |added_at=:added_at, 
-                        |content=:content,
-                        |author_id=:author_id
-                        |where id=:id""".trimMargin(),
-                    parameters.toMutableMap<String, Any>().also { it["id"] = "${article.id.value}" })
-                .let { article }
-        }
+    private fun getArticleParameters(article: Article): Map<String, Any> = with(article) {
+        mapOf(
+            "title" to title,
+            "headline" to headline,
+            "slug" to slug,
+            "added_at" to addedAt,
+            "content" to content,
+            "author_id" to author.id.value,
+        )
     }
 
     private fun toArticle(rs: ResultSet): ArticleEntity {
