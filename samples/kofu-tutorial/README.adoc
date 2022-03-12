@@ -507,11 +507,11 @@ or if maven
 We will need a Jdbc helper class in order to create tables and doing some quick query. The helper also has a companion object method
 `getDataSource` in order to manually instantiate a JdbcDatasource for the tests.
 
-`src/test/kotlin/com/example/blog/JdbcTestsHelper.kt`
+`src/main/kotlin/com/example/blog/JdbcHelper.kt`
 
 [source,kotlin]
 ----
-class JdbcTestsHelper(dataSource: DataSource) {
+class JdbcHelper(dataSource: DataSource) {
     companion object{
         val h2Url = "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;"
 
