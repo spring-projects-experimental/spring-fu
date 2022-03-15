@@ -1236,3 +1236,33 @@ val app = webApplication {
 If you start the application and go to http://localhost:8080 you should see the following page
 
 image::images/blog.png[width=1000]
+
+=== Adapt the tests
+
+In order to adapt the test to the engine, we could choose to continue to follow the path of the integration tests and
+start the application as is, with the database, or we could choose to mock part of the application and test only
+the upper layer, i.e. the routing.
+
+We will go for the second path, so that we can stress how easy and intuitive is with *KoFu to enable only what you need to test*, in
+contrast of Spring, where you have to seatch for the right annotation that disables what you don't need for the test.
+
+Let's start by adding MockK to our dependencies.
+
+===== Gradle
+
+[source,kotlin]
+----
+testImplementation("io.mockk:mockk:1.12.2")
+----
+
+===== Maven
+
+[source,xml]
+----
+<dependency>
+    <groupId>io.mockk</groupId>
+    <artifactId>mockk</artifactId>
+    <version>1.12.2</version>
+    <scope>test</scope>
+</dependency>
+----
