@@ -1026,6 +1026,8 @@ Notice that the `populate` configuration is enable only for `profile("dev")`. In
 
 == Implementing the blog engine
 
+=== The templates
+
 Let's update the "blog" mustache template and add some new template ("header", "footer" and "article").
 
 `src/main/resources/views/blog.mustache`
@@ -1096,7 +1098,10 @@ Let's update the "blog" mustache template and add some new template ("header", "
 {{> footer}}
 ----
 
-We declare `RenderedUser` and `RenderedArticle` classes in order to simplify the usage in the mustache templates.
+=== Simplified rendering models
+
+We declare `RenderedUser` and `RenderedArticle` classes in order to simplify the usage in the mustache templates. We also
+write a an extension method `render` to transform the entities to the rendered data class.
 
 `src/main/kotlin/com/example/blog/RenderedUser.kt`
 
@@ -1109,7 +1114,7 @@ data class RenderedUser(
     val lastname: String,
     val description: String?)
 
-fun Entity.WithId<User>.render() = RenderedUser(
+fun UserEntity.render() = RenderedUser(
     id.value,
     info.login.value,
     info.name.firstname,
@@ -1141,6 +1146,8 @@ fun ArticleEntity.render() = RenderedArticle(
 )
 ----
 
+=== The routing and handling
+
 Let's move the blog router code into a dedicated file.
 
 `src/main/kotlin/com/example/blog/blog.kt`
@@ -1154,7 +1161,7 @@ val blog = configuration {
         }
 
         router {
-            val htmlHandler = HtmlHandler(ref())
+            val htmlHandler = HtmlHandler(articleRepository = ref())
 
             GET("/", htmlHandler::blog)
             GET("/article/{slug}", htmlHandler::article)
@@ -1191,10 +1198,21 @@ class HtmlHandler(
 We split the routing declaration from the routing handling. The route is declared into a `configuration`, while we the
 class `HtmlHandler` does the work with requests and responses.
 
+In the method `article`, if `articleRepository.findBySlug()` returns null, we convert it to a `notFound()` html response.
+
+NOTE: `GET("/article/{slug}", ...)` declares a path variable with the same sintax we are used to have with the annotation `@GetMapping("/article/{slug}")`.
+Inside the method of the handler, we get the value of `{slug}` with `request.pathVariable("slug")`.
+
+NOTE: We bind the response to a mustache template with the call to `ServerResponse.ok().render()`. The first paramer is the name of the template that we
+are going to use (ex: `article` for `src/main/resources/views/article.mustache`). The second parameter is the model of the template; the difference from
+Spring here is that instead of a `Model`, this parameter requires a Map<String, Any>.
+
+=== Enable the blog configuration
+
 It only remains to enable the blog configuration in the main application.
 
-
 `src/main/kotlin/com/example/blog/BlogApplication.kt`
+
 
 [source,kotlin]
 ----

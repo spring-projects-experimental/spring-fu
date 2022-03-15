@@ -13,7 +13,7 @@ val blog = configuration {
         }
 
         router {
-            val htmlHandler = HtmlHandler(ref())
+            val htmlHandler = HtmlHandler(articleRepository = ref())
 
             GET("/", htmlHandler::blog)
             GET("/article/{slug}", htmlHandler::article)
@@ -45,37 +45,3 @@ class HtmlHandler(
         }
         ?: ServerResponse.notFound().build()
 }
-
-data class RenderedArticle(
-    val id: Long,
-    val slug: String,
-    val title: String,
-    val headline: String,
-    val content: String,
-    val author: RenderedUser,
-    val addedAt: String)
-
-
-fun ArticleEntity.render() = RenderedArticle(
-    id.value,
-    info.slug,
-    info.title,
-    info.headline,
-    info.content,
-    info.author.render(),
-    info.addedAt.format()
-)
-
-data class RenderedUser(
-    val id: Long,
-    val login: String,
-    val firstname: String,
-    val lastname: String,
-    val description: String?)
-
-fun Entity.WithId<User>.render() = RenderedUser(
-    id.value,
-    info.login.value,
-    info.name.firstname,
-    info.name.lastname,
-    info.description)
