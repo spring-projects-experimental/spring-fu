@@ -1351,6 +1351,51 @@ to figure what's happening at the framework level.
 NOTE: we configured a random port using the `port` field of `webMvc{}`. You must put this declaration as the last `webMvc{}`, otherwise
 the port gets overwritten by the default one.
 
+=== Make it an Integration test
+
 Testing with KoFu you don't need to know the differences between `@SpringBootTest`, `@WebMvcTest` and `@DataJpaTest` because you have the
 full control of the application context of the test.
 
+For example it is easy to transform the test above, into an integration test on the H2 database.
+
+`src/test/kotlin/com/example/blog/BlogTests.kt`
+
+[source,kotlin]
+----
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+class BlogTests {
+    ...
+
+    private val app = webApplication {
+        enable(blog)
+        enable(datasource)
+        enable(repositories)
+        enable(createDb)
+        enable(populate)
+        webMvc { port = (10000..10500).random() }
+    }
+
+    @BeforeAll
+    internal fun setUp() {
+        ...
+    }
+
+    @AfterAll
+    internal fun tearDown() {
+        ...
+    }
+
+    @Test
+    internal fun `Assert blog page title, content and status code`() {
+        ...
+    }
+
+    @Test
+    internal fun `Assert article page title, content and status code`() {
+        ...
+    }
+}
+----
+
+We removed the repository mock and enabled the real configurations. Everything else remains untouched. The test just became
+an integration test.

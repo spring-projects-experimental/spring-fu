@@ -1,7 +1,5 @@
 package com.sample.blog
 
-import io.mockk.every
-import io.mockk.mockk
 import org.hamcrest.Matchers.containsString
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
@@ -32,15 +30,10 @@ class BlogTests {
 
     private val app = webApplication {
         enable(blog)
-
-        beans {
-            bean {
-                mockk<ArticleRepository> {
-                    every { findAllByOrderByAddedAtDesc() } returns listOf(article)
-                    every { findBySlug(article.info.slug) } returns article
-                }
-            }
-        }
+        enable(datasource)
+        enable(repositories)
+        enable(createDb)
+        enable(populate)
         webMvc { port = (10000..10500).random() }
     }
 
