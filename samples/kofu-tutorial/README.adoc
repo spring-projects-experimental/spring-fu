@@ -1246,7 +1246,7 @@ the upper layer, i.e. the routing.
 We will go for the second path, so that we can stress how easy and intuitive is with *KoFu to enable only what you need to test*, in
 contrast of Spring, where you have to seatch for the right annotation that disables what you don't need for the test.
 
-Let's start by adding MockK to our dependencies.
+Let's start by adding https://mockk.io[MockK] to our dependencies. We are going to use it to mock the dependencies of the blog engine.
 
 ===== Gradle
 
@@ -1266,3 +1266,91 @@ testImplementation("io.mockk:mockk:1.12.2")
     <scope>test</scope>
 </dependency>
 ----
+
+`src/test/kotlin/com/example/blog/BlogTests.kt`
+
+[source,kotlin]
+----
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+class BlogTests {
+    private lateinit var context: ConfigurableApplicationContext
+    private lateinit var client: MockMvc
+
+    private val author = UserEntity(Id(0), User.of("springluca", "Luca", "Piccinelli"))
+    private val article = ArticleEntity(Id(0),
+        Article(
+            title = "Reactor Bismuth is out",
+            headline = "Lorem ipsum",
+            content = "dolor sit amet",
+            authorFn = { author }
+        )
+    )
+
+    private val app = webApplication {
+        enable(blog)
+
+        beans {
+            bean {
+                mockk<ArticleRepository> {
+                    every { findAllByOrderByAddedAtDesc() } returns listOf(article)
+                    every { findBySlug(article.info.slug) } returns article
+                }
+            }
+        }
+        webMvc { port = (10000..10500).random() }
+    }
+
+    @BeforeAll
+    internal fun setUp() {
+        context = app.run()
+        client = MockMvcBuilders
+            .webAppContextSetup(context as WebApplicationContext)
+            .build()
+    }
+
+    @AfterAll
+    internal fun tearDown() {
+        context.close()
+    }
+
+    @Test
+    internal fun `Assert blog page title, content and status code`() {
+        client.get("/")
+            .andExpect {
+                status { isOk() }
+                content {
+                    string(containsString("<h1>Blog</h1>"))
+                    string(containsString("Reactor"))
+                }
+            }
+    }
+
+    @Test
+    internal fun `Assert article page title, content and status code`() {
+        val title = article.info.title
+
+        client.get("/article/${title.toSlug()}")
+            .andExpect {
+                status { isOk() }
+                content {
+                    string(containsString(title))
+                    string(containsString("Lorem ipsum"))
+                    string(containsString("dolor sit amet"))
+                }
+            }
+    }
+}
+----
+
+The `app` variable is now a new spring application context declaration, where we enable only the `blog` configuration.
+The mocked dependencies are put into the context with the same mechanics used in the main application.
+
+If you compare it to the usage of the annotation `@MockkBean`, there is more transparency and less knowledge involved,
+to figure what's happening at the framework level.
+
+NOTE: we configured a random port using the `port` field of `webMvc{}`. You must put this declaration as the last `webMvc{}`, otherwise
+the port gets overwritten by the default one.
+
+Testing with KoFu you don't need to know the differences between `@SpringBootTest`, `@WebMvcTest` and `@DataJpaTest` because you have the
+full control of the application context of the test.
+

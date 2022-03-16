@@ -17,8 +17,8 @@ import org.springframework.web.context.WebApplicationContext
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class BlogTests {
-    lateinit var context: ConfigurableApplicationContext
-    lateinit var client: MockMvc
+    private lateinit var context: ConfigurableApplicationContext
+    private lateinit var client: MockMvc
 
     private val author = UserEntity(Id(0), User.of("springluca", "Luca", "Piccinelli"))
     private val article = ArticleEntity(Id(0),
