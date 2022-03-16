@@ -2,7 +2,7 @@ package com.sample.blog
 
 import io.mockk.every
 import io.mockk.mockk
-import org.hamcrest.Matchers
+import org.hamcrest.Matchers.containsString
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
@@ -20,20 +20,21 @@ class BlogTests {
     lateinit var context: ConfigurableApplicationContext
     lateinit var client: MockMvc
 
-    val app = webApplication {
+    private val author = UserEntity(Id(0), User.of("springluca", "Luca", "Piccinelli"))
+    private val article = ArticleEntity(Id(0),
+        Article(
+            title = "Reactor Bismuth is out",
+            headline = "Lorem ipsum",
+            content = "dolor sit amet",
+            authorFn = { author }
+        )
+    )
+
+    private val app = webApplication {
         enable(blog)
 
         beans {
             bean {
-                val author = UserEntity(Id(0), User.of("springluca", "Luca", "Piccinelli"))
-                val article = ArticleEntity(Id(0),
-                    Article(
-                        title = "Reactor Bismuth is out",
-                        headline = "Lorem ipsum",
-                        content = "dolor sit amet",
-                        authorFn = { author }
-                    )
-                )
                 mockk<ArticleRepository> {
                     every { findAllByOrderByAddedAtDesc() } returns listOf(article)
                     every { findBySlug(article.info.slug) } returns article
@@ -62,23 +63,23 @@ class BlogTests {
             .andExpect {
                 status { isOk() }
                 content {
-                    string(Matchers.containsString("<h1>Blog</h1>"))
-                    string(Matchers.containsString("Reactor"))
+                    string(containsString("<h1>Blog</h1>"))
+                    string(containsString("Reactor"))
                 }
             }
     }
 
     @Test
     internal fun `Assert article page title, content and status code`() {
-        val title = "Reactor Bismuth is out"
+        val title = article.info.title
 
         client.get("/article/${title.toSlug()}")
             .andExpect {
                 status { isOk() }
                 content {
-                    string(Matchers.containsString(title))
-                    string(Matchers.containsString("Lorem ipsum"))
-                    string(Matchers.containsString("dolor sit amet"))
+                    string(containsString(title))
+                    string(containsString("Lorem ipsum"))
+                    string(containsString("dolor sit amet"))
                 }
             }
     }
