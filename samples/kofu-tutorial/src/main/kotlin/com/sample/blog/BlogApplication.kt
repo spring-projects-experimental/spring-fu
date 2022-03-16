@@ -67,6 +67,7 @@ val app = webApplication {
     enable(repositories)
     enable(datasource)
     enable(blog)
+    enable(blogApi)
 }
 
 fun main(args: Array<String>) {
