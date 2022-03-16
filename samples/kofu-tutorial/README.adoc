@@ -1486,3 +1486,83 @@ val blogApi = configuration {
 ----
 
 Now Spring knows that it has to use the Jackson library to convert the DTOs in JSON.
+
+==== API Test
+
+Let's write some tests on the API
+
+`src/test/kotlin/com/example/blog/ApiTests.kt`
+
+[source,kotlin]
+----
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+class ApiTests {
+    lateinit var context: ConfigurableApplicationContext
+    lateinit var client: MockMvc
+
+    private val author = UserEntity(Id(0), User.of("springluca", "Luca", "Piccinelli"))
+    private val article = ArticleEntity(Id(0),
+        Article(
+            title = "Reactor Bismuth is out",
+            headline = "Lorem ipsum",
+            content = "dolor sit amet",
+            authorFn = { author }
+        )
+    )
+
+    private val app: KofuApplication = webApplication {
+        enable(blogApi)
+        beans {
+            bean {
+                mockk<ArticleRepository> {
+                    every { findAll() } returns listOf(article)
+                }
+            }
+            bean {
+                mockk<UserRepository> {
+                    every { findAll() } returns listOf(author)
+                }
+            }
+        }
+        webMvc { port = (10000..10500).random() }
+    }
+
+    @BeforeAll
+    internal fun setUp() {
+        context = app.run()
+        client = MockMvcBuilders
+            .webAppContextSetup(context as WebApplicationContext)
+            .build()
+    }
+
+    @AfterAll
+    internal fun tearDown() {
+        context.close()
+    }
+
+    @Test
+    internal fun `List articles`() {
+        client.get("/api/article")
+            .andExpect {
+                status { isOk() }
+                content {
+                    contentType(MediaType.APPLICATION_JSON)
+                    jsonPath("\$.[0].author.login", Matchers.equalTo(article.info.author.info.login.value))
+                    jsonPath("\$.[0].slug", Matchers.equalTo(article.info.slug))
+                }
+            }
+    }
+
+    @Test
+    internal fun `List users`() {
+        client.get("/api/user")
+            .andExpect {
+                status { isOk() }
+                content {
+                    contentType(MediaType.APPLICATION_JSON)
+                    jsonPath("\$.[0].login", Matchers.equalTo(author.info.login.value))
+                }
+            }
+    }
+}
+----
