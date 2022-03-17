@@ -4,6 +4,17 @@
 
 <div class="articles">
 
+    {{#banner.title}}
+        <section>
+            <header class="banner">
+                <h2 class="banner-title">{{banner.title}}</h2>
+            </header>
+            <div class="banner-content">
+                {{banner.content}}
+            </div>
+        </section>
+    {{/banner.title}}
+
     {{#articles}}
         <section>
             <header class="article-header">

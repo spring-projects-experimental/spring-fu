@@ -1,6 +1,7 @@
 package com.sample.blog
 
 import org.springframework.boot.context.event.ApplicationReadyEvent
+import org.springframework.core.env.get
 import org.springframework.fu.kofu.configuration
 import org.springframework.fu.kofu.jdbc.DataSourceType
 import org.springframework.fu.kofu.jdbc.jdbc
@@ -8,10 +9,10 @@ import org.springframework.fu.kofu.webApplication
 
 val datasource = configuration {
     jdbc(DataSourceType.Hikari){
-        url = "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE"
-        driverClassName = "org.h2.Driver"
-        username = "sa"
-        password = ""
+        url = env["datasource.url"]
+        driverClassName = env["datasource.driver"]
+        username = env["datasource.username"]
+        password = env["datasource.password"]
     }
 }
 

@@ -12,11 +12,13 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import org.springframework.web.context.WebApplicationContext
+import javax.sql.DataSource
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class BlogTests {
     private lateinit var context: ConfigurableApplicationContext
     private lateinit var client: MockMvc
+    private lateinit var repoHelper: JdbcHelper
 
     private val author = UserEntity(Id(0), User.of("springluca", "Luca", "Piccinelli"))
     private val article = ArticleEntity(Id(0),
@@ -43,10 +45,15 @@ class BlogTests {
         client = MockMvcBuilders
             .webAppContextSetup(context as WebApplicationContext)
             .build()
+
+        repoHelper = context
+            .getBean(DataSource::class.java)
+            .run(::JdbcHelper)
     }
 
     @AfterAll
     internal fun tearDown() {
+        repoHelper.dropDb()
         context.close()
     }
 

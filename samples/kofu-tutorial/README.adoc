@@ -1365,6 +1365,7 @@ For example it is easy to transform the test above, into an integration test on 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class BlogTests {
     ...
+    private lateinit var repoHelper: JdbcHelper
 
     private val app = webApplication {
         enable(blog)
@@ -1377,12 +1378,17 @@ class BlogTests {
 
     @BeforeAll
     internal fun setUp() {
+        context = app.run()
         ...
+        repoHelper = context
+            .getBean(DataSource::class.java)
+            .run(::JdbcHelper)
     }
 
     @AfterAll
     internal fun tearDown() {
-        ...
+        repoHelper.dropDb()
+        context.close()
     }
 
     @Test
@@ -1400,7 +1406,7 @@ class BlogTests {
 We removed the repository mock and enabled the real configurations. Everything else remains untouched. The test just became
 an integration test.
 
-== Exposing HTTP API
+== Exposing an HTTP API
 
 Writing an HTTP API is pretty much the same of we saw up to now. It only changes the function that we call when returning a
 `ServerResponse`.
@@ -1466,9 +1472,10 @@ val app = webApplication {
 }
 ----
 
-If now you start your application and try to run `curl http://localhost:8080/api/article -v`, you will receive a `406` error.
+If you start the application and try to run `curl http://localhost:8080/api/article -v`, you will receive a
+https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/406[`406` (Not Acceptable)] error.
 
-Do you rembember that KoFu doesn't start things automatically? No one told to Spring how to convert back the `RenderdArticle` and
+Do you remember that KoFu doesn't start things automatically? No one told to Spring how to convert back the `RenderdArticle` and
 `RenderedUser` DTOs. Let's do that by adding the following in our `blogApi` configuration.
 
 [source,kotlin]
@@ -1489,7 +1496,7 @@ Now Spring knows that it has to use the Jackson library to convert the DTOs in J
 
 ==== API Test
 
-Let's write some tests on the API
+Let's write some tests on the API, mocking the repositories.
 
 `src/test/kotlin/com/example/blog/ApiTests.kt`
 
@@ -1566,3 +1573,155 @@ class ApiTests {
     }
 }
 ----
+
+== Configuration properties
+
+There are two way to deal with configuration properties with KoFu inside the `configuration{}` DSL lambda function:
+
+* use the `env` property of type `Environment`.
+* Use the `configurationProperties` function call, that converts properties to a custom class
+
+=== Use `Environment` with `env`
+
+When it comes to a datasource, we want to configure it from `application.properties` instead of hard-coding it.
+
+`src/main/resources/application.properties`
+
+[source,properties]
+----
+
+datasource.url=jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+datasource.driver=org.h2.Driver
+datasource.username=sa
+datasource.password=
+----
+
+`src/main/kotlin/com/example/blog/BlogApplication.kt`
+
+[source,kotlin]
+----
+...
+
+val datasource = configuration {
+    jdbc(DataSourceType.Hikari){
+        url = env["datasource.url"]
+        driverClassName = env["datasource.driver"]
+        username = env["datasource.username"]
+        password = env["datasource.password"]
+    }
+}
+
+...
+----
+
+NOTE: In Spring we need to search in the documentation for the right property to modify when we want to configure a bean. With KoFu we choose the name
+to assign to the property, then we don't have to search for it.
+
+=== Use `configurationProperties`
+
+Let's declare some custom properties classes.
+
+`src/main/kotlin/com/example/blog/BlogProperties.kt`
+
+[source,kotlin]
+----
+data class BlogProperties(var title: String, val banner: Banner) {
+  data class Banner(val title: String? = null, val content: String)
+}
+----
+
+put some properties in `application.properties`
+
+
+`src/main/resources/application.properties`
+
+[source,properties]
+----
+...
+
+blog.title=Blog
+blog.banner.title=Warning
+blog.banner.content=The blog will be down tomorrow.
+----
+
+Now, we modify the `blog` configuration
+
+`src/main/kotlin/com/example/blog/blog.kt`
+
+[source,kotlin]
+----
+val blog = configuration {
+    configurationProperties<BlogProperties>(prefix = "blog")
+    webMvc {
+        mustache{
+            prefix = "classpath:/views/"
+        }
+
+        router {
+            val htmlHandler = HtmlHandler(articleRepository = ref(), properties = ref())
+
+            GET("/", htmlHandler::blog)
+            GET("/article/{slug}", htmlHandler::article)
+        }
+    }
+}
+
+class HtmlHandler(
+    private val articleRepository: ArticleRepository,
+    private val properties: BlogProperties
+) {
+    fun blog(request: ServerRequest): ServerResponse =
+        ServerResponse.ok().render(
+            "blog", mapOf(
+                "title" to properties.title,
+                "banner" to properties.banner,
+                "articles" to articleRepository.findAllByOrderByAddedAtDesc().map { it.render() }
+            ),
+        )
+
+    fun article(request: ServerRequest): ServerResponse = articleRepository
+        .findBySlug(request.pathVariable("slug"))
+        ?.render()
+        ?.let { article ->
+            ServerResponse.ok().render(
+                "article", mapOf(
+                    "title" to article.title,
+                    "article" to article
+                )
+            )
+        }
+        ?: ServerResponse.notFound().build()
+}
+----
+
+The `HtmlHandler` receives the addition parameter `private val properties: BlogProperties` that is put into the Spring context
+in the first line of the blog configuration.
+
+=== Generate metadata of `application.properties`
+
+To generate https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#configuration-metadata-annotation-processor[your own metadata] in order to get these custom properties recognized by your IDE, https://kotlinlang.org/docs/reference/kapt.html[kapt should be configured] with the `spring-boot-configuration-processor` dependency as following.
+
+`build.gradle.kts`
+[source,kotlin]
+----
+plugins {
+	...
+	kotlin("kapt") version "1.6.10"
+}
+
+dependencies {
+	...
+	kapt("org.springframework.boot:spring-boot-configuration-processor")
+}
+----
+
+NOTE: Note that some features (such as detecting the default value or deprecated items) are not working due to limitations in the model kapt provides. Also annotation processing is not yet supported with Maven due to https://youtrack.jetbrains.com/issue/KT-18022[KT-18022], see https://github.com/spring-io/initializr/issues/438[initializr#438] for more details.
+
+In IntelliJ IDEA:
+
+- Make sure Spring Boot plugin in enabled in menu File | Settings | Plugins | Spring Boot
+- Enable annotation processing via menu File | Settings | Build, Execution, Deployment | Compiler | Annotation Processors | Enable annotation processing
+- Since https://youtrack.jetbrains.com/issue/KT-15040[Kapt is not yet integrated in IDEA], you need to run manually the command `./gradlew kaptKotlin` to generate the metadata
+
+Your custom properties should now be recognized when editing `application.properties` (autocomplete, validation, etc.).
+

@@ -4,6 +4,7 @@ plugins {
     id("org.springframework.boot") version "2.6.3"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     kotlin("jvm") version "1.6.10"
+    kotlin("kapt") version "1.6.10"
 }
 
 group = "com.sample"
@@ -19,6 +20,8 @@ repositories {
 }
 
 dependencies {
+    kapt("org.springframework.boot:spring-boot-configuration-processor")
+
     implementation("org.springframework.fu:spring-fu-kofu:$kofuVersion")
     implementation("org.springframework.boot:spring-boot-starter-jdbc")
     implementation("org.springframework.boot:spring-boot-starter-web")

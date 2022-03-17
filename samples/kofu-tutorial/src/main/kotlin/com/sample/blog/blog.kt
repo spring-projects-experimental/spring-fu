@@ -7,13 +7,14 @@ import org.springframework.web.servlet.function.ServerRequest
 import org.springframework.web.servlet.function.ServerResponse
 
 val blog = configuration {
+    configurationProperties<BlogProperties>(prefix = "blog")
     webMvc {
         mustache{
             prefix = "classpath:/views/"
         }
 
         router {
-            val htmlHandler = HtmlHandler(articleRepository = ref())
+            val htmlHandler = HtmlHandler(articleRepository = ref(), properties = ref())
 
             GET("/", htmlHandler::blog)
             GET("/article/{slug}", htmlHandler::article)
@@ -22,12 +23,14 @@ val blog = configuration {
 }
 
 class HtmlHandler(
-    private val articleRepository: ArticleRepository
+    private val articleRepository: ArticleRepository,
+    private val properties: BlogProperties
 ) {
     fun blog(request: ServerRequest): ServerResponse =
         ServerResponse.ok().render(
             "blog", mapOf(
-                "title" to "Blog",
+                "title" to properties.title,
+                "banner" to properties.banner,
                 "articles" to articleRepository.findAllByOrderByAddedAtDesc().map { it.render() }
             ),
         )
