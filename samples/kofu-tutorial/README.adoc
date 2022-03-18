@@ -128,7 +128,7 @@ Open  `build.gradle.kts` and remove the following line:
 kotlin("plugin.spring") version "1.4.32"
 ----
 
-The plugin section should look like this:
+The plugin section should now look like this:
 
 [source,kotlin]
 ----
@@ -214,6 +214,8 @@ fun main(args: Array<String>) {
 }
 ----
 
+You can try to start the application and everything should be fine.
+
 == Writing your first route
 
 Let's write the routing to display a simple web page
@@ -239,9 +241,9 @@ fun main(args: Array<String>) {
     app.run(args)
 }
 ----
-Notice that the `render` method doesn't use a `Model` class but just a `Map<String, Any>`.
+NOTE: the `render` method doesn't use a `org.springframework.ui.Model` class but a `Map<String, Any>`.
 
-Also, we are explicitly declaring the use of `mustache` through the activation function call. KoFu doesn't start things automatically. We have to
+We are explicitly declaring the use of `mustache` through the activation function call. KoFu doesn't start things automatically. We have to
 declare it. The cool part is that you can explore all the possible configuration options using the IDE code completion.
 
 image::images/code_completion.png[width=500]
@@ -330,11 +332,12 @@ There is no magic here. Everything is transparent.
 
 `@TestInstance(TestInstance.Lifecycle.PER_CLASS)` is related to JUnit 5, you
 probably already know what it is if you use JUnit 5. https://www.baeldung.com/junit-testinstance-annotation[It is needed to use `@BeforeAll` and `@AfterAll`] annotations.
-You can change the tests instances lyfe cycle also project-wise if you like it, as described https://github.com/spring-guides/tut-spring-boot-kotlin#test-instance-lifecycle[here].
+You can change the tests instances life-cycle also project-wise if you like it, as described https://github.com/spring-guides/tut-spring-boot-kotlin#test-instance-lifecycle[here].
 I would not suggest of doing it.
 
 In the `@BeforeAll` we start Spring on a random port and use the application context to create the MockMvc, so that
-it points to correct port.
+it points to the correct port.
+
 
 We then use the `client` to perform the http requests in the test and verify the result. More on MockMvc https://www.baeldung.com/integration-testing-in-spring[here].
 
@@ -385,9 +388,9 @@ ORM frameworks forces you to model your entities as a 1:1 mapping with the E/R s
  * https://martinfowler.com/bliki/AnemicDomainModel.html[Anemic Domain Model]
  * https://refactoring.guru/smells/primitive-obsession[Primitive obsession coding smell]
 
-Let's model our domain entities at first:
-
 === Domain Entities
+
+Let's model our domain entities at first:
 
 `src/main/kotlin/com/example/blog/entities.kt`
 
@@ -445,11 +448,11 @@ typealias UserEntity = Entity.WithId<User>
 typealias ArticleEntity = Entity.WithId<Article>
 ----
 
-Please notice the typealiases at the end. With the `typealias` we specify a more readable name to use for the entities.
+NOTE: notice the typealiases at the end. With the `typealias` we specify a more readable name to use for the entities.
 
 Here we also used some of the many nice features of Kotlin.
 
-===== Sealed class for the Entity
+==== Sealed class for the Entity
 
 When you use a repository to save an entity, you usually don't make distinction beetween saving something new or doing an update.
 This is a responsibility of the repository. Also, it happens many times that you want the persistence layer to give you
@@ -461,20 +464,20 @@ class that is inherited by `Entity<T>.New` and `Entity<T>.WithId`. Then you can 
 comes to the `save` method, and it returns an `Entity<T>.WithId` for the `get/find` methods. Internally the `save` method will check
 statically if we are saving something new or to update.
 
-===== Value class and companion objects for the Login and the User
+==== Value class and companion objects for the Login and the User
 
 A login value is not just a string. It is a string with some restrictions. In this case it should not be empty. We can use
 https://kotlinlang.org/docs/inline-classes.html[Kotlin inline classes] to wrap the string without any runtime overhead and
-force its validation making the constructor private and exposing the constructor method `of`.
+force its validation, making the constructor private and exposing the constructor method `of`.
 
 The class `User` is composed by attributes that are not primitives. As a consequence, its constructor become less friendly to use.
 That's why we expose a constructor method `of` also for the `User`.
 
-===== Lazy delegated property for the user
+==== Lazy delegated property for the user
 
 If we don't use JPA, we lose some interesting properties. Lazy fetching of relations, for example. That's why in the
-constructor of `Article` we don't receive an `Entity<User>`, but a lambda that returns an `Entity<User>` (`<T>` is constraint
-of being an `Entity<User>`). The property `author` is a https://kotlinlang.org/docs/delegated-properties.html#lazy-properties[lazy]
+constructor of `Article` we don't receive a `UserEntity`, but a lambda that returns a `UserEntity`. The property
+`author` is a https://kotlinlang.org/docs/delegated-properties.html#lazy-properties[lazy]
 delegated property, that executes the lambda only if the property is accessed.
 
 === Repositories Tests
@@ -600,8 +603,8 @@ interface ArticleRepository {
 }
 ----
 
-Please notice that the repositories `save` methods receive an `Entity` class, while when an Entity is returned, it is always of
-type `Entity.WithId`. This is because `save` if both for insert and update, then it can receive either `Entity.New` or
+Please notice that the repositories `save` methods receive an `Entity` class, while when an entity is returned, it is always of
+type `Entity.WithId`. This is because `save` is both for insert and update, then it can receive either `Entity.New` or
 `Entity.WithId`
 
 Then it follows the `UserRepository` tests.
@@ -746,8 +749,9 @@ class ArticleRepositoriesTests {
 ----
 
 When using JPA, you test the repositories with `@DataJpaTests`, that requires spring to start. In contrast, the tests above have nothing particular.
+
 At first we instantiate the repositories using the `Datasource` coming from the helper. Then we prepare the database before each test
-(see `@BeforeEach`), and we drop everything after each test (see `@AfterEach`), so that each test is actually isolated from the others.
+(see `@BeforeEach`), and we drop everything after each test (see `@AfterEach`), so that tests are isolated.
 
 === The repositories
 
@@ -809,7 +813,7 @@ class JdbcUserRepositoryImpl(dataSource: DataSource): UserRepository {
 ----
 
 NOTE: Notice in the `save` method how we switch (`when` in Kotlin) between `Entity.New` and `Entity.WithId`. It is
-is exhaustive, thanks to the power of sealed classes. That means that the compiler forces use to match every
+is exhaustive, thanks to the power of sealed classes. That means that the compiler forces us to match every
 possible case of the switch, so that nothing unexpected can happen at run-time. The https://kotlinlang.org/docs/typecasts.html#smart-casts[smart cast] do the rest,
 so in each branch of the `when` we can access the specialized attributes of each class (e.g. the `id` when updating).
 
@@ -905,7 +909,7 @@ Now it's time to add the repositories to the spring context. Let's modify the ma
 ----
 val repositories = configuration {
     beans {
-        bean { JdbcUserRepositoryImpl(ref()) }
+        bean { JdbcUserRepositoryImpl(datasource = ref()) }
         bean { JdbcArticleRepositoryImpl(ref()) }
     }
 }
@@ -918,7 +922,10 @@ val app = webApplication {
 }
 ----
 
-We just created a new configuration and put the repositories into the context with `beans{}`. Then we enabled the new configuration.
+We just created a new configuration and put the repositories into the context with `beans{}`. This is equivalent of using
+`@Configuration` and `@Bean`.
+
+Then we enabled the new configuration.
 Please notice the `ref()` calls in repositories constructors. This is the equivalent of `@Autowired`. The `ref()` call
 asks Spring to find an implementation of a `Datasource`. In this case it is a shorthand for
 
@@ -928,7 +935,7 @@ val datasource: Datasource = ref()
 JdbcUserRepositoryImpl(datasource)
 ----
 
-We are asking spring to give us an implementation of a `Datasource`. Pay attention that `spring-boot-starter-jdbc` doesn't create magically a datasource
+Pay attention that `spring-boot-starter-jdbc` doesn't create magically a datasource
 like it does with regular Springboot. We have to declare it explicitly as it follows:
 
 `src/main/kotlin/com/example/blog/BlogApplication.kt`
@@ -1195,7 +1202,7 @@ class HtmlHandler(
 }
 ----
 
-We split the routing declaration from the routing handling. The route is declared into a `configuration`, while we the
+We split the routing declaration from the routing handling. The route is declared into a `configuration`, while the
 class `ApiHandler` does the work with requests and responses.
 
 In the method `article`, if `articleRepository.findBySlug()` returns null, we convert it to a `notFound()` html response.
@@ -1244,7 +1251,7 @@ start the application as is, with the database, or we could choose to mock part 
 the upper layer, i.e. the routing.
 
 We will go for the second path, so that we can stress how easy and intuitive is with *KoFu to enable only what you need to test*, in
-contrast of Spring, where you have to seatch for the right annotation that disables what you don't need for the test.
+contrast of traditional Spring boot, where you have to search for the right annotation that disables what you don't need for the test.
 
 Let's start by adding https://mockk.io[MockK] to our dependencies. We are going to use it to mock the dependencies of the blog engine.
 
@@ -1403,12 +1410,12 @@ class BlogTests {
 }
 ----
 
-We removed the repository mock and enabled the real configurations. Everything else remains untouched. The test just became
-an integration test.
+We removed the repository mock and enabled the real configurations. We also declared the `repoHelper` and drop the db when
+tests are finished. Everything else remains untouched. The test just became an integration test.
 
 == Exposing an HTTP API
 
-Writing an HTTP API is pretty much the same of we saw up to now. It only changes the function that we call when returning a
+Writing an HTTP API is pretty much the same of what we saw up to now. It only changes the function that we call when returning a
 `ServerResponse`.
 
 [source,kotlin]
@@ -1576,10 +1583,10 @@ class ApiTests {
 
 == Configuration properties
 
-There are two way to deal with configuration properties with KoFu inside the `configuration{}` DSL lambda function:
+There are two ways to deal with configuration properties with KoFu (inside the `configuration{}` DSL lambda function):
 
 * use the `env` property of type `Environment`.
-* Use the `configurationProperties` function call, that converts properties to a custom class
+* Use the `configurationProperties` function call, that converts properties to a custom class.
 
 === Use `Environment` with `env`
 
@@ -1630,7 +1637,7 @@ data class BlogProperties(var title: String, val banner: Banner) {
 }
 ----
 
-put some properties in `application.properties`
+fill the properties in `application.properties`
 
 
 `src/main/resources/application.properties`
@@ -1694,7 +1701,7 @@ class HtmlHandler(
 }
 ----
 
-The `HtmlHandler` receives the addition parameter `private val properties: BlogProperties` that is put into the Spring context
+The `HtmlHandler` receives the addition parameter `private val properties: BlogProperties`. The bean is put into the Spring context
 in the first line of the blog configuration.
 
 === Generate metadata of `application.properties`
@@ -1748,7 +1755,7 @@ Your custom properties should now be recognized when editing `application.proper
 
 KoFu already integrates many databases, tools and engines (example: jdbc, r2dbc, mustache, thymeleaf, redis, mongo, cassandra, elasticsearch, just to mention some).
 
-Yet, many important integration, like https://liquibase.org/[Liquibase], are still missing. That's not a big deal, has we can easily work around it.
+Yet, many important integration, like https://liquibase.org/[Liquibase], are still missing. That's not a big deal, as we can work around it.
 
 Let's start by writing the changeset that creates User and Article tables.
 
