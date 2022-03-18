@@ -34,7 +34,7 @@ class BlogTests {
         enable(blog)
         enable(datasource)
         enable(repositories)
-        enable(createDb)
+        enable(liquibase)
         enable(populate)
         webMvc { port = (10000..10500).random() }
     }

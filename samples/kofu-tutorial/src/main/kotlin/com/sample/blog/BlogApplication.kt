@@ -1,11 +1,13 @@
 package com.sample.blog
 
+import liquibase.integration.spring.SpringLiquibase
 import org.springframework.boot.context.event.ApplicationReadyEvent
 import org.springframework.core.env.get
 import org.springframework.fu.kofu.configuration
 import org.springframework.fu.kofu.jdbc.DataSourceType
 import org.springframework.fu.kofu.jdbc.jdbc
 import org.springframework.fu.kofu.webApplication
+import org.springframework.fu.kofu.webmvc.webMvc
 
 val datasource = configuration {
     jdbc(DataSourceType.Hikari){
@@ -60,8 +62,22 @@ val populate = configuration {
     }
 }
 
+val liquibase = configuration {
+    beans {
+        bean {
+            val liquibaseProperties: LiquibaseProperties = ref()
+
+            SpringLiquibase().apply {
+                changeLog = liquibaseProperties.changelogPath
+                dataSource = ref()
+            }
+        }
+    }
+    configurationProperties<LiquibaseProperties>(prefix = "liquibase")
+}
+
 val app = webApplication {
-    enable(createDb)
+    enable(liquibase)
     profile("dev"){
         enable(populate)
     }

@@ -1728,3 +1728,170 @@ image::images/metadata.png[width=500]
 
 Your custom properties should now be recognized when editing `application.properties` (autocomplete, validation, etc.).
 
+== Integrating with Liquibase
+
+KoFu already integrates many databases, tools and engines (example: jdbc, r2dbc, mustache, thymeleaf, redis, mongo, cassandra, elasticsearch, just to mention some).
+
+Yet, many important integration, like https://liquibase.org/[Liquibase], are still missing. That's not a big deal, has we can easily work around it.
+
+Let's start by writing the changeset that creates User and Article tables.
+
+`src/main/resources/liquibase/changelog-master.xml`
+
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="1" author="luca.piccinelli">
+        <createTable tableName="USER">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="PK_USER"/>
+            </column>
+            <column name="login" type="varchar">
+                <constraints nullable="false"/>
+            </column>
+            <column name="firstname" type="varchar">
+                <constraints nullable="false"/>
+            </column>
+            <column name="lastname" type="varchar">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="varchar"/>
+        </createTable>
+
+        <createTable tableName="ARTICLE">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="PK_article"/>
+            </column>
+            <column name="title" type="varchar">
+                <constraints nullable="false"/>
+            </column>
+            <column name="headline" type="varchar">
+                <constraints nullable="false"/>
+            </column>
+            <column name="content" type="varchar">
+                <constraints nullable="false"/>
+            </column>
+            <column name="slug" type="varchar">
+                <constraints nullable="false"/>
+            </column>
+            <column name="added_at" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="author_id" type="int">
+                <constraints
+                        nullable="false"
+                        references="USER(id)"
+                        foreignKeyName="FK_USER"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>
+----
+
+Then add the following dependency:
+
+Gradle
+
+`build.gradle.kts`
+
+[source,kotlin]
+----
+implementation("org.liquibase:liquibase-core:4.7.1")
+----
+
+Maven
+
+`pom.xml`
+
+[source,kotlin]
+----
+<dependency>
+    <groupId>org.liquibase</groupId>
+    <artifactId>liquibase-core</artifactId>
+    <version>4.7.1</version>
+</dependency>
+----
+
+Liquibase will need to be configured, so let's write a custom properties class
+
+`src/main/kotlin/com/example/blog/LiquibaseProperties.kt`
+
+[source,kotlin]
+----
+@ConstructorBinding
+@ConfigurationProperties("liquibase")
+data class LiquibaseProperties(
+    var changelogPath: String
+)
+----
+
+In `application.properties` point the changelog path to our changelog master.
+
+`src/main/resources/application.properties`
+
+[source,properties]
+----
+...
+
+liquibase.changelog-path=classpath:/liquibase/changelog-master.xml
+----
+
+Finally, create a Liquibase configuration bean
+
+`src/main/kotlin/com/example/blog/BlogApplication.kt`
+
+[source,kotlin]
+----
+...
+
+val liquibase = configuration {
+    beans {
+        bean {
+            val liquibaseProperties: LiquibaseProperties = ref()
+
+            SpringLiquibase().apply {
+                changeLog = liquibaseProperties.changelogPath
+                dataSource = ref()
+            }
+        }
+    }
+    configurationProperties<LiquibaseProperties>(prefix = "liquibase")
+}
+
+val app = webApplication {
+    enable(liquibase)
+    profile("dev"){
+        enable(populate)
+    }
+    enable(repositories)
+    enable(datasource)
+    enable(blog)
+    enable(blogApi)
+}
+
+...
+----
+
+You can test it easily going in the file `src/test/kotlin/com/example/blog/BlogTests.kt` and replacing
+
+[source,kotlin]
+----
+enable(createDb)
+----
+
+with
+
+[source,kotlin]
+----
+enable(liquibase)
+----
+
+The configuration `createDb` can be deleted.
+
+== Conclusion
