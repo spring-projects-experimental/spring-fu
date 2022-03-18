@@ -1911,3 +1911,13 @@ enable(liquibase)
 The configuration `createDb` can be deleted.
 
 == Conclusion
+
+In this tutorial, we built a Spring Boot application with KoFu, that provides a programmatic way of configuring the Spring
+application context. KoFu is intuitive and simplifies testing the application, as it lowers the "magic" of the framework.
+
+Less "magic" means lowering the productivity in the short-term, but benefit the decrease of the framework overhead.
+Short-term productivity is good for small-sized products. Unfortunately, when a project starts growing you may discover
+yourself spending more time configuring the framework, than building your business.
+
+With the programmatic approach of KoFu, you enjoy the full power of Spring. At the same time, you can configure it using
+only the statements of your language.
