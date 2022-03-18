@@ -1717,11 +1717,14 @@ dependencies {
 
 NOTE: Note that some features (such as detecting the default value or deprecated items) are not working due to limitations in the model kapt provides. Also annotation processing is not yet supported with Maven due to https://youtrack.jetbrains.com/issue/KT-18022[KT-18022], see https://github.com/spring-io/initializr/issues/438[initializr#438] for more details.
 
-In IntelliJ IDEA:
+In IntelliJ IDEA (as of 18/03/2022 Ultimate version is needed):
 
-- Make sure Spring Boot plugin in enabled in menu File | Settings | Plugins | Spring Boot
-- Enable annotation processing via menu File | Settings | Build, Execution, Deployment | Compiler | Annotation Processors | Enable annotation processing
-- Since https://youtrack.jetbrains.com/issue/KT-15040[Kapt is not yet integrated in IDEA], you need to run manually the command `./gradlew kaptKotlin` to generate the metadata
+* Make sure Spring Boot plugin in enabled in menu File | Settings | Plugins | Spring Boot
+* Enable annotation processing via menu File | Settings | Build, Execution, Deployment | Compiler | Annotation Processors | Enable annotation processing
+* Since https://youtrack.jetbrains.com/issue/KT-15040[Kapt is not yet integrated in IDEA], you need to run manually the command `./gradlew kaptKotlin` to generate the metadata
+* You should find the generated metadata here:
+
+image::images/metadata.png[width=500]
 
 Your custom properties should now be recognized when editing `application.properties` (autocomplete, validation, etc.).
 
