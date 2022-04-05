@@ -7,7 +7,7 @@ plugins {
 }
 
 dependencies {
-	implementation("org.springframework.fu:spring-fu-kofu:0.5.1")
+	implementation("org.springframework.fu:spring-fu-kofu:0.5.2-SNAPSHOT")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("am.ik.yavi:yavi:0.9.1")

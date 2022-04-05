@@ -10,7 +10,7 @@ plugins {
 }
 
 dependencies {
-	implementation("org.springframework.fu:spring-fu-kofu:0.5.1")
+	implementation("org.springframework.fu:spring-fu-kofu:0.5.2-SNAPSHOT")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-jooq")
 	implementation("org.springframework.boot:spring-boot-starter-mustache")
