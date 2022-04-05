@@ -1,4 +1,4 @@
-:spring-fu-version: 0.5.0
+:spring-fu-version: 0.5.1
 :kofu-kdoc-url: http://repo.spring.io/milestone/org/springframework/fu/spring-fu-kofu/{spring-fu-version}/spring-fu-kofu-{spring-fu-version}-javadoc.jar!
 
 image:https://img.shields.io/badge/KoFu%20documentation-blue.svg["KoFu documentation", link="{kofu-kdoc-url}/kofu/index.html"]
@@ -14,7 +14,7 @@ It leverages other Spring Kotlin DSLs available in Spring like:
 
 * https://docs.spring.io/spring/docs/current/spring-framework-reference/languages.html#kotlin-bean-definition-dsl[`beans { }` DSL] from Spring Framework
 * https://docs.spring.io/spring/docs/current/spring-framework-reference/languages.html#router-dsl[`router { }` DSL] from Spring MVC or Spring WebFlux
-* https://github.com/spring-projects-experimental/spring-security-kotlin-dsl[`security { }` DSL] (work in progress) from Spring Security
+* https://github.com/spring-projects-experimental/spring-security-kotlin-dsl[`security { }` DSL] from Spring Security
 
 === Sample application
 

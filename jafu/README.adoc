@@ -1,4 +1,4 @@
-:spring-fu-version: 0.5.0
+:spring-fu-version: 0.5.1
 :jafu-javadoc-url: http://repo.spring.io/milestone/org/springframework/fu/spring-fu-jafu/{spring-fu-version}/spring-fu-jafu-{spring-fu-version}-javadoc.jar!
 
 image:https://img.shields.io/badge/JaFu%20documentation-blue.svg["JaFu documentation", link="{jafu-javadoc-url}/index.html"]
