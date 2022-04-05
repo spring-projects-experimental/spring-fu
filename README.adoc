@@ -8,9 +8,7 @@ and is a good fit with https://www.graalvm.org/docs/reference-manual/native-imag
 
 == Status
 
-Spring Fu is not intended to be used in production yet, but rather to incubate and get feedback and contributions
-from the community in order to hopefully reach a point where it can be integrated as part of Spring Framework and Spring
-Boot.
+Spring Fu is experimental and not intended to be used in production. The project has been stalled for some time, and we recognize that Spring Fu has not been getting the attention it deserves. The reason for this is that we have been focussed on other projects, such as native compilation and AOT. Rest assured that we will work on functional configurations again in the future, be it through Spring Fu, or in another form.
 
 == Credits
 
