@@ -1,9 +1,6 @@
-:spring-fu-version: 0.5.0
-:kofu-kdoc-url: http://repo.spring.io/milestone/org/springframework/fu/spring-fu-kofu/{spring-fu-version}/spring-fu-kofu-{spring-fu-version}-javadoc.jar!
+== Content of this tutorial
 
-image:https://img.shields.io/badge/KoFu%20documentation-blue.svg["KoFu documentation", link="{kofu-kdoc-url}/kofu/index.html"]
-
-== KoFu DSL for Spring Boot
+We are going to build the same blog application as https://spring.io/guides/tutorials/spring-boot-kotlin/[the tutorial for writing Spring Boot applications in Kotlin] with KoFu DSL.
 
 KoFu (for **Ko**tlin and **Fu**nctional) is an alternative way of configuring explicitly your Spring Boot application,
 different from regular auto-configuration, using a Kotlin DSL. It is based on Spring Boot infrastructure, but
@@ -15,17 +12,6 @@ It leverages other Spring Kotlin DSLs available in Spring like:
 * https://docs.spring.io/spring/docs/current/spring-framework-reference/languages.html#kotlin-bean-definition-dsl[`beans { }` DSL] from Spring Framework
 * https://docs.spring.io/spring/docs/current/spring-framework-reference/languages.html#router-dsl[`router { }` DSL] from Spring MVC or Spring WebFlux
 * https://github.com/spring-projects-experimental/spring-security-kotlin-dsl[`security { }` DSL] (work in progress) from Spring Security
-
-=== Differences with regular Boot applications
-
-- Spring optimizations for native applications are enabled by default
-- XML support is disabled by default
-- SpEL support is disabled by default
-- Devtools automatic restart does not work yet so just restart your applications (very fast with KoFu)
-
-== Content of this tutorial
-
-We are going to build the same blog application as https://spring.io/guides/tutorials/spring-boot-kotlin/[the tutorial for writing Spring Boot applications in Kotlin].
 
 Instead of Spring Data JPA, we are going to use plain JDBC, in order to avoid completely the use of CGLIB.
 Writing repositories in plain JDBC requires a consistent extra effort. Fortunately, there exist light ORM like
@@ -43,9 +29,9 @@ Click https://start.spring.io/#!type=gradle-project&language=kotlin&platformVers
 We selected:
 
 1. Gradle (Kotlin DSL) as the build system and Kotlin as language.
-2. The latest stable Spring Boot `2.6.x` version (2.6.3 at the moment of writing).
+2. The latest stable Spring Boot `2.6.x` version.
 3. Changed the name of artifact to "blog"
-4. Jar packaging and Jvm 11 target
+4. Jar packaging and JVM 11 target
 5. The following dependencies:
     * Spring Web
     * Mustache
@@ -89,7 +75,7 @@ repositories {
 
 ==== Dependencies
 
-Add the Kofu dependency. At the time of writing the latest version of KoFu is the `0.5.0`.
+Add the Kofu dependency.
 
 ===== Gradle
 
@@ -125,7 +111,7 @@ Open  `build.gradle.kts` and remove the following line:
 
 [source,kotlin]
 ----
-kotlin("plugin.spring") version "1.4.32"
+kotlin("plugin.spring") version "1.6.10"
 ----
 
 The plugin section should now look like this:
@@ -1832,7 +1818,7 @@ Maven
 
 `pom.xml`
 
-[source,kotlin]
+[source,xml]
 ----
 <dependency>
     <groupId>org.liquibase</groupId>
