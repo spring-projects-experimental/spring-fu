@@ -19,7 +19,8 @@ include(
 		"kofu-reactive-cassandra",
 		"kofu-reactive-validation",
 		"kofu-servlet-minimal",
-		"kofu-servlet-validation"
+		"kofu-servlet-validation",
+		"kofu-tutorial"
 )
 
 pluginManagement {
