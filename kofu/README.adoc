@@ -92,10 +92,10 @@ fun main() {
 }
 ```
 
-See also sample projects https://github.com/spring-projects/spring-fu/tree/main/samples[here].
+See also sample projects https://github.com/spring-projects/spring-fu/tree/main/samples[here], and more specifically the https://github.com/spring-projects/spring-fu/tree/main/samples/kofu-tutorial[KoFu tutorial].
 
-You can now also benefits of
-https://docs.spring.io/spring/docs/5.2.x/spring-framework-reference/[Spring Framework reference documentation]
+You can now also benefit of
+https://docs.spring.io/spring-framework/docs/5.3.x/kdoc-api/[Spring Framework reference documentation]
 which is now available with Kotlin code samples.
 
 === Differences with regular Boot applications
