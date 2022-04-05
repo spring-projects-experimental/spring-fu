@@ -36,7 +36,7 @@ public class ThymeleafServletWebInitializer implements ApplicationContextInitial
 
     @Override
     public void initialize(GenericApplicationContext context) {
-        ThymeleafAutoConfiguration.ThymeleafDefaultConfiguration defaultConfiguration = new ThymeleafAutoConfiguration.ThymeleafDefaultConfiguration();
+        TemplateEngineConfigurations.DefaultTemplateEngineConfiguration defaultConfiguration = new TemplateEngineConfigurations.DefaultTemplateEngineConfiguration();
         ThymeleafAutoConfiguration.ThymeleafWebMvcConfiguration.ThymeleafViewResolverConfiguration webMvcConfiguration = new ThymeleafAutoConfiguration.ThymeleafWebMvcConfiguration.ThymeleafViewResolverConfiguration();
         context.registerBean("thymeleafTemplateEngine", SpringTemplateEngine.class, () -> defaultConfiguration.templateEngine(this.properties, context.getBeanProvider(ITemplateResolver.class), context.getBeanProvider(IDialect.class)));
         context.registerBean("thymeleafViewResolver", ViewResolver.class, () -> webMvcConfiguration.thymeleafViewResolver(this.properties, context.getBean("thymeleafTemplateEngine", SpringTemplateEngine.class)));

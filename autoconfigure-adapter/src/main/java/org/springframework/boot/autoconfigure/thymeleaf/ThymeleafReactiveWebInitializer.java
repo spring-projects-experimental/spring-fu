@@ -20,7 +20,7 @@ public class ThymeleafReactiveWebInitializer implements ApplicationContextInitia
 
     @Override
     public void initialize(GenericApplicationContext context) {
-        ThymeleafAutoConfiguration.ThymeleafReactiveConfiguration reactiveConfiguration = new ThymeleafAutoConfiguration.ThymeleafReactiveConfiguration();
+        TemplateEngineConfigurations.ReactiveTemplateEngineConfiguration reactiveConfiguration = new TemplateEngineConfigurations.ReactiveTemplateEngineConfiguration();
         ThymeleafAutoConfiguration.ThymeleafWebFluxConfiguration webFluxConfiguration = new ThymeleafAutoConfiguration.ThymeleafWebFluxConfiguration();
         context.registerBean("thymeleafTemplateEngine", SpringWebFluxTemplateEngine.class, () -> reactiveConfiguration.templateEngine(this.properties, context.getBeanProvider(ITemplateResolver.class), context.getBeanProvider(IDialect.class)));
         context.registerBean(ViewResolver.class, () -> webFluxConfiguration.thymeleafViewResolver(context.getBean("thymeleafTemplateEngine", SpringWebFluxTemplateEngine.class), this.properties));

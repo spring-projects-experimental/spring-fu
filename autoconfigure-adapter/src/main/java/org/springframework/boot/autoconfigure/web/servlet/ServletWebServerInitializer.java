@@ -47,6 +47,7 @@ import java.util.List;
 import java.util.function.Supplier;
 import javax.servlet.MultipartConfigElement;
 
+import static org.springframework.boot.autoconfigure.web.servlet.ServletWebServerFactoryAutoConfiguration.*;
 import static org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration.EnableWebMvcConfiguration;
 import static org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration.ResourceChainCustomizerConfiguration;
 import static org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration.ResourceChainResourceHandlerRegistrationCustomizer;
@@ -76,14 +77,15 @@ public class ServletWebServerInitializer implements ApplicationContextInitialize
 	public void initialize(GenericApplicationContext context) {
 		context.registerBean("webServerFactoryCustomizerBeanPostProcessor", WebServerFactoryCustomizerBeanPostProcessor.class, WebServerFactoryCustomizerBeanPostProcessor::new);
 		context.registerBean(WebMvcProperties.class, () -> this.webMvcProperties);
-		context.registerBean(ServletWebServerFactoryAutoConfiguration.BeanPostProcessorsRegistrar.class, ServletWebServerFactoryAutoConfiguration.BeanPostProcessorsRegistrar::new);
+		context.registerBean(BeanPostProcessorsRegistrar.class, BeanPostProcessorsRegistrar::new);
 		context.registerBean(ConfigurableServletWebServerFactory.class, () -> serverFactory);
 		ServletWebServerFactoryAutoConfiguration servletWebServerFactoryConfiguration = new ServletWebServerFactoryAutoConfiguration();
 		context.registerBean(ServletWebServerFactoryCustomizer.class, () -> servletWebServerFactoryConfiguration.servletWebServerFactoryCustomizer(serverProperties, context.getBeanProvider(WebListenerRegistrar.class), context.getBeanProvider(CookieSameSiteSupplier.class)));
 		if (serverFactory instanceof TomcatServletWebServerFactory) {
 			context.registerBean(TomcatServletWebServerFactoryCustomizer.class, () -> servletWebServerFactoryConfiguration.tomcatServletWebServerFactoryCustomizer(serverProperties));
+			context.registerBean(ForwardedHeaderFilterCustomizer.class, () -> new ForwardedHeaderFilterConfiguration().tomcatForwardedHeaderFilterCustomizer(serverProperties));
 		}
-		context.registerBean(FilterRegistrationBean.class, servletWebServerFactoryConfiguration::forwardedHeaderFilter);
+		context.registerBean(FilterRegistrationBean.class, () -> new ForwardedHeaderFilterConfiguration().forwardedHeaderFilter(context.getBeanProvider(ForwardedHeaderFilterCustomizer.class)));
 
 		DispatcherServletAutoConfiguration.DispatcherServletConfiguration dispatcherServletConfiguration = new DispatcherServletAutoConfiguration.DispatcherServletConfiguration();
 		context.registerBean(DispatcherServletAutoConfiguration.DEFAULT_DISPATCHER_SERVLET_BEAN_NAME, DispatcherServlet.class, () -> dispatcherServletConfiguration.dispatcherServlet(webMvcProperties));
