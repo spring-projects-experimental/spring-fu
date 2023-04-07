@@ -34,6 +34,7 @@ dependencies {
 
 	testImplementation("org.junit.jupiter:junit-jupiter-api")
 	testImplementation("org.springframework:spring-test")
+	testImplementation("org.springframework.boot:spring-boot-test")
 	testImplementation("io.projectreactor:reactor-test")
 	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
 	testImplementation("org.springframework.boot:spring-boot-starter-web")
