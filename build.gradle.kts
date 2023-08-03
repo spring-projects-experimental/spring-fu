@@ -1,10 +1,9 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-	id("org.jetbrains.kotlin.jvm") version "1.6.10" apply false
+	id("org.jetbrains.kotlin.jvm") version "1.8.22" apply false
 	id("org.springframework.boot") apply false
-	id("org.jetbrains.dokka") version "1.6.10" apply false
-	id("io.spring.dependency-management") version "1.0.11.RELEASE"
+	id("io.spring.dependency-management") version "1.1.2"
 	id("maven-publish")
 }
 
@@ -29,14 +28,14 @@ allprojects {
 	}
 
 	tasks.withType<JavaCompile> {
-		sourceCompatibility = "8"
-		targetCompatibility = "8"
+		sourceCompatibility = "17"
+		targetCompatibility = "17"
 	}
 
 	tasks.withType<KotlinCompile> {
 		kotlinOptions {
-			jvmTarget = "1.8"
-			freeCompilerArgs = listOf("-Xjsr305=strict", "-Xjvm-default=enable")
+			freeCompilerArgs += "-Xjsr305=strict"
+			jvmTarget = "17"
 		}
 	}
 
