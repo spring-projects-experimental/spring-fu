@@ -36,5 +36,4 @@ class ConfigurationPropertiesTests {
 	}
 
 	class City(val name: String = "Paris", val country: String = "FR")
-
 }

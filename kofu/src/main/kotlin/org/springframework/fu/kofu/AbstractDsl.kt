@@ -33,8 +33,8 @@ internal annotation class KofuMarker
 @KofuMarker
 abstract class AbstractDsl {
 
-	@PublishedApi
-	internal lateinit var context: GenericApplicationContext
+	lateinit var context: GenericApplicationContext
+		private set
 
 	/**
 	 * Shortcut the get the environment.

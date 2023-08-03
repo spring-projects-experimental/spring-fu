@@ -1,9 +1,34 @@
-rootProject.name = "spring-fu-build"
+rootProject.name = "kofu"
 
 include(
-		"autoconfigure-adapter",
-		"kofu",
-		"jafu"
+	"autoconfigure-adapter",
+	"autoconfigure-adapter-cassandra",
+	"autoconfigure-adapter-context",
+	"autoconfigure-adapter-elasticsearch",
+	"autoconfigure-adapter-jackson",
+	"autoconfigure-adapter-jdbc",
+	"autoconfigure-adapter-jooq",
+	"autoconfigure-adapter-mongo",
+	"autoconfigure-adapter-mustache",
+	"autoconfigure-adapter-r2dbc",
+	"autoconfigure-adapter-redis",
+	"autoconfigure-adapter-security",
+	"autoconfigure-adapter-thymeleaf",
+	"autoconfigure-adapter-web-reactive",
+	"autoconfigure-adapter-web-servlet",
+	"kofu",
+	"kofu-cassandra",
+	"kofu-elasticsearch",
+	"kofu-jdbc",
+	"kofu-jooq",
+	"kofu-mongo",
+	"kofu-r2dbc",
+	"kofu-redis",
+	"kofu-templating-mustache",
+	"kofu-templating-thymeleaf",
+	"kofu-web",
+	"kofu-webflux",
+	"kofu-webmvc",
 )
 
 pluginManagement {

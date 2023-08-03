@@ -1,19 +1,18 @@
-image:https://ci.spring.io/api/v1/teams/spring-fu/pipelines/spring-fu/badge["Build Status", link="https://ci.spring.io/teams/spring-fu/pipelines/spring-fu"]
+== Kofu
 
-Spring Fu is an incubator for https://github.com/spring-projects-experimental/spring-fu/tree/main/jafu[JaFu] (Java DSL)
-and https://github.com/spring-projects-experimental/spring-fu/tree/main/kofu[KoFu] (Kotlin DSL) designed to configure
-Spring Boot explicitly with code in a declarative way with great discoverability thanks to auto-complete.
-It provides fast startup (40% faster than regular auto-configuration on a minimal Spring MVC app), low memory consumption
-and is a good fit with https://www.graalvm.org/docs/reference-manual/native-image/[GraalVM native] thanks to its (almost) reflection-less approach.
+Kofu is a fork of Spring Fu project that aims to minimize the scope of original project to support only Kotlin, modularize
+and make every module as slim as possible. This project also aims to maintain the parts of Spring Fu and update them to
+support latest Spring versions.
 
-== Status
-
-Spring Fu is experimental and not intended to be used in production. The project has been stalled for some time, and we recognize that Spring Fu has not been getting the attention it deserves. The reason for this is that we have been focussed on other projects, such as native compilation and AOT. Rest assured that we will work on functional configurations again in the future, be it through Spring Fu, or in another form.
+This project has no relation to the development work done on the original Spring Fu project. It is not intended to be used
+in production (although we do).
 
 == Credits
 
-In addition to the whole Spring and Reactor teams, special credits to:
+Credits to:
 
+ * Spring and Reactor teams
+ * https://github.com/spring-projects-experimental/spring-fu/ and contributors for the work on original JaFu and KoFu projects
  * https://github.com/jhoeller[Juergen Hoeller] for his support on Kotlin and the functional bean registration API
  * https://github.com/poutsma[Arjen Poutsma] for creating the WebFlux functional API
  * https://github.com/tgirard12[Thomas Girard] for its https://github.com/tgirard12/spring-webflux-kotlin-dsl[spring-webflux-kotlin-dsl] experiment that initially demonstrated this approach was possible

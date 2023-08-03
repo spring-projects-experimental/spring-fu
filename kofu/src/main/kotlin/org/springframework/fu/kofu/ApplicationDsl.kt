@@ -40,5 +40,4 @@ open class ApplicationDsl internal constructor(private val dsl: ApplicationDsl.(
 			MessageSourceInitializer().initialize(context)
 		}
 	}
-
 }

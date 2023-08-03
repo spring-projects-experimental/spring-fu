@@ -90,5 +90,4 @@ open class ConfigurationDsl(private val dsl: ConfigurationDsl.() -> Unit): Abstr
 		super.initialize(context)
 		dsl()
 	}
-
 }

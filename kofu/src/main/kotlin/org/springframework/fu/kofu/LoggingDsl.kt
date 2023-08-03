@@ -19,7 +19,6 @@ package org.springframework.fu.kofu
 import org.springframework.boot.logging.LogLevel
 import org.springframework.boot.logging.LoggingSystem
 import org.springframework.context.support.GenericApplicationContext
-import org.springframework.fu.kofu.webmvc.WebMvcServerDsl
 
 /**
  * Kofu DSL for logging configuration.

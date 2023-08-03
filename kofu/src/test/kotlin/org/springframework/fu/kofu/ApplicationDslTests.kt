@@ -98,5 +98,4 @@ class ApplicationDslTests {
 
 	class Foo
 	class Bar(val value: String)
-
 }

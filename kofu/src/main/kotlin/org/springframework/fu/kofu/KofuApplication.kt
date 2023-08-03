@@ -59,5 +59,4 @@ abstract class KofuApplication(private val initializer: AbstractDsl) {
 	}
 
 	protected abstract fun createContext(): ConfigurableApplicationContext
-
 }
