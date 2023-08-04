@@ -47,7 +47,7 @@ abstract class AbstractMongoDsl(private val init: MongoDsl.() -> Unit) : Abstrac
     /**
      * Enable MongoDB embedded webFlux.
      *
-     * Require `de.flapdoodle.embed:de.flapdoodle.embed.mongo` dependency.
+     * Require `de.flapdoodle.embed:de.flapdoodle.embed.mongo.spring30x:4.7.0` dependency.
      *
      * @sample org.springframework.fu.kofu.samples.mongoEmbedded
      */

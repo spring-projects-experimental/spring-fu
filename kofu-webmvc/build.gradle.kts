@@ -17,7 +17,7 @@ dependencies {
 
     implementation("org.jetbrains.kotlin:kotlin-reflect")
 
-    compileOnly("javax.servlet:javax.servlet-api")
+    compileOnly("jakarta.servlet:jakarta.servlet-api")
     implementation("org.springframework:spring-webmvc")
     implementation("org.springframework.security:spring-security-web")
     implementation("org.springframework.security:spring-security-config")
@@ -28,7 +28,7 @@ dependencies {
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
     testImplementation("org.testcontainers:testcontainers")
 
-    testImplementation("javax.servlet:javax.servlet-api")
+    testImplementation("jakarta.servlet:jakarta.servlet-api")
     testImplementation("org.springframework.boot:spring-boot-starter-web")
     testImplementation("org.springframework.boot:spring-boot-starter-security")
     testImplementation("org.springframework.security:spring-security-test")

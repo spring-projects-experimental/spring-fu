@@ -8,7 +8,7 @@ dependencies {
 	api("org.springframework.boot:spring-boot-autoconfigure")
 
 	compileOnly("org.springframework:spring-webmvc")
-	compileOnly("javax.servlet:javax.servlet-api")
+	compileOnly("jakarta.servlet:jakarta.servlet-api")
 	compileOnly("org.springframework:spring-webflux")
 	compileOnly("org.springframework.security:spring-security-web")
 	compileOnly("org.springframework.security:spring-security-config")
