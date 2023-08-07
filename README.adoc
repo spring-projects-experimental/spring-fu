@@ -7,6 +7,14 @@ support latest Spring versions.
 This project has no relation to the development work done on the original Spring Fu project. It is not intended to be used
 in production (although we do).
 
+== Help needed
+
+This project is a derivation from the original spring-fu project with no intention to become mainline.
+Recently a lot of changes were introduced while migrating to Spring 3 - it is expected the stuff will be horribly broken.
+Any help bringing Kofu up to a working level will be absolutely appreciated.
+
+PS: For now though this project will stay in a single man's playground state.
+
 == Credits
 
 Credits to:
