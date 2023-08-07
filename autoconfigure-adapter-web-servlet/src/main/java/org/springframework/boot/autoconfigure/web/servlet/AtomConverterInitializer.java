@@ -7,8 +7,12 @@ import org.springframework.http.converter.feed.AtomFeedHttpMessageConverter;
 
 public class AtomConverterInitializer implements ApplicationContextInitializer<GenericApplicationContext> {
 
-	@Override
-	public void initialize(GenericApplicationContext context) {
-		context.registerBean("atomFeedHttpMessageConverter", HttpMessageConverter.class, AtomFeedHttpMessageConverter::new);
-	}
+    @Override
+    public void initialize(GenericApplicationContext context) {
+        context.registerBean(
+            "atomFeedHttpMessageConverter",
+            HttpMessageConverter.class,
+            AtomFeedHttpMessageConverter::new
+        );
+    }
 }

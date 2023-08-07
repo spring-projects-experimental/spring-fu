@@ -72,11 +72,9 @@ open class AbstractRedisDsl : AbstractDsl() {
 	/**
 	 * Configure whether to enable SSL support.
 	 */
-	var ssl: Boolean
-		get() = properties.isSsl
-		set(value) {
-			properties.isSsl = value
-		}
+	fun ssl(dsl: RedisProperties.Ssl.() -> Unit = {}) {
+		properties.ssl.dsl()
+	}
 
 	/**
 	 * Configure the redis sentinel properties via a [dedicated DSL][SentinelDsl].

@@ -19,47 +19,104 @@ import com.datastax.oss.driver.api.core.CqlSession;
  */
 public class CassandraDataInitializer implements ApplicationContextInitializer<GenericApplicationContext> {
 
-	private final CassandraProperties properties;
+    private final CassandraProperties properties;
 
-	public CassandraDataInitializer(CassandraProperties properties) {
-		this.properties = properties;
-	}
+    public CassandraDataInitializer(CassandraProperties properties) {
+        this.properties = properties;
+    }
 
-	@Override
-	public void initialize(GenericApplicationContext context) {
-		Supplier<CassandraDataAutoConfiguration> configurationSupplier = () -> new CassandraDataAutoConfiguration(context.getBean(CqlSession.class));
+    @Override
+    public void initialize(GenericApplicationContext context) {
+        Supplier<CassandraDataAutoConfiguration> configurationSupplier = () -> new CassandraDataAutoConfiguration(
+            context.getBean(CqlSession.class)
+        );
 
-		context.registerBean(CassandraCustomConversions.class, () -> configurationSupplier.get().cassandraCustomConversions());
-		context.registerBean(CassandraMappingContext.class, () -> getCassandraMappingContext(context, configurationSupplier));
-		context.registerBean(CassandraConverter.class, () -> configurationSupplier.get().cassandraConverter(context.getBean(CassandraMappingContext.class), context.getBean(CassandraCustomConversions.class)));
-		context.registerBean(SessionFactoryFactoryBean.class, () -> getCassandraSessionFactoryBean(context, configurationSupplier));
-		context.registerBean(CassandraTemplate.class, () -> getCassandraTemplate(context, configurationSupplier));
-	}
+        context.registerBean(
+            CassandraCustomConversions.class,
+            () -> configurationSupplier
+                .get()
+                .cassandraCustomConversions()
+        );
+        context.registerBean(
+            CassandraMappingContext.class,
+            () -> getCassandraMappingContext(
+                context,
+                configurationSupplier
+            )
+        );
+        context.registerBean(
+            CassandraConverter.class,
+            () -> configurationSupplier
+                .get()
+                .cassandraConverter(
+                    context.getBean(CassandraMappingContext.class),
+                    context.getBean(CassandraCustomConversions.class)
+                )
+        );
+        context.registerBean(
+            SessionFactoryFactoryBean.class,
+            () -> getCassandraSessionFactoryBean(
+                context,
+                configurationSupplier
+            )
+        );
+        context.registerBean(
+            CassandraTemplate.class,
+            () -> getCassandraTemplate(
+                context,
+                configurationSupplier
+            )
+        );
+    }
 
-	private CassandraMappingContext getCassandraMappingContext(GenericApplicationContext context, Supplier<CassandraDataAutoConfiguration> configurationSupplier) {
-		try {
-			return configurationSupplier.get().cassandraMapping(context.getBeanFactory(), context.getBean(CassandraCustomConversions.class));
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
+    private CassandraMappingContext getCassandraMappingContext(
+        GenericApplicationContext context,
+        Supplier<CassandraDataAutoConfiguration> configurationSupplier
+    ) {
+        try {
+            return configurationSupplier
+                .get()
+                .cassandraMappingContext(
+                    CassandraDataAutoConfiguration.cassandraManagedTypes(context.getBeanFactory()),
+                    context.getBean(CassandraCustomConversions.class)
+                );
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
-	private CassandraTemplate getCassandraTemplate(GenericApplicationContext context, Supplier<CassandraDataAutoConfiguration> configurationSupplier) {
-		try {
-			return configurationSupplier.get().cassandraTemplate(context.getBean(SessionFactory.class), context.getBean(CassandraConverter.class));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
+    private CassandraTemplate getCassandraTemplate(
+        GenericApplicationContext context,
+        Supplier<CassandraDataAutoConfiguration> configurationSupplier
+    ) {
+        try {
+            return configurationSupplier
+                .get()
+                .cassandraTemplate(
+                    context.getBean(SessionFactory.class),
+                    context.getBean(CassandraConverter.class)
+                );
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
-	private SessionFactoryFactoryBean getCassandraSessionFactoryBean(GenericApplicationContext context, Supplier<CassandraDataAutoConfiguration> configurationSupplier) {
-		try {
-			return configurationSupplier.get().cassandraSessionFactory(context.getEnvironment(), context.getBean(CassandraConverter.class));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
+    private SessionFactoryFactoryBean getCassandraSessionFactoryBean(
+        GenericApplicationContext context,
+        Supplier<CassandraDataAutoConfiguration> configurationSupplier
+    ) {
+        try {
+            return configurationSupplier
+                .get()
+                .cassandraSessionFactory(
+                    context.getEnvironment(),
+                    context.getBean(CassandraConverter.class)
+                );
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

@@ -20,7 +20,7 @@ import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.web.servlet.ViewResolver;
 import org.thymeleaf.dialect.IDialect;
-import org.thymeleaf.spring5.SpringTemplateEngine;
+import org.thymeleaf.spring6.SpringTemplateEngine;
 import org.thymeleaf.templateresolver.ITemplateResolver;
 
 /**
@@ -38,7 +38,26 @@ public class ThymeleafServletWebInitializer implements ApplicationContextInitial
     public void initialize(GenericApplicationContext context) {
         TemplateEngineConfigurations.DefaultTemplateEngineConfiguration defaultConfiguration = new TemplateEngineConfigurations.DefaultTemplateEngineConfiguration();
         ThymeleafAutoConfiguration.ThymeleafWebMvcConfiguration.ThymeleafViewResolverConfiguration webMvcConfiguration = new ThymeleafAutoConfiguration.ThymeleafWebMvcConfiguration.ThymeleafViewResolverConfiguration();
-        context.registerBean("thymeleafTemplateEngine", SpringTemplateEngine.class, () -> defaultConfiguration.templateEngine(this.properties, context.getBeanProvider(ITemplateResolver.class), context.getBeanProvider(IDialect.class)));
-        context.registerBean("thymeleafViewResolver", ViewResolver.class, () -> webMvcConfiguration.thymeleafViewResolver(this.properties, context.getBean("thymeleafTemplateEngine", SpringTemplateEngine.class)));
+
+        context.registerBean(
+            "thymeleafTemplateEngine",
+            SpringTemplateEngine.class,
+            () -> defaultConfiguration.templateEngine(this.properties,
+                context.getBeanProvider(ITemplateResolver.class),
+                context.getBeanProvider(IDialect.class)
+            )
+        );
+
+        context.registerBean(
+            "thymeleafViewResolver",
+            ViewResolver.class,
+            () -> webMvcConfiguration.thymeleafViewResolver(
+                this.properties,
+                context.getBean(
+                    "thymeleafTemplateEngine",
+                    SpringTemplateEngine.class
+                )
+            )
+        );
     }
 }

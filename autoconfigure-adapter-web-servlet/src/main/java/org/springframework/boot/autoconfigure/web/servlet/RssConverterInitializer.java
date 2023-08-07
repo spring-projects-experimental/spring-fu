@@ -7,8 +7,12 @@ import org.springframework.http.converter.feed.RssChannelHttpMessageConverter;
 
 public class RssConverterInitializer implements ApplicationContextInitializer<GenericApplicationContext> {
 
-	@Override
-	public void initialize(GenericApplicationContext context) {
-		context.registerBean("rssChannelHttpMessageConverter", HttpMessageConverter.class, RssChannelHttpMessageConverter::new);
-	}
+    @Override
+    public void initialize(GenericApplicationContext context) {
+        context.registerBean(
+            "rssChannelHttpMessageConverter",
+            HttpMessageConverter.class,
+            RssChannelHttpMessageConverter::new
+        );
+    }
 }

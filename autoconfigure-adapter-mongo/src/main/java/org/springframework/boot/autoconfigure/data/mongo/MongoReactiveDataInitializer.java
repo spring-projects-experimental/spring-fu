@@ -18,6 +18,7 @@ package org.springframework.boot.autoconfigure.data.mongo;
 
 import com.mongodb.reactivestreams.client.MongoClient;
 import org.springframework.boot.autoconfigure.mongo.MongoProperties;
+import org.springframework.boot.autoconfigure.mongo.PropertiesMongoConnectionDetails;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.data.mongodb.ReactiveMongoDatabaseFactory;
@@ -42,27 +43,64 @@ public class MongoReactiveDataInitializer implements ApplicationContextInitializ
     @Override
     public void initialize(GenericApplicationContext context) {
         MongoDataConfiguration dataConfiguration = new MongoDataConfiguration();
-        if (context.getBeanFactory().getBeanNamesForType(MongoCustomConversions.class).length == 0) {
-            context.registerBean(MongoCustomConversions.class, dataConfiguration::mongoCustomConversions);
-        }
-        if (context.getBeanFactory().getBeanNamesForType(MongoMappingContext.class).length == 0) {
-            context.registerBean(MongoMappingContext.class, () -> {
-                try {
-                    return dataConfiguration.mongoMappingContext(
-                        context,
-                        properties,
-                        context.getBean(MongoCustomConversions.class)
-                    );
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
-                return null;
-            });
+        if (
+            context
+                .getBeanFactory()
+                .getBeanNamesForType(MongoCustomConversions.class).length == 0
+        ) {
+            context.registerBean(
+                MongoCustomConversions.class,
+                dataConfiguration::mongoCustomConversions
+            );
         }
 
-        MongoReactiveDataAutoConfiguration configuration = new MongoReactiveDataAutoConfiguration();
-        context.registerBean(MappingMongoConverter.class, () -> configuration.mappingMongoConverter(context.getBean(MongoMappingContext.class), context.getBean(MongoCustomConversions.class)));
-        context.registerBean(SimpleReactiveMongoDatabaseFactory.class, () -> configuration.reactiveMongoDatabaseFactory(this.properties, context.getBean(MongoClient.class)));
-        context.registerBean(ReactiveMongoTemplate.class, () -> configuration.reactiveMongoTemplate(context.getBean(ReactiveMongoDatabaseFactory.class), context.getBean(MongoConverter.class)));
+        if (
+            context
+                .getBeanFactory()
+                .getBeanNamesForType(MongoMappingContext.class).length == 0
+        ) {
+            context.registerBean(
+                MongoMappingContext.class,
+                () -> {
+                    try {
+                        return dataConfiguration.mongoMappingContext(
+                            properties,
+                            context.getBean(MongoCustomConversions.class),
+                            MongoDataConfiguration.mongoManagedTypes(context)
+                        );
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    return null;
+                }
+            );
+        }
+
+        MongoReactiveDataAutoConfiguration configuration = new MongoReactiveDataAutoConfiguration(
+            new PropertiesMongoConnectionDetails(properties)
+        );
+        context.registerBean(
+            MappingMongoConverter.class,
+            () -> configuration.mappingMongoConverter(
+                context.getBean(MongoMappingContext.class),
+                context.getBean(MongoCustomConversions.class)
+            )
+        );
+
+        context.registerBean(
+            SimpleReactiveMongoDatabaseFactory.class,
+            () -> configuration.reactiveMongoDatabaseFactory(
+                context.getBean(MongoClient.class),
+                this.properties
+            )
+        );
+
+        context.registerBean(
+            ReactiveMongoTemplate.class,
+            () -> configuration.reactiveMongoTemplate(
+                context.getBean(ReactiveMongoDatabaseFactory.class),
+                context.getBean(MongoConverter.class)
+            )
+        );
     }
 }

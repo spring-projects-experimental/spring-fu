@@ -17,7 +17,20 @@ public class RedisInitializer implements ApplicationContextInitializer<GenericAp
     @Override
     public void initialize(GenericApplicationContext context) {
         RedisAutoConfiguration redisAutoConfiguration = new RedisAutoConfiguration();
-        context.registerBean("redisTemplate", RedisTemplate.class, () -> redisAutoConfiguration.redisTemplate(context.getBean(RedisConnectionFactory.class)), (definition) -> ((RootBeanDefinition) definition).setTargetType(ResolvableType.forClassWithGenerics(RedisTemplate.class, Object.class, Object.class)));
-        context.registerBean("stringRedisTemplate", StringRedisTemplate.class, () -> redisAutoConfiguration.stringRedisTemplate(context.getBean(RedisConnectionFactory.class)));
+        context.registerBean(
+            "redisTemplate",
+            RedisTemplate.class,
+            () -> redisAutoConfiguration.redisTemplate(context.getBean(RedisConnectionFactory.class)),
+            (definition) -> ((RootBeanDefinition) definition).setTargetType(ResolvableType.forClassWithGenerics(RedisTemplate.class,
+                Object.class,
+                Object.class
+            ))
+        );
+
+        context.registerBean(
+            "stringRedisTemplate",
+            StringRedisTemplate.class,
+            () -> redisAutoConfiguration.stringRedisTemplate(context.getBean(RedisConnectionFactory.class))
+        );
     }
 }

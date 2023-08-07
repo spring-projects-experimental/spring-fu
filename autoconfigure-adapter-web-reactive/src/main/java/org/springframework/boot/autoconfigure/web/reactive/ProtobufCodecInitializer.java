@@ -24,19 +24,27 @@ import org.springframework.http.codec.protobuf.ProtobufEncoder;
 
 /**
  * {@link ApplicationContextInitializer} adapter for registering Protobuf codecs.
+ *
  * @see ProtobufEncoder
  * @see ProtobufDecoder
  */
 public class ProtobufCodecInitializer extends AbstractCodecInitializer {
 
-	public ProtobufCodecInitializer(boolean isClientCodec) {
-		super(isClientCodec);
-	}
+    public ProtobufCodecInitializer(boolean isClientCodec) {
+        super(isClientCodec);
+    }
 
-	@Override
-	protected void register(GenericApplicationContext context, CodecConfigurer configurer) {
-		configurer.customCodecs().encoder(new ProtobufEncoder());
-		configurer.customCodecs().decoder(new ProtobufDecoder());
+    @Override
+    protected void register(
+        GenericApplicationContext context,
+        CodecConfigurer configurer
+    ) {
+        configurer
+            .customCodecs()
+            .register(new ProtobufEncoder());
 
-	}
+        configurer
+            .customCodecs()
+            .register(new ProtobufDecoder());
+    }
 }

@@ -20,6 +20,7 @@ import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 
 import org.springframework.boot.autoconfigure.cassandra.CassandraAutoConfiguration;
+import org.springframework.boot.ssl.SslBundles;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
 
@@ -28,24 +29,38 @@ import org.springframework.context.support.GenericApplicationContext;
  */
 public class MongoInitializer implements ApplicationContextInitializer<GenericApplicationContext> {
 
-	private final MongoProperties properties;
+    private final MongoProperties properties;
 
-	private final boolean embeddedServer;
+    private final boolean embeddedServer;
 
-	public MongoInitializer(MongoProperties properties, boolean embeddedServer) {
-		this.properties = properties;
-		this.embeddedServer = embeddedServer;
-	}
+    public MongoInitializer(
+        MongoProperties properties,
+        boolean embeddedServer
+    ) {
+        this.properties = properties;
+        this.embeddedServer = embeddedServer;
+    }
 
-	@Override
-	public void initialize(GenericApplicationContext context) {
-		MongoAutoConfiguration configuration = new MongoAutoConfiguration();
-		MongoAutoConfiguration.MongoClientSettingsConfiguration mongoClientSettingsConfiguration = new MongoAutoConfiguration.MongoClientSettingsConfiguration();
-		context.registerBean(MongoClientSettingsBuilderCustomizer.class, () -> mongoClientSettingsConfiguration.mongoPropertiesCustomizer(this.properties, context.getEnvironment()));
-		context.registerBean(MongoClient.class, () -> configuration.mongo(context.getBeanProvider(MongoClientSettingsBuilderCustomizer.class), mongoClientSettingsConfiguration.mongoClientSettings()), (definition) -> {
-			if (embeddedServer) {
-				definition.setDependsOn("embeddedMongoServer");
-			}
-		});
-	}
+    @Override
+    public void initialize(GenericApplicationContext context) {
+        MongoAutoConfiguration configuration = new MongoAutoConfiguration();
+        MongoAutoConfiguration.MongoClientSettingsConfiguration mongoClientSettingsConfiguration = new MongoAutoConfiguration.MongoClientSettingsConfiguration();
+
+		context.registerBean(
+            MongoClientSettingsBuilderCustomizer.class,
+            () -> mongoClientSettingsConfiguration.standardMongoSettingsCustomizer(
+                this.properties,
+                configuration.mongoConnectionDetails(properties),
+                context.getBeanProvider(SslBundles.class)
+            )
+        );
+
+        context.registerBean(
+            MongoClient.class,
+            () -> configuration.mongo(
+                context.getBeanProvider(MongoClientSettingsBuilderCustomizer.class),
+                mongoClientSettingsConfiguration.mongoClientSettings()
+            )
+        );
+    }
 }

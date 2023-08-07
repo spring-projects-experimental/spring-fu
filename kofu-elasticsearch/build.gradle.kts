@@ -14,6 +14,9 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
 
     implementation("org.springframework.data:spring-data-elasticsearch")
+    implementation("org.elasticsearch.client:elasticsearch-rest-high-level-client:7.17.5") {
+        exclude("commons-logging:commons-logging")
+    }
 
     testImplementation("org.junit.jupiter:junit-jupiter-api")
     testImplementation("org.springframework:spring-test")
@@ -22,4 +25,7 @@ dependencies {
     testImplementation("org.testcontainers:testcontainers")
 
     testImplementation("org.springframework.data:spring-data-elasticsearch")
+    testImplementation("org.elasticsearch.client:elasticsearch-rest-high-level-client:7.17.5") {
+        exclude("commons-logging:commons-logging")
+    }
 }

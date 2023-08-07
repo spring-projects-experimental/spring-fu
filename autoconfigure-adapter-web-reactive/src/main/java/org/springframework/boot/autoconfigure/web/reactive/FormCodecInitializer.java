@@ -27,13 +27,21 @@ import org.springframework.http.codec.FormHttpMessageWriter;
  */
 public class FormCodecInitializer extends AbstractCodecInitializer {
 
-	public FormCodecInitializer(boolean isClientCodec) {
-		super(isClientCodec);
-	}
+    public FormCodecInitializer(boolean isClientCodec) {
+        super(isClientCodec);
+    }
 
-	@Override
-	protected void register(GenericApplicationContext context, CodecConfigurer configurer) {
-		configurer.customCodecs().writer(new FormHttpMessageWriter());
-		configurer.customCodecs().reader(new FormHttpMessageReader());
-	}
+    @Override
+    protected void register(
+        GenericApplicationContext context,
+        CodecConfigurer configurer
+    ) {
+        configurer
+            .customCodecs()
+            .register(new FormHttpMessageWriter());
+
+        configurer
+            .customCodecs()
+            .register(new FormHttpMessageReader());
+    }
 }

@@ -27,16 +27,27 @@ import org.springframework.http.codec.CodecConfigurer;
  */
 public class StringCodecInitializer extends AbstractCodecInitializer {
 
-	private final boolean textPlainOnly;
+    private final boolean textPlainOnly;
 
-	public StringCodecInitializer(boolean isClientCodec, boolean textPlainOnly) {
-		super(isClientCodec);
-		this.textPlainOnly = textPlainOnly;
-	}
+    public StringCodecInitializer(
+        boolean isClientCodec,
+        boolean textPlainOnly
+    ) {
+        super(isClientCodec);
+        this.textPlainOnly = textPlainOnly;
+    }
 
-	@Override
-	protected void register(GenericApplicationContext context, CodecConfigurer configurer) {
-		configurer.customCodecs().encoder(textPlainOnly ? CharSequenceEncoder.textPlainOnly() : CharSequenceEncoder.allMimeTypes());
-		configurer.customCodecs().decoder(textPlainOnly ? StringDecoder.textPlainOnly() : StringDecoder.allMimeTypes());
-	}
+    @Override
+    protected void register(
+        GenericApplicationContext context,
+        CodecConfigurer configurer
+    ) {
+        configurer
+            .customCodecs()
+            .register(textPlainOnly ? CharSequenceEncoder.textPlainOnly() : CharSequenceEncoder.allMimeTypes());
+
+        configurer
+            .customCodecs()
+            .register(textPlainOnly ? StringDecoder.textPlainOnly() : StringDecoder.allMimeTypes());
+    }
 }

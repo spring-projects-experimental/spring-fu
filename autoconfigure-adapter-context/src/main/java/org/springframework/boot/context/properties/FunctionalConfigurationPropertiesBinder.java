@@ -32,24 +32,38 @@ import org.springframework.core.env.PropertySources;
  */
 public class FunctionalConfigurationPropertiesBinder {
 
-	private final ConfigurableApplicationContext context;
+    private final ConfigurableApplicationContext context;
 
-	private final Binder binder;
-
-
-	public FunctionalConfigurationPropertiesBinder(ConfigurableApplicationContext context) {
-		PropertySources propertySources = new FunctionalPropertySourcesDeducer(context).getPropertySources();
-		this.context = context;
-		this.binder = new Binder(ConfigurationPropertySources.from(propertySources),
-        				new PropertySourcesPlaceholdersResolver(propertySources),
-        				null,
-				(registry) -> context.getBeanFactory().copyRegisteredEditorsTo(registry));
-	}
+    private final Binder binder;
 
 
-	public <T> BindResult<T> bind(String prefix, Bindable<T> target) {
-		UnboundElementsSourceFilter filter = new UnboundElementsSourceFilter();
-		NoUnboundElementsBindHandler handler = new NoUnboundElementsBindHandler(new IgnoreTopLevelConverterNotFoundBindHandler(), filter);
-		return binder.bind(prefix, target, handler);
-	}
+    public FunctionalConfigurationPropertiesBinder(ConfigurableApplicationContext context) {
+        PropertySources propertySources = new FunctionalPropertySourcesDeducer(context).getPropertySources();
+        this.context = context;
+        this.binder = new Binder(
+            ConfigurationPropertySources.from(propertySources),
+            new PropertySourcesPlaceholdersResolver(propertySources),
+            null,
+            (registry) -> context
+                .getBeanFactory()
+                .copyRegisteredEditorsTo(registry)
+        );
+    }
+
+
+    public <T> BindResult<T> bind(
+        String prefix,
+        Bindable<T> target
+    ) {
+        UnboundElementsSourceFilter filter = new UnboundElementsSourceFilter();
+        NoUnboundElementsBindHandler handler = new NoUnboundElementsBindHandler(
+            new IgnoreTopLevelConverterNotFoundBindHandler(),
+            filter
+        );
+        return binder.bind(
+            prefix,
+            target,
+            handler
+        );
+    }
 }

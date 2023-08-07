@@ -10,9 +10,18 @@ import org.springframework.http.converter.ResourceRegionHttpMessageConverter;
 
 public class ResourceConverterInitializer implements ApplicationContextInitializer<GenericApplicationContext> {
 
-	@Override
-	public void initialize(GenericApplicationContext context) {
-		context.registerBean("resourceHttpMessageConverter", HttpMessageConverter.class, (Supplier<HttpMessageConverter>) ResourceHttpMessageConverter::new);
-		context.registerBean("resourceRegionHttpMessageConverter", HttpMessageConverter.class, ResourceRegionHttpMessageConverter::new);
-	}
+    @Override
+    public void initialize(GenericApplicationContext context) {
+        context.registerBean(
+            "resourceHttpMessageConverter",
+            HttpMessageConverter.class,
+            (Supplier<HttpMessageConverter>) ResourceHttpMessageConverter::new
+        );
+
+        context.registerBean(
+            "resourceRegionHttpMessageConverter",
+            HttpMessageConverter.class,
+            ResourceRegionHttpMessageConverter::new
+        );
+    }
 }

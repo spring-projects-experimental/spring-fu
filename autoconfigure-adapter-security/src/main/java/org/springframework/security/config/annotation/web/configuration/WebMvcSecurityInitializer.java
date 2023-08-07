@@ -11,14 +11,19 @@ import java.util.function.Supplier;
  */
 public class WebMvcSecurityInitializer implements ApplicationContextInitializer<GenericApplicationContext> {
 
-	@Override
-	public void initialize(GenericApplicationContext context) {
-		Supplier<WebMvcSecurityConfiguration> configurationSupplier = () -> {
-			final WebMvcSecurityConfiguration configuration = new WebMvcSecurityConfiguration();
-			configuration.setApplicationContext(context);
-			return configuration;
-		};
+    @Override
+    public void initialize(GenericApplicationContext context) {
+        Supplier<WebMvcSecurityConfiguration> configurationSupplier = () -> {
+            final WebMvcSecurityConfiguration configuration = new WebMvcSecurityConfiguration();
+            configuration.setApplicationContext(context);
+            return configuration;
+        };
 
-		context.registerBean(RequestDataValueProcessor.class, () -> configurationSupplier.get().requestDataValueProcessor());
-	}
+        context.registerBean(
+            RequestDataValueProcessor.class,
+            () -> configurationSupplier
+                .get()
+                .requestDataValueProcessor()
+        );
+    }
 }

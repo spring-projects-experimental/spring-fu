@@ -14,12 +14,26 @@ import org.springframework.data.cassandra.core.convert.CassandraConverter;
  */
 public class CassandraReactiveDataInitializer implements ApplicationContextInitializer<GenericApplicationContext> {
 
-	@Override
-	public void initialize(GenericApplicationContext context) {
-		CassandraReactiveDataAutoConfiguration configuration = new CassandraReactiveDataAutoConfiguration();
+    @Override
+    public void initialize(GenericApplicationContext context) {
+        CassandraReactiveDataAutoConfiguration configuration = new CassandraReactiveDataAutoConfiguration();
 
-		context.registerBean(ReactiveSession.class, () -> configuration.reactiveCassandraSession(context.getBean(CqlSession.class)));
-		context.registerBean(ReactiveSessionFactory.class, () -> configuration.reactiveCassandraSessionFactory(context.getBean(ReactiveSession.class)));
-		context.registerBean(ReactiveCassandraTemplate.class, () -> configuration.reactiveCassandraTemplate(context.getBean(ReactiveSession.class), context.getBean(CassandraConverter.class)));
-	}
+        context.registerBean(
+            ReactiveSession.class,
+            () -> configuration.reactiveCassandraSession(context.getBean(CqlSession.class))
+        );
+
+        context.registerBean(
+            ReactiveSessionFactory.class,
+            () -> configuration.reactiveCassandraSessionFactory(context.getBean(ReactiveSession.class))
+        );
+
+        context.registerBean(
+            ReactiveCassandraTemplate.class,
+            () -> configuration.reactiveCassandraTemplate(
+                context.getBean(ReactiveSession.class),
+                context.getBean(CassandraConverter.class)
+            )
+        );
+    }
 }

@@ -4,7 +4,7 @@ import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.web.reactive.result.view.ViewResolver;
 import org.thymeleaf.dialect.IDialect;
-import org.thymeleaf.spring5.SpringWebFluxTemplateEngine;
+import org.thymeleaf.spring6.SpringWebFluxTemplateEngine;
 import org.thymeleaf.templateresolver.ITemplateResolver;
 
 /**
@@ -22,7 +22,25 @@ public class ThymeleafReactiveWebInitializer implements ApplicationContextInitia
     public void initialize(GenericApplicationContext context) {
         TemplateEngineConfigurations.ReactiveTemplateEngineConfiguration reactiveConfiguration = new TemplateEngineConfigurations.ReactiveTemplateEngineConfiguration();
         ThymeleafAutoConfiguration.ThymeleafWebFluxConfiguration webFluxConfiguration = new ThymeleafAutoConfiguration.ThymeleafWebFluxConfiguration();
-        context.registerBean("thymeleafTemplateEngine", SpringWebFluxTemplateEngine.class, () -> reactiveConfiguration.templateEngine(this.properties, context.getBeanProvider(ITemplateResolver.class), context.getBeanProvider(IDialect.class)));
-        context.registerBean(ViewResolver.class, () -> webFluxConfiguration.thymeleafViewResolver(context.getBean("thymeleafTemplateEngine", SpringWebFluxTemplateEngine.class), this.properties));
+
+        context.registerBean(
+            "thymeleafTemplateEngine",
+            SpringWebFluxTemplateEngine.class,
+            () -> reactiveConfiguration.templateEngine(this.properties,
+                context.getBeanProvider(ITemplateResolver.class),
+                context.getBeanProvider(IDialect.class)
+            )
+        );
+
+        context.registerBean(
+            ViewResolver.class,
+            () -> webFluxConfiguration.thymeleafViewResolver(
+                context.getBean(
+                    "thymeleafTemplateEngine",
+                    SpringWebFluxTemplateEngine.class
+                ),
+                this.properties
+            )
+        );
     }
 }

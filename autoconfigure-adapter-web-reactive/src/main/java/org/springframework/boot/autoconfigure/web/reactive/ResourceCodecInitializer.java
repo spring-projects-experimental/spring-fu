@@ -28,13 +28,21 @@ import org.springframework.http.codec.ResourceHttpMessageWriter;
  */
 public class ResourceCodecInitializer extends AbstractCodecInitializer {
 
-	public ResourceCodecInitializer(boolean isClientCodec) {
-		super(isClientCodec);
-	}
+    public ResourceCodecInitializer(boolean isClientCodec) {
+        super(isClientCodec);
+    }
 
-	@Override
-	protected void register(GenericApplicationContext context, CodecConfigurer configurer) {
-		configurer.customCodecs().writer(new ResourceHttpMessageWriter());
-		configurer.customCodecs().decoder(new ResourceDecoder());
-	}
+    @Override
+    protected void register(
+        GenericApplicationContext context,
+        CodecConfigurer configurer
+    ) {
+        configurer
+            .customCodecs()
+            .register(new ResourceHttpMessageWriter());
+
+        configurer
+            .customCodecs()
+            .register(new ResourceDecoder());
+    }
 }

@@ -22,6 +22,7 @@ import static org.springframework.boot.autoconfigure.jackson.JacksonAutoConfigur
 
 import java.util.ArrayList;
 
+import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.context.ApplicationContextInitializer;
@@ -33,18 +34,43 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
  */
 public class JacksonInitializer implements ApplicationContextInitializer<GenericApplicationContext> {
 
-	private final JacksonProperties properties;
+    private final JacksonProperties properties;
 
-	public JacksonInitializer(JacksonProperties properties) {
-		this.properties = properties;
-	}
+    public JacksonInitializer(JacksonProperties properties) {
+        this.properties = properties;
+    }
 
-	@Override
-	public void initialize(GenericApplicationContext context) {
-		context.registerBean(Jackson2ObjectMapperBuilderCustomizer.class, () -> new Jackson2ObjectMapperBuilderCustomizerConfiguration().standardJacksonObjectMapperBuilderCustomizer(context, this.properties));
-		JacksonObjectMapperBuilderConfiguration configuration = new JacksonObjectMapperBuilderConfiguration();
-		context.registerBean(Jackson2ObjectMapperBuilder.class, () ->
-				configuration.jacksonObjectMapperBuilder(context, new ArrayList<>(context.getBeansOfType(Jackson2ObjectMapperBuilderCustomizer.class).values())));
-		context.registerBean(ObjectMapper.class, () -> new JacksonObjectMapperConfiguration().jacksonObjectMapper(context.getBean(Jackson2ObjectMapperBuilder.class)));
-	}
+    @Override
+    public void initialize(GenericApplicationContext context) {
+        context.registerBean(
+            Jackson2ObjectMapperBuilderCustomizer.class,
+            () -> new Jackson2ObjectMapperBuilderCustomizerConfiguration()
+                .standardJacksonObjectMapperBuilderCustomizer(
+                    this.properties,
+                    context.getBeanProvider(Module.class)
+                )
+        );
+
+        JacksonObjectMapperBuilderConfiguration configuration = new JacksonObjectMapperBuilderConfiguration();
+        context.registerBean(
+            Jackson2ObjectMapperBuilder.class,
+            () ->
+                configuration.jacksonObjectMapperBuilder(
+                    context,
+                    new ArrayList<>(
+                        context
+                            .getBeansOfType(Jackson2ObjectMapperBuilderCustomizer.class)
+                            .values()
+                    )
+                )
+        );
+
+        context.registerBean(
+            ObjectMapper.class,
+            () -> new JacksonObjectMapperConfiguration()
+                .jacksonObjectMapper(
+                    context.getBean(Jackson2ObjectMapperBuilder.class)
+                )
+        );
+    }
 }

@@ -18,7 +18,10 @@ public class ClusterInitializer implements ApplicationContextInitializer<Generic
     @Override
     public void initialize(GenericApplicationContext context) {
         if (cluster != null) {
-            context.registerBean(RedisClusterConfiguration.class, this::getRedisClusterConfiguration);
+            context.registerBean(
+                RedisClusterConfiguration.class,
+                this::getRedisClusterConfiguration
+            );
         }
     }
 

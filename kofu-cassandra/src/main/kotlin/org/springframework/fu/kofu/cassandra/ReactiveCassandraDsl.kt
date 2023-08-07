@@ -16,13 +16,13 @@ import org.springframework.fu.kofu.ConfigurationDsl
  * @sample org.springframework.fu.kofu.samples.reactiveCassandra
  */
 open class ReactiveCassandraDsl(private val initBlock: ReactiveCassandraDsl.() -> Unit) : CassandraDsl({}) {
-	override fun initialize(context: GenericApplicationContext){
-		super.initialize(context)
-		initBlock()
-		CassandraInitializer(properties).initialize(context)
-		CassandraDataInitializer(properties).initialize(context)
-		CassandraReactiveDataInitializer().initialize(context)
-	}
+    override fun initialize(context: GenericApplicationContext) {
+        super.initialize(context)
+        initBlock()
+        CassandraInitializer(properties).initialize(context)
+        CassandraDataInitializer(properties).initialize(context)
+        CassandraReactiveDataInitializer().initialize(context)
+    }
 }
 
 /**
@@ -30,5 +30,5 @@ open class ReactiveCassandraDsl(private val initBlock: ReactiveCassandraDsl.() -
  * @see ReactiveCassandraDsl
  */
 fun ConfigurationDsl.reactiveCassandra(dsl: ReactiveCassandraDsl.() -> Unit = {}) {
-	ReactiveCassandraDsl(dsl).initialize(context)
+    ReactiveCassandraDsl(dsl).initialize(context)
 }

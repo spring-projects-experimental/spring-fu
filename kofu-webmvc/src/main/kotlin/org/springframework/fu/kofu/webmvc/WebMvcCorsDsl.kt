@@ -29,23 +29,23 @@ import org.springframework.web.filter.CorsFilter
  * @author Sebastien Deleuze
  */
 class WebMvcCorsDsl(
-	defaults: Boolean = true,
-	private val init: AbstractCorsDsl.() -> Unit
+    defaults: Boolean = true,
+    private val init: AbstractCorsDsl.() -> Unit
 ) : AbstractCorsDsl(defaults) {
 
-	private val source = UrlBasedCorsConfigurationSource()
+    private val source = UrlBasedCorsConfigurationSource()
 
-	override fun registerCorsConfiguration(path: String, configuration: CorsConfiguration) {
-		source.registerCorsConfiguration(path, configuration)
-	}
+    override fun registerCorsConfiguration(path: String, configuration: CorsConfiguration) {
+        source.registerCorsConfiguration(path, configuration)
+    }
 
-	override fun initialize(context: GenericApplicationContext) {
-		super.initialize(context)
-		init()
-		context.registerBean("corsFilter") {
-			CorsFilter(source)
-		}
-	}
+    override fun initialize(context: GenericApplicationContext) {
+        super.initialize(context)
+        init()
+        context.registerBean("corsFilter") {
+            CorsFilter(source)
+        }
+    }
 }
 
 /**
@@ -58,7 +58,9 @@ class WebMvcCorsDsl(
  * @param dsl Cors DSL
  * @sample org.springframework.fu.kofu.samples.corsDsl
  */
-fun WebMvcServerDsl.cors(defaults: Boolean = true,
-						 dsl: AbstractCorsDsl.() -> Unit = {}) {
-	WebMvcCorsDsl(defaults, dsl).initialize(context)
+fun WebMvcServerDsl.cors(
+    defaults: Boolean = true,
+    dsl: AbstractCorsDsl.() -> Unit = {}
+) {
+    WebMvcCorsDsl(defaults, dsl).initialize(context)
 }

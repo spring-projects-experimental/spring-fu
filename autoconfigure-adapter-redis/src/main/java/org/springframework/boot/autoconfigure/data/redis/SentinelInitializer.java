@@ -19,11 +19,17 @@ public class SentinelInitializer implements ApplicationContextInitializer<Generi
     @Override
     public void initialize(GenericApplicationContext context) {
         if (sentinel != null) {
-            context.registerBean(RedisSentinelConfiguration.class, this::getRedisSentinelConfiguration);
+            context.registerBean(
+                RedisSentinelConfiguration.class,
+                this::getRedisSentinelConfiguration
+            );
         }
     }
 
     private RedisSentinelConfiguration getRedisSentinelConfiguration() {
-        return new RedisSentinelConfiguration(sentinel.getMaster(), new HashSet<>(sentinel.getNodes()));
+        return new RedisSentinelConfiguration(
+            sentinel.getMaster(),
+            new HashSet<>(sentinel.getNodes())
+        );
     }
 }

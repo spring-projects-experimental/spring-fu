@@ -15,7 +15,6 @@ import org.springframework.fu.kofu.ConfigurationDsl
  * @author Waldemar Panas
  * @author Sebastien Deleuze
  */
-@Suppress("UsePropertyAccessSyntax")
 class RedisDsl(private val init: RedisDsl.() -> Unit) : AbstractRedisDsl(), JedisRedisSupporter, LettuceRedisSupporter {
 
 	private var jedisInitializer: ApplicationContextInitializer<GenericApplicationContext>? = null

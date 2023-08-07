@@ -9,8 +9,12 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 
 public class JacksonJsonConverterInitializer implements ApplicationContextInitializer<GenericApplicationContext> {
 
-	@Override
-	public void initialize(GenericApplicationContext context) {
-		context.registerBean("mappingJackson2HttpMessageConverter", HttpMessageConverter.class, () -> new MappingJackson2HttpMessageConverter(context.getBean(ObjectMapper.class)));
-	}
+    @Override
+    public void initialize(GenericApplicationContext context) {
+        context.registerBean(
+            "mappingJackson2HttpMessageConverter",
+            HttpMessageConverter.class,
+            () -> new MappingJackson2HttpMessageConverter(context.getBean(ObjectMapper.class))
+        );
+    }
 }

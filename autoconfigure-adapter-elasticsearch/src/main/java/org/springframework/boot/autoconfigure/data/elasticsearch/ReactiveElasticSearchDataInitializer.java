@@ -3,10 +3,10 @@ package org.springframework.boot.autoconfigure.data.elasticsearch;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.data.elasticsearch.client.ClientConfiguration;
-import org.springframework.data.elasticsearch.client.reactive.ReactiveElasticsearchClient;
-import org.springframework.data.elasticsearch.client.reactive.ReactiveRestClients;
+import org.springframework.data.elasticsearch.client.erhlc.ReactiveElasticsearchClient;
+import org.springframework.data.elasticsearch.client.erhlc.ReactiveRestClients;
 
-public class ReactiveElasticSearchDataInitializer implements ApplicationContextInitializer<GenericApplicationContext>  {
+public class ReactiveElasticSearchDataInitializer implements ApplicationContextInitializer<GenericApplicationContext> {
 
     private final ClientConfiguration clientConfiguration;
 
@@ -14,8 +14,12 @@ public class ReactiveElasticSearchDataInitializer implements ApplicationContextI
         this.clientConfiguration = clientConfiguration;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void initialize(GenericApplicationContext context) {
-        context.registerBean(ReactiveElasticsearchClient.class, () -> ReactiveRestClients.create(clientConfiguration));
+        context.registerBean(
+            ReactiveElasticsearchClient.class,
+            () -> ReactiveRestClients.create(clientConfiguration)
+        );
     }
 }

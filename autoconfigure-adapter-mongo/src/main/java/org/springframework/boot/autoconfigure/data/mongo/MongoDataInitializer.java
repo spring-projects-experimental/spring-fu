@@ -42,21 +42,57 @@ public class MongoDataInitializer implements ApplicationContextInitializer<Gener
     @Override
     public void initialize(GenericApplicationContext context) {
         MongoDataConfiguration dataConfiguration = new MongoDataConfiguration();
-        context.registerBean(MongoCustomConversions.class, dataConfiguration::mongoCustomConversions);
-        context.registerBean(MongoMappingContext.class, () -> {
-            try {
-                return dataConfiguration.mongoMappingContext(context, properties, context.getBean(MongoCustomConversions.class));
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-            return null;
-        });
-        context.registerBean(MongoCustomConversions.class, dataConfiguration::mongoCustomConversions);
+        context.registerBean(
+            MongoCustomConversions.class,
+            dataConfiguration::mongoCustomConversions
+        );
 
-        MongoDatabaseFactoryDependentConfiguration conf = new MongoDatabaseFactoryDependentConfiguration(properties);
-        context.registerBean(SimpleMongoClientDatabaseFactory.class, () -> new SimpleMongoClientDatabaseFactory(context.getBean(MongoClient.class), properties.getMongoClientDatabase()));
-        context.registerBean(MongoConverter.class, () -> conf.mappingMongoConverter(context.getBean(MongoDatabaseFactory.class), context.getBean(MongoMappingContext.class), context.getBean(MongoCustomConversions.class)));
-        context.registerBean(MongoTemplate.class, () -> conf.mongoTemplate(context.getBean(MongoDatabaseFactory.class), context.getBean(MongoConverter.class)));
+        context.registerBean(
+            MongoMappingContext.class,
+            () -> {
+                try {
+                    return dataConfiguration.mongoMappingContext(
+                        properties,
+                        context.getBean(MongoCustomConversions.class),
+                        MongoDataConfiguration.mongoManagedTypes(context)
+                    );
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+        );
+
+        context.registerBean(
+            MongoCustomConversions.class,
+            dataConfiguration::mongoCustomConversions
+        );
+
+        MongoDatabaseFactoryDependentConfiguration conf = new MongoDatabaseFactoryDependentConfiguration();
+        context.registerBean(
+            SimpleMongoClientDatabaseFactory.class,
+            () -> new SimpleMongoClientDatabaseFactory(
+                context.getBean(MongoClient.class),
+                properties.getMongoClientDatabase()
+            )
+        );
+
+        context.registerBean(
+            MongoConverter.class,
+            () -> conf.mappingMongoConverter(
+                context.getBean(MongoDatabaseFactory.class),
+                context.getBean(MongoMappingContext.class),
+                context.getBean(MongoCustomConversions.class)
+            )
+        );
+
+        context.registerBean(
+            MongoTemplate.class,
+            () -> conf.mongoTemplate(
+                context.getBean(MongoDatabaseFactory.class),
+                context.getBean(MongoConverter.class)
+            )
+        );
     }
 
 }

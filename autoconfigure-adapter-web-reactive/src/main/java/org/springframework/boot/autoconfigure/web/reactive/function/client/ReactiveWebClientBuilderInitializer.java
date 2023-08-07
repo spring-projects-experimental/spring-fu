@@ -31,40 +31,67 @@ import org.springframework.web.reactive.function.client.WebClient;
  */
 public class ReactiveWebClientBuilderInitializer implements ApplicationContextInitializer<GenericApplicationContext> {
 
-	private final String baseUrl;
+    private final String baseUrl;
 
-	public ReactiveWebClientBuilderInitializer(String baseUrl) {
-		this.baseUrl = baseUrl;
-	}
+    public ReactiveWebClientBuilderInitializer(String baseUrl) {
+        this.baseUrl = baseUrl;
+    }
 
-	@Override
-	public void initialize(GenericApplicationContext context) {
-		context.registerBean(WebClient.Builder.class, () -> new WebClientAutoConfiguration().webClientBuilder(context.getBeanProvider(WebClientCustomizer.class)));
-		context.registerBean(DefaultWebClientCodecCustomizer.class, () -> new DefaultWebClientCodecCustomizer(this.baseUrl, new ArrayList<>(context.getBeansOfType(CodecCustomizer.class).values())));
-	}
+    @Override
+    public void initialize(GenericApplicationContext context) {
+        context.registerBean(
+            WebClient.Builder.class,
+            () -> new WebClientAutoConfiguration().webClientBuilder(
+				context.getBeanProvider(WebClientCustomizer.class)
+			)
+        );
 
-	/**
-	 * Variant of {@link WebClientCodecCustomizer} that configure empty default codecs by defaults
-	 */
-	static public class DefaultWebClientCodecCustomizer implements WebClientCustomizer {
+        context.registerBean(
+            DefaultWebClientCodecCustomizer.class,
+            () -> new DefaultWebClientCodecCustomizer(
+                this.baseUrl,
+                new ArrayList<>(
+					context
+						.getBeansOfType(CodecCustomizer.class)
+						.values()
+				)
+            )
+        );
+    }
 
-		private final List<CodecCustomizer> codecCustomizers;
+    /**
+     * Variant of {@link WebClientCodecCustomizer} that configure empty default codecs by defaults
+     */
+    static public class DefaultWebClientCodecCustomizer implements WebClientCustomizer {
 
-		private final String baseUrl;
+        private final List<CodecCustomizer> codecCustomizers;
 
-		public DefaultWebClientCodecCustomizer(String baseUrl, List<CodecCustomizer> codecCustomizers) {
-			this.codecCustomizers = codecCustomizers;
-			this.baseUrl = baseUrl;
-		}
+        private final String baseUrl;
 
-		@Override
-		public void customize(WebClient.Builder builder) {
-			builder.exchangeStrategies(ExchangeStrategies.empty()
-							.codecs(codecs -> this.codecCustomizers
-									.forEach((customizer) -> customizer.customize(codecs))).build());
-			if (this.baseUrl != null) {
-				builder.baseUrl(this.baseUrl);
-			}
-		}
-	}
+        public DefaultWebClientCodecCustomizer(
+            String baseUrl,
+            List<CodecCustomizer> codecCustomizers
+        ) {
+            this.codecCustomizers = codecCustomizers;
+            this.baseUrl = baseUrl;
+        }
+
+        @Override
+        public void customize(WebClient.Builder builder) {
+            builder.exchangeStrategies(
+				ExchangeStrategies
+					.empty()
+					.codecs(
+						codecs -> this
+							.codecCustomizers
+							.forEach((customizer) -> customizer.customize(codecs))
+					)
+					.build()
+			);
+
+            if (this.baseUrl != null) {
+                builder.baseUrl(this.baseUrl);
+            }
+        }
+    }
 }

@@ -42,7 +42,6 @@ import org.springframework.web.server.WebFilter
  * @see WebFluxServerDsl.mustache
  * @author Sebastien Deleuze
  */
-@Suppress("DEPRECATION")
 open class WebFluxServerDsl(private val init: WebFluxServerDsl.() -> Unit): AbstractDsl() {
 
 	private val serverProperties = ServerProperties()

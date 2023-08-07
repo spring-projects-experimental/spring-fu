@@ -16,11 +16,7 @@
 
 package org.springframework.fu.kofu.mongo
 
-import de.flapdoodle.embed.mongo.distribution.IFeatureAwareVersion
-import de.flapdoodle.embed.mongo.distribution.Version
 import org.springframework.boot.autoconfigure.mongo.MongoProperties
-import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoInitializer
-import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoProperties
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.fu.kofu.AbstractDsl
 
@@ -43,39 +39,4 @@ abstract class AbstractMongoDsl(private val init: MongoDsl.() -> Unit) : Abstrac
         set(value) {
             properties.uri = value
         }
-
-    /**
-     * Enable MongoDB embedded webFlux.
-     *
-     * Require `de.flapdoodle.embed:de.flapdoodle.embed.mongo.spring30x:4.7.0` dependency.
-     *
-     * @sample org.springframework.fu.kofu.samples.mongoEmbedded
-     */
-    fun embedded(version: IFeatureAwareVersion, dsl: EmbeddedMongoDsl.() -> Unit = {}) {
-        embedded = true
-        EmbeddedMongoDsl(properties, version, dsl).initialize(context)
-    }
-
-    /**
-     * Kofu DSL for embedded MongoDB configuration.
-     */
-    class EmbeddedMongoDsl(private val mongoProperties: MongoProperties, version: IFeatureAwareVersion, private val init: EmbeddedMongoDsl.() -> Unit) : AbstractDsl() {
-
-        private val embeddedMongoProperties = EmbeddedMongoProperties()
-
-        override fun initialize(context: GenericApplicationContext) {
-            super.initialize(context)
-            embeddedMongoProperties.version = version.asInDownloadPath()
-            init()
-            EmbeddedMongoInitializer(mongoProperties, embeddedMongoProperties).initialize(context)
-        }
-
-        /**
-         * Version of Mongo to use
-         */
-        var version: IFeatureAwareVersion = Version.Main.PRODUCTION
-            set(value) {
-                embeddedMongoProperties.version = value.asInDownloadPath()
-            }
-    }
 }

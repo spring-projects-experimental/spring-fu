@@ -26,17 +26,26 @@ import org.springframework.http.codec.multipart.MultipartHttpMessageWriter;
 /**
  * {@link ApplicationContextInitializer} adapter for registering multipart codecs.
  */
+
 public class MultipartCodecInitializer extends AbstractCodecInitializer {
 
-	public MultipartCodecInitializer(boolean isClientCodec) {
-		super(isClientCodec);
-	}
+    public MultipartCodecInitializer(boolean isClientCodec) {
+        super(isClientCodec);
+    }
 
-	@Override
-	protected void register(GenericApplicationContext context, CodecConfigurer configurer) {
-		configurer.customCodecs().writer(new MultipartHttpMessageWriter());
-		if (!isClientCodec) {
-			configurer.customCodecs().reader(new MultipartHttpMessageReader(new DefaultPartHttpMessageReader()));
-		}
-	}
+    @Override
+    protected void register(
+        GenericApplicationContext context,
+        CodecConfigurer configurer
+    ) {
+        configurer
+            .customCodecs()
+            .register(new MultipartHttpMessageWriter());
+
+        if (!isClientCodec) {
+            configurer
+                .customCodecs()
+                .register(new MultipartHttpMessageReader(new DefaultPartHttpMessageReader()));
+        }
+    }
 }

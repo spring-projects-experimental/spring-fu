@@ -15,10 +15,22 @@ public class RedisReactiveInitializer implements ApplicationContextInitializer<G
     @Override
     public void initialize(GenericApplicationContext context) {
         RedisReactiveAutoConfiguration redisAutoConfiguration = new RedisReactiveAutoConfiguration();
-        context.registerBean("reactiveRedisTemplate", ReactiveRedisTemplate.class,
-            () -> redisAutoConfiguration.reactiveRedisTemplate(context.getBean(ReactiveRedisConnectionFactory.class), context),
-            (definition) -> ((RootBeanDefinition) definition).setTargetType(ResolvableType.forClassWithGenerics(ReactiveRedisTemplate.class, Object.class, Object.class)));
-        context.registerBean("reactiveStringRedisTemplate", ReactiveStringRedisTemplate.class,
-            () -> redisAutoConfiguration.reactiveStringRedisTemplate(context.getBean(ReactiveRedisConnectionFactory.class)));
+        context.registerBean("reactiveRedisTemplate",
+            ReactiveRedisTemplate.class,
+            () -> redisAutoConfiguration.reactiveRedisTemplate(
+                context.getBean(ReactiveRedisConnectionFactory.class),
+                context
+            ),
+            (definition) -> ((RootBeanDefinition) definition).setTargetType(ResolvableType.forClassWithGenerics(
+                ReactiveRedisTemplate.class,
+                Object.class,
+                Object.class
+            ))
+        );
+
+        context.registerBean("reactiveStringRedisTemplate",
+            ReactiveStringRedisTemplate.class,
+            () -> redisAutoConfiguration.reactiveStringRedisTemplate(context.getBean(ReactiveRedisConnectionFactory.class))
+        );
     }
 }

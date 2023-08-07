@@ -19,33 +19,57 @@ package org.springframework.boot.autoconfigure.mongo;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.reactivestreams.client.MongoClient;
 
+import org.springframework.boot.ssl.SslBundles;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
 
 /**
-* {@link ApplicationContextInitializer} adapter for {@link MongoReactiveAutoConfiguration}.
-*/
+ * {@link ApplicationContextInitializer} adapter for {@link MongoReactiveAutoConfiguration}.
+ */
 public class MongoReactiveInitializer implements ApplicationContextInitializer<GenericApplicationContext> {
 
-	private final MongoProperties properties;
+    private final MongoProperties properties;
 
-	private final boolean embeddedServer;
+    public MongoReactiveInitializer(
+        MongoProperties properties
+    ) {
+        this.properties = properties;
+    }
 
-	public MongoReactiveInitializer(MongoProperties properties, boolean embeddedServer) {
-		this.properties = properties;
-		this.embeddedServer = embeddedServer;
-	}
+    @Override
+    public void initialize(GenericApplicationContext context) {
+        context.registerBean(
+            MongoClientSettingsBuilderCustomizer.class,
+            () -> new MongoReactiveAutoConfiguration.NettyDriverConfiguration()
+                .nettyDriverCustomizer(
+                    context
+                        .getDefaultListableBeanFactory()
+                        .getBeanProvider(MongoClientSettings.class)
+                )
+        );
 
-	@Override
-	public void initialize(GenericApplicationContext context) {
-		context.registerBean(MongoClientSettingsBuilderCustomizer.class, () -> new MongoReactiveAutoConfiguration.NettyDriverConfiguration().nettyDriverCustomizer(context.getDefaultListableBeanFactory().getBeanProvider(MongoClientSettings.class)));
-		context.registerBean(MongoClient.class, () -> new MongoReactiveAutoConfiguration().reactiveStreamsMongoClient(context.getBeanProvider(MongoClientSettingsBuilderCustomizer.class), context.getBean(MongoClientSettings.class)), (definition) -> {
-			if (embeddedServer) {
-				definition.setDependsOn("embeddedMongoServer");
-			}
-		});
-		MongoReactiveAutoConfiguration.MongoClientSettingsConfiguration configuration = new MongoReactiveAutoConfiguration.MongoClientSettingsConfiguration();
-		context.registerBean(MongoClientSettings.class, () -> configuration.mongoClientSettings());
-		context.registerBean(MongoPropertiesClientSettingsBuilderCustomizer.class, () -> configuration.mongoPropertiesCustomizer(properties, context.getEnvironment()));
-	}
+        MongoReactiveAutoConfiguration configuration = new MongoReactiveAutoConfiguration();
+        context.registerBean(
+            MongoClient.class,
+            () -> configuration.reactiveStreamsMongoClient(
+                context.getBeanProvider(MongoClientSettingsBuilderCustomizer.class),
+                context.getBean(MongoClientSettings.class)
+            )
+        );
+
+        MongoReactiveAutoConfiguration.MongoClientSettingsConfiguration mongoClientSettingsConfiguration = new MongoReactiveAutoConfiguration.MongoClientSettingsConfiguration();
+        context.registerBean(
+            MongoClientSettings.class,
+            mongoClientSettingsConfiguration::mongoClientSettings
+        );
+
+        context.registerBean(
+            MongoClientSettingsBuilderCustomizer.class,
+            () -> mongoClientSettingsConfiguration.standardMongoSettingsCustomizer(
+                this.properties,
+                configuration.mongoConnectionDetails(properties),
+                context.getBeanProvider(SslBundles.class)
+            )
+        );
+    }
 }

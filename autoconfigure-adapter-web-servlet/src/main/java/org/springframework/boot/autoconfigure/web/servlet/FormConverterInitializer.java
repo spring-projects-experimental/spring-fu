@@ -7,8 +7,12 @@ import org.springframework.http.converter.support.AllEncompassingFormHttpMessage
 
 public class FormConverterInitializer implements ApplicationContextInitializer<GenericApplicationContext> {
 
-	@Override
-	public void initialize(GenericApplicationContext context) {
-		context.registerBean("allEncompassingFormHttpMessageConverter", HttpMessageConverter.class, AllEncompassingFormHttpMessageConverter::new);
-	}
+    @Override
+    public void initialize(GenericApplicationContext context) {
+        context.registerBean(
+            "allEncompassingFormHttpMessageConverter",
+            HttpMessageConverter.class,
+            AllEncompassingFormHttpMessageConverter::new
+        );
+    }
 }

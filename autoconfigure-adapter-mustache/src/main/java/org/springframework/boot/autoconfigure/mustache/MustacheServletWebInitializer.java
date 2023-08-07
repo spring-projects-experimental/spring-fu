@@ -27,15 +27,22 @@ import org.springframework.web.servlet.ViewResolver;
  */
 public class MustacheServletWebInitializer implements ApplicationContextInitializer<GenericApplicationContext> {
 
-	private final MustacheProperties properties;
+    private final MustacheProperties properties;
 
-	public MustacheServletWebInitializer(MustacheProperties properties) {
-		this.properties = properties;
-	}
+    public MustacheServletWebInitializer(MustacheProperties properties) {
+        this.properties = properties;
+    }
 
-	@Override
-	public void initialize(GenericApplicationContext context) {
-		MustacheServletWebConfiguration configuration = new MustacheServletWebConfiguration();
-		context.registerBean("mustacheViewResolver", ViewResolver.class, () -> configuration.mustacheViewResolver(context.getBean(Mustache.Compiler.class), this.properties));
-	}
+    @Override
+    public void initialize(GenericApplicationContext context) {
+        MustacheServletWebConfiguration configuration = new MustacheServletWebConfiguration();
+        context.registerBean(
+            "mustacheViewResolver",
+            ViewResolver.class,
+            () -> configuration.mustacheViewResolver(
+                context.getBean(Mustache.Compiler.class),
+                this.properties
+            )
+        );
+    }
 }

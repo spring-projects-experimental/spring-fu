@@ -2,6 +2,7 @@ package org.springframework.boot.autoconfigure.data.redis;
 
 import io.lettuce.core.resource.ClientResources;
 import io.lettuce.core.resource.DefaultClientResources;
+import org.springframework.boot.ssl.SslBundles;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.data.redis.connection.RedisClusterConfiguration;
@@ -21,12 +22,26 @@ public class LettuceRedisInitializer implements ApplicationContextInitializer<Ge
 
     @Override
     public void initialize(GenericApplicationContext context) {
-        context.registerBean(LettuceConnectionFactory.class, () -> getLettuceConnectionFactory(context));
+        context.registerBean(
+            LettuceConnectionFactory.class,
+            () -> getLettuceConnectionFactory(context)
+        );
     }
 
     private LettuceConnectionFactory getLettuceConnectionFactory(GenericApplicationContext context) {
-        final LettuceConnectionConfiguration configuration = new LettuceConnectionConfiguration(redisProperties, context.getBeanProvider(RedisStandaloneConfiguration.class), context.getBeanProvider(RedisSentinelConfiguration.class), context.getBeanProvider(RedisClusterConfiguration.class));
-        final ClientResources clientResources = DefaultClientResources.create();
-        return configuration.redisConnectionFactory(context.getBeanProvider(LettuceClientConfigurationBuilderCustomizer.class), clientResources);
+        final LettuceConnectionConfiguration configuration = new LettuceConnectionConfiguration(
+            redisProperties,
+            context.getBeanProvider(RedisStandaloneConfiguration.class),
+            context.getBeanProvider(RedisSentinelConfiguration.class),
+            context.getBeanProvider(RedisClusterConfiguration.class),
+            new PropertiesRedisConnectionDetails(redisProperties),
+            context.getBeanProvider(SslBundles.class)
+        );
+
+        ClientResources clientResources = DefaultClientResources.create();
+        return configuration.redisConnectionFactory(
+            context.getBeanProvider(LettuceClientConfigurationBuilderCustomizer.class),
+            clientResources
+        );
     }
 }

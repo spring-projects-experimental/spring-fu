@@ -27,15 +27,22 @@ import org.springframework.web.reactive.result.view.ViewResolver;
  */
 public class MustacheReactiveWebInitializer implements ApplicationContextInitializer<GenericApplicationContext> {
 
-	private final MustacheProperties properties;
+    private final MustacheProperties properties;
 
-	public MustacheReactiveWebInitializer(MustacheProperties properties) {
-		this.properties = properties;
-	}
+    public MustacheReactiveWebInitializer(MustacheProperties properties) {
+        this.properties = properties;
+    }
 
-	@Override
-	public void initialize(GenericApplicationContext context) {
-		MustacheReactiveWebConfiguration configuration = new MustacheReactiveWebConfiguration();
-		context.registerBean(ViewResolver.class, () -> configuration.mustacheViewResolver(context.getBean(Mustache.Compiler.class), this.properties));
-	}
+    @Override
+    public void initialize(GenericApplicationContext context) {
+        MustacheReactiveWebConfiguration configuration = new MustacheReactiveWebConfiguration();
+
+        context.registerBean(
+            ViewResolver.class,
+            () -> configuration.mustacheViewResolver(
+                context.getBean(Mustache.Compiler.class),
+                this.properties
+            )
+        );
+    }
 }

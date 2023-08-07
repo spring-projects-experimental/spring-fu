@@ -14,26 +14,26 @@ import org.springframework.core.env.PropertySources;
  */
 public class FunctionalPropertySourcesDeducer {
 
-	private final ApplicationContext applicationContext;
+    private final ApplicationContext applicationContext;
 
-	FunctionalPropertySourcesDeducer(ApplicationContext applicationContext) {
-		this.applicationContext = applicationContext;
-	}
+    FunctionalPropertySourcesDeducer(ApplicationContext applicationContext) {
+        this.applicationContext = applicationContext;
+    }
 
-	public PropertySources getPropertySources() {
-		MutablePropertySources sources = extractEnvironmentPropertySources();
-		if (sources != null) {
-			return sources;
-		}
-		throw new IllegalStateException("Unable to obtain PropertySources from "
-				+ "PropertySourcesPlaceholderConfigurer or Environment");
-	}
+    public PropertySources getPropertySources() {
+        MutablePropertySources sources = extractEnvironmentPropertySources();
+        if (sources != null) {
+            return sources;
+        }
+        throw new IllegalStateException("Unable to obtain PropertySources from "
+            + "PropertySourcesPlaceholderConfigurer or Environment");
+    }
 
-	private MutablePropertySources extractEnvironmentPropertySources() {
-		Environment environment = this.applicationContext.getEnvironment();
-		if (environment instanceof ConfigurableEnvironment) {
-			return ((ConfigurableEnvironment) environment).getPropertySources();
-		}
-		return null;
-	}
+    private MutablePropertySources extractEnvironmentPropertySources() {
+        Environment environment = this.applicationContext.getEnvironment();
+        if (environment instanceof ConfigurableEnvironment) {
+            return ((ConfigurableEnvironment) environment).getPropertySources();
+        }
+        return null;
+    }
 }

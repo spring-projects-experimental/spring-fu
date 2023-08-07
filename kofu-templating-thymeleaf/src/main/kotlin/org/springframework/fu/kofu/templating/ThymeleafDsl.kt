@@ -32,6 +32,7 @@ import org.springframework.fu.kofu.webmvc.WebMvcServerDsl
  *
  * Required dependencies can be retrieve using `org.springframework.boot:spring-boot-starter-thymeleaf`.
  */
+@Suppress("SetterBackingFieldAssignment")
 class ThymeleafDsl(private val init: ThymeleafDsl.() -> Unit) : AbstractDsl() {
 
     private val properties = ThymeleafProperties()

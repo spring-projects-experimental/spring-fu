@@ -28,8 +28,12 @@ import org.springframework.http.converter.StringHttpMessageConverter;
  */
 public class StringConverterInitializer implements ApplicationContextInitializer<GenericApplicationContext> {
 
-	@Override
-	public void initialize(GenericApplicationContext context) {
-		context.registerBean("StringHttpMessageConverter", HttpMessageConverter.class, (Supplier<HttpMessageConverter>) StringHttpMessageConverter::new);
-	}
+    @Override
+    public void initialize(GenericApplicationContext context) {
+        context.registerBean(
+            "StringHttpMessageConverter",
+            HttpMessageConverter.class,
+            (Supplier<HttpMessageConverter>) StringHttpMessageConverter::new
+        );
+    }
 }

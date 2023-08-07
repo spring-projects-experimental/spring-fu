@@ -4,7 +4,6 @@ import org.jooq.SQLDialect
 import org.springframework.boot.autoconfigure.jdbc.*
 import org.springframework.boot.autoconfigure.jooq.JooqConfigurationInitializer
 import org.springframework.boot.autoconfigure.jooq.JooqProperties
-import org.springframework.boot.jdbc.DataSourceInitializationMode
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.fu.kofu.AbstractDsl
 import org.springframework.fu.kofu.ConfigurationDsl
@@ -18,8 +17,6 @@ class JooqDsl(private val datasourceType: DataSourceType, private val init: Jooq
     var schema = listOf<String>()
 
     var data = listOf<String>()
-
-    var initializationMode = DataSourceInitializationMode.EMBEDDED
 
     var url: String? = null
 
@@ -39,9 +36,6 @@ class JooqDsl(private val datasourceType: DataSourceType, private val init: Jooq
 
         val jdbcProperties = JdbcProperties()
         val dataSourceProperties = DataSourceProperties().apply {
-            schema = this@JooqDsl.schema
-            data = this@JooqDsl.data
-            initializationMode = this@JooqDsl.initializationMode
             url = this@JooqDsl.url
             name = this@JooqDsl.name
             username = this@JooqDsl.username

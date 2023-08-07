@@ -4,6 +4,7 @@ import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.CqlSessionBuilder;
 import com.datastax.oss.driver.api.core.config.DriverConfigLoader;
 
+import org.springframework.boot.ssl.SslBundles;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
 
@@ -20,9 +21,34 @@ public class CassandraInitializer implements ApplicationContextInitializer<Gener
 
 	@Override
 	public void initialize(GenericApplicationContext context) {
-		CassandraAutoConfiguration configuration = new CassandraAutoConfiguration();
-		context.registerBean(CqlSession.class, () -> configuration.cassandraSession(context.getBean(CqlSessionBuilder.class)));
-		context.registerBean(CqlSessionBuilder.class, () -> configuration.cassandraSessionBuilder(properties, context.getBean(DriverConfigLoader.class), context.getBeanProvider(CqlSessionBuilderCustomizer.class)));
-		context.registerBean(DriverConfigLoader.class, () -> configuration.cassandraDriverConfigLoader(properties, context.getBeanProvider(DriverConfigLoaderBuilderCustomizer.class)));
+		CassandraAutoConfiguration configuration = new CassandraAutoConfiguration(properties);
+
+		context.registerBean(
+			CqlSession.class,
+			() -> configuration.cassandraSession(context.getBean(CqlSessionBuilder.class))
+		);
+
+		context.registerBean(
+			CassandraConnectionDetails.class,
+			configuration::cassandraConnectionDetails
+		);
+
+		context.registerBean(
+			CqlSessionBuilder.class,
+			() -> configuration.cassandraSessionBuilder(
+				context.getBean(DriverConfigLoader.class),
+				context.getBean(CassandraConnectionDetails.class),
+				context.getBeanProvider(CqlSessionBuilderCustomizer.class),
+				context.getBeanProvider(SslBundles.class)
+			)
+		);
+
+		context.registerBean(
+			DriverConfigLoader.class,
+			() -> configuration.cassandraDriverConfigLoader(
+				context.getBean(CassandraConnectionDetails.class),
+				context.getBeanProvider(DriverConfigLoaderBuilderCustomizer.class)
+			)
+		);
 	}
 }

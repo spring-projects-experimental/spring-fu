@@ -40,7 +40,7 @@ open class ReactiveMongoDsl(
 		super.initialize(context)
 		init()
 		MongoReactiveDataInitializer(properties).initialize(context)
-		MongoReactiveInitializer(properties, embedded).initialize(context)
+		MongoReactiveInitializer(properties).initialize(context)
 	}
 
 }

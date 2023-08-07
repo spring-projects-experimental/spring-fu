@@ -21,12 +21,12 @@ import org.springframework.beans.factory.getBeanProvider
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.fu.kofu.AbstractDsl
 import org.springframework.security.authentication.AuthenticationManager
+import org.springframework.security.config.annotation.web.HttpSecurityDsl
 import org.springframework.security.config.annotation.web.configuration.HttpSecurityInitializer
 import org.springframework.security.config.annotation.web.configuration.ObjectPostProcessorInitializer
 import org.springframework.security.config.annotation.web.configuration.WebMvcSecurityInitializer
 import org.springframework.security.config.annotation.web.configuration.WebSecurityInitializer
-import org.springframework.security.config.web.servlet.HttpSecurityDsl
-import org.springframework.security.config.web.servlet.invoke
+import org.springframework.security.config.annotation.web.invoke
 import org.springframework.security.core.userdetails.UserDetailsPasswordService
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -43,44 +43,47 @@ import org.springframework.security.web.context.SecurityContextRepository
  */
 class WebMvcSecurityDsl(private val init: WebMvcSecurityDsl.() -> Unit) : AbstractDsl() {
 
-	var authenticationManager: AuthenticationManager? = null
+    var authenticationManager: AuthenticationManager? = null
 
-	var userDetailsService: UserDetailsService? = null
+    var userDetailsService: UserDetailsService? = null
 
-	var passwordEncoder: PasswordEncoder? = null
+    var passwordEncoder: PasswordEncoder? = null
 
-	var userDetailsPasswordService: UserDetailsPasswordService? = null
+    var userDetailsPasswordService: UserDetailsPasswordService? = null
 
-	var securityContextRepository: SecurityContextRepository? = null
+    var securityContextRepository: SecurityContextRepository? = null
 
-	private var httpConfiguration: HttpSecurityDsl.() -> Unit = {}
+    private var httpConfiguration: HttpSecurityDsl.() -> Unit = {}
 
-	fun http(httpConfiguration: HttpSecurityDsl.() -> Unit = {}) {
-		this.httpConfiguration = httpConfiguration
-	}
+    fun http(httpConfiguration: HttpSecurityDsl.() -> Unit = {}) {
+        this.httpConfiguration = httpConfiguration
+    }
 
-	override fun initialize(context: GenericApplicationContext) {
-		super.initialize(context)
-		init()
+    override fun initialize(context: GenericApplicationContext) {
+        super.initialize(context)
+        init()
 
-		ObjectPostProcessorInitializer().initialize(context)
+        ObjectPostProcessorInitializer().initialize(context)
 
-		val securityInitializer = HttpSecurityInitializer(authenticationManager, userDetailsService, passwordEncoder,
-				userDetailsPasswordService)
+        val securityInitializer = HttpSecurityInitializer(
+            authenticationManager, userDetailsService, passwordEncoder,
+            userDetailsPasswordService
+        )
 
-		securityInitializer.initialize(context)
+        securityInitializer.initialize(context)
 
-		WebSecurityInitializer {
-			if (securityContextRepository != null) {
-				it.securityContext().securityContextRepository(securityContextRepository).and()
-			} else {
-				it
-			}
-					.invoke(httpConfiguration)
-		}
-				.initialize(context)
-		WebMvcSecurityInitializer().initialize(context)
-	}
+        WebSecurityInitializer {
+            if (securityContextRepository != null) {
+                @Suppress("DEPRECATION", "removal")
+                it.securityContext().securityContextRepository(securityContextRepository).and()
+            } else {
+                it
+            }
+                .invoke(httpConfiguration)
+        }
+            .initialize(context)
+        WebMvcSecurityInitializer().initialize(context)
+    }
 }
 
 /**
@@ -93,7 +96,7 @@ class WebMvcSecurityDsl(private val init: WebMvcSecurityDsl.() -> Unit) : Abstra
  * @author Fred Montariol
  */
 fun WebMvcServerDsl.security(dsl: WebMvcSecurityDsl.() -> Unit = {}) {
-	WebMvcSecurityDsl(dsl).initialize(context)
+    WebMvcSecurityDsl(dsl).initialize(context)
 }
 
 /**
@@ -105,8 +108,8 @@ fun WebMvcServerDsl.security(dsl: WebMvcSecurityDsl.() -> Unit = {}) {
  * @param T type the bean must match, can be an interface or superclass
  */
 inline fun <reified T : Any> WebMvcSecurityDsl.ref(name: String? = null): T = when (name) {
-	null -> context.getBean(T::class.java)
-	else -> context.getBean(name, T::class.java)
+    null -> context.getBean(T::class.java)
+    else -> context.getBean(name, T::class.java)
 }
 
 /**
@@ -115,4 +118,4 @@ inline fun <reified T : Any> WebMvcSecurityDsl.ref(name: String? = null): T = wh
  * TODO Update when SPR-17648 will be fixed
  * @see org.springframework.beans.factory.BeanFactory.getBeanProvider
  */
-inline fun <reified T : Any> WebMvcSecurityDsl.provider() : ObjectProvider<T> = context.getBeanProvider()
+inline fun <reified T : Any> WebMvcSecurityDsl.provider(): ObjectProvider<T> = context.getBeanProvider()

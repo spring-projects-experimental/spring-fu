@@ -25,8 +25,12 @@ import org.springframework.http.converter.json.KotlinSerializationJsonHttpMessag
 
 public class KotlinSerializationConverterInitializer implements ApplicationContextInitializer<GenericApplicationContext> {
 
-	@Override
-	public void initialize(GenericApplicationContext context) {
-		context.registerBean("kotlinSerializationJsonHttpMessageConverter", HttpMessageConverter.class, (Supplier<HttpMessageConverter>) KotlinSerializationJsonHttpMessageConverter::new);
-	}
+    @Override
+    public void initialize(GenericApplicationContext context) {
+        context.registerBean(
+            "kotlinSerializationJsonHttpMessageConverter",
+            HttpMessageConverter.class,
+            (Supplier<HttpMessageConverter>) KotlinSerializationJsonHttpMessageConverter::new
+        );
+    }
 }

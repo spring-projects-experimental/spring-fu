@@ -24,19 +24,27 @@ import org.springframework.http.codec.json.KotlinSerializationJsonEncoder;
 
 /**
  * {@link ApplicationContextInitializer} adapter for registering Kotlin serialization codecs.
+ *
  * @see KotlinSerializationJsonEncoder
  * @see KotlinSerializationJsonDecoder
  */
 public class KotlinSerializationCodecInitializer extends AbstractCodecInitializer {
 
-	public KotlinSerializationCodecInitializer(boolean isClientCodec) {
-		super(isClientCodec);
-	}
+    public KotlinSerializationCodecInitializer(boolean isClientCodec) {
+        super(isClientCodec);
+    }
 
-	@Override
-	protected void register(GenericApplicationContext context, CodecConfigurer configurer) {
-		configurer.customCodecs().encoder(new KotlinSerializationJsonEncoder());
-		configurer.customCodecs().decoder(new KotlinSerializationJsonDecoder());
+    @Override
+    protected void register(
+        GenericApplicationContext context,
+        CodecConfigurer configurer
+    ) {
+        configurer
+            .customCodecs()
+            .register(new KotlinSerializationJsonEncoder());
 
-	}
+        configurer
+            .customCodecs()
+            .register(new KotlinSerializationJsonDecoder());
+    }
 }

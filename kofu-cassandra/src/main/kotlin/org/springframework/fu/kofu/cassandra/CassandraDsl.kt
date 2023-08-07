@@ -74,15 +74,6 @@ open class CassandraDsl(private val init: CassandraDsl.() -> Unit) : AbstractDsl
 		}
 
 	/**
-	 * Enable SSL support
-	 */
-	var ssl: Boolean
-		get() = properties.isSsl
-		set(value) {
-			properties.isSsl = value
-		}
-
-	/**
 	 * Configure the compression supported by the Cassandra binary protocol.
 	 */
 	var compression: CassandraProperties.Compression
@@ -92,9 +83,16 @@ open class CassandraDsl(private val init: CassandraDsl.() -> Unit) : AbstractDsl
 		}
 
 	/**
+	 * Enable SSL support
+	 */
+	fun ssl(dsl: CassandraProperties.Ssl.() -> Unit = {}) {
+		properties.ssl.dsl()
+	}
+
+	/**
 	 * Configure the connection.
 	 */
-	fun connection(dsl: CassandraProperties.Connection.() -> Unit =  {}) {
+	fun connection(dsl: CassandraProperties.Connection.() -> Unit = {}) {
 		properties.connection.dsl()
 	}
 

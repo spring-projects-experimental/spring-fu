@@ -10,9 +10,12 @@ import org.springframework.security.config.annotation.configuration.ObjectPostPr
  */
 public class ObjectPostProcessorInitializer implements ApplicationContextInitializer<GenericApplicationContext> {
 
-	@Override
-	public void initialize(GenericApplicationContext context) {
-		ObjectPostProcessorConfiguration configuration = new ObjectPostProcessorConfiguration();
-		context.registerBean(ObjectPostProcessor.class, () -> configuration.objectPostProcessor(context.getBeanFactory()));
-	}
+    @Override
+    public void initialize(GenericApplicationContext context) {
+        ObjectPostProcessorConfiguration configuration = new ObjectPostProcessorConfiguration();
+        context.registerBean(
+            ObjectPostProcessor.class,
+            () -> configuration.objectPostProcessor(context.getBeanFactory())
+        );
+    }
 }

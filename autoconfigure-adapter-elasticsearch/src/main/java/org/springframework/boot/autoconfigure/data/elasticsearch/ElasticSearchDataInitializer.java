@@ -4,9 +4,9 @@ import org.elasticsearch.client.RestHighLevelClient;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.data.elasticsearch.client.ClientConfiguration;
-import org.springframework.data.elasticsearch.client.RestClients;
+import org.springframework.data.elasticsearch.client.erhlc.RestClients;
 
-public class ElasticSearchDataInitializer implements ApplicationContextInitializer<GenericApplicationContext>  {
+public class ElasticSearchDataInitializer implements ApplicationContextInitializer<GenericApplicationContext> {
 
     private final ClientConfiguration clientConfiguration;
 
@@ -14,8 +14,14 @@ public class ElasticSearchDataInitializer implements ApplicationContextInitializ
         this.clientConfiguration = clientConfiguration;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void initialize(GenericApplicationContext context) {
-        context.registerBean(RestHighLevelClient.class, () -> RestClients.create(clientConfiguration).rest());
+        context.registerBean(
+            RestHighLevelClient.class,
+            () -> RestClients
+                .create(clientConfiguration)
+                .rest()
+        );
     }
 }

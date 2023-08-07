@@ -26,16 +26,29 @@ import org.springframework.context.support.GenericApplicationContext;
  */
 public class MustacheInitializer implements ApplicationContextInitializer<GenericApplicationContext> {
 
-	private final MustacheProperties properties;
+    private final MustacheProperties properties;
 
-	public MustacheInitializer(MustacheProperties properties) {
-		this.properties = properties;
-	}
+    public MustacheInitializer(MustacheProperties properties) {
+        this.properties = properties;
+    }
 
-	@Override
-	public void initialize(GenericApplicationContext context) {
-		MustacheAutoConfiguration configuration = new MustacheAutoConfiguration(this.properties, context);
-		context.registerBean(MustacheResourceTemplateLoader.class, configuration::mustacheTemplateLoader);
-		context.registerBean(Mustache.Compiler.class, () -> configuration.mustacheCompiler(context.getBean(Mustache.TemplateLoader.class), context.getEnvironment()));
-	}
+    @Override
+    public void initialize(GenericApplicationContext context) {
+        MustacheAutoConfiguration configuration = new MustacheAutoConfiguration(
+            this.properties,
+            context
+        );
+
+        context.registerBean(
+            MustacheResourceTemplateLoader.class,
+            configuration::mustacheTemplateLoader
+        );
+
+        context.registerBean(
+            Mustache.Compiler.class,
+            () -> configuration.mustacheCompiler(
+                context.getBean(Mustache.TemplateLoader.class)
+            )
+        );
+    }
 }
