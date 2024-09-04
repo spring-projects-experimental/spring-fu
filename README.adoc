@@ -1,5 +1,3 @@
-image:https://ci.spring.io/api/v1/teams/spring-fu/pipelines/spring-fu/badge["Build Status", link="https://ci.spring.io/teams/spring-fu/pipelines/spring-fu"]
-
 Spring Fu is an incubator for https://github.com/spring-projects-experimental/spring-fu/tree/main/jafu[JaFu] (Java DSL)
 and https://github.com/spring-projects-experimental/spring-fu/tree/main/kofu[KoFu] (Kotlin DSL) designed to configure
 Spring Boot explicitly with code in a declarative way with great discoverability thanks to auto-complete.
